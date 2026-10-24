@@ -1,8 +1,12 @@
-/* Perguntas do quiz.
-   Para mudar um texto, edite aqui. Cada etapa tem suas perguntas, e cada
-   pergunta tem um "tipo" (A = pergunta normal, com uma resposta). */
-window.QUIZ_ETAPAS = [
+/* Sequência do quiz, na ordem em que a pessoa vê.
+   - "etapa": um bloco de perguntas com o progresso 1 · 2 · 3 no topo.
+     Cada pergunta tem um "tipo" (A = pergunta normal, com uma resposta).
+   - "carregamento": tela com o círculo de 0% a 100%. Enquanto ela roda, as
+     imagens listadas em "preCarregar" (e as imagens das próximas perguntas)
+     são baixadas, para aparecerem na hora. */
+window.QUIZ_FLUXO = [
   {
+    tipo: "etapa",
     id: "etapa-1",
     perguntas: [
       {
@@ -36,6 +40,20 @@ window.QUIZ_ETAPAS = [
           "Mais de um ano.",
         ],
       },
+    ],
+  },
+  {
+    tipo: "carregamento",
+    id: "carregamento-1",
+    // Texto: "destaque" aparece em preto, negrito e itálico, no começo da
+    // primeira linha. Cada item de "linhas" começa numa linha nova.
+    destaque: "A cada",
+    linhas: ["100 mulheres,", "99 sentiram melhora na sua aparência."],
+    imagem: "assets/img/carregamento.jpg",
+    imagemAlt: "Mulher com a pele bonita e saudável",
+    duracao: 3300, // em milissegundos (0% → 100%)
+    preCarregar: [
+      // Coloque aqui as imagens das próximas perguntas, ex.: "assets/img/pergunta-4.jpg"
     ],
   },
 ];

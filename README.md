@@ -19,8 +19,12 @@ para o ar (README, configurações e a pasta `.git`).
 
 ## Perguntas do quiz
 
-Os textos das perguntas e respostas ficam em `assets/js/quiz-perguntas.js`. Para mudar um texto,
-basta editar esse arquivo. As respostas da pessoa ficam guardadas no navegador durante a visita
+Os textos das perguntas, das respostas e da tela de carregamento ficam em
+`assets/js/quiz-perguntas.js`, na ordem em que aparecem. Para mudar um texto, basta editar esse arquivo.
+
+Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
+desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas perguntas e as listadas em
+`preCarregar` são baixadas, para aparecerem na hora. As respostas da pessoa ficam guardadas no navegador durante a visita
 (sessionStorage), para serem usadas no resultado.
 
 ## Espaços de imagem
@@ -33,6 +37,7 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | FOTO 1 (rosto 1, prova social) | `assets/img/foto-1.jpg` | quadrada, 200 × 200 px |
 | FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.jpg` | quadrada, 200 × 200 px |
 | FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.jpg` | quadrada, 200 × 200 px |
+| Imagem do carregamento (quiz) | `assets/img/carregamento.jpg` | 1404 × 880 px (provisória, recortada do layout) |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
 A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de imagem.
