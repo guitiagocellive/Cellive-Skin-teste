@@ -46,9 +46,9 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 
 | Espaço na página | Arquivo | Tamanho sugerido |
 | --- | --- | --- |
-| FOTO 1 (rosto 1, prova social) | `assets/img/foto-1.jpg` | quadrada, 200 × 200 px |
-| FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.jpg` | quadrada, 200 × 200 px |
-| FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.jpg` | quadrada, 200 × 200 px |
+| FOTO 1 (rosto 1, prova social) | `assets/img/foto-1.webp` | ✅ já colocada |
+| FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.webp` | ✅ já colocada |
+| FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.webp` | ✅ já colocada |
 | Imagem do carregamento (quiz) | `assets/img/carregamento.jpg` | 1404 × 880 px (provisória, recortada do layout) |
 | Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.jpg` | quadrada, 600 × 600 px |
 | Idade: Entre 26 - 30 anos | `assets/img/quiz/idade-26-30.jpg` | quadrada, 600 × 600 px |
