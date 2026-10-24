@@ -75,11 +75,12 @@ window.QUIZ_FLUXO = [
         tipo: "B",
         titulo: "Qual é sua idade?",
         subtitulo: "Vamos separar os melhores ativos conforme suas escolhas",
+        formato: "retrato", // fotos em 2:3
         opcoes: [
-          { texto: "Entre 18 - 25 anos", imagem: "assets/img/quiz/idade-18-25.jpg" },
-          { texto: "Entre 26 - 30 anos", imagem: "assets/img/quiz/idade-26-30.jpg" },
-          { texto: "Entre 30 - 35 anos", imagem: "assets/img/quiz/idade-30-35.jpg" },
-          { texto: "+35 anos", imagem: "assets/img/quiz/idade-35-mais.jpg" },
+          { texto: "Entre 18 - 25 anos", imagem: "assets/img/quiz/idade-18-25.webp" },
+          { texto: "Entre 25 - 35 anos", imagem: "assets/img/quiz/idade-25-35.webp" },
+          { texto: "Entre 35 - 40 anos", imagem: "assets/img/quiz/idade-35-40.webp" },
+          { texto: "+40 anos", imagem: "assets/img/quiz/idade-40-mais.webp" },
         ],
         ativo: { id: "acido-hialuronico", nome: "Ácido Hialurônico", imagem: "assets/img/ativos/acido-hialuronico.jpg" },
       },

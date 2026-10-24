@@ -457,6 +457,7 @@
   var FIGURA_MIN = 130;                    // altura mínima da imagem de exemplo
   var FOTO_PROPORCAO_MIN = 0.74;           // fotos da idade: de quadrada até 74% da largura
   var FOTO_SINAIS_MIN = 78;                // fotos dos sinais: altura mínima
+  var RETRATO_MIN = 120;                   // fotos 2:3 (idade): altura mínima
 
   function encaixarNaTela() {
     if (formulaEl.hidden) return;
@@ -476,6 +477,22 @@
     }
     var fotos = screenEl.querySelectorAll(".quiz-card-foto");
     if (!fotos.length) return;
+
+    // Fotos em 2:3: para manter a proporção, a grade fica mais estreita
+    // (centralizada) até os cartões caberem acima do painel.
+    if (lista.classList.contains("quiz-cards-retrato")) {
+      for (var tentativa = 0; tentativa < 6 && sobra < 0; tentativa++) {
+        var foto = fotos[0].getBoundingClientRect();
+        var cartao = lista.firstElementChild.getBoundingClientRect();
+        var novaAltura = Math.max(RETRATO_MIN, foto.height + sobra / 2);
+        var novaLargura = novaAltura * 2 / 3;
+        var folga = cartao.width - foto.width;
+        var gap = parseFloat(getComputedStyle(lista).columnGap) || 0;
+        lista.style.maxWidth = (2 * (novaLargura + folga) + gap + 4).toFixed(1) + "px";
+        sobra = limite - ultimo.getBoundingClientRect().bottom;
+      }
+      return;
+    }
     var colunas = lista.classList.contains("quiz-cards-3") ? 3 : 2;
     var linhas = Math.ceil(fotos.length / colunas);
     var r = fotos[0].getBoundingClientRect();
@@ -489,6 +506,8 @@
     Array.prototype.forEach.call(screenEl.querySelectorAll(".quiz-figura, .quiz-card-foto"), function (e) {
       e.style.height = "";
     });
+    var grade = screenEl.querySelector(".quiz-cards-retrato");
+    if (grade) grade.style.maxWidth = "";
     encaixarNaTela();
   });
 
@@ -511,6 +530,7 @@
 
     var classeLista = p.tipo === "B" ? "quiz-cards" : "quiz-options";
     if (p.tipo === "B" && p.opcoes.length > 4) classeLista += " quiz-cards-3";
+    if (p.formato === "retrato") classeLista += " quiz-cards-retrato";
     var lista = el("div", classeLista);
     lista.setAttribute("role", multipla ? "group" : "radiogroup");
     lista.setAttribute("aria-labelledby", "quiz-pergunta");
@@ -530,7 +550,15 @@
 
       if (p.tipo === "B") {
         botao.appendChild(slotDeImagem("quiz-card-foto", "Foto " + (i + 1), op.imagem, ""));
-        botao.appendChild(el("span", "quiz-card-text", texto));
+        var rotulo = el("span", "quiz-card-text", texto);
+        // Retrato: "Entre 18 - 25 anos" vira "ENTRE" pequeno + "18 - 25 anos"
+        var partes = p.formato === "retrato" && (texto.match(/^(Entre)\s+(.+)$/) || texto.match(/^\+\s*(\d+ anos)$/));
+        if (partes) {
+          rotulo.textContent = "";
+          rotulo.appendChild(el("small", null, partes.length === 3 ? partes[1] : "Mais de"));
+          rotulo.appendChild(el("span", null, partes.length === 3 ? partes[2] : partes[1]));
+        }
+        botao.appendChild(rotulo);
       } else {
         var radio = el("span", "quiz-radio");
         radio.setAttribute("aria-hidden", "true");

@@ -43,6 +43,7 @@ desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas pergun
 
 As fotos não foram recortadas do layout. Cada uma tem um espaço marcado na página.
 Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto aparece sozinha.
+As imagens são convertidas para WebP, no tamanho em que aparecem, para a página carregar rápido.
 
 | Espaço na página | Arquivo | Tamanho sugerido |
 | --- | --- | --- |
@@ -50,10 +51,10 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.webp` | ✅ já colocada |
 | FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.webp` | ✅ já colocada |
 | Imagem do carregamento (quiz) | `assets/img/carregamento.jpg` | 1404 × 880 px (provisória, recortada do layout) |
-| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.jpg` | quadrada, 600 × 600 px |
-| Idade: Entre 26 - 30 anos | `assets/img/quiz/idade-26-30.jpg` | quadrada, 600 × 600 px |
-| Idade: Entre 30 - 35 anos | `assets/img/quiz/idade-30-35.jpg` | quadrada, 600 × 600 px |
-| Idade: +35 anos | `assets/img/quiz/idade-35-mais.jpg` | quadrada, 600 × 600 px |
+| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.webp` | ✅ já colocada (2:3) |
+| Idade: Entre 25 - 35 anos | `assets/img/quiz/idade-25-35.webp` | ✅ já colocada (2:3) |
+| Idade: Entre 35 - 40 anos | `assets/img/quiz/idade-35-40.webp` | ✅ já colocada (2:3) |
+| Idade: +40 anos | `assets/img/quiz/idade-40-mais.webp` | ✅ já colocada (2:3) |
 | Ativo: Ácido Hialurônico (bolinha) | `assets/img/ativos/acido-hialuronico.jpg` | ✅ já colocada |
 | Ativo: PDRN (bolinha) | `assets/img/ativos/pdrn.jpg` | ✅ já colocada |
 | Pergunta 3 (exemplo): Você já pensou em fazer botox ou peeling? | `assets/img/quiz/botox-peeling.jpg` | horizontal 16:9, 1280 × 720 px |
