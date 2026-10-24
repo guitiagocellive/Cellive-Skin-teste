@@ -683,26 +683,24 @@
     linhas: '<path d="M4.5 8.5c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M4.5 13c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M4.5 17.5c2.5-2 5-2 7.5 0s5 2 7.5 0"/>',
   };
 
-  // Rosto em traço fino (viewBox 200 × 240): cabelo e franja em azul
-  // acinzentado suave, rosto branco, traços em azul médio
+  // Rosto minimalista (viewBox 200 × 240): só o cabelo e o contorno do rosto
   var ROSTO_SVG =
     '<svg class="analise-rosto-svg" viewBox="0 0 200 240" aria-hidden="true">' +
-      '<path fill="#dbe4ef" stroke="none" d="M100 20C56 20 36 56 38 100c2 40-6 72 4 106 14 10 28 10 38 0v-56h40v56c10 10 24 10 38 0 10-34 2-66 4-106 2-44-18-80-62-80z"/>' +
-      '<path d="M86 192v20c0 8-14 13-38 22M114 192v20c0 8 14 13 38 22"/>' +
-      '<path fill="#ffffff" d="M100 40C68 40 54 72 56 108c2 38 20 76 44 86 24-10 42-48 44-86 2-36-12-68-44-68z"/>' +
-      '<path fill="#dbe4ef" stroke="none" d="M57 102c1-38 20-58 45-58 24 0 39 16 42 46-14-18-32-26-56-22-16 3-26 15-31 34z"/>' +
-      '<circle fill="#b1c6dd" fill-opacity=".35" stroke="none" cx="74" cy="142" r="9"/>' +
-      '<circle fill="#b1c6dd" fill-opacity=".35" stroke="none" cx="126" cy="142" r="9"/>' +
-      '<path d="M72 106q9-5 19-2M109 104q10-3 19 2"/>' +
-      '<path d="M73 118q8 5 16 0M111 118q8 5 16 0"/>' +
-      '<path d="M100 122q-2 12-4 18 3 3 8 1"/>' +
-      '<path d="M89 163q5-4 11-2 6-2 11 2-11 8-22 0z"/>' +
+      '<path class="analise-cabelo" d="M100 20C56 20 36 56 38 100c2 40-6 72 4 106 14 10 28 10 38 0v-56h40v56c10 10 24 10 38 0 10-34 2-66 4-106 2-44-18-80-62-80z"/>' +
+      '<path class="analise-face" d="M100 40C68 40 54 72 56 108c2 38 20 76 44 86 24-10 42-48 44-86 2-36-12-68-44-68z"/>' +
+      '<path class="analise-cabelo" d="M57 102c1-38 20-58 45-58 24 0 39 16 42 46-14-18-32-26-56-22-16 3-26 15-31 34z"/>' +
     "</svg>";
 
   function telaAnalise(tela) {
     var b = tela.bloco;
     var wrap = el("div", "analise");
-    wrap.appendChild(el("h1", "quiz-title analise-titulo", b.titulo));
+    var titulo = el("h1", "analise-titulo");
+    titulo.appendChild(el("span", "analise-titulo-leve", b.titulo));
+    if (b.destaque) {
+      titulo.appendChild(document.createTextNode(" "));
+      titulo.appendChild(el("strong", "analise-titulo-forte", b.destaque));
+    }
+    wrap.appendChild(titulo);
     if (b.subtitulo) wrap.appendChild(el("p", "quiz-subtitle analise-sub", b.subtitulo));
 
     // Cartão com o rosto sendo escaneado
@@ -715,10 +713,6 @@
         pino.setAttribute("data-etapa", i);
         pino.style.left = (ponto.x / 200) * 100 + "%";
         pino.style.top = (ponto.y / 240) * 100 + "%";
-        if (ponto.rotulo) {
-          var rot = el("span", "analise-rotulo analise-rotulo-" + (ponto.lado || "direita"), ponto.rotulo);
-          pino.appendChild(rot);
-        }
         rosto.appendChild(pino);
       });
     });
@@ -732,7 +726,7 @@
     progresso.setAttribute("aria-valuemin", "0");
     progresso.setAttribute("aria-valuemax", "100");
     progresso.setAttribute("aria-valuenow", "0");
-    progresso.setAttribute("aria-label", b.titulo);
+    progresso.setAttribute("aria-label", b.titulo + (b.destaque ? " " + b.destaque : ""));
     progresso.innerHTML = '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span></span><span class="analise-pct" data-pct>0%</span>';
     wrap.appendChild(progresso);
 

@@ -225,29 +225,16 @@ window.QUIZ_FLUXO = [
   {
     tipo: "analise",
     id: "analise",
-    titulo: "Analisando sua pele",
-    subtitulo: "Estamos cruzando as suas respostas para entender a sua pele.",
+    // Título no estilo do site: "titulo" em letra fina condensada e
+    // "destaque" em negrito
+    titulo: "Fazendo uma análise",
+    destaque: "do seu caso",
     // Cada etapa: texto, ícone (gota, escudo ou linhas), duração em ms e os
     // pontos que acendem no rosto (posição no desenho de 200 × 240).
     etapas: [
-      {
-        texto: "Entendendo seu tipo de pele",
-        icone: "gota",
-        duracao: 800,
-        pontos: [{ x: 128, y: 144, rotulo: "Textura e hidratação", lado: "direita" }, { x: 72, y: 144 }],
-      },
-      {
-        texto: "Checando a sensibilidade",
-        icone: "escudo",
-        duracao: 800,
-        pontos: [{ x: 112, y: 84, rotulo: "Sensibilidade", lado: "direita" }],
-      },
-      {
-        texto: "Mapeando linhas e sinais",
-        icone: "linhas",
-        duracao: 800,
-        pontos: [{ x: 64, y: 118, rotulo: "Linhas de expressão", lado: "esquerda" }, { x: 86, y: 156 }, { x: 136, y: 118 }],
-      },
+      { texto: "Entendendo seu tipo de pele", icone: "gota", duracao: 800, pontos: [{ x: 126, y: 140 }, { x: 74, y: 140 }] },
+      { texto: "Checando a sensibilidade", icone: "escudo", duracao: 800, pontos: [{ x: 112, y: 84 }] },
+      { texto: "Mapeando linhas e sinais", icone: "linhas", duracao: 800, pontos: [{ x: 66, y: 116 }, { x: 134, y: 116 }, { x: 88, y: 160 }] },
     ],
     pausaFinal: 300, // tempo parado em 100% antes de seguir (total ≈ 2,7 s)
   },
