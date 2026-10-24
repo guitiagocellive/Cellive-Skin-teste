@@ -27,15 +27,9 @@ A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de
 
 ## Fonte (Acumin Pro)
 
-O layout usa **Acumin Pro** e **Acumin Pro Condensed**, que são fontes da Adobe Fonts.
-Para usar no site:
-
-1. Em [fonts.adobe.com](https://fonts.adobe.com), crie um **projeto web** com Acumin Pro e Acumin Pro Condensed
-   (pesos 300, 400, 600 e 700, com itálico).
-2. Copie o link do kit (`https://use.typekit.net/XXXXXXX.css`).
-3. Cole o link no `<head>` de cada página, no lugar indicado pelo comentário.
-
-Enquanto o kit não estiver ligado, o site usa a **Archivo** (Google Fonts), que tem desenho parecido.
+O site usa **Acumin Pro** e **Acumin Pro Condensed**, carregadas pelo projeto web da Adobe Fonts
+(`https://use.typekit.net/zvs4xwq.css`), que já está no `<head>` de todas as páginas.
+Toda página nova precisa ter esse mesmo link.
 
 ## Política de Privacidade
 
