@@ -115,6 +115,10 @@ para a resposta dela. Aparecem 5 ativos, e os outros 7 abrem no botão "Ver os o
 do `quiz-perguntas.js`; os textos ficam em `assets/js/oferta-formula.js` (uma frase para cada resposta possível). Se a
 pessoa abrir a oferta sem ter feito o quiz, aparece só o que cada ativo faz.
 
+Depois vem "FÓRMULA COM AÇÃO **SRRP**": a ponteira do frasco entra pela esquerda conforme a página rola e para na
+diagonal ao lado do título. Abaixo, as 4 frentes da ação, cada uma com a letra, o ativo responsável e uma frase:
+Sinalização (GHK-Cu), Renovação (Retinal), Regeneração (PDRN) e Potencialização (microespículas).
+
 ## Fonte (Acumin Pro)
 
 O site usa **Acumin Pro** e **Acumin Pro Condensed**, carregadas pelo projeto web da Adobe Fonts

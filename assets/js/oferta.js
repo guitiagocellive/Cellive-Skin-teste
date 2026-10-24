@@ -135,6 +135,40 @@
     Array.prototype.forEach.call(aparecer, function (el) { el.classList.add("is-visivel"); });
   }
 
+  /* ---------- Ação SRRP: ponteira que entra deitando com a rolagem ----------
+     --p vai de 0 (seção entrando por baixo, ponteira escondida) a 1 (seção
+     perto do topo, ponteira na diagonal). */
+  var srrp = document.querySelector("[data-srrp]");
+  var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (srrp && !semMovimento) {
+    var pedidoSrrp = 0;
+    var atualizarSrrp = function () {
+      pedidoSrrp = 0;
+      var alto = window.innerHeight;
+      var p = (alto * 0.9 - srrp.getBoundingClientRect().top) / (alto * 0.6);
+      p = Math.min(1, Math.max(0, p));
+      p = 1 - Math.pow(1 - p, 2); // desacelera no final
+      srrp.style.setProperty("--p", p.toFixed(3));
+    };
+    var pedirSrrp = function () { if (!pedidoSrrp) pedidoSrrp = requestAnimationFrame(atualizarSrrp); };
+    window.addEventListener("scroll", pedirSrrp, { passive: true });
+    window.addEventListener("resize", pedirSrrp);
+    atualizarSrrp();
+  }
+
+  // Os 4 cartões entram juntos (um depois do outro) ao aparecer na tela
+  var listaSrrp = document.querySelector("[data-srrp-lista]");
+  if (listaSrrp && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (itens, obs) {
+      if (itens[0].isIntersecting) {
+        listaSrrp.classList.add("is-visivel");
+        obs.disconnect();
+      }
+    }, { threshold: 0.15 }).observe(listaSrrp);
+  } else if (listaSrrp) {
+    listaSrrp.classList.add("is-visivel");
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {
