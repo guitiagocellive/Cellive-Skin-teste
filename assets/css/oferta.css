@@ -1135,7 +1135,7 @@
   width: calc(620 * var(--u));
   height: calc(560 * var(--u));
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(177, 198, 221, 0.75), rgba(177, 198, 221, 0.32) 55%, rgba(177, 198, 221, 0));
+  background: radial-gradient(closest-side, #fff 22%, rgba(255, 255, 255, 0.85) 34%, rgba(177, 198, 221, 0.55) 58%, rgba(177, 198, 221, 0.22) 78%, rgba(177, 198, 221, 0));
   transform: translate(-50%, -50%) scale(0.6);
   opacity: 0;
   transition: opacity 1s ease, transform 1.4s cubic-bezier(0.25, 0.8, 0.3, 1);
@@ -1145,7 +1145,7 @@
 .palco-chao {
   position: absolute;
   left: calc(372 * var(--u));
-  top: calc(470 * var(--u));
+  top: calc(478 * var(--u));
   width: calc(400 * var(--u));
   height: calc(46 * var(--u));
   border-radius: 50%;
@@ -1185,10 +1185,11 @@
 .palco-caixa-esq {
   --dx: calc(120 * var(--u));
   --atraso: 0.45s;
+  z-index: 1; /* na frente da caixa da direita */
   left: calc(162 * var(--u));
   top: calc(78 * var(--u));
-  width: calc(184 * var(--u));
-  height: calc(398 * var(--u));
+  width: calc(195 * var(--u));
+  height: calc(422 * var(--u));
   transform-origin: left top;
   transform: skewY(0deg);
 }
@@ -1196,21 +1197,22 @@
 .palco-caixa-dir {
   --dx: calc(-100 * var(--u));
   --atraso: 0.55s;
-  left: calc(440 * var(--u));
-  top: calc(253 * var(--u));
-  width: calc(180 * var(--u));
-  height: calc(390 * var(--u));
+  z-index: 0; /* a mais de trás */
+  left: calc(428 * var(--u));
+  top: calc(263 * var(--u));
+  width: calc(202 * var(--u));
+  height: calc(437 * var(--u));
   transform: translate(-50%, -50%) rotate(0deg);
 }
 
 /* Frasco: sobe primeiro */
 .palco-frasco {
   --atraso: 0.15s;
-  z-index: 1;
-  left: calc(382 * var(--u));
-  top: calc(278 * var(--u));
-  width: calc(117 * var(--u));
-  height: calc(380 * var(--u));
+  z-index: 2; /* na frente de tudo */
+  left: calc(383 * var(--u));
+  top: calc(281 * var(--u));
+  width: calc(120 * var(--u));
+  height: calc(390 * var(--u));
   translate: 0 calc(60 * var(--u));
   transform: translate(-50%, -50%) rotate(0deg);
   filter: drop-shadow(0 calc(10 * var(--u)) calc(14 * var(--u)) rgba(90, 110, 140, 0.2));
