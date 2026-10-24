@@ -943,6 +943,7 @@
     var raiz = screenEl.querySelector(".montagem");
     var bolhas = screenEl.querySelectorAll(".montagem-bolha");
     var liquido = screenEl.querySelector("[data-liquido]");
+    var poteSvg = screenEl.querySelector(".montagem-pote svg");
     var nomeEl = screenEl.querySelector(".montagem-ativo");
     var ativos = ativosDaFormula();
     var total = bolhas.length;
@@ -950,10 +951,10 @@
     carregamentoAtivo = controle;
     var rapido = reduzirMovimento();
 
-    var SURGIR = rapido ? 0 : b.surgir || 70;       // intervalo entre os ativos surgindo
-    var ESPERA = rapido ? 200 : b.espera || 450;    // pausa antes de começar a entrar
-    var ENTRAR = rapido ? 120 : b.entrar || 300;    // intervalo entre cada ativo entrando
-    var FINAL = b.final || 1700;                    // tempo na tela de "concluída"
+    var SURGIR = rapido ? 0 : b.surgir || 45;       // intervalo entre os ativos surgindo
+    var ESPERA = rapido ? 200 : b.espera || 250;    // pausa antes de começar a entrar
+    var ENTRAR = rapido ? 120 : b.entrar || 190;    // intervalo entre cada ativo entrando
+    var FINAL = b.final || 1200;                    // tempo na tela de "concluída"
 
     function depois(ms, fn) {
       setTimeout(function () { if (!controle.cancelado) fn(); }, ms);
@@ -979,12 +980,18 @@
         nomeEl.classList.remove("is-troca");
         void nomeEl.offsetWidth;
         nomeEl.classList.add("is-troca");
-        depois(rapido ? 0 : 260, function () { nivel(i + 1); });
+        depois(rapido ? 0 : 230, function () {
+          nivel(i + 1);
+          // leve "gole" do pote quando o ativo entra
+          poteSvg.classList.remove("is-gole");
+          void poteSvg.getBoundingClientRect();
+          poteSvg.classList.add("is-gole");
+        });
       });
     });
 
     // 3) fórmula concluída
-    var fim = inicioEntrada + total * ENTRAR + (rapido ? 100 : 450);
+    var fim = inicioEntrada + total * ENTRAR + (rapido ? 100 : 300);
     depois(fim, function () {
       nivel(total);
       raiz.classList.add("is-concluida");

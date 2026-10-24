@@ -1626,8 +1626,8 @@ a {
   opacity: 0;
   transform: rotate(var(--a)) translateY(-8%) rotate(calc(-1 * var(--a))) scale(0.25);
   transition:
-    transform 0.6s cubic-bezier(0.55, 0, 0.3, 1),
-    opacity 0.6s ease-in;
+    transform 0.45s cubic-bezier(0.55, 0, 0.3, 1),
+    opacity 0.45s ease-in;
 }
 
 /* Pote grande no centro */
@@ -1644,6 +1644,19 @@ a {
   display: block;
   width: 100%;
   height: 100%;
+  transform-origin: 50% 100%;
+}
+
+/* Leve "gole" a cada ativo que entra */
+.montagem-pote svg.is-gole {
+  animation: montagem-gole 0.32s ease-out;
+}
+
+@keyframes montagem-gole {
+  0% { transform: scale(1, 1); }
+  40% { transform: scale(1.045, 0.975); }
+  75% { transform: scale(0.99, 1.012); }
+  100% { transform: scale(1, 1); }
 }
 
 .montagem-liquido {
@@ -1774,6 +1787,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .montagem-anel,
+  .montagem-pote svg.is-gole,
   .montagem-ativo.is-troca,
   .montagem.is-concluida .montagem-pote {
     animation: none;

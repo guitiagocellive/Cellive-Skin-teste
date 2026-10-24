@@ -251,10 +251,10 @@ window.QUIZ_FLUXO = [
     concluido: "Fórmula",
     concluidoDestaque: "concluída!",
     // Tempos em ms: intervalo entre ativos surgindo, pausa, intervalo entre
-    // ativos entrando e tempo na tela final (total ≈ 7 s)
-    surgir: 70,
-    espera: 450,
-    entrar: 300,
-    final: 1700,
+    // ativos entrando e tempo na tela final (total ≈ 4,7 s, máximo 5 s)
+    surgir: 45,
+    espera: 250,
+    entrar: 190,
+    final: 1200,
   },
 ];
