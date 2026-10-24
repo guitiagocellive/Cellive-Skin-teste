@@ -112,7 +112,7 @@ window.QUIZ_FLUXO = [
         id: "linhas-testa",
         tipo: "C",
         titulo: "Quando seu rosto está relaxado, você ainda percebe linhas na testa?",
-        imagem: "assets/img/quiz/linhas-testa.jpg",
+        imagem: "assets/img/quiz/linhas-testa.webp",
         opcoes: [
           "Sim, ficam bem marcadas.",
           "Algumas linhas já ficam visíveis.",
@@ -164,7 +164,7 @@ window.QUIZ_FLUXO = [
         id: "firmeza",
         tipo: "C",
         titulo: "Você sente que a pele do seu rosto está menos firme do que antes?",
-        imagem: "assets/img/quiz/firmeza.jpg",
+        imagem: "assets/img/quiz/firmeza.webp",
         opcoes: [
           "Sim, percebo claramente.",
           "Comecei a perceber.",

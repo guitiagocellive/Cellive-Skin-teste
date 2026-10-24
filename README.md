@@ -58,14 +58,14 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Ácido Hialurônico (bolinha) | `assets/img/ativos/acido-hialuronico.jpg` | ✅ já colocada |
 | Ativo: PDRN (bolinha) | `assets/img/ativos/pdrn.jpg` | ✅ já colocada |
 | Pergunta 3 (exemplo): Você já pensou em fazer botox ou peeling? | `assets/img/quiz/botox-peeling.webp` | ✅ já colocada (3:2) |
-| Pergunta 4 (exemplo): Quando seu rosto está relaxado, você ainda percebe linhas na testa? | `assets/img/quiz/linhas-testa.jpg` | 3:2, 900 × 600 px |
+| Pergunta 4 (exemplo): Quando seu rosto está relaxado, você ainda percebe linhas na testa? | `assets/img/quiz/linhas-testa.webp` | ✅ já colocada (3:2) |
 | Pergunta 6: Pé de galinha | `assets/img/quiz/sinal-pe-de-galinha.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Linhas 11 | `assets/img/quiz/sinal-linhas-11.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Bigode chinês | `assets/img/quiz/sinal-bigode-chines.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Linhas na testa | `assets/img/quiz/sinal-linhas-testa.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Aspecto envelhecido | `assets/img/quiz/sinal-aspecto-envelhecido.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Manchas | `assets/img/quiz/sinal-manchas.jpg` | quadrada, 300 × 300 px |
-| Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.jpg` | 3:2, 900 × 600 px |
+| Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.webp` | ✅ já colocada (3:2) |
 | Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.jpg` | 3:2, 900 × 600 px |
 | Pergunta 11 (exemplo): Você já utiliza algum ativo específico para rejuvenescimento? | `assets/img/quiz/rejuvenescimento.jpg` | 3:2, 900 × 600 px |
 | Pergunta 12 (exemplo): Você percebe linhas ao redor dos olhos quando sorri? | `assets/img/quiz/linhas-olhos.jpg` | 3:2, 900 × 600 px |
