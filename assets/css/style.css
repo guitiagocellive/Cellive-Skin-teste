@@ -349,27 +349,29 @@ a {
 /* ==========================================================================
    Fórmula com tecnologia coreana
    ========================================================================== */
+/* Área discreta: bandeira pequena e texto claro, para não tirar o foco */
 .origin {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 11px;
-  margin-top: 18px;
+  gap: 7px;
+  margin-top: 14px;
 }
 
 .origin .flag {
   flex-shrink: 0;
-  width: 36px;
-  height: 28px;
+  width: 22px;
+  height: 17px;
+  opacity: 0.8;
 }
 
 .origin p {
   margin: 0;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 10.5px;
+  font-weight: 500;
   line-height: 1.15;
   text-align: left;
-  color: var(--gray-dark);
+  color: #9a9ea4;
 }
 
 /* ==========================================================================
