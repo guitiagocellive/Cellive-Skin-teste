@@ -111,7 +111,7 @@ Em seguida vem "VOCÊ ENVELHECE. **MAS SUA PELE NÃO PRECISA TE ACOMPANHAR!**", 
 
 Em seguida vem "SUA FÓRMULA **PERSONALIZADA**": os 12 ativos do quiz em cartões curtos, cada um com a bolinha, o
 nome, o que o ativo faz em uma linha, a pergunta, o que a pessoa respondeu e uma frase breve de por que aquele ativo é bom
-para a resposta dela. Aparecem 6 ativos, e os outros 6 abrem no botão "Ver os outros 6 ativos". Os nomes e as imagens vêm
+para a resposta dela. Aparecem 5 ativos, e os outros 7 abrem no botão "Ver os outros 7 ativos". No fim, o botão preto "Quero minha fórmula" (com ondas de sombra saindo dele) leva até os planos. Os nomes e as imagens vêm
 do `quiz-perguntas.js`; os textos ficam em `assets/js/oferta-formula.js` (uma frase para cada resposta possível). Se a
 pessoa abrir a oferta sem ter feito o quiz, aparece só o que cada ativo faz.
 

@@ -1303,8 +1303,8 @@
 /* ---------- Dobra 7: sua fórmula personalizada ---------- */
 .oferta-formula {
   position: relative;
-  margin: 10px calc(-1 * var(--gutter)) 0;
-  padding: 44px var(--gutter) 10px;
+  margin: 4px calc(-1 * var(--gutter)) 0;
+  padding: 34px var(--gutter) 14px;
   background:
     radial-gradient(ellipse 80% 22% at 50% 0%, rgba(177, 198, 221, 0.28), transparent 75%),
     linear-gradient(180deg, rgba(241, 245, 250, 0) 0%, #f3f6fa 18%, #f3f6fa 82%, rgba(243, 246, 250, 0) 100%);
@@ -1333,8 +1333,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .fp-bolinhas {
@@ -1343,8 +1343,8 @@
 }
 
 .fp-mini {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   margin-left: -8px;
   overflow: hidden;
   border: 2px solid var(--white);
@@ -1370,7 +1370,7 @@
 .fp-resumo {
   margin: 0;
   color: #6b6f75;
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
 }
 
@@ -1378,23 +1378,23 @@
 .fp-lista {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 24px 0 0;
+  gap: 9px;
+  margin: 18px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .fp-extra .fp-lista {
-  margin-top: 12px;
+  margin-top: 9px;
 }
 
 .fp-item {
   display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: 14px;
-  padding: 16px 16px 16px 14px;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
+  padding: 12px 14px 13px 12px;
   border: 1px solid #e6ecf2;
-  border-radius: 20px;
+  border-radius: 18px;
   background: var(--white);
   box-shadow: 0 6px 18px rgba(120, 152, 190, 0.12);
   opacity: 0;
@@ -1409,8 +1409,8 @@
 }
 
 .fp-bolha {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   overflow: hidden;
   border: 2px solid var(--white);
   border-radius: 50%;
@@ -1439,7 +1439,7 @@
   margin: 0;
   color: var(--black);
   font-family: var(--font-condensed);
-  font-size: 20px;
+  font-size: 18.5px;
   font-weight: 700;
   line-height: 1.1;
 }
@@ -1454,31 +1454,31 @@
 }
 
 .fp-beneficio {
-  margin: 3px 0 0;
+  margin: 2px 0 0;
   color: #3d3d3d;
-  font-size: 14.5px;
-  line-height: 1.35;
+  font-size: 13.5px;
+  line-height: 1.32;
 }
 
 /* Pergunta, resposta da pessoa e o porquê */
 .fp-resposta {
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid #edf1f5;
 }
 
 .fp-pergunta {
   display: block;
   color: #9a9ea4;
-  font-size: 12px;
-  line-height: 1.3;
+  font-size: 11.5px;
+  line-height: 1.28;
 }
 
 .fp-valor {
-  margin: 3px 0 0;
+  margin: 2px 0 0;
   color: #7a7e84;
-  font-size: 14px;
-  line-height: 1.35;
+  font-size: 13px;
+  line-height: 1.32;
 }
 
 .fp-valor em {
@@ -1487,12 +1487,12 @@
 
 .fp-porque {
   position: relative;
-  margin: 6px 0 0;
-  padding-left: 14px;
+  margin: 5px 0 0;
+  padding-left: 12px;
   color: #1f1f1f;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.32;
 }
 
 .fp-porque::before {
@@ -1527,8 +1527,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 8px auto 0;
-  padding: 12px 22px;
+  margin: 4px auto 0;
+  padding: 10px 20px;
   border: 1.5px solid #c9d7e7;
   border-radius: 999px;
   background: var(--white);
@@ -1563,7 +1563,47 @@
 }
 
 .fp-comprar {
-  margin-top: 26px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  margin: 24px 14px 8px;
+  border-radius: 999px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 21px;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+/* O botão fica parado; duas "ondas" de sombra sólida, sem desfoque, saem
+   dele uma depois da outra e somem. */
+.fp-comprar::before,
+.fp-comprar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  animation: fp-onda 2.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+}
+
+.fp-comprar::after {
+  animation-delay: 1.2s;
+}
+
+@keyframes fp-onda {
+  0% { box-shadow: 0 0 0 0 rgba(120, 152, 192, 0.85); }
+  55% { box-shadow: 0 0 0 11px rgba(120, 152, 192, 0.35); }
+  85%, 100% { box-shadow: 0 0 0 16px rgba(120, 152, 192, 0); }
+}
+
+.fp-comprar:active {
+  transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1590,6 +1630,11 @@
   .fp-item,
   .fp-extra {
     transition: none;
+  }
+
+  .fp-comprar::before,
+  .fp-comprar::after {
+    animation: none;
   }
 
   .fp-mini {

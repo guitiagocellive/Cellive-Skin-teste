@@ -112,7 +112,7 @@
     },
   };
 
-  var VISIVEIS = 6; // quantos ativos aparecem antes do botão "Ver mais"
+  var VISIVEIS = 5; // quantos ativos aparecem antes do botão "Ver mais"
 
   var lista = document.querySelector("[data-formula-lista]");
   var extra = document.querySelector("[data-formula-extra]");
