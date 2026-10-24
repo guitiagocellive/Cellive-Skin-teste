@@ -51,10 +51,10 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.webp` | ✅ já colocada |
 | FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.webp` | ✅ já colocada |
 | Imagem do carregamento (quiz) | `assets/img/carregamento.jpg` | 1404 × 880 px (provisória, recortada do layout) |
-| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.webp` | ✅ já colocada (2:3) |
-| Idade: Entre 25 - 35 anos | `assets/img/quiz/idade-25-35.webp` | ✅ já colocada (2:3) |
-| Idade: Entre 35 - 40 anos | `assets/img/quiz/idade-35-40.webp` | ✅ já colocada (2:3) |
-| Idade: +40 anos | `assets/img/quiz/idade-40-mais.webp` | ✅ já colocada (2:3) |
+| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.webp` | ✅ já colocada (1:1) |
+| Idade: Entre 25 - 35 anos | `assets/img/quiz/idade-25-35.webp` | ✅ já colocada (1:1) |
+| Idade: Entre 35 - 40 anos | `assets/img/quiz/idade-35-40.webp` | ✅ já colocada (1:1) |
+| Idade: +40 anos | `assets/img/quiz/idade-40-mais.webp` | ✅ já colocada (1:1) |
 | Ativo: Ácido Hialurônico (bolinha) | `assets/img/ativos/acido-hialuronico.jpg` | ✅ já colocada |
 | Ativo: PDRN (bolinha) | `assets/img/ativos/pdrn.jpg` | ✅ já colocada |
 | Pergunta 3 (exemplo): Você já pensou em fazer botox ou peeling? | `assets/img/quiz/botox-peeling.webp` | ✅ já colocada (3:2) |

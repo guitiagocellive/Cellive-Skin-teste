@@ -75,7 +75,7 @@ window.QUIZ_FLUXO = [
         tipo: "B",
         titulo: "Qual é sua idade?",
         subtitulo: "Vamos separar os melhores ativos conforme suas escolhas",
-        formato: "retrato", // fotos em 2:3
+        formato: "quadrado", // fotos 1:1, rótulo em duas linhas
         opcoes: [
           { texto: "Entre 18 - 25 anos", imagem: "assets/img/quiz/idade-18-25.webp" },
           { texto: "Entre 25 - 35 anos", imagem: "assets/img/quiz/idade-25-35.webp" },
