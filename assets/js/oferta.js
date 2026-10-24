@@ -135,29 +135,6 @@
     Array.prototype.forEach.call(aparecer, function (el) { el.classList.add("is-visivel"); });
   }
 
-  /* ---------- Embalagens desfocadas que "deitam" com a rolagem ----------
-     --p vai de 0 (a dobra ainda está entrando por baixo) a 1 (dobra no lugar,
-     embalagens na posição final). */
-  var conheca = document.querySelector("[data-conheca]");
-  var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (conheca && !semMovimento) {
-    var pedido = 0;
-    var atualizarConheca = function () {
-      pedido = 0;
-      var alto = window.innerHeight;
-      // Começa quando a dobra já entrou um quarto na tela (antes disso as
-      // embalagens estão escondidas) e termina com ela perto do topo.
-      var p = (alto * 0.75 - conheca.getBoundingClientRect().top) / (alto * 0.6);
-      p = Math.min(1, Math.max(0, p));
-      p = 1 - Math.pow(1 - p, 2); // desacelera no final
-      conheca.style.setProperty("--p", p.toFixed(3));
-    };
-    var pedirConheca = function () { if (!pedido) pedido = requestAnimationFrame(atualizarConheca); };
-    window.addEventListener("scroll", pedirConheca, { passive: true });
-    window.addEventListener("resize", pedirConheca);
-    atualizarConheca();
-  }
-
   /* ---------- Barra de compra fixa ----------
      Aparece depois que a pessoa passa do botão "Comprar Agora" e some quando
      ela volta para os planos. O botão leva até a escolha do plano. */

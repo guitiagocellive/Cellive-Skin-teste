@@ -87,7 +87,6 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 | Oferta: caixa e frasco (dobra "Conheça o Sérum") | `assets/img/oferta/caixa.webp`, `frasco.webp` | ✅ já colocadas (fundo transparente) |
-| Oferta: embalagens desfocadas das laterais | `assets/img/oferta/caixa-desfocada.webp`, `frasco-desfocado.webp` | ✅ já colocadas (desfoque já aplicado na imagem) |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
@@ -108,9 +107,7 @@ textos dos depoimentos ou respostas das dúvidas, edite direto o `oferta.html`. 
 "Comprar Agora", aparece uma barra fixa no rodapé com o botão "Comprar", que leva de volta à escolha do plano.
 
 Em seguida vem "VOCÊ ENVELHECE. **MAS SUA PELE NÃO PRECISA TE ACOMPANHAR!**", com degradê azul no fundo e etiquetas
-(rugas, linhas finas…) flutuando de leve. Depois, "CONHEÇA O **SÉRUM REVITALIZADOR**": o frasco e as duas caixas entram
-quando aparecem na tela, e as embalagens desfocadas das laterais vão "deitando" conforme a página rola, até parar na
-posição final.
+(rugas, linhas finas…) flutuando de leve. Depois, "CONHEÇA O **SÉRUM REVITALIZADOR**": quando a dobra aparece, a luz azul acende atrás do produto, o frasco sobe e as duas caixas se abrem de trás dele; depois o conjunto flutua de leve.
 
 ## Fonte (Acumin Pro)
 

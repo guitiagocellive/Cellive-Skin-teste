@@ -1032,9 +1032,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 480px;
+  min-height: 440px;
   margin: 30px calc(-1 * var(--gutter)) 0;
-  padding: 0 var(--gutter) 40px;
+  padding: 0 var(--gutter) 10px;
   background:
     radial-gradient(ellipse 62% 30% at 50% 45%, rgba(177, 198, 221, 0.5), rgba(177, 198, 221, 0.18) 55%, transparent 80%);
 }
@@ -1111,57 +1111,13 @@
    referência, em proporção da tela (no máximo a largura da página). */
 .oferta-conheca {
   --u: min(calc(100vw / 739), calc(var(--page-max) / 739));
-  --p: 1; /* andamento da rolagem (0 → 1), controlado pelo oferta.js */
   position: relative;
   margin: 0 calc(-1 * var(--gutter));
   padding: 0 0 calc(60 * var(--u));
   overflow-x: clip;
-  background:
-    radial-gradient(ellipse 40% 26% at 0% 52%, rgba(177, 198, 221, 0.3), transparent 70%),
-    radial-gradient(ellipse 40% 30% at 100% 42%, rgba(177, 198, 221, 0.3), transparent 70%);
-}
-
-/* Embalagens desfocadas (o desfoque já vem na imagem, para pesar pouco).
-   Ficam só nas bordas; com --p = 0 estão fora da tela e em pé, e com --p = 1
-   chegam deitadas na posição da referência. */
-.conheca-desfoque {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.desfocada {
-  position: absolute;
-  max-width: none;
-  will-change: transform;
-  transform:
-    translate(-50%, -50%)
-    translateX(calc((1 - var(--p)) * var(--fora)))
-    rotate(calc(var(--giro) * var(--p)))
-    scaleX(var(--espelho, 1));
-}
-
-.desfocada-caixa {
-  --fora: calc(300 * var(--u));
-  --giro: 11deg;
-  left: calc(799 * var(--u));
-  top: calc(305 * var(--u));
-  width: calc(284 * var(--u));
-  height: calc(585 * var(--u));
-}
-
-/* Frasco espelhado, com a parte de baixo sumindo antes do texto */
-.desfocada-frasco {
-  --fora: calc(-300 * var(--u));
-  --giro: 15deg;
-  --espelho: -1;
-  left: calc(62 * var(--u));
-  top: calc(640 * var(--u));
-  width: calc(239 * var(--u));
-  height: calc(706 * var(--u));
-  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 76%);
-  mask-image: linear-gradient(to bottom, #000 45%, transparent 76%);
+  /* degradê suave: começa branco (emenda sem corte na dobra anterior),
+     fica azul claro atrás do produto e volta ao branco no texto */
+  background: linear-gradient(180deg, rgba(177, 198, 221, 0) 0%, rgba(177, 198, 221, 0.22) 28%, rgba(177, 198, 221, 0.1) 55%, rgba(177, 198, 221, 0) 78%);
 }
 
 /* Composição do produto */
@@ -1171,15 +1127,42 @@
   height: calc(470 * var(--u));
 }
 
-.conheca-palco::before {
-  content: "";
+/* Luz azul atrás do produto */
+.palco-luz {
   position: absolute;
-  left: 50%;
-  top: 55%;
-  width: calc(640 * var(--u));
+  left: calc(380 * var(--u));
+  top: calc(270 * var(--u));
+  width: calc(620 * var(--u));
   height: calc(560 * var(--u));
-  transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, #fff 55%, rgba(255, 255, 255, 0));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(177, 198, 221, 0.75), rgba(177, 198, 221, 0.32) 55%, rgba(177, 198, 221, 0));
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  transition: opacity 1s ease, transform 1.4s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+/* Sombra suave no "chão", embaixo do produto */
+.palco-chao {
+  position: absolute;
+  left: calc(372 * var(--u));
+  top: calc(470 * var(--u));
+  width: calc(400 * var(--u));
+  height: calc(46 * var(--u));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(70, 95, 130, 0.28), rgba(70, 95, 130, 0));
+  transform: translate(-50%, -50%) scaleX(0.4);
+  opacity: 0;
+  transition: opacity 0.8s ease 0.3s, transform 1s cubic-bezier(0.25, 0.8, 0.3, 1) 0.3s;
+}
+
+.conheca-palco.is-visivel .palco-luz {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.conheca-palco.is-visivel .palco-chao {
+  opacity: 1;
+  transform: translate(-50%, -50%) scaleX(1);
 }
 
 .palco-caixa,
@@ -1187,22 +1170,21 @@
   position: absolute;
   max-width: none;
   opacity: 0;
-  translate: var(--dx, 0) calc(30 * var(--u));
   transition:
-    opacity 0.7s ease var(--atraso, 0s),
-    translate 0.9s cubic-bezier(0.25, 0.8, 0.3, 1) var(--atraso, 0s),
-    transform 0.9s cubic-bezier(0.25, 0.8, 0.3, 1) var(--atraso, 0s);
+    opacity 0.6s ease var(--atraso, 0s),
+    translate 1s cubic-bezier(0.22, 1, 0.36, 1) var(--atraso, 0s),
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1) var(--atraso, 0s);
 }
 
 .palco-caixa {
-  width: calc(176 * var(--u));
-  height: calc(380 * var(--u));
+  /* começam escondidas atrás do frasco */
+  translate: var(--dx) calc(20 * var(--u));
 }
 
 /* Caixa da esquerda: bordas retas e texto subindo para a direita, como na foto */
 .palco-caixa-esq {
-  --dx: calc(110 * var(--u));
-  --atraso: 0.25s;
+  --dx: calc(120 * var(--u));
+  --atraso: 0.45s;
   left: calc(162 * var(--u));
   top: calc(78 * var(--u));
   width: calc(184 * var(--u));
@@ -1212,8 +1194,8 @@
 }
 
 .palco-caixa-dir {
-  --dx: calc(-90 * var(--u));
-  --atraso: 0.35s;
+  --dx: calc(-100 * var(--u));
+  --atraso: 0.55s;
   left: calc(440 * var(--u));
   top: calc(253 * var(--u));
   width: calc(180 * var(--u));
@@ -1221,14 +1203,17 @@
   transform: translate(-50%, -50%) rotate(0deg);
 }
 
+/* Frasco: sobe primeiro */
 .palco-frasco {
+  --atraso: 0.15s;
   z-index: 1;
   left: calc(382 * var(--u));
   top: calc(278 * var(--u));
   width: calc(117 * var(--u));
   height: calc(380 * var(--u));
+  translate: 0 calc(60 * var(--u));
   transform: translate(-50%, -50%) rotate(0deg);
-  filter: drop-shadow(0 calc(10 * var(--u)) calc(14 * var(--u)) rgba(90, 110, 140, 0.18));
+  filter: drop-shadow(0 calc(10 * var(--u)) calc(14 * var(--u)) rgba(90, 110, 140, 0.2));
 }
 
 .conheca-palco.is-visivel > img {
@@ -1246,6 +1231,16 @@
 
 .conheca-palco.is-visivel .palco-frasco {
   transform: translate(-50%, -50%) rotate(2deg);
+}
+
+/* Depois da chegada, o conjunto flutua bem de leve */
+.conheca-palco.is-visivel {
+  animation: palco-flutua 4.5s ease-in-out 1.6s infinite alternate;
+}
+
+@keyframes palco-flutua {
+  from { translate: 0 0; }
+  to { translate: 0 calc(-10 * var(--u)); }
 }
 
 .conheca-titulo {
@@ -1313,11 +1308,14 @@
   .barra-compra,
   .sinal,
   .palco-caixa,
-  .palco-frasco {
+  .palco-frasco,
+  .palco-luz,
+  .palco-chao {
     transition: none;
   }
 
-  .sinal {
+  .sinal,
+  .conheca-palco.is-visivel {
     animation: none;
   }
 }
