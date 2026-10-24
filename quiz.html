@@ -13,16 +13,32 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <!-- Página provisória: será substituída pelas perguntas do quiz na próxima etapa. -->
-  <main class="landing">
-    <a class="brand" href="./" aria-label="Cellive Skin">
-      <img src="assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
-    </a>
-    <div class="spacer-top" aria-hidden="true"></div>
-    <h1 class="hero-title">O quiz está <span class="highlight">QUASE PRONTO</span></h1>
-    <p class="hero-subtitle">As perguntas entram na próxima etapa.</p>
-    <div class="spacer-bottom" aria-hidden="true"></div>
-    <p class="legal-note"><a href="./">← Voltar para a página inicial</a></p>
+  <main class="quiz">
+
+    <header class="quiz-top">
+      <button class="quiz-back" type="button" aria-label="Voltar" data-back>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <a class="brand" href="./" aria-label="Cellive Skin">
+        <img src="assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
+      </a>
+    </header>
+
+    <!-- Progresso: 1, 2, 3 -->
+    <ol class="stepper" data-stepper></ol>
+
+    <!-- Pergunta atual (montada pelo assets/js/quiz.js) -->
+    <section class="quiz-screen" data-screen aria-live="polite"></section>
+
+    <noscript>
+      <p class="quiz-note">Para responder ao quiz, ative o JavaScript do seu navegador.</p>
+    </noscript>
+
   </main>
+
+  <script src="assets/js/quiz-perguntas.js"></script>
+  <script src="assets/js/quiz.js"></script>
 </body>
 </html>

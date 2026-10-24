@@ -150,42 +150,35 @@ a {
 
 /* Título */
 .hero-title {
-  max-width: 372px;
+  max-width: 350px;
   margin: 0 auto;
   font-family: var(--font);
-  font-size: clamp(25px, 7.55vw, 31px);
+  font-size: clamp(27px, 8.35vw, 34.4px);
   font-weight: 700;
-  line-height: 1.16;
+  line-height: 1.08;
   letter-spacing: -0.005em;
   color: var(--black);
 }
 
-/* Destaque em "NOVA FASE": sublinhado em pincel azul, que se desenha
-   da esquerda para a direita quando a página abre. */
 .highlight {
   position: relative;
-  z-index: 0;
   display: inline-block;
-  font-weight: 800;
-  white-space: nowrap;
+  z-index: 0;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.highlight::after {
+/* Marca-texto azul atrás de "NOVA FASE" */
+.highlight::before {
   content: "";
   position: absolute;
   z-index: -1;
-  left: -4%;
-  right: -4%;
-  bottom: -0.26em;
-  height: 0.4em;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'%3E%3Cpath d='M3 10C60 2 135 0 197 4c3 3 1 8-4 9C131 11 71 14 10 19c-6 1-10-7-7-9Z' fill='%2387a6cc'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-  clip-path: inset(0 0 0 0);
-  animation: underline-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
-}
-
-@keyframes underline-draw {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 0 0 0); }
+  left: 0.2em;
+  right: -0.1em;
+  top: 0.5em;
+  bottom: -0.03em;
+  background: var(--blue);
 }
 
 /* Subtítulo */
@@ -256,8 +249,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cta,
-  .highlight::after {
+  .cta {
     animation: none;
   }
 }
@@ -400,6 +392,266 @@ a {
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
+}
+
+/* ==========================================================================
+   Quiz
+   Medidas tiradas do layout de referência (celular de 412px de largura).
+   ========================================================================== */
+.quiz {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: var(--page-max);
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 47px 16px max(32px, calc(env(safe-area-inset-bottom) + 20px));
+  text-align: center;
+}
+
+/* Logo centralizada com o botão de voltar à esquerda */
+.quiz-top {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.quiz-back {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-top: -20px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #7c7e80;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.quiz-back svg {
+  width: 22px;
+  height: 22px;
+}
+
+.quiz-back:hover {
+  background: #f2f4f7;
+}
+
+.quiz-back:active {
+  transform: scale(0.92);
+}
+
+.quiz-back:focus-visible {
+  outline: 3px solid #7f9cc0;
+  outline-offset: 2px;
+}
+
+/* Progresso 1 · 2 · 3 */
+.stepper {
+  display: flex;
+  gap: 13px;
+  margin: 28px 0 0;
+  padding: 4px 8px;
+  list-style: none;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 0 22px rgba(0, 0, 0, 0.07);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding-bottom: 2px;
+  border-radius: 50%;
+  color: #7c7e80;
+  font-family: var(--font-condensed);
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 0.35s ease, color 0.35s ease, transform 0.35s ease;
+}
+
+.step.is-done {
+  background: #dfe1e5;
+  color: var(--white);
+}
+
+.step.is-current {
+  background: var(--blue);
+  color: var(--white);
+  animation: step-pop 0.4s ease;
+}
+
+@keyframes step-pop {
+  0% { transform: scale(0.85); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* Pergunta */
+.quiz-screen {
+  width: 100%;
+}
+
+.quiz-title {
+  max-width: 310px;
+  margin: 36px auto 0;
+  font-size: 24.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--black);
+}
+
+.quiz-note {
+  margin: 14px auto 0;
+  max-width: 320px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.3;
+  color: var(--gray-text);
+}
+
+/* Opções de resposta */
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 21px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 53px;
+  padding: 11px 20px 11px 22px;
+  border: 1.5px solid transparent;
+  border-radius: 27px;
+  background: var(--white);
+  box-shadow: 0 2px 11px rgba(0, 0, 0, 0.07);
+  color: var(--gray-dark);
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  animation: option-in 0.38s ease both;
+  animation-delay: calc(var(--i, 0) * 60ms + 90ms);
+}
+
+.quiz-option:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-option:active {
+  transform: scale(0.98);
+}
+
+.quiz-option:focus-visible {
+  outline: 3px solid #7f9cc0;
+  outline-offset: 2px;
+}
+
+.quiz-radio {
+  position: relative;
+  flex-shrink: 0;
+  width: 21px;
+  height: 21px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
+  transition: border-color 0.2s ease;
+}
+
+.quiz-radio::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--blue);
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+/* Opção escolhida */
+.quiz-option.is-selected {
+  border-color: var(--blue);
+  color: var(--black);
+  box-shadow: 0 2px 14px var(--blue-glow);
+}
+
+.quiz-option.is-selected .quiz-radio {
+  border-color: var(--blue);
+}
+
+.quiz-option.is-selected .quiz-radio::after {
+  transform: scale(1);
+}
+
+/* Troca de pergunta: sai para um lado e entra pelo outro */
+.quiz-screen.is-leaving {
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: opacity 0.17s ease, transform 0.17s ease;
+}
+
+.quiz-screen.is-leaving-back {
+  opacity: 0;
+  transform: translateX(18px);
+  transition: opacity 0.17s ease, transform 0.17s ease;
+}
+
+.quiz-screen.enter-forward .quiz-title {
+  animation: quiz-in-forward 0.32s ease both;
+}
+
+.quiz-screen.enter-back .quiz-title {
+  animation: quiz-in-back 0.32s ease both;
+}
+
+@keyframes quiz-in-forward {
+  from { opacity: 0; transform: translateX(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes quiz-in-back {
+  from { opacity: 0; transform: translateX(-22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes option-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step.is-current,
+  .quiz-option,
+  .quiz-screen.enter-forward .quiz-title,
+  .quiz-screen.enter-back .quiz-title {
+    animation: none;
+  }
+
+  .quiz-screen.is-leaving,
+  .quiz-screen.is-leaving-back {
+    transform: none;
+  }
 }
 
 /* ==========================================================================

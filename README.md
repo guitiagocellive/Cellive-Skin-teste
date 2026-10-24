@@ -14,8 +14,14 @@ para o ar (README, configurações e a pasta `.git`).
 | --- | --- |
 | `index.html` | Capa do quiz (primeira página) |
 | `politica-de-privacidade.html` | Política de Privacidade (LGPD) |
-| `quiz.html` | Provisória. Vira o quiz na próxima etapa |
+| `quiz.html` | Quiz: uma pergunta por vez, com progresso 1 · 2 · 3 e botão de voltar |
 | `404.html` | Página de "não encontrada" |
+
+## Perguntas do quiz
+
+Os textos das perguntas e respostas ficam em `assets/js/quiz-perguntas.js`. Para mudar um texto,
+basta editar esse arquivo. As respostas da pessoa ficam guardadas no navegador durante a visita
+(sessionStorage), para serem usadas no resultado.
 
 ## Espaços de imagem
 
