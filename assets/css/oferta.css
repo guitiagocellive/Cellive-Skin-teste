@@ -1181,17 +1181,17 @@
   translate: var(--dx) calc(20 * var(--u));
 }
 
-/* Caixa da esquerda: bordas retas e texto subindo para a direita, como na foto */
+/* Caixa da esquerda: inclinada 11° para a esquerda, como na foto */
 .palco-caixa-esq {
   --dx: calc(120 * var(--u));
   --atraso: 0.45s;
   z-index: 1; /* na frente da caixa da direita */
-  left: calc(162 * var(--u));
-  top: calc(78 * var(--u));
-  width: calc(195 * var(--u));
-  height: calc(422 * var(--u));
+  left: calc(158 * var(--u));
+  top: calc(68 * var(--u));
+  width: calc(194 * var(--u));
+  height: calc(419 * var(--u));
   transform-origin: left top;
-  transform: skewY(0deg);
+  transform: rotate(0deg);
 }
 
 .palco-caixa-dir {
@@ -1224,7 +1224,7 @@
 }
 
 .conheca-palco.is-visivel .palco-caixa-esq {
-  transform: skewY(-12deg);
+  transform: rotate(-11deg);
 }
 
 .conheca-palco.is-visivel .palco-caixa-dir {
