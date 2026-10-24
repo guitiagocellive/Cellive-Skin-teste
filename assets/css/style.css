@@ -154,25 +154,13 @@ a {
   color: var(--black);
 }
 
+/* Destaque em "NOVA FASE": versão condensada, mais grossa e um pouco maior
+   que o resto do título, na mesma cor. */
 .highlight {
-  position: relative;
-  display: inline-block;
-  z-index: 0;
   font-family: var(--font-condensed);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-/* Marca-texto azul atrás de "NOVA FASE" */
-.highlight::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 0.2em;
-  right: -0.1em;
-  top: 0.5em;
-  bottom: -0.03em;
-  background: var(--blue);
+  font-size: 1.1em;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 
 /* Subtítulo */
@@ -415,10 +403,6 @@ a {
   font-weight: 700;
   line-height: 1.1;
   color: var(--black);
-}
-
-.doc h1 .highlight {
-  font-size: 1.05em;
 }
 
 .doc-updated {
