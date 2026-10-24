@@ -21,9 +21,9 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | FOTO 1 (rosto 1, prova social) | `assets/img/foto-1.jpg` | quadrada, 200 × 200 px |
 | FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.jpg` | quadrada, 200 × 200 px |
 | FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.jpg` | quadrada, 200 × 200 px |
-| BANDEIRA (Coreia do Sul) | `assets/img/bandeira-coreia.png` | 240 × 180 px, fundo transparente |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
+A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de imagem.
 
 ## Fonte (Acumin Pro)
 
@@ -39,5 +39,5 @@ Enquanto o kit não estiver ligado, o site usa a **Archivo** (Google Fonts), que
 
 ## Política de Privacidade
 
-Os trechos em amarelo (`[RAZÃO SOCIAL]`, `[CNPJ]`, `[E-MAIL DE PRIVACIDADE]` etc.) precisam ser preenchidos
-com os dados reais da empresa antes de o site ir ao ar. Vale uma revisão final com um advogado.
+A política é genérica e não traz dados da empresa. O aceite acontece ao clicar em
+“Quero melhorar minha pele”, como informado no rodapé da página inicial.

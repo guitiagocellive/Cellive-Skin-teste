@@ -191,11 +191,16 @@ a {
 
 /* ==========================================================================
    Botão principal
-   Animação discreta: o botão "respira", um anel suave se expande ao redor
-   e um brilho passa pela superfície a cada poucos segundos.
+   Animação discreta: o botão "respira" (pulsa devagar) e afunda de leve
+   ao ser tocado.
    ========================================================================== */
+.cta-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .cta {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,45 +219,9 @@ a {
   text-decoration: none;
   white-space: nowrap;
   box-shadow: 0 2px 14px var(--blue-glow);
-  isolation: isolate;
-  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  animation: cta-breathe 2.8s ease-in-out infinite;
-}
-
-/* Brilho que atravessa o botão */
-.cta::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  left: -60%;
-  width: 45%;
-  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
-  transform: skewX(-18deg);
-  animation: cta-shine 4.2s ease-in-out infinite;
-}
-
-/* Anel que pulsa em volta do botão (fica fora do botão, por isso usa o wrapper) */
-.cta-wrap {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.cta-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: 0 auto;
-  max-width: 368px;
-  border-radius: 999px;
-  box-shadow: 0 0 0 0 var(--blue-glow);
-  animation: cta-ring 2.8s ease-out infinite;
-  pointer-events: none;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  animation: cta-breathe 2.6s ease-in-out infinite;
 }
 
 .cta:hover {
@@ -260,9 +229,11 @@ a {
   box-shadow: 0 4px 22px var(--blue-glow);
 }
 
+/* Afunda de leve ao tocar/clicar */
 .cta:active {
-  transform: scale(0.97);
   animation: none;
+  transform: scale(0.96);
+  box-shadow: 0 1px 6px var(--blue-glow);
 }
 
 .cta:focus-visible {
@@ -272,24 +243,11 @@ a {
 
 @keyframes cta-breathe {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.025); }
-}
-
-@keyframes cta-ring {
-  0% { box-shadow: 0 0 0 0 rgba(177, 198, 221, 0.6); }
-  70% { box-shadow: 0 0 0 12px rgba(177, 198, 221, 0); }
-  100% { box-shadow: 0 0 0 12px rgba(177, 198, 221, 0); }
-}
-
-@keyframes cta-shine {
-  0%, 55% { left: -60%; }
-  85%, 100% { left: 130%; }
+  50% { transform: scale(1.035); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cta,
-  .cta::after,
-  .cta-wrap::before {
+  .cta {
     animation: none;
   }
 }
@@ -302,21 +260,21 @@ a {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px 15px;
+  gap: 6px clamp(8px, 3.4vw, 15px);
   margin: 12px 0 0;
   padding: 0;
   list-style: none;
   color: var(--gray-soft);
-  font-size: clamp(11px, 3.4vw, 13.5px);
+  font-size: clamp(10.5px, 3.25vw, 13.5px);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .facts li {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: clamp(4px, 1.6vw, 7px);
 }
 
 .facts svg {
@@ -397,10 +355,10 @@ a {
   margin-top: 58px;
 }
 
-.origin .slot {
-  width: 40px;
-  height: 30px;
-  border-radius: 3px;
+.origin .flag {
+  flex-shrink: 0;
+  width: 42px;
+  height: 33px;
 }
 
 .origin p {
@@ -521,15 +479,6 @@ a {
   columns: 2 220px;
   column-gap: 24px;
   font-size: 14px;
-}
-
-/* Campos que a empresa precisa preencher (ex.: CNPJ). */
-.fill {
-  padding: 0 4px;
-  border-radius: 3px;
-  background: #fff3c4;
-  color: #6b5200;
-  font-weight: 600;
 }
 
 .doc-back {
