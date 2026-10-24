@@ -392,6 +392,34 @@
       </p>
     </section>
 
+    <!-- ===================== DOBRA 7: sua fórmula personalizada =====================
+         Montada pelo assets/js/oferta-formula.js com as respostas do quiz. -->
+    <section class="oferta-formula" aria-labelledby="fp-titulo">
+      <p class="fp-selo">Feita a partir do seu quiz</p>
+      <h2 class="secao-titulo fp-titulo" id="fp-titulo">
+        <span class="titulo-leve">Sua fórmula</span>
+        <strong>personalizada</strong>
+      </h2>
+      <div class="fp-topo">
+        <div class="fp-bolinhas" data-formula-bolinhas aria-hidden="true"></div>
+        <p class="fp-resumo" data-formula-resumo>12 ativos que trabalham juntos na sua pele</p>
+      </div>
+
+      <ol class="fp-lista" data-formula-lista></ol>
+      <div class="fp-extra" data-formula-extra id="fp-extra">
+        <div class="fp-extra-dentro">
+          <ol class="fp-lista" start="7"></ol>
+        </div>
+      </div>
+
+      <button type="button" class="fp-mais" data-formula-mais aria-expanded="false" aria-controls="fp-extra">
+        <span>Ver os outros 6 ativos</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+
+      <a class="comprar fp-comprar" href="#planos" data-ir-planos>Quero minha fórmula</a>
+    </section>
+
   </main>
 
   <!-- Barra de compra fixa: aparece depois que a pessoa passa do botão "Comprar Agora" -->
@@ -402,5 +430,7 @@
   </div>
 
   <script src="assets/js/oferta.js"></script>
+  <script src="assets/js/quiz-perguntas.js"></script>
+  <script src="assets/js/oferta-formula.js"></script>
 </body>
 </html>
