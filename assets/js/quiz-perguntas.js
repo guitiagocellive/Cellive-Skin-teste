@@ -176,7 +176,7 @@ window.QUIZ_FLUXO = [
         id: "espelho",
         tipo: "C",
         titulo: "Quando você se olha no espelho sem maquiagem, como sente sua pele?",
-        imagem: "assets/img/quiz/espelho.jpg",
+        imagem: "assets/img/quiz/espelho.webp",
         opcoes: [
           "Sinto que perdi minha autoestima.",
           "Sinto que minha pele está envelhecida.",
@@ -201,7 +201,7 @@ window.QUIZ_FLUXO = [
         id: "ativo-rejuvenescimento-2",
         tipo: "C",
         titulo: "Você já utiliza algum ativo específico para rejuvenescimento?",
-        imagem: "assets/img/quiz/rejuvenescimento.jpg",
+        imagem: "assets/img/quiz/rejuvenescimento.webp",
         opcoes: [
           "Sim, uso retinol ou algum retinoide.",
           "Uso séruns anti-idade.",

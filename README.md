@@ -66,8 +66,8 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Pergunta 6: Aspecto envelhecido | `assets/img/quiz/sinal-aspecto-envelhecido.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Manchas | `assets/img/quiz/sinal-manchas.jpg` | quadrada, 300 × 300 px |
 | Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.webp` | ✅ já colocada (3:2) |
-| Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.jpg` | 3:2, 900 × 600 px |
-| Pergunta 11 (exemplo): Você já utiliza algum ativo específico para rejuvenescimento? | `assets/img/quiz/rejuvenescimento.jpg` | 3:2, 900 × 600 px |
+| Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.webp` | ✅ já colocada (3:2) |
+| Pergunta 11 (exemplo): Você já utiliza algum ativo específico para rejuvenescimento? | `assets/img/quiz/rejuvenescimento.webp` | ✅ já colocada (3:2) |
 | Pergunta 12 (exemplo): Você percebe linhas ao redor dos olhos quando sorri? | `assets/img/quiz/linhas-olhos.jpg` | 3:2, 900 × 600 px |
 | Ativo: GHK-Cu (bolinha) | `assets/img/ativos/ghk-cu.jpg` | ✅ já colocada |
 | Ativo: Acetyl Hexapeptide-8 (bolinha) | `assets/img/ativos/acetyl-hexapeptide-8.jpg` | ✅ já colocada |
