@@ -86,6 +86,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | ✅ já colocada |
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
+| Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
 A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de imagem.
@@ -98,6 +99,11 @@ redesenhado a partir da imagem de referência.
 link de checkout de cada plano ficam nos atributos `data-` de cada plano no próprio `oferta.html`
 (`data-resumo`, `data-parcela`, `data-avista` e `data-link`). A contagem regressiva começa em 3h37m45s e continua
 de onde parou se a pessoa recarregar a página.
+
+Depois dos planos vêm os **depoimentos** ("AMADO POR **+5.000 MULHERES**", com o traço azul que se desenha em volta),
+num carrossel que a pessoa arrasta para o lado, e as **principais dúvidas**, que abrem uma por vez. Para mudar nomes,
+textos dos depoimentos ou respostas das dúvidas, edite direto o `oferta.html`. Depois que a pessoa passa do botão
+"Comprar Agora", aparece uma barra fixa no rodapé com o botão "Comprar", que leva de volta à escolha do plano.
 
 ## Fonte (Acumin Pro)
 

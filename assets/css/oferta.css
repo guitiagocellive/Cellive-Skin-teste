@@ -645,8 +645,391 @@
   stroke-linejoin: round;
 }
 
+/* Âncora dos planos não fica escondida atrás do logo fixo */
+#planos {
+  scroll-margin-top: 64px;
+}
+
+/* ---------- Dobra 3: depoimentos ---------- */
+.oferta-depoimentos {
+  margin-top: 60px;
+}
+
+/* Palavra circulada à mão (o traço se desenha ao aparecer na tela) */
+.circulado {
+  position: relative;
+  display: inline-block;
+  padding: 0 2px;
+  white-space: nowrap;
+}
+
+.circulado svg {
+  position: absolute;
+  top: -58%;
+  left: -8%;
+  width: 116%;
+  height: 216%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.circulado path {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.55, 0.1, 0.3, 1) 0.15s;
+}
+
+.circulado.is-visivel path {
+  stroke-dashoffset: 0;
+}
+
+/* Carrossel: arrasta para o lado, o próximo cartão aparece na borda */
+.depos {
+  display: flex;
+  gap: 16px;
+  margin: 34px calc(-1 * var(--gutter)) 0;
+  padding: 6px var(--gutter) 26px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 var(--gutter);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+}
+
+.depos::-webkit-scrollbar {
+  display: none;
+}
+
+.depo {
+  flex: 0 0 81%;
+  overflow: hidden;
+  border-radius: 30px;
+  background: var(--white);
+  box-shadow: 0 6px 22px rgba(120, 152, 190, 0.28);
+  scroll-snap-align: start;
+}
+
+.depo-foto {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 6 / 5;
+  border-radius: 30px;
+  font-size: 10px;
+}
+
+.depo-corpo {
+  padding: 16px 20px 22px;
+}
+
+.depo-topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.depo-nome {
+  position: relative;
+  margin: 0;
+  padding-bottom: 8px;
+  color: var(--black);
+  font-family: var(--font-condensed);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.depo-nome::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: #e4e6e9;
+}
+
+.depo-topo .estrelas {
+  flex: none;
+  width: 92px;
+  height: 17px;
+  margin-top: 3px;
+}
+
+.depo-verificada {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 14px 0 0;
+  color: #9db3cc;
+  font-family: var(--font-condensed);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.depo-verificada svg {
+  flex: none;
+  width: 19px;
+  height: 19px;
+}
+
+.depo-verificada circle {
+  fill: #6b6f75;
+}
+
+.depo-verificada path {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.depo-texto {
+  margin: 12px 0 0;
+  color: #6b6f75;
+  font-size: 14.5px;
+  line-height: 1.38;
+}
+
+.depos-pontos {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: -6px;
+}
+
+.depos-pontos span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #e1e5ea;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.depos-pontos span.is-ativo {
+  width: 20px;
+  background: var(--blue);
+}
+
+/* ---------- Dobra 4: dúvidas ---------- */
+.oferta-duvidas {
+  margin-top: 50px;
+}
+
+/* Traço azul embaixo de "PRINCIPAIS" */
+.titulo-sublinhado {
+  position: relative;
+}
+
+.titulo-sublinhado::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 72%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--blue);
+}
+
+.faq {
+  margin-top: 24px;
+}
+
+.faq-item {
+  border-bottom: 1.5px solid #e4e6e9;
+}
+
+.faq-item h3 {
+  margin: 0;
+}
+
+.faq-pergunta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 22px 4px 22px 2px;
+  border: 0;
+  background: none;
+  color: var(--black);
+  font-family: var(--font);
+  font-size: clamp(13px, 3.65vw, 15.5px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.faq-seta {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s ease;
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-seta {
+  transform: rotate(180deg);
+}
+
+/* Abre e fecha suave (a altura vai de 0 até o tamanho do texto) */
+.faq-resposta {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.faq-item.is-aberto .faq-resposta {
+  grid-template-rows: 1fr;
+}
+
+.faq-conteudo {
+  overflow: hidden;
+  min-height: 0;
+  color: #7a7e84;
+  font-size: 15px;
+  line-height: 1.38;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.faq-item.is-aberto .faq-conteudo {
+  opacity: 1;
+}
+
+.faq-conteudo ul,
+.faq-conteudo p {
+  margin: 0;
+  padding: 0 2px 20px;
+}
+
+.faq-conteudo ul {
+  list-style: none;
+}
+
+.faq-conteudo li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.faq-conteudo li + li {
+  margin-top: 6px;
+}
+
+.faq-conteudo li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #7a7e84;
+}
+
+.faq-conteudo strong {
+  color: #505050;
+  font-weight: 700;
+}
+
+/* ---------- Barra de compra fixa ---------- */
+.oferta-body {
+  padding-bottom: 104px;
+}
+
+.barra-compra {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: var(--page-max);
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  background: var(--white);
+  box-shadow: 0 -4px 22px rgba(0, 0, 0, 0.08);
+  transform: translate(-50%, 110%);
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.barra-compra.is-visivel {
+  transform: translate(-50%, 0);
+}
+
+.barra-compra-foto {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  font-size: 7px;
+}
+
+.barra-compra-nome {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.barra-compra-botao {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: var(--black);
+  box-shadow: 0 4px 16px var(--blue-glow);
+  color: var(--white);
+  font-size: 21px;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.barra-compra-botao:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 360px) {
+  .barra-compra-nome { font-size: 13.5px; }
+  .barra-compra-botao { padding: 0 20px; font-size: 19px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
+  }
+
+  .circulado path,
+  .faq-resposta,
+  .barra-compra {
+    transition: none;
   }
 }

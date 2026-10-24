@@ -71,4 +71,79 @@
   function rolou() { topo.classList.toggle("is-rolando", window.scrollY > 40); }
   window.addEventListener("scroll", rolou, { passive: true });
   rolou();
+
+  /* ---------- Traço circulando "+5.000 mulheres" ---------- */
+  var circulo = document.querySelector("[data-circulo]");
+  if (circulo && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (itens, obs) {
+      if (itens[0].isIntersecting) {
+        circulo.classList.add("is-visivel");
+        obs.disconnect();
+      }
+    }, { threshold: 0.8 }).observe(circulo);
+  } else if (circulo) {
+    circulo.classList.add("is-visivel");
+  }
+
+  /* ---------- Depoimentos: pontinhos acompanham o cartão da vez ---------- */
+  var depos = document.querySelector("[data-depos]");
+  var pontos = document.querySelector("[data-depos-pontos]");
+  if (depos && pontos) {
+    var cartoes = depos.querySelectorAll(".depo");
+    Array.prototype.forEach.call(cartoes, function () {
+      pontos.appendChild(document.createElement("span"));
+    });
+    var marcarPonto = function () {
+      var passo = cartoes.length > 1 ? cartoes[1].offsetLeft - cartoes[0].offsetLeft : 1;
+      var fimRolagem = depos.scrollWidth - depos.clientWidth;
+      var atual = depos.scrollLeft >= fimRolagem - 2 ? cartoes.length - 1 : Math.round(depos.scrollLeft / passo);
+      Array.prototype.forEach.call(pontos.children, function (p, i) {
+        p.classList.toggle("is-ativo", i === atual);
+      });
+    };
+    depos.addEventListener("scroll", marcarPonto, { passive: true });
+    marcarPonto();
+  }
+
+  /* ---------- Dúvidas: abre uma por vez ---------- */
+  var itensFaq = document.querySelectorAll(".faq-item");
+  Array.prototype.forEach.call(itensFaq, function (item) {
+    var botao = item.querySelector(".faq-pergunta");
+    botao.addEventListener("click", function () {
+      var abrir = !item.classList.contains("is-aberto");
+      Array.prototype.forEach.call(itensFaq, function (outro) {
+        var aberto = abrir && outro === item;
+        outro.classList.toggle("is-aberto", aberto);
+        outro.querySelector(".faq-pergunta").setAttribute("aria-expanded", aberto ? "true" : "false");
+      });
+    });
+  });
+
+  /* ---------- Barra de compra fixa ----------
+     Aparece depois que a pessoa passa do botão "Comprar Agora" e some quando
+     ela volta para os planos. O botão leva até a escolha do plano. */
+  var barra = document.querySelector("[data-barra-compra]");
+  var botaoPlanos = document.querySelector("[data-comprar]");
+  if (barra && botaoPlanos) {
+    var botaoBarra = barra.querySelector(".barra-compra-botao");
+    var barraVisivel = null;
+    // Confere a cada rolagem (um salto direto para o fim da página também conta)
+    var conferirBarra = function () {
+      var mostrar = botaoPlanos.getBoundingClientRect().bottom < 0;
+      if (mostrar === barraVisivel) return;
+      barraVisivel = mostrar;
+      barra.classList.toggle("is-visivel", mostrar);
+      barra.setAttribute("aria-hidden", mostrar ? "false" : "true");
+      botaoBarra.tabIndex = mostrar ? 0 : -1;
+    };
+    window.addEventListener("scroll", conferirBarra, { passive: true });
+    window.addEventListener("resize", conferirBarra);
+    conferirBarra();
+    botaoBarra.addEventListener("click", function (ev) {
+      var planosSecao = document.getElementById("planos");
+      if (!planosSecao) return;
+      ev.preventDefault();
+      planosSecao.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 })();
