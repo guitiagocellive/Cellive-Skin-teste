@@ -87,6 +87,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 | Oferta: caixa e frasco (dobra "Conheça o Sérum") | `assets/img/oferta/caixa.webp`, `frasco.webp` | ✅ já colocadas (fundo transparente) |
+| Oferta: foto das microespículas (ação SRRP) | `assets/img/oferta/srrp-microespiculas.webp` | 400 × 121 px (faixa) |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
@@ -115,9 +116,10 @@ para a resposta dela. Aparecem 5 ativos, e os outros 7 abrem no botão "Ver os o
 do `quiz-perguntas.js`; os textos ficam em `assets/js/oferta-formula.js` (uma frase para cada resposta possível). Se a
 pessoa abrir a oferta sem ter feito o quiz, aparece só o que cada ativo faz.
 
-Depois vem "FÓRMULA COM AÇÃO **SRRP**": a ponteira do frasco entra pela esquerda conforme a página rola e para na
-diagonal ao lado do título. Abaixo, as 4 frentes da ação, cada uma com a letra, o ativo responsável e uma frase:
-Sinalização (GHK-Cu), Renovação (Retinal), Regeneração (PDRN) e Potencialização (microespículas).
+Depois vem "FÓRMULA COM AÇÃO **SRRP**": o frasco entra pela esquerda conforme a página rola e para na diagonal ao lado
+do título, com "CELLIVE SKIN" bem clarinho na vertical ao fundo. Abaixo, a linha do tempo das 4 frentes (Sinalização,
+Renovação, Regeneração e Potencialização): a linha azul vai se preenchendo com a rolagem e cada etapa acende quando a
+linha chega nela, com o cartão do ativo (GHK-Cu, Retinal, PDRN e microespículas).
 
 ## Fonte (Acumin Pro)
 

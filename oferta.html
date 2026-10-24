@@ -419,53 +419,58 @@
       <a class="fp-comprar" href="#planos" data-ir-planos>Quero minha fórmula</a>
     </section>
 
-    <!-- ===================== DOBRA 8: ação SRRP ===================== -->
+    <!-- ===================== DOBRA 8: ação SRRP =====================
+         Medidas copiadas da imagem de referência (739 px de largura). -->
     <section class="oferta-srrp" data-srrp aria-labelledby="srrp-titulo">
-      <!-- Ponteira do frasco: entra pela esquerda conforme a página rola e
-           termina na diagonal -->
-      <img class="srrp-ponteira" src="assets/img/oferta/ponteira.webp" alt="" width="300" height="416" loading="lazy" aria-hidden="true">
+      <!-- Marca d'água "CELLIVE SKIN" na vertical -->
+      <img class="srrp-marca" src="assets/img/logo-cellive-skin.svg" alt="" width="157" height="18" aria-hidden="true">
+      <!-- Frasco: entra pela esquerda conforme a página rola e para na diagonal -->
+      <img class="srrp-frasco" src="assets/img/oferta/srrp-frasco.webp" alt="" width="240" height="684" loading="lazy" aria-hidden="true">
 
       <div class="srrp-cabeca">
-        <p class="fp-chamada srrp-chamada">Exclusivo Cellive Skin</p>
         <h2 class="srrp-titulo" id="srrp-titulo">
           <span class="titulo-leve">Fórmula com ação</span>
           <strong>SRRP</strong>
         </h2>
+        <p class="srrp-intro">Nossa fórmula foi pensada de ativo, por ativo. Com isso, temos 4 ingredientes em especial na fórmula, onde cada um tem um objetivo em específico.</p>
       </div>
 
-      <p class="srrp-intro">Na formulação, alguns ativos foram colocados de forma estratégica para agir em <strong>4 frentes ao mesmo tempo</strong>.</p>
-
+      <!-- Linha do tempo: a linha azul vai se preenchendo com a rolagem -->
       <ol class="srrp-lista" data-srrp-lista>
-        <li class="srrp-item" style="--i:0">
-          <span class="srrp-letra" aria-hidden="true">S</span>
-          <div class="srrp-corpo">
-            <h3 class="srrp-palavra">Sinalização</h3>
-            <span class="srrp-ativo"><span class="srrp-bolha"><img src="assets/img/ativos/ghk-cu.jpg" alt="" width="120" height="120" loading="lazy"></span>GHK-Cu</span>
-            <p class="srrp-texto">Sinaliza para os fibroblastos produzirem <strong>colágeno e elastina</strong>.</p>
+        <li class="srrp-item" style="--n:1">
+          <span class="srrp-frente">Sinalização</span>
+          <span class="srrp-num" aria-hidden="true">1</span>
+          <div class="srrp-cartao">
+            <span class="slot srrp-foto" data-label="GHK-Cu"><img src="assets/img/oferta/srrp-ghk-cu.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <h3 class="srrp-nome">GHK-Cu</h3>
+            <p class="srrp-texto">O GHK-Cu sinaliza para os fibroblastos produzirem colágeno e elastina.</p>
           </div>
         </li>
-        <li class="srrp-item" style="--i:1">
-          <span class="srrp-letra" aria-hidden="true">R</span>
-          <div class="srrp-corpo">
-            <h3 class="srrp-palavra">Renovação</h3>
-            <span class="srrp-ativo"><span class="srrp-bolha"><img src="assets/img/ativos/retinal.jpg" alt="" width="120" height="120" loading="lazy"></span>Retinal</span>
-            <p class="srrp-texto">Parte do retinal se converte em ácido retinoico e <strong>acelera a renovação celular</strong>.</p>
+        <li class="srrp-item" style="--n:2">
+          <span class="srrp-frente">Renovação</span>
+          <span class="srrp-num" aria-hidden="true">2</span>
+          <div class="srrp-cartao">
+            <span class="slot srrp-foto" data-label="Retinal"><img src="assets/img/oferta/srrp-retinal.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <h3 class="srrp-nome">Retinal</h3>
+            <p class="srrp-texto">Parte do Retinal se converte em ácido retinoico e acelera a renovação celular.</p>
           </div>
         </li>
-        <li class="srrp-item" style="--i:2">
-          <span class="srrp-letra" aria-hidden="true">R</span>
-          <div class="srrp-corpo">
-            <h3 class="srrp-palavra">Regeneração</h3>
-            <span class="srrp-ativo"><span class="srrp-bolha"><img src="assets/img/ativos/pdrn.jpg" alt="" width="120" height="120" loading="lazy"></span>PDRN</span>
-            <p class="srrp-texto">Atua nos receptores de adenosina, auxiliando na <strong>reparação da barreira cutânea</strong>.</p>
+        <li class="srrp-item" style="--n:3">
+          <span class="srrp-frente">Regeneração</span>
+          <span class="srrp-num" aria-hidden="true">3</span>
+          <div class="srrp-cartao">
+            <span class="slot srrp-foto" data-label="PDRN"><img src="assets/img/oferta/srrp-pdrn.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <h3 class="srrp-nome">PDRN</h3>
+            <p class="srrp-texto">O PDRN atua nos receptores de adenosina, auxiliando na reparação da barreira cutânea.</p>
           </div>
         </li>
-        <li class="srrp-item" style="--i:3">
-          <span class="srrp-letra" aria-hidden="true">P</span>
-          <div class="srrp-corpo">
-            <h3 class="srrp-palavra">Potencialização</h3>
-            <span class="srrp-ativo"><span class="srrp-bolha"><svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#eef3f8"/><g fill="#9fb3cb"><path d="M10 38 13 14l3 24z"/><path d="M21 38 24 9l3 29z"/><path d="M32 38l3-21 3 21z"/></g><path d="M6 38h36" stroke="#c5d3e3" stroke-width="2"/></svg></span>Microespículas</span>
-            <p class="srrp-texto">Criam microcanais na pele que <strong>potencializam a absorção</strong> dos ativos.</p>
+        <li class="srrp-item" style="--n:4">
+          <span class="srrp-frente">Potencialização</span>
+          <span class="srrp-num" aria-hidden="true">4</span>
+          <div class="srrp-cartao">
+            <span class="slot srrp-foto" data-label="Microespículas"><img src="assets/img/oferta/srrp-microespiculas.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <h3 class="srrp-nome">Microespículas</h3>
+            <p class="srrp-texto">As microespículas criam microcanais na pele, potencializando a absorção dos ativos.</p>
           </div>
         </li>
       </ol>
