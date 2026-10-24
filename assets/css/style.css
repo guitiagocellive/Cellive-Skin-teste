@@ -1665,6 +1665,50 @@ a {
   transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
 
+/* Rótulo do produto: escondido até a fórmula ser concluída */
+.rotulo text {
+  font-family: var(--font);
+  letter-spacing: 0.02em;
+}
+
+.rotulo-mini {
+  font-size: 1.85px;
+  font-weight: 500;
+}
+
+.rotulo-forte {
+  font-size: 2.75px;
+  font-weight: 700;
+}
+
+.rotulo-parte {
+  opacity: 0;
+  transform: translateY(1.5px);
+  transform-box: fill-box;
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
+  transition-delay: calc(0.35s + var(--d, 0) * 0.12s);
+}
+
+.montagem.is-concluida .rotulo-parte {
+  opacity: 1;
+  transform: none;
+}
+
+/* Brilho que atravessa o frasco quando ele vira o produto */
+.montagem-brilho {
+  fill: url(#montagem-brilho-grad);
+  opacity: 0;
+}
+
+.montagem.is-concluida .montagem-brilho {
+  animation: montagem-brilho 0.9s ease-in-out 0.1s;
+}
+
+@keyframes montagem-brilho {
+  0% { opacity: 1; transform: translateX(0) skewX(-12deg); }
+  100% { opacity: 1; transform: translateX(110px) skewX(-12deg); }
+}
+
 /* Textos de baixo: andamento → concluída */
 .montagem-status {
   position: relative;
@@ -1787,6 +1831,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .montagem-anel,
+  .montagem.is-concluida .montagem-brilho,
   .montagem-pote svg.is-gole,
   .montagem-ativo.is-troca,
   .montagem.is-concluida .montagem-pote {

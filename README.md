@@ -27,7 +27,7 @@ Depois do carregamento vem a etapa da **fórmula** (12 perguntas, 12 ativos): ca
 a bolinha do ativo desce até o painel "Combinação ideal para sua pele", o selo abre com o nome, o
 contador sobe (1/12, 2/12...) e o pote enche. Os ativos anteriores viram bolinhas que vão se juntando ao lado do pote.
 A bolinha acompanha o selo até ele parar, para pousar exatamente sobre o número e o nome do ativo.
-Na última resposta, todas as bolinhas entram no pote, ele termina de encher, vai para o meio do painel e o título vira "Fórmula concluída".
+Na última resposta, todas as bolinhas vêm da direita e entram pela lateral do pote, ele termina de encher, vai para o meio do painel e o título vira "Fórmula concluída".
 As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `quiz.html#formula`.
 
 Depois da fórmula vem a tela de **análise** ("FAZENDO UMA ANÁLISE **DO SEU CASO**"): o contorno de um rosto com cabelo
@@ -37,7 +37,7 @@ em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
 
 Depois da análise vem a **montagem da fórmula** ("MONTANDO SUA **FÓRMULA**"): os 12 ativos surgem num anel
 tracejado que gira em volta do pote, entram um a um ("+NOME DO ATIVO") e o pote enche. No fim aparece
-"FÓRMULA **CONCLUÍDA!**" com o check e a luz azul cresce (cerca de 4,7 s no total). A cada ativo que entra, o pote dá uma leve "engolida". Textos e tempos ficam em
+"FÓRMULA **CONCLUÍDA!**" com o check, a luz azul cresce e o pote vira o produto: um brilho passa e o rótulo aparece (lista de ativos, "PELE MAIS FIRME…", "RETINALDEÍDO 0,05%", logo na vertical e "30ml"). Cerca de 4,8 s no total. A cada ativo que entra, o pote dá uma leve "engolida". Textos e tempos ficam em
 `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#montagem`.
 
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,

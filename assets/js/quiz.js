@@ -415,7 +415,8 @@
 
     var icones = Array.prototype.slice.call(formulaListEl.querySelectorAll(".ativo-icone"));
     var p = poteEl.getBoundingClientRect();
-    var boca = { x: p.left + p.width / 2, y: p.top + p.height * 0.12 };
+    // Os ativos vêm da direita e entram pela lateral do pote (altura do corpo)
+    var boca = { x: p.left + p.width * 0.35, y: p.top + p.height * 0.62 };
     var restantes = icones.length;
     var ESPACO_ENTRE = 55;
 
@@ -433,9 +434,10 @@
           { x: boca.x - r.width / 2, y: boca.y - r.height / 2 },
           {
             duracao: 620,
-            arco: 34,
-            escala: function (t) { return 1 - 0.75 * suavizar(t); },
-            opacidade: function (t) { return t < 0.75 ? 1 : 1 - (t - 0.75) / 0.25; },
+            arco: 6,
+            escala: function (t) { return 1 - 0.7 * suavizar(t); },
+            // some ao encostar na lateral do pote, como se entrasse nele
+            opacidade: function (t) { return t < 0.68 ? 1 : Math.max(0, 1 - (t - 0.68) / 0.22); },
           },
           function () {
             copia.remove();
@@ -883,6 +885,42 @@
      no pote, que vai enchendo; no fim aparece "Fórmula concluída". */
   var POTE_PATH = "M9 10.2H5.8C3.4 10.2 1.8 9.4 1.8 7.6V5.4C1.8 3.8 3 3.1 4.8 3.1C6.9 3.1 7.7 2.8 7.8 1.6C7.9 .3 8.6 0 10.4 0H21.4C23.1 0 24 .2 25.2 .7C27 1 29.6 1.1 31.4 1.7C34.4 2.2 37.6 3.4 39.6 4.6C41.2 5.6 41.6 6.4 41.6 8.4V25.4L43.2 26.3C44.2 26.9 44.5 27.6 44.5 28.8V37.1H45.6C47.6 37.1 48.5 38 48.5 39.6V41L49.4 42C49.7 42.4 49.7 42.9 49.7 43.6V51.6L49.2 53.8V156.6C49.2 159.5 47.4 160.7 44.6 161.1C42.6 161.4 40.8 162.9 35.8 162.9H14.1C9.2 162.9 7.4 161.4 5.4 161.1C2.6 160.7 1 159.5 1 156.6V53.8L.2 52.4C0 52 0 51.6 0 51.1V43.6C0 42.9 .2 42.5 .7 42L1.9 41V39.6C1.9 38 2.8 37.1 4.8 37.1H6.6V28.8C6.6 27.6 7 26.9 8 26.3L9 25.6Z";
 
+  /* Rótulo do produto (aparece quando a fórmula é concluída). Posições no
+     desenho do pote (50 × 163), seguindo a arte do frasco. */
+  var ROTULO_SVG =
+    '<defs><linearGradient id="montagem-brilho-grad" x1="0" x2="1">' +
+      '<stop offset="0" stop-color="#fff" stop-opacity="0"/>' +
+      '<stop offset=".5" stop-color="#fff" stop-opacity=".55"/>' +
+      '<stop offset="1" stop-color="#fff" stop-opacity="0"/>' +
+    "</linearGradient></defs>" +
+    '<g class="rotulo" fill="#fff">' +
+      '<g class="rotulo-parte" style="--d:0">' +
+        '<text class="rotulo-mini" x="6.3" y="57.6">ÁCIDO HIALURÔNICO</text>' +
+        '<text class="rotulo-mini" x="6.3" y="59.6">NANO ARBUTIN</text>' +
+        '<text class="rotulo-mini" x="6.3" y="61.6">NIACINAMIDA</text>' +
+        '<text class="rotulo-mini" x="6.3" y="63.6">NANO TRANEXAMIC ACID</text>' +
+        '<text class="rotulo-mini" x="30.3" y="57.6">PDRN</text>' +
+        '<text class="rotulo-mini" x="30.3" y="59.6">GHK-CU</text>' +
+        '<text class="rotulo-mini" x="30.3" y="61.6">EXOS SKIN</text>' +
+      "</g>" +
+      '<rect class="rotulo-parte" style="--d:1" x="6.3" y="69.6" width="6.2" height=".45"/>' +
+      '<g class="rotulo-parte" style="--d:2">' +
+        '<text class="rotulo-forte" x="6.3" y="75.2">PELE MAIS FIRME</text>' +
+        '<text class="rotulo-forte" x="6.3" y="79">HIDRATA</text>' +
+        '<text class="rotulo-forte" x="6.3" y="82.8">LUMINOSA</text>' +
+        '<text class="rotulo-forte" x="6.3" y="86.6">REVITALIZADA</text>' +
+      "</g>" +
+      '<text class="rotulo-parte rotulo-forte" style="--d:3" x="6.3" y="94.4">RETINALDEÍDO 0,05%</text>' +
+      // Logo na vertical (de baixo para cima)
+      '<g class="rotulo-parte" style="--d:4"><g transform="translate(5.2 144.3) rotate(-90)">' +
+        '<image href="assets/img/logo-cellive-skin-branco.svg" x="0" y="0" width="42.6" height="4.8"/>' +
+      "</g></g>" +
+      '<g class="rotulo-parte" style="--d:4">' +
+        '<text class="rotulo-mini" x="44" y="155.6" text-anchor="end">30ml</text>' +
+        '<text class="rotulo-mini" x="44" y="157.8" text-anchor="end">1,01fl oz</text>' +
+      "</g>" +
+    "</g>";
+
   function tituloEmDuasPartes(classe, leve, forte) {
     var h = el("p", classe);
     h.appendChild(el("span", "titulo-leve", leve));
@@ -916,7 +954,10 @@
         '<g clip-path="url(#pote-montagem)">' +
           '<rect class="formula-pote-vazio" width="50" height="163"/>' +
           '<rect class="montagem-liquido" width="50" height="163" data-liquido/>' +
+          // Brilho que passa pelo frasco quando ele vira o produto
+          '<rect class="montagem-brilho" x="-30" y="0" width="22" height="163"/>' +
         "</g>" +
+        ROTULO_SVG +
       "</svg>";
     palco.appendChild(pote);
     wrap.appendChild(palco);
