@@ -143,7 +143,7 @@ window.QUIZ_FLUXO = [
           { texto: "Linhas 11", imagem: "assets/img/quiz/sinal-linhas-11.webp" },
           { texto: "Bigode chinês", imagem: "assets/img/quiz/sinal-bigode-chines.webp" },
           { texto: "Linhas na testa", imagem: "assets/img/quiz/sinal-linhas-testa.webp" },
-          { texto: "Aspecto envelhecido", imagem: "assets/img/quiz/sinal-aspecto-envelhecido.jpg" },
+          { texto: "Aspecto envelhecido", imagem: "assets/img/quiz/sinal-aspecto-envelhecido.webp" },
           { texto: "Manchas", imagem: "assets/img/quiz/sinal-manchas.webp" },
         ],
         ativo: { id: "retinal", nome: "Retinal", imagem: "assets/img/ativos/retinal.jpg" },

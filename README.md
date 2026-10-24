@@ -63,7 +63,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Pergunta 6: Linhas 11 | `assets/img/quiz/sinal-linhas-11.webp` | ✅ já colocada (1:1) |
 | Pergunta 6: Bigode chinês | `assets/img/quiz/sinal-bigode-chines.webp` | ✅ já colocada (1:1) |
 | Pergunta 6: Linhas na testa | `assets/img/quiz/sinal-linhas-testa.webp` | ✅ já colocada (1:1) |
-| Pergunta 6: Aspecto envelhecido | `assets/img/quiz/sinal-aspecto-envelhecido.jpg` | quadrada, 300 × 300 px |
+| Pergunta 6: Aspecto envelhecido | `assets/img/quiz/sinal-aspecto-envelhecido.webp` | ✅ já colocada (1:1) |
 | Pergunta 6: Manchas | `assets/img/quiz/sinal-manchas.webp` | ✅ já colocada (1:1) |
 | Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.webp` | ✅ já colocada (3:2) |
 | Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.webp` | ✅ já colocada (3:2) |
