@@ -1,22 +1,33 @@
 /* Quiz: mostra as telas na ordem de quiz-perguntas.js (perguntas, tela de
-   carregamento...), guarda as respostas e controla o botão de voltar (o da
-   tela e o do celular). */
+   carregamento, perguntas da fórmula...), guarda as respostas e controla o
+   botão de voltar (o da tela e o do celular). */
 (function () {
   "use strict";
 
   var STORAGE_KEY = "cellive-quiz-respostas";
-  var DELAY_AVANCAR = 380;      // tempo para a pessoa ver a opção marcada antes de avançar
+  var DELAY_AVANCAR = 380;          // tempo para ver a opção marcada antes de avançar
+  var DELAY_ANTES_DO_VOO = 180;     // espera antes de o ativo sair em direção ao painel
+  var DURACAO_VOO = 760;            // tempo do ativo descendo até o painel
+  var PAUSA_DEPOIS_DO_VOO = 260;    // tempo para ver o ativo entrando na fórmula
   var PAUSA_FIM_CARREGAMENTO = 350; // fica um instante em 100% antes de seguir
 
-  var stepperEl = document.querySelector("[data-stepper]");
-  var screenEl = document.querySelector("[data-screen]");
-  var backEl = document.querySelector("[data-back]");
-  var quizEl = document.querySelector(".quiz");
+  var $ = function (sel) { return document.querySelector(sel); };
+  var quizEl = $(".quiz");
+  var stepperEl = $("[data-stepper]");
+  var barEl = $("[data-bar]");
+  var barFillEl = $("[data-bar-fill]");
+  var screenEl = $("[data-screen]");
+  var backEl = $("[data-back]");
+  var formulaEl = $("[data-formula]");
+  var formulaListEl = $("[data-formula-list]");
+  var formulaCountEl = $("[data-formula-count]");
+  var formulaEmptyEl = $("[data-formula-empty]");
+  var poteFillEl = $("[data-pote-fill]");
 
   /* Transforma o fluxo numa lista simples de telas */
   var telas = [];
   window.QUIZ_FLUXO.forEach(function (bloco) {
-    if (bloco.tipo === "etapa") {
+    if (bloco.tipo === "etapa" || bloco.tipo === "formula") {
       bloco.perguntas.forEach(function (p, i) {
         telas.push({ tipo: "pergunta", bloco: bloco, indice: i, pergunta: p });
       });
@@ -31,6 +42,37 @@
   var stepperBloco = null;
   var carregamentoAtivo = null; // permite cancelar se a pessoa voltar no meio
   var respostas = carregarRespostas();
+
+  /* ---------- Utilidades ---------- */
+  function el(tag, classe, texto) {
+    var e = document.createElement(tag);
+    if (classe) e.className = classe;
+    if (texto != null) e.textContent = texto;
+    return e;
+  }
+
+  function textoDaOpcao(op) {
+    return typeof op === "string" ? op : op.texto;
+  }
+
+  function reduzirMovimento() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  /* Espaço de imagem: mostra o nome do espaço até a foto existir */
+  function slotDeImagem(classe, rotulo, src, alt) {
+    var slot = el("span", "slot " + classe);
+    if (rotulo) slot.setAttribute("data-label", rotulo);
+    if (src) {
+      var img = el("img");
+      img.src = src;
+      img.alt = alt || "";
+      img.decoding = "async";
+      img.addEventListener("error", function () { img.hidden = true; });
+      slot.appendChild(img);
+    }
+    return slot;
+  }
 
   /* ---------- Respostas ---------- */
   function carregarRespostas() {
@@ -62,7 +104,7 @@
     });
   }
 
-  // Procura campos "imagem"/"imagens" em qualquer parte de um objeto
+  // Procura campos "imagem"/"imagens"/"preCarregar" em qualquer parte de um objeto
   function imagensDe(obj, lista) {
     lista = lista || [];
     if (!obj || typeof obj !== "object") return lista;
@@ -83,37 +125,183 @@
     var lista = [];
     for (var i = aPartirDe; i < telas.length; i++) {
       if (telas[i].pergunta) imagensDe(telas[i].pergunta, lista);
-      if (telas[i].bloco && telas[i].tipo === "carregamento") imagensDe(telas[i].bloco, lista);
+      if (telas[i].tipo === "carregamento") imagensDe(telas[i].bloco, lista);
     }
     return lista;
   }
 
-  /* ---------- Progresso 1 · 2 · 3 ---------- */
+  /* ---------- Progresso: 1 · 2 · 3 (1ª etapa) ou barra (fórmula) ---------- */
   function montarStepper(bloco) {
     stepperBloco = bloco;
     stepperEl.innerHTML = "";
     bloco.perguntas.forEach(function (_, i) {
-      var li = document.createElement("li");
-      li.className = "step";
-      li.textContent = String(i + 1);
-      stepperEl.appendChild(li);
+      stepperEl.appendChild(el("li", "step", String(i + 1)));
     });
   }
 
-  function atualizarStepper(tela) {
-    var mostrar = tela.tipo === "pergunta";
-    stepperEl.hidden = !mostrar;
-    if (!mostrar) return;
-    if (stepperBloco !== tela.bloco) montarStepper(tela.bloco);
+  function atualizarProgresso(tela) {
+    var bloco = tela.bloco;
+    var ehEtapa = tela.tipo === "pergunta" && bloco.tipo === "etapa";
+    var ehFormula = tela.tipo === "pergunta" && bloco.tipo === "formula";
 
-    var passos = stepperEl.children;
-    for (var i = 0; i < passos.length; i++) {
-      passos[i].classList.toggle("is-done", i < tela.indice);
-      passos[i].classList.toggle("is-current", i === tela.indice);
-      if (i === tela.indice) passos[i].setAttribute("aria-current", "step");
-      else passos[i].removeAttribute("aria-current");
+    stepperEl.hidden = !ehEtapa;
+    barEl.hidden = !ehFormula;
+
+    if (ehEtapa) {
+      if (stepperBloco !== bloco) montarStepper(bloco);
+      var passos = stepperEl.children;
+      for (var i = 0; i < passos.length; i++) {
+        passos[i].classList.toggle("is-done", i < tela.indice);
+        passos[i].classList.toggle("is-current", i === tela.indice);
+        if (i === tela.indice) passos[i].setAttribute("aria-current", "step");
+        else passos[i].removeAttribute("aria-current");
+      }
+      stepperEl.setAttribute("aria-label", "Pergunta " + (tela.indice + 1) + " de " + passos.length);
     }
-    stepperEl.setAttribute("aria-label", "Pergunta " + (tela.indice + 1) + " de " + passos.length);
+
+    if (ehFormula) {
+      var total = bloco.totalAtivos || bloco.perguntas.length;
+      barFillEl.style.width = ((tela.indice + 1) / total) * 100 + "%";
+      barEl.setAttribute("role", "progressbar");
+      barEl.setAttribute("aria-valuemin", "0");
+      barEl.setAttribute("aria-valuemax", String(total));
+      barEl.setAttribute("aria-valuenow", String(tela.indice + 1));
+      barEl.setAttribute("aria-label", "Pergunta " + (tela.indice + 1) + " de " + total);
+    }
+  }
+
+  /* ---------- Painel da fórmula ---------- */
+  var blocoFormula = null;
+  window.QUIZ_FLUXO.forEach(function (b) { if (b.tipo === "formula") blocoFormula = b; });
+  var ativosNoPainel = 0;
+
+  function ativosDaFormula() {
+    return blocoFormula
+      ? blocoFormula.perguntas.filter(function (p) { return p.ativo; }).map(function (p) { return p.ativo; })
+      : [];
+  }
+
+  // Quantos ativos já entraram na fórmula quando a pessoa está nesta tela
+  function ativosAte(tela) {
+    if (!blocoFormula) return 0;
+    var idx = telas.indexOf(tela);
+    var n = 0;
+    for (var i = 0; i < idx; i++) {
+      if (telas[i].bloco === blocoFormula && telas[i].pergunta.ativo) n++;
+    }
+    return n;
+  }
+
+  function chipDoAtivo(ativo) {
+    var li = el("li", "ativo");
+    li.appendChild(slotDeImagem("ativo-icone", "", ativo.imagem, ""));
+    li.appendChild(el("span", "ativo-nome", ativo.nome));
+    li.title = ativo.nome;
+    return li;
+  }
+
+  function atualizarPote(n, animar) {
+    var total = blocoFormula.totalAtivos || blocoFormula.perguntas.length;
+    // Mesmo vazio, o pote mostra uma linha fina preta no fundo (como no layout)
+    var nivel = Math.max(Math.min(n / total, 1), 0.035);
+    poteFillEl.classList.toggle("sem-transicao", !animar);
+    poteFillEl.style.transform = "translateY(" + (163 * (1 - nivel)).toFixed(2) + "px)";
+    formulaCountEl.textContent = n + "/" + total;
+    formulaEmptyEl.hidden = n > 0;
+  }
+
+  // Deixa só o último ativo aberto (com nome); os anteriores viram bolinhas
+  function marcarUltimoAberto() {
+    var itens = formulaListEl.children;
+    for (var i = 0; i < itens.length; i++) {
+      itens[i].classList.toggle("is-collapsed", i < itens.length - 1);
+    }
+    var rolar = function () {
+      formulaListEl.scrollTo({ left: formulaListEl.scrollWidth, behavior: reduzirMovimento() ? "auto" : "smooth" });
+    };
+    rolar();
+    setTimeout(rolar, 420); // de novo depois que o selo termina de abrir
+  }
+
+  // Mostra/esconde o painel e acerta a lista sem animação (ex.: ao voltar)
+  function sincronizarPainel(tela) {
+    var mostrar = !!blocoFormula && tela.tipo === "pergunta" && tela.bloco === blocoFormula;
+    if (mostrar && formulaEl.hidden) {
+      formulaEl.hidden = false;
+      formulaEl.classList.remove("is-entering");
+      void formulaEl.offsetWidth;
+      formulaEl.classList.add("is-entering");
+    } else if (!mostrar) {
+      formulaEl.hidden = true;
+    }
+    quizEl.classList.toggle("com-formula", mostrar);
+    if (!blocoFormula) return;
+
+    var alvo = ativosAte(tela);
+    var lista = ativosDaFormula();
+    var mudou = alvo !== ativosNoPainel;
+    while (ativosNoPainel > alvo) {
+      formulaListEl.removeChild(formulaListEl.lastElementChild);
+      ativosNoPainel--;
+    }
+    while (ativosNoPainel < alvo) {
+      formulaListEl.appendChild(chipDoAtivo(lista[ativosNoPainel]));
+      ativosNoPainel++;
+    }
+    if (mudou) marcarUltimoAberto();
+    atualizarPote(ativosNoPainel, mostrar);
+  }
+
+  /* A bolinha do ativo sai da resposta escolhida e desce até o painel;
+     ao chegar, o selo abre com o nome e o pote enche um pouco. */
+  function adicionarAtivoComAnimacao(ativo, origemEl, aoTerminar) {
+    var chip = chipDoAtivo(ativo);
+    chip.classList.add("is-arriving", "is-collapsed");
+    formulaListEl.appendChild(chip);
+    ativosNoPainel++;
+    formulaEmptyEl.hidden = true;
+    formulaListEl.scrollTo({ left: formulaListEl.scrollWidth });
+
+    var concluir = function () {
+      chip.classList.remove("is-arriving");
+      marcarUltimoAberto();
+      atualizarPote(ativosNoPainel, true);
+      formulaCountEl.classList.remove("is-pop");
+      void formulaCountEl.offsetWidth;
+      formulaCountEl.classList.add("is-pop");
+      setTimeout(aoTerminar, PAUSA_DEPOIS_DO_VOO);
+    };
+
+    var alvoEl = chip.querySelector(".ativo-icone");
+    if (reduzirMovimento() || !alvoEl.animate) {
+      concluir();
+      return;
+    }
+
+    var o = origemEl.getBoundingClientRect();
+    var a = alvoEl.getBoundingClientRect();
+    var tamanho = a.width;
+    var x0 = o.left + o.width / 2 - tamanho / 2;
+    var y0 = o.top + o.height / 2 - tamanho / 2;
+    var x1 = a.left;
+    var y1 = a.top;
+
+    var bola = slotDeImagem("ativo-icone ativo-voando", "", ativo.imagem, "");
+    bola.style.width = bola.style.height = tamanho + "px";
+    document.body.appendChild(bola);
+
+    // Aparece na resposta, sobe um pouco e desce em curva até o painel
+    var anim = bola.animate([
+      { transform: "translate(" + x0 + "px," + y0 + "px) scale(0.2)", opacity: 0 },
+      { transform: "translate(" + x0 + "px," + (y0 - 18) + "px) scale(1.15)", opacity: 1, offset: 0.22 },
+      { transform: "translate(" + (x0 + (x1 - x0) * 0.45) + "px," + (y0 + (y1 - y0) * 0.35) + "px) scale(1.05)", opacity: 1, offset: 0.55 },
+      { transform: "translate(" + x1 + "px," + y1 + "px) scale(1)", opacity: 1 }
+    ], { duration: DURACAO_VOO, easing: "cubic-bezier(0.45, 0, 0.25, 1)", fill: "forwards" });
+
+    anim.onfinish = function () {
+      bola.remove();
+      concluir();
+    };
   }
 
   /* ---------- Telas ---------- */
@@ -121,39 +309,38 @@
     var p = tela.pergunta;
     var frag = document.createDocumentFragment();
 
-    var titulo = document.createElement("h1");
-    titulo.className = "quiz-title";
+    var titulo = el("h1", "quiz-title", p.titulo);
     titulo.id = "quiz-pergunta";
-    titulo.textContent = p.titulo;
     frag.appendChild(titulo);
 
-    var lista = document.createElement("div");
-    lista.className = "quiz-options";
+    if (p.subtitulo) frag.appendChild(el("p", "quiz-subtitle", p.subtitulo));
+
+    var lista = el("div", p.tipo === "B" ? "quiz-cards" : "quiz-options");
     lista.setAttribute("role", "radiogroup");
     lista.setAttribute("aria-labelledby", "quiz-pergunta");
 
-    p.opcoes.forEach(function (texto, i) {
-      var botao = document.createElement("button");
+    p.opcoes.forEach(function (op, i) {
+      var texto = textoDaOpcao(op);
+      var botao = el("button", p.tipo === "B" ? "quiz-card" : "quiz-option");
       botao.type = "button";
-      botao.className = "quiz-option";
       botao.setAttribute("role", "radio");
       botao.style.setProperty("--i", i);
       var marcada = respostas[p.id] === texto;
       botao.setAttribute("aria-checked", marcada ? "true" : "false");
       if (marcada) botao.classList.add("is-selected");
 
-      var radio = document.createElement("span");
-      radio.className = "quiz-radio";
-      radio.setAttribute("aria-hidden", "true");
+      if (p.tipo === "B") {
+        botao.appendChild(slotDeImagem("quiz-card-foto", "Foto " + (i + 1), op.imagem, ""));
+        botao.appendChild(el("span", "quiz-card-text", texto));
+      } else {
+        var radio = el("span", "quiz-radio");
+        radio.setAttribute("aria-hidden", "true");
+        botao.appendChild(radio);
+        botao.appendChild(el("span", "quiz-option-text", texto));
+      }
 
-      var rotulo = document.createElement("span");
-      rotulo.className = "quiz-option-text";
-      rotulo.textContent = texto;
-
-      botao.appendChild(radio);
-      botao.appendChild(rotulo);
       botao.addEventListener("click", function () {
-        escolher(p, texto, botao, lista);
+        escolher(tela, texto, botao, lista);
       });
       lista.appendChild(botao);
     });
@@ -167,8 +354,7 @@
 
   function telaCarregamento(tela) {
     var b = tela.bloco;
-    var wrap = document.createElement("div");
-    wrap.className = "loading";
+    var wrap = el("div", "loading");
     wrap.innerHTML =
       '<div class="loading-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Carregando">' +
         '<svg viewBox="0 0 154 154" aria-hidden="true">' +
@@ -177,31 +363,20 @@
         "</svg>" +
         '<span class="loading-pct" data-pct>0%</span>' +
       "</div>" +
-      '<p class="loading-text"></p>' +
-      '<span class="slot loading-photo" data-label="Imagem do carregamento"></span>';
+      '<p class="loading-text"></p>';
 
     var texto = wrap.querySelector(".loading-text");
     (b.linhas || []).forEach(function (linha, i) {
-      var span = document.createElement("span");
-      span.className = "loading-line";
+      var span = el("span", "loading-line");
       if (i === 0 && b.destaque) {
-        var em = document.createElement("em");
-        em.textContent = b.destaque;
-        span.appendChild(em);
+        span.appendChild(el("em", null, b.destaque));
         span.appendChild(document.createTextNode(" "));
       }
       span.appendChild(document.createTextNode(linha));
       texto.appendChild(span);
     });
 
-    if (b.imagem) {
-      var img = document.createElement("img");
-      img.src = b.imagem;
-      img.alt = b.imagemAlt || "";
-      img.decoding = "async";
-      img.addEventListener("error", function () { img.hidden = true; });
-      wrap.querySelector(".loading-photo").appendChild(img);
-    }
+    wrap.appendChild(slotDeImagem("loading-photo", "Imagem do carregamento", b.imagem, b.imagemAlt));
     return wrap;
   }
 
@@ -230,8 +405,7 @@
   }
 
   function iniciarCarregamento(tela, indiceTela) {
-    var b = tela.bloco;
-    var duracao = b.duracao || 3300;
+    var duracao = tela.bloco.duracao || 3300;
     var barra = screenEl.querySelector(".loading-bar");
     var pct = screenEl.querySelector("[data-pct]");
     var ring = screenEl.querySelector(".loading-ring");
@@ -275,14 +449,8 @@
   /* Tela provisória até as próximas perguntas chegarem */
   function telaFim() {
     var frag = document.createDocumentFragment();
-    var titulo = document.createElement("h1");
-    titulo.className = "quiz-title";
-    titulo.textContent = "Próximas perguntas em breve.";
-    var texto = document.createElement("p");
-    texto.className = "quiz-note";
-    texto.textContent = "Esta parte do quiz ainda está sendo montada.";
-    frag.appendChild(titulo);
-    frag.appendChild(texto);
+    frag.appendChild(el("h1", "quiz-title", "Próximas perguntas em breve."));
+    frag.appendChild(el("p", "quiz-note", "Esta parte do quiz ainda está sendo montada."));
     return frag;
   }
 
@@ -299,7 +467,8 @@
       telaFim();
 
     atual = indice;
-    atualizarStepper(tela);
+    atualizarProgresso(tela);
+    sincronizarPainel(tela);
     backEl.hidden = tela.tipo === "carregamento";
     quizEl.setAttribute("data-tela", tela.tipo);
 
@@ -309,6 +478,7 @@
       screenEl.appendChild(conteudo);
       void screenEl.offsetWidth; // reinicia a animação de entrada
       screenEl.classList.add(direcao === "back" ? "enter-back" : "enter-forward");
+      window.scrollTo(0, 0);
       bloqueado = false;
       if (tela.tipo === "carregamento") iniciarCarregamento(tela, indice);
     };
@@ -321,7 +491,7 @@
     setTimeout(trocar, 170);
   }
 
-  function escolher(pergunta, texto, botao, lista) {
+  function escolher(tela, texto, botao, lista) {
     if (bloqueado) return;
     bloqueado = true;
 
@@ -332,16 +502,27 @@
     botao.classList.add("is-selected");
     botao.setAttribute("aria-checked", "true");
 
-    respostas[pergunta.id] = texto;
+    var p = tela.pergunta;
+    respostas[p.id] = texto;
     salvarRespostas();
 
     var origem = atual;
-    setTimeout(function () {
+    var avancar = function () {
       if (atual !== origem) return; // a pessoa voltou antes de avançar
       var proxima = origem + 1;
       history.pushState({ s: proxima }, "");
       mostrar(proxima, "forward");
-    }, DELAY_AVANCAR);
+    };
+
+    if (tela.bloco === blocoFormula && p.ativo) {
+      setTimeout(function () {
+        if (atual !== origem) return;
+        var origemEl = botao.querySelector(".quiz-card-foto, .quiz-radio") || botao;
+        adicionarAtivoComAnimacao(p.ativo, origemEl, avancar);
+      }, DELAY_ANTES_DO_VOO);
+    } else {
+      setTimeout(avancar, DELAY_AVANCAR);
+    }
   }
 
   function voltar() {
@@ -350,10 +531,6 @@
     } else {
       history.back();
     }
-  }
-
-  function reduzirMovimento() {
-    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   /* Botão voltar do celular/navegador */
@@ -370,6 +547,14 @@
     if (t.tipo === "carregamento") preCarregar(t.bloco.imagem ? [t.bloco.imagem] : []);
   });
 
-  history.replaceState({ s: 0 }, "");
-  mostrar(0, "forward");
+  // Atalho para testes: quiz.html#formula abre direto na etapa da fórmula
+  var inicio = 0;
+  if (location.hash === "#formula" && blocoFormula) {
+    for (var i = 0; i < telas.length; i++) {
+      if (telas[i].bloco === blocoFormula) { inicio = i; break; }
+    }
+  }
+
+  history.replaceState({ s: inicio }, "");
+  mostrar(inicio, "forward");
 })();

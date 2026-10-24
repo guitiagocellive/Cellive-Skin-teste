@@ -26,8 +26,11 @@
       </a>
     </header>
 
-    <!-- Progresso: 1, 2, 3 -->
-    <ol class="stepper" data-stepper></ol>
+    <!-- Progresso da 1ª etapa: 1, 2, 3 -->
+    <ol class="stepper" data-stepper hidden></ol>
+
+    <!-- Progresso da etapa da fórmula: barra -->
+    <div class="quiz-bar" data-bar hidden><span class="quiz-bar-fill" data-bar-fill></span></div>
 
     <!-- Pergunta atual (montada pelo assets/js/quiz.js) -->
     <section class="quiz-screen" data-screen aria-live="polite"></section>
@@ -37,6 +40,30 @@
     </noscript>
 
   </main>
+
+  <!-- Painel da fórmula: fica fixo embaixo durante a etapa da fórmula -->
+  <aside class="formula" data-formula hidden aria-label="Combinação ideal para sua pele">
+    <div class="formula-head">
+      <p class="formula-title">Combinação ideal para sua pele:</p>
+      <p class="formula-count" data-formula-count aria-live="polite">0/12</p>
+    </div>
+    <div class="formula-body">
+      <!-- Pote: cinza vazio, vai enchendo de preto a cada ativo -->
+      <svg class="formula-pote" viewBox="0 0 50 163" aria-hidden="true">
+        <defs>
+          <clipPath id="pote-forma">
+            <path d="M9 10.2H5.8C3.4 10.2 1.8 9.4 1.8 7.6V5.4C1.8 3.8 3 3.1 4.8 3.1C6.9 3.1 7.7 2.8 7.8 1.6C7.9 .3 8.6 0 10.4 0H21.4C23.1 0 24 .2 25.2 .7C27 1 29.6 1.1 31.4 1.7C34.4 2.2 37.6 3.4 39.6 4.6C41.2 5.6 41.6 6.4 41.6 8.4V25.4L43.2 26.3C44.2 26.9 44.5 27.6 44.5 28.8V37.1H45.6C47.6 37.1 48.5 38 48.5 39.6V41L49.4 42C49.7 42.4 49.7 42.9 49.7 43.6V51.6L49.2 53.8V156.6C49.2 159.5 47.4 160.7 44.6 161.1C42.6 161.4 40.8 162.9 35.8 162.9H14.1C9.2 162.9 7.4 161.4 5.4 161.1C2.6 160.7 1 159.5 1 156.6V53.8L.2 52.4C0 52 0 51.6 0 51.1V43.6C0 42.9 .2 42.5 .7 42L1.9 41V39.6C1.9 38 2.8 37.1 4.8 37.1H6.6V28.8C6.6 27.6 7 26.9 8 26.3L9 25.6Z"/>
+          </clipPath>
+        </defs>
+        <g clip-path="url(#pote-forma)">
+          <rect class="formula-pote-vazio" width="50" height="163"/>
+          <rect class="formula-pote-cheio" width="50" height="163" data-pote-fill/>
+        </g>
+      </svg>
+      <p class="formula-empty" data-formula-empty>Responda para revelar o primeiro ativo</p>
+      <ul class="formula-list" data-formula-list></ul>
+    </div>
+  </aside>
 
   <script src="assets/js/quiz-perguntas.js"></script>
   <script src="assets/js/quiz.js"></script>

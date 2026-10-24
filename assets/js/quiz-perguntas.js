@@ -1,6 +1,11 @@
 /* Sequência do quiz, na ordem em que a pessoa vê.
    - "etapa": um bloco de perguntas com o progresso 1 · 2 · 3 no topo.
-     Cada pergunta tem um "tipo" (A = pergunta normal, com uma resposta).
+   - "formula": perguntas que montam a fórmula. Cada pergunta acrescenta um
+     "ativo", que desce até o painel "Combinação ideal para sua pele" e vai
+     enchendo o pote. Barra de progresso no topo.
+   Tipos de pergunta:
+     A = pergunta normal (lista de respostas)
+     B = seleção única por imagens (cartões com foto, em grade 2 × 2)
    - "carregamento": tela com o círculo de 0% a 100%. Enquanto ela roda, as
      imagens listadas em "preCarregar" (e as imagens das próximas perguntas)
      são baixadas, para aparecerem na hora. */
@@ -54,6 +59,38 @@ window.QUIZ_FLUXO = [
     duracao: 3300, // em milissegundos (0% → 100%)
     preCarregar: [
       // Coloque aqui as imagens das próximas perguntas, ex.: "assets/img/pergunta-4.jpg"
+    ],
+  },
+  {
+    tipo: "formula",
+    id: "formula",
+    totalAtivos: 12, // total de perguntas/ativos desta etapa (contador "0/12")
+    perguntas: [
+      {
+        id: "idade",
+        tipo: "B",
+        titulo: "Qual é sua idade?",
+        subtitulo: "Vamos separar os melhores ativos conforme suas escolhas",
+        opcoes: [
+          { texto: "Entre 18 - 25 anos", imagem: "assets/img/quiz/idade-18-25.jpg" },
+          { texto: "Entre 26 - 30 anos", imagem: "assets/img/quiz/idade-26-30.jpg" },
+          { texto: "Entre 30 - 35 anos", imagem: "assets/img/quiz/idade-30-35.jpg" },
+          { texto: "+35 anos", imagem: "assets/img/quiz/idade-35-mais.jpg" },
+        ],
+        ativo: { id: "acido-hialuronico", nome: "Ácido Hialurônico", imagem: "assets/img/ativos/acido-hialuronico.jpg" },
+      },
+      {
+        id: "sensibilidade",
+        tipo: "A",
+        titulo: "Sua pele costuma irritar com facilidade?",
+        opcoes: [
+          "Sim, minha pele é bastante sensível.",
+          "Às vezes irrita.",
+          "Raramente.",
+          "Minha pele não é sensível.",
+        ],
+        ativo: { id: "pdrn", nome: "PDRN", imagem: "assets/img/ativos/pdrn.jpg" },
+      },
     ],
   },
 ];
