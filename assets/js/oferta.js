@@ -145,7 +145,9 @@
     var atualizarConheca = function () {
       pedido = 0;
       var alto = window.innerHeight;
-      var p = (alto - conheca.getBoundingClientRect().top) / (alto * 0.9);
+      // Começa quando a dobra já entrou um quarto na tela (antes disso as
+      // embalagens estão escondidas) e termina com ela perto do topo.
+      var p = (alto * 0.75 - conheca.getBoundingClientRect().top) / (alto * 0.6);
       p = Math.min(1, Math.max(0, p));
       p = 1 - Math.pow(1 - p, 2); // desacelera no final
       conheca.style.setProperty("--p", p.toFixed(3));
