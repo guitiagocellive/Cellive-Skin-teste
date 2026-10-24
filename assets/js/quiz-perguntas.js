@@ -213,7 +213,7 @@ window.QUIZ_FLUXO = [
         id: "linhas-olhos",
         tipo: "C",
         titulo: "Você percebe linhas ao redor dos olhos quando sorri?",
-        imagem: "assets/img/quiz/linhas-olhos.jpg",
+        imagem: "assets/img/quiz/linhas-olhos.webp",
         opcoes: [
           "Sim, inclusive isso me incomoda.",
           "Sim, as minhas aparecem até relaxada.",
