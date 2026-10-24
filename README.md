@@ -71,8 +71,8 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | ✅ já colocada |
 | Ativo: Tetrapeptide-7 (bolinha) | `assets/img/ativos/tetrapeptide-7.jpg` | ✅ já colocada |
 | Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | ✅ já colocada |
-| Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | quadrada, 150 × 150 px |
-| Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | quadrada, 150 × 150 px |
+| Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | ✅ já colocada |
+| Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
 A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de imagem.
