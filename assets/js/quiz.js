@@ -220,7 +220,7 @@
   /* Deixa só o último ativo aberto (com nome); os anteriores viram bolinhas
      que vão se juntando, uma por cima da outra, ao lado do pote. Quanto mais
      bolinhas, mais elas se sobrepõem, para tudo caber numa linha. */
-  var BOLINHA = 32;
+  var BOLINHA = 28;
 
   function marcarUltimoAberto() {
     var itens = formulaListEl.children;
@@ -235,7 +235,7 @@
     }
     var ultimo = itens[n - 1];
     var nome = ultimo.querySelector(".ativo-textos");
-    var larguraSelo = (nome ? nome.scrollWidth : 120) + 36 + 4 + 11 + 16 + 2;
+    var larguraSelo = (nome ? nome.scrollWidth : 120) + 32 + 4 + 10 + 14 + 2;
     var espaco = formulaListEl.clientWidth - larguraSelo - 10;
     var passo = n > 2 ? (espaco - BOLINHA) / (n - 2) : BOLINHA;
     passo = Math.max(7, Math.min(BOLINHA - 6, passo));
@@ -299,18 +299,22 @@
   function voarEmCurva(elemento, de, para, opcoes, aoTerminar) {
     var duracao = opcoes.duracao;
     var altura = opcoes.arco; // quanto a curva sobe antes de descer
-    var cx = de.x + (para.x - de.x) * 0.35;
-    var cy = Math.min(de.y, para.y) - altura;
+    // "para" pode ser uma função: o destino é medido de novo a cada quadro,
+    // assim a bolinha acompanha o selo se ele ainda estiver se ajeitando.
+    var destino = typeof para === "function" ? para : function () { return para; };
     var inicio = null;
     elemento.style.willChange = "transform, opacity";
 
     function quadro(agora) {
       if (inicio === null) inicio = agora;
       var t = Math.min((agora - inicio) / duracao, 1);
+      var alvo = destino();
+      var cx = de.x + (alvo.x - de.x) * 0.35;
+      var cy = Math.min(de.y, alvo.y) - altura;
       var e = suavizar(t);
       var u = 1 - e;
-      var x = u * u * de.x + 2 * u * e * cx + e * e * para.x;
-      var y = u * u * de.y + 2 * u * e * cy + e * e * para.y;
+      var x = u * u * de.x + 2 * u * e * cx + e * e * alvo.x;
+      var y = u * u * de.y + 2 * u * e * cy + e * e * alvo.y;
       var escala = opcoes.escala(t);
       var opacidade = opcoes.opacidade ? opcoes.opacidade(t) : 1;
       elemento.style.transform = "translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + escala.toFixed(3) + ")";
@@ -358,7 +362,10 @@
     voarEmCurva(
       bola,
       { x: o.left + o.width / 2 - tamanho / 2, y: o.top + o.height / 2 - tamanho / 2 },
-      { x: a.left, y: a.top },
+      function () {
+        var r = alvoEl.getBoundingClientRect();
+        return { x: r.left, y: r.top };
+      },
       {
         duracao: DURACAO_VOO,
         arco: 40,
@@ -445,8 +452,9 @@
      Na etapa da fórmula, a imagem de exemplo (tipo C) e as fotos dos cartões
      (tipo B) mudam de altura para que tudo caiba acima do painel fixo, sem a
      pessoa precisar rolar. */
-  var FIGURA_MIN = 100, FIGURA_MAX = 236;  // altura da imagem de exemplo (proporção 4:3)
-  var FOTO_PROPORCAO_MIN = 0.74;            // fotos dos cartões: de quadrada até 74% da largura
+  var FIGURA_MIN = 130;                    // altura mínima da imagem de exemplo
+  var FOTO_PROPORCAO_MIN = 0.74;           // fotos da idade: de quadrada até 74% da largura
+  var FOTO_SINAIS_MIN = 78;                // fotos dos sinais: altura mínima
 
   function encaixarNaTela() {
     if (formulaEl.hidden) return;
@@ -454,23 +462,24 @@
     if (!lista) return;
     var ultimo = screenEl.querySelector(".quiz-continuar") || lista;
     // Posição final do painel (sem contar a animação de entrada dele)
-    var limite = window.innerHeight - formulaEl.offsetHeight - 18;
+    var limite = window.innerHeight - formulaEl.offsetHeight - 14;
     var sobra = limite - ultimo.getBoundingClientRect().bottom;
+    if (sobra >= 0) return;
 
     var figura = screenEl.querySelector(".quiz-figura");
     if (figura) {
       var hFig = figura.getBoundingClientRect().height;
-      figura.style.height = Math.max(FIGURA_MIN, Math.min(FIGURA_MAX, hFig + sobra)) + "px";
+      figura.style.height = Math.max(FIGURA_MIN, hFig + sobra) + "px";
       return;
     }
-    if (lista.classList.contains("quiz-cards-lista")) return;
     var fotos = screenEl.querySelectorAll(".quiz-card-foto");
-    if (fotos.length && sobra < 0) {
-      var linhas = Math.ceil(fotos.length / 2);
-      var r = fotos[0].getBoundingClientRect();
-      var nova = Math.max(r.width * FOTO_PROPORCAO_MIN, r.height + sobra / linhas);
-      Array.prototype.forEach.call(fotos, function (f) { f.style.height = nova + "px"; });
-    }
+    if (!fotos.length) return;
+    var colunas = lista.classList.contains("quiz-cards-3") ? 3 : 2;
+    var linhas = Math.ceil(fotos.length / colunas);
+    var r = fotos[0].getBoundingClientRect();
+    var minimo = colunas === 3 ? FOTO_SINAIS_MIN : r.width * FOTO_PROPORCAO_MIN;
+    var nova = Math.max(minimo, r.height + sobra / linhas);
+    Array.prototype.forEach.call(fotos, function (f) { f.style.height = nova + "px"; });
   }
 
   window.addEventListener("resize", function () {
@@ -499,7 +508,7 @@
     }
 
     var classeLista = p.tipo === "B" ? "quiz-cards" : "quiz-options";
-    if (multipla) classeLista += " quiz-cards-lista";
+    if (p.tipo === "B" && p.opcoes.length > 4) classeLista += " quiz-cards-3";
     var lista = el("div", classeLista);
     lista.setAttribute("role", multipla ? "group" : "radiogroup");
     lista.setAttribute("aria-labelledby", "quiz-pergunta");

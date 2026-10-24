@@ -506,9 +506,9 @@ a {
 }
 
 .quiz-title {
-  max-width: 310px;
+  max-width: 320px;
   margin: 30px auto 0;
-  font-size: 24.5px;
+  font-size: 21px;
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.005em;
@@ -654,7 +654,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 12.5px 15px 0;
+  padding: 12px 12px 0;
   border: 1.5px solid transparent;
   border-radius: 20px;
   background: var(--white);
@@ -679,9 +679,10 @@ a {
 .quiz-card-text {
   display: grid;
   place-items: center;
-  min-height: 48px;
+  min-height: 46px;
   padding: 4px 0;
-  font-size: 16.5px;
+  font-size: 15.5px;
+  white-space: nowrap;
   font-weight: 700;
   line-height: 1.1;
 }
@@ -705,61 +706,55 @@ a {
   box-shadow: 0 2px 16px var(--blue-glow);
 }
 
-/* Pergunta tipo C: imagem de exemplo entre a pergunta e as respostas.
-   Proporção 4:3 (mais quadrada); a altura se ajusta ao espaço livre. */
+/* Pergunta tipo C: imagem de exemplo larga, ocupando a largura toda
+   (proporção da referência, ~16:9). Se faltar espaço, ela perde altura. */
 .quiz-figura {
   display: grid;
-  height: 200px;
-  aspect-ratio: 4 / 3;
-  max-width: 100%;
-  margin: 20px auto 0;
-  border-radius: 18px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 16px auto 0;
+  border-radius: 16px;
   font-size: 9px;
   animation: option-in 0.4s ease 0.05s both;
 }
 
 .quiz-figura + .quiz-options {
-  gap: 14px;
-  margin-top: 20px;
-}
-
-/* Seleção de vários (ex.: sinais): cartões horizontais grandes, 2 colunas */
-.quiz-cards-lista {
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
-.quiz-cards-lista .quiz-card {
-  flex-direction: row;
-  align-items: center;
+.quiz-bar:not([hidden]) + .quiz-screen .quiz-option {
+  min-height: 50px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  font-size: 16.5px;
+}
+
+/* Muitos cartões (ex.: 6 sinais): grade de 3 colunas com foto grande */
+.quiz-cards-3 {
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  min-height: 76px;
-  padding: 7px 10px 7px 7px;
-  border-radius: 18px;
-  text-align: left;
+  margin-top: 16px;
 }
 
-.quiz-cards-lista .quiz-card-foto {
-  flex-shrink: 0;
-  width: 62px;
-  height: 62px;
-  border-radius: 13px;
+.quiz-cards-3 .quiz-card {
+  padding: 6px 6px 0;
+  border-radius: 16px;
 }
 
-.quiz-cards-lista .quiz-card-text {
-  place-items: center start;
-  min-height: 0;
-  padding: 0;
-  font-size: 15.5px;
-  line-height: 1.15;
+.quiz-cards-3 .quiz-card-foto {
+  border-radius: 11px;
 }
 
-.quiz-cards-lista .quiz-card.is-selected {
+.quiz-cards-3 .quiz-card-text {
+  min-height: 36px;
+  font-size: 13.5px;
+  white-space: normal;
+  line-height: 1.1;
+}
+
+.quiz-cards-3 .quiz-card.is-selected {
   background: #f5f8fb;
-}
-
-.quiz-cards-lista .quiz-card.is-selected .quiz-card-foto {
-  box-shadow: 0 0 0 2px var(--blue);
 }
 
 /* Botão "Continuar" (seleção múltipla) */
@@ -818,39 +813,44 @@ a {
     margin-top: 8px;
   }
 
-  .quiz-cards-lista {
-    gap: 10px;
+  .quiz-cards-3 {
+    gap: 8px;
+    margin-top: 12px;
   }
 
-  .quiz-cards-lista .quiz-card {
-    min-height: 68px;
-    padding: 6px 9px 6px 6px;
+  .quiz-cards-3 .quiz-card {
+    padding: 5px 5px 0;
   }
 
-  .quiz-cards-lista .quiz-card-foto {
-    width: 54px;
-    height: 54px;
+  .quiz-cards-3 .quiz-card-text {
+    min-height: 32px;
+    font-size: 13px;
   }
 
   .quiz-bar:not([hidden]) + .quiz-screen .quiz-options {
-    gap: 11px;
+    gap: 10px;
   }
 
   .quiz-bar:not([hidden]) + .quiz-screen .quiz-option {
-    min-height: 48px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    min-height: 46px;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
 
   .quiz-figura,
   .quiz-figura + .quiz-options {
-    margin-top: 16px;
+    margin-top: 12px;
+  }
+
+  .quiz-continuar {
+    min-height: 44px;
+    margin-top: 12px;
   }
 }
 
 /* Espaço para o painel fixo embaixo */
 .quiz.com-formula {
-  padding-bottom: calc(124px + env(safe-area-inset-bottom));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
 }
 
 /* Painel "Combinação ideal para sua pele" (fixo embaixo) */
@@ -861,8 +861,7 @@ a {
   z-index: 20;
   width: 100%;
   max-width: var(--page-max);
-  min-height: 120px;
-  padding: 10px 16px calc(env(safe-area-inset-bottom) + 18px);
+  padding: 8px 16px calc(env(safe-area-inset-bottom) + 12px);
   background: var(--white);
   transform: translateX(-50%);
 }
@@ -901,7 +900,7 @@ a {
 .formula-count {
   margin: 0;
   font-family: var(--font-condensed);
-  font-size: 16.8px;
+  font-size: 15px;
   font-style: normal;
   line-height: 1.2;
 }
@@ -930,15 +929,15 @@ a {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
-  height: 52px;
-  margin-top: 10px;
+  gap: 14px;
+  height: 44px;
+  margin-top: 6px;
 }
 
 .formula-pote {
   flex-shrink: 0;
-  width: 15.4px;
-  height: 50px;
+  width: 12.3px;
+  height: 40px;
 }
 
 .formula-pote-vazio {
@@ -965,8 +964,8 @@ a {
   left: 0;
   right: 0;
   margin: 0;
-  color: #e0e1e4;
-  font-size: 16.6px;
+  color: #d5d7db;
+  font-size: 15px;
   font-weight: 300;
   text-align: center;
   pointer-events: none;
@@ -984,7 +983,7 @@ a {
   align-items: center;
   min-width: 0;
   flex: 1;
-  height: 52px;
+  height: 44px;
   margin: 0;
   padding: 0 2px;
   overflow: hidden;
@@ -998,8 +997,8 @@ a {
   align-items: center;
   flex-shrink: 0;
   max-width: 290px;
-  height: 46px;
-  padding: 3px 16px 3px 3px;
+  height: 40px;
+  padding: 3px 14px 3px 3px;
   overflow: hidden;
   border: 1px solid #d3d8df;
   border-radius: 999px;
@@ -1022,7 +1021,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-left: 11px;
+  margin-left: 10px;
   white-space: nowrap;
   transition: opacity 0.35s ease 0.18s;
 }
@@ -1030,7 +1029,7 @@ a {
 .ativo-rotulo {
   color: #8b929b;
   font-family: var(--font-condensed);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1;
@@ -1039,7 +1038,7 @@ a {
 
 .ativo-nome {
   color: var(--black);
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.1;
@@ -1048,8 +1047,8 @@ a {
 
 /* Ativos anteriores: bolinhas com borda branca, empilhadas */
 .ativo.is-collapsed {
-  max-width: 32px;
-  height: 32px;
+  max-width: 28px;
+  height: 28px;
   padding: 0;
   border-color: var(--white);
   border-width: 2px;
@@ -1065,8 +1064,8 @@ a {
 }
 
 .ativo.is-collapsed .ativo-icone {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 }
 
 .ativo.is-collapsed .ativo-textos {
@@ -1076,7 +1075,7 @@ a {
 
 /* Enquanto a bolinha está voando, o selo novo fica invisível e fechado */
 .ativo.is-arriving {
-  max-width: 46px;
+  max-width: 40px;
   opacity: 0;
   transition: none;
 }
@@ -1096,7 +1095,7 @@ a {
 }
 
 .formula.is-concluded .formula-pote {
-  transform: translateX(var(--centro, 0px)) scale(1.18);
+  transform: translateX(var(--centro, 0px)) scale(1.12);
 }
 
 .formula-title {
@@ -1117,8 +1116,8 @@ a {
 /* Bolinha do ativo (a imagem entra aqui; sem imagem, mostra bolhas cinza) */
 .ativo-icone {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   transition: width 0.35s ease, height 0.35s ease;
   border: 0;
   border-radius: 50%;
