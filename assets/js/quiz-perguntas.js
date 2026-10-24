@@ -11,8 +11,10 @@
    - "carregamento": tela com o círculo de 0% a 100%. Enquanto ela roda, as
      imagens listadas em "preCarregar" (e as imagens das próximas perguntas)
      são baixadas, para aparecerem na hora.
-   - "analise": tela de análise depois da fórmula: círculo de 0% a 100% e uma
-     lista de etapas que vão sendo checadas (cada uma com sua duração, em ms). */
+   - "analise": tela de análise depois da fórmula: rosto escaneado, barra e
+     etapas que vão sendo checadas (cada uma com sua duração, em ms).
+   - "montagem": os 12 ativos giram em volta do pote, entram um a um e o pote
+     enche; no fim aparece "Fórmula concluída". */
 window.QUIZ_FLUXO = [
   {
     tipo: "etapa",
@@ -238,5 +240,21 @@ window.QUIZ_FLUXO = [
       { texto: "Mapeando linhas e sinais", icone: "linhas", duracao: 850, pontos: [{ x: 66, y: 116 }, { x: 134, y: 116 }, { x: 88, y: 160 }] },
     ],
     pausaFinal: 300, // tempo parado em 100% antes de seguir (total ≈ 2,85 s)
+  },
+  {
+    tipo: "montagem",
+    id: "montagem",
+    titulo: "Montando sua",
+    destaque: "fórmula",
+    legenda: "Combinando os",
+    legendaDestaque: "ativos",
+    concluido: "Fórmula",
+    concluidoDestaque: "concluída!",
+    // Tempos em ms: intervalo entre ativos surgindo, pausa, intervalo entre
+    // ativos entrando e tempo na tela final (total ≈ 7 s)
+    surgir: 70,
+    espera: 450,
+    entrar: 300,
+    final: 1700,
   },
 ];

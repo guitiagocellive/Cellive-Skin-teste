@@ -1527,6 +1527,259 @@ a {
 
 }
 
+/* ==========================================================================
+   Montagem da fórmula
+   ========================================================================== */
+.quiz[data-tela="montagem"] .quiz-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 28px;
+}
+
+.montagem {
+  --palco: min(330px, 86vw, 46svh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Títulos "parte fina + PARTE EM NEGRITO" (mesmo estilo da análise) */
+.titulo-leve {
+  font-family: var(--font-condensed);
+  font-weight: 400;
+}
+
+.titulo-forte {
+  color: var(--black);
+  font-family: var(--font);
+  font-weight: 700;
+}
+
+.montagem .analise-titulo {
+  font-size: 26px;
+}
+
+.montagem .analise-titulo .titulo-leve {
+  letter-spacing: -0.005em;
+}
+
+.montagem-palco {
+  position: relative;
+  width: var(--palco);
+  height: var(--palco);
+  margin-top: 26px;
+}
+
+/* Luz azul suave atrás do pote; cresce no final */
+.montagem-luz {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(177, 198, 221, 0.55) 0%, rgba(177, 198, 221, 0.22) 38%, rgba(177, 198, 221, 0) 68%);
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0.8;
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 1.1s ease;
+}
+
+/* Anel tracejado com os ativos, girando devagar */
+.montagem-anel {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed #dfe1e4;
+  border-radius: 50%;
+  animation: montagem-gira 18s linear infinite;
+}
+
+@keyframes montagem-gira {
+  to { transform: rotate(360deg); }
+}
+
+.montagem-bolha {
+  --r: calc(var(--palco) / 2);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 8px rgba(97, 111, 124, 0.18);
+  opacity: 0;
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))) scale(0.2);
+  transition:
+    transform 0.55s cubic-bezier(0.3, 1.3, 0.5, 1),
+    opacity 0.35s ease;
+}
+
+.montagem-bolha.is-visivel {
+  opacity: 1;
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))) scale(1);
+}
+
+/* Entrando no pote: vai para o centro e encolhe */
+.montagem-bolha.is-entrando {
+  opacity: 0;
+  transform: rotate(var(--a)) translateY(-8%) rotate(calc(-1 * var(--a))) scale(0.25);
+  transition:
+    transform 0.6s cubic-bezier(0.55, 0, 0.3, 1),
+    opacity 0.6s ease-in;
+}
+
+/* Pote grande no centro */
+.montagem-pote {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 72%;
+  aspect-ratio: 50 / 163;
+  transform: translate(-50%, -50%);
+}
+
+.montagem-pote svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.montagem-liquido {
+  fill: #1b1b1b;
+  transform: translateY(157px);
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+/* Textos de baixo: andamento → concluída */
+.montagem-status {
+  position: relative;
+  width: 100%;
+  height: 92px;
+  margin-top: 26px;
+  text-align: center;
+}
+
+.montagem-andamento,
+.montagem-pronto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.montagem-legenda {
+  margin: 0;
+  color: #3d3d3d;
+  font-size: 24px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.montagem-ativo {
+  min-height: 24px;
+  margin: 10px 0 0;
+  color: #8a8e94;
+  font-family: var(--font-condensed);
+  font-size: 19px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.montagem-ativo.is-troca {
+  animation: montagem-troca 0.3s ease;
+}
+
+@keyframes montagem-troca {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.montagem-pronto {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.montagem-check {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin-top: 14px;
+  border-radius: 50%;
+  background: var(--blue);
+  transform: scale(0);
+  transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.2s;
+}
+
+.montagem-check::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 13px;
+  width: 17px;
+  height: 9px;
+  border-left: 3.5px solid var(--white);
+  border-bottom: 3.5px solid var(--white);
+  border-radius: 1px;
+  transform: rotate(-45deg);
+}
+
+/* Fórmula concluída */
+.montagem.is-concluida .montagem-andamento {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.montagem.is-concluida .montagem-pronto {
+  opacity: 1;
+  transform: none;
+}
+
+.montagem.is-concluida .montagem-check {
+  transform: scale(1);
+}
+
+.montagem.is-concluida .montagem-luz {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.35);
+}
+
+.montagem.is-concluida .montagem-pote {
+  animation: montagem-pronto 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+@keyframes montagem-pronto {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  45% { transform: translate(-50%, -50%) scale(1.06); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (max-height: 700px) {
+  .montagem-palco {
+    margin-top: 16px;
+  }
+
+  .montagem-status {
+    margin-top: 16px;
+  }
+
+  .montagem-legenda {
+    font-size: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .montagem-anel,
+  .montagem-ativo.is-troca,
+  .montagem.is-concluida .montagem-pote {
+    animation: none;
+  }
+}
+
 /* Elementos escondidos em algumas telas (ex.: carregamento) */
 .quiz-back[hidden],
 .stepper[hidden] {

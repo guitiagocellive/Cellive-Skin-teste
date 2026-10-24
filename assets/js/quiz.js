@@ -34,6 +34,8 @@
       });
     } else if (bloco.tipo === "carregamento") {
       telas.push({ tipo: "carregamento", bloco: bloco });
+    } else if (bloco.tipo === "montagem") {
+      telas.push({ tipo: "montagem", bloco: bloco });
     } else if (bloco.tipo === "analise") {
       telas.push({ tipo: "analise", bloco: bloco });
     }
@@ -876,11 +878,130 @@
     requestAnimationFrame(quadro);
   }
 
-  /* Tela provisória até a próxima etapa chegar */
+  /* ---------- Montagem da fórmula ----------
+     Os 12 ativos surgem num anel que gira em volta do pote; um a um entram
+     no pote, que vai enchendo; no fim aparece "Fórmula concluída". */
+  var POTE_PATH = "M9 10.2H5.8C3.4 10.2 1.8 9.4 1.8 7.6V5.4C1.8 3.8 3 3.1 4.8 3.1C6.9 3.1 7.7 2.8 7.8 1.6C7.9 .3 8.6 0 10.4 0H21.4C23.1 0 24 .2 25.2 .7C27 1 29.6 1.1 31.4 1.7C34.4 2.2 37.6 3.4 39.6 4.6C41.2 5.6 41.6 6.4 41.6 8.4V25.4L43.2 26.3C44.2 26.9 44.5 27.6 44.5 28.8V37.1H45.6C47.6 37.1 48.5 38 48.5 39.6V41L49.4 42C49.7 42.4 49.7 42.9 49.7 43.6V51.6L49.2 53.8V156.6C49.2 159.5 47.4 160.7 44.6 161.1C42.6 161.4 40.8 162.9 35.8 162.9H14.1C9.2 162.9 7.4 161.4 5.4 161.1C2.6 160.7 1 159.5 1 156.6V53.8L.2 52.4C0 52 0 51.6 0 51.1V43.6C0 42.9 .2 42.5 .7 42L1.9 41V39.6C1.9 38 2.8 37.1 4.8 37.1H6.6V28.8C6.6 27.6 7 26.9 8 26.3L9 25.6Z";
+
+  function tituloEmDuasPartes(classe, leve, forte) {
+    var h = el("p", classe);
+    h.appendChild(el("span", "titulo-leve", leve));
+    h.appendChild(document.createTextNode(" "));
+    h.appendChild(el("strong", "titulo-forte", forte));
+    return h;
+  }
+
+  function telaMontagem(tela) {
+    var b = tela.bloco;
+    var wrap = el("div", "montagem");
+    var titulo = tituloEmDuasPartes("analise-titulo", b.titulo, b.destaque);
+    wrap.appendChild(titulo);
+
+    var palco = el("div", "montagem-palco");
+    palco.appendChild(el("span", "montagem-luz"));
+
+    var anel = el("div", "montagem-anel");
+    var ativos = ativosDaFormula();
+    ativos.forEach(function (ativo, i) {
+      var bolha = slotDeImagem("ativo-icone montagem-bolha", "", ativo.imagem, "");
+      bolha.style.setProperty("--a", (i * 360) / ativos.length + "deg");
+      anel.appendChild(bolha);
+    });
+    palco.appendChild(anel);
+
+    var pote = el("div", "montagem-pote");
+    pote.innerHTML =
+      '<svg viewBox="0 0 50 163" aria-hidden="true">' +
+        '<defs><clipPath id="pote-montagem"><path d="' + POTE_PATH + '"/></clipPath></defs>' +
+        '<g clip-path="url(#pote-montagem)">' +
+          '<rect class="formula-pote-vazio" width="50" height="163"/>' +
+          '<rect class="montagem-liquido" width="50" height="163" data-liquido/>' +
+        "</g>" +
+      "</svg>";
+    palco.appendChild(pote);
+    wrap.appendChild(palco);
+
+    var status = el("div", "montagem-status");
+    status.setAttribute("aria-live", "polite");
+    var andamento = el("div", "montagem-andamento");
+    andamento.appendChild(tituloEmDuasPartes("montagem-legenda", b.legenda, b.legendaDestaque));
+    andamento.appendChild(el("p", "montagem-ativo", ""));
+    status.appendChild(andamento);
+
+    var pronto = el("div", "montagem-pronto");
+    pronto.appendChild(tituloEmDuasPartes("montagem-legenda", b.concluido, b.concluidoDestaque));
+    var check = el("span", "montagem-check");
+    check.setAttribute("aria-hidden", "true");
+    pronto.appendChild(check);
+    status.appendChild(pronto);
+    wrap.appendChild(status);
+    return wrap;
+  }
+
+  function iniciarMontagem(tela, indiceTela) {
+    var b = tela.bloco;
+    var raiz = screenEl.querySelector(".montagem");
+    var bolhas = screenEl.querySelectorAll(".montagem-bolha");
+    var liquido = screenEl.querySelector("[data-liquido]");
+    var nomeEl = screenEl.querySelector(".montagem-ativo");
+    var ativos = ativosDaFormula();
+    var total = bolhas.length;
+    var controle = { cancelado: false };
+    carregamentoAtivo = controle;
+    var rapido = reduzirMovimento();
+
+    var SURGIR = rapido ? 0 : b.surgir || 70;       // intervalo entre os ativos surgindo
+    var ESPERA = rapido ? 200 : b.espera || 450;    // pausa antes de começar a entrar
+    var ENTRAR = rapido ? 120 : b.entrar || 300;    // intervalo entre cada ativo entrando
+    var FINAL = b.final || 1700;                    // tempo na tela de "concluída"
+
+    function depois(ms, fn) {
+      setTimeout(function () { if (!controle.cancelado) fn(); }, ms);
+    }
+
+    function nivel(n) {
+      var v = Math.max(n / total, 0.035);
+      liquido.style.transform = "translateY(" + (163 * (1 - v)).toFixed(2) + "px)";
+    }
+    nivel(0);
+
+    // 1) os ativos surgem um a um no anel
+    Array.prototype.forEach.call(bolhas, function (bolha, i) {
+      depois(i * SURGIR, function () { bolha.classList.add("is-visivel"); });
+    });
+
+    // 2) um a um entram no pote
+    var inicioEntrada = total * SURGIR + ESPERA;
+    Array.prototype.forEach.call(bolhas, function (bolha, i) {
+      depois(inicioEntrada + i * ENTRAR, function () {
+        bolha.classList.add("is-entrando");
+        nomeEl.textContent = "+" + ativos[i].nome;
+        nomeEl.classList.remove("is-troca");
+        void nomeEl.offsetWidth;
+        nomeEl.classList.add("is-troca");
+        depois(rapido ? 0 : 260, function () { nivel(i + 1); });
+      });
+    });
+
+    // 3) fórmula concluída
+    var fim = inicioEntrada + total * ENTRAR + (rapido ? 100 : 450);
+    depois(fim, function () {
+      nivel(total);
+      raiz.classList.add("is-concluida");
+    });
+    depois(fim + FINAL, function () {
+      carregamentoAtivo = null;
+      // A montagem não fica no histórico: voltar leva à última pergunta
+      history.replaceState({ s: indiceTela + 1 }, "");
+      mostrar(indiceTela + 1, "forward");
+    });
+  }
+
+  /* Tela provisória até a página da oferta chegar */
   function telaFim() {
     var frag = document.createDocumentFragment();
-    frag.appendChild(el("h1", "quiz-title", "Estamos montando sua fórmula"));
-    frag.appendChild(el("p", "quiz-note", "Esta tela entra na próxima etapa."));
+    frag.appendChild(el("h1", "quiz-title", "Sua fórmula está pronta!"));
+    frag.appendChild(el("p", "quiz-note", "A página da oferta entra na próxima etapa."));
     return frag;
   }
 
@@ -895,12 +1016,13 @@
       tela.tipo === "pergunta" ? telaPergunta(tela) :
       tela.tipo === "carregamento" ? telaCarregamento(tela) :
       tela.tipo === "analise" ? telaAnalise(tela) :
+      tela.tipo === "montagem" ? telaMontagem(tela) :
       telaFim();
 
     atual = indice;
     atualizarProgresso(tela);
     sincronizarPainel(tela);
-    backEl.hidden = tela.tipo === "carregamento" || tela.tipo === "analise";
+    backEl.hidden = tela.tipo === "carregamento" || tela.tipo === "analise" || tela.tipo === "montagem";
     quizEl.setAttribute("data-tela", tela.tipo);
 
     var trocar = function () {
@@ -914,6 +1036,7 @@
       bloqueado = false;
       if (tela.tipo === "carregamento") iniciarCarregamento(tela, indice);
       if (tela.tipo === "analise") iniciarAnalise(tela, indice);
+      if (tela.tipo === "montagem") iniciarMontagem(tela, indice);
     };
 
     if (!screenEl.firstChild || reduzirMovimento()) {
@@ -995,6 +1118,7 @@
   for (var i = 0; i < telas.length; i++) {
     if (location.hash === "#formula" && telas[i].bloco === blocoFormula) { inicio = i; break; }
     if (location.hash === "#analise" && telas[i].tipo === "analise") { inicio = i; break; }
+    if (location.hash === "#montagem" && telas[i].tipo === "montagem") { inicio = i; break; }
   }
 
   history.replaceState({ s: inicio }, "");

@@ -34,6 +34,11 @@ Depois da fórmula vem a tela de **análise** ("FAZENDO UMA ANÁLISE **DO SEU CA
 por vez (entra, ganha o check, sai e entra a próxima). Tudo leva menos de 3 s. Textos, ícones, pontos e tempos ficam
 em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
 
+Depois da análise vem a **montagem da fórmula** ("MONTANDO SUA **FÓRMULA**"): os 12 ativos surgem num anel
+tracejado que gira em volta do pote, entram um a um ("+NOME DO ATIVO") e o pote enche. No fim aparece
+"FÓRMULA **CONCLUÍDA!**" com o check e a luz azul cresce (cerca de 6 s no total). Textos e tempos ficam em
+`quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#montagem`.
+
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
 desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas perguntas e as listadas em
 `preCarregar` são baixadas, para aparecerem na hora. As respostas da pessoa ficam guardadas no navegador durante a visita
