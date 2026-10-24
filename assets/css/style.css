@@ -1215,7 +1215,7 @@ a {
   margin-top: 20px;
   overflow: hidden;
   border-radius: 24px;
-  background: radial-gradient(120% 90% at 50% 0%, #e8eff7 0%, #f2f6fa 60%, #f8fafc 100%);
+  background: var(--white);
   animation: option-in 0.4s ease both;
 }
 
@@ -1235,12 +1235,12 @@ a {
 }
 
 .analise-cabelo {
-  fill: #dfe7f0;
+  fill: #eceded;
 }
 
 .analise-face {
   fill: var(--white);
-  stroke: #a9bacd;
+  stroke: #c4c7cb;
   stroke-width: 1.6;
 }
 
@@ -1250,10 +1250,10 @@ a {
   left: 8%;
   right: 8%;
   top: 0;
-  height: 30px;
-  background: linear-gradient(180deg, rgba(177, 198, 221, 0) 0%, rgba(177, 198, 221, 0.32) 100%);
-  border-bottom: 1.5px solid rgba(127, 156, 192, 0.85);
-  box-shadow: 0 6px 14px -6px rgba(127, 156, 192, 0.7);
+  height: 34px;
+  background: linear-gradient(180deg, rgba(177, 198, 221, 0) 0%, rgba(177, 198, 221, 0.38) 100%);
+  border-bottom: 2px solid #7f9cc0;
+  box-shadow: 0 6px 14px -6px rgba(127, 156, 192, 0.8);
   animation: analise-scan 1.35s ease-in-out infinite alternate;
   pointer-events: none;
 }
@@ -1311,7 +1311,7 @@ a {
   height: 5px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e6ebf1;
+  background: #eceded;
 }
 
 .analise-barra-fill {
@@ -1349,8 +1349,8 @@ a {
   align-items: center;
   gap: 12px;
   padding: 11px 2px;
-  border-bottom: 1px solid #eef1f5;
-  color: #b3b9c1;
+  border-bottom: 1px solid #f0f1f2;
+  color: #b5b8bc;
   font-size: 15px;
   line-height: 1.2;
   transition: color 0.3s ease;
@@ -1368,7 +1368,7 @@ a {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
-  color: #c3cbd5;
+  color: #c4c7cb;
   transition: color 0.3s ease;
 }
 
@@ -1411,7 +1411,7 @@ a {
 }
 
 .analise-etapa.is-feita {
-  color: #4c5866;
+  color: #505050;
 }
 
 .analise-etapa.is-feita .analise-status {
