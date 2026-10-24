@@ -1,7 +1,12 @@
 # Cellive Skin — página de vendas com quiz
 
 Site estático (HTML + CSS), sem instalação. Para ver, abra o `index.html` no navegador.
-Pode ser publicado em qualquer hospedagem de site estático (GitHub Pages, Netlify, Vercel, Cloudflare Pages).
+
+## Publicação (Cloudflare)
+
+O site é publicado pela Cloudflare (Workers) direto deste repositório. A configuração está em
+`wrangler.jsonc`, e não precisa de comando de build. O `.assetsignore` lista os arquivos que não vão
+para o ar (README, configurações e a pasta `.git`).
 
 ## Páginas
 
@@ -10,6 +15,7 @@ Pode ser publicado em qualquer hospedagem de site estático (GitHub Pages, Netli
 | `index.html` | Capa do quiz (primeira página) |
 | `politica-de-privacidade.html` | Política de Privacidade (LGPD) |
 | `quiz.html` | Provisória. Vira o quiz na próxima etapa |
+| `404.html` | Página de "não encontrada" |
 
 ## Espaços de imagem
 

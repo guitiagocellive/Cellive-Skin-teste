@@ -1,0 +1,8 @@
+# Arquivos que NÃO vão para o site publicado
+.git
+.assetsignore
+.gitignore
+wrangler.jsonc
+README.md
+node_modules
+.wrangler
