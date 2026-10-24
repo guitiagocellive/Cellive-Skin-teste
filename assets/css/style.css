@@ -1,0 +1,542 @@
+/* ==========================================================================
+   Cellive Skin — estilos gerais
+   Medidas tiradas do layout de referência (celular de 412px de largura).
+   ========================================================================== */
+
+/* Fontes
+   A fonte oficial é a Acumin Pro (Adobe Fonts). Quando o kit da Adobe estiver
+   ligado no <head>, ela é usada automaticamente. Enquanto isso, a página usa a
+   Archivo (Google Fonts), que tem desenho e larguras parecidas. */
+:root {
+  --font: "acumin-pro", "Acumin Pro", "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-condensed: "acumin-pro-condensed", "Acumin Pro Condensed", "Archivo", "Arial Narrow", sans-serif;
+
+  --white: #ffffff;
+  --black: #000000;
+  --ink: #1a1a1a;          /* logo */
+  --gray-text: #7e7d80;    /* subtítulo */
+  --gray-soft: #a4a4a4;    /* itens "10 perguntas", "2 minutos"... */
+  --gray-dark: #505050;    /* "Fórmula com tecnologia..." */
+  --gray-legal: #535353;   /* texto da política */
+  --blue: #b1c6dd;         /* botão e marca-texto */
+  --blue-glow: rgba(177, 198, 221, 0.55);
+  --verified: #46adfe;     /* selo de verificado */
+
+  --page-max: 480px;
+  --gutter: 22px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-stretch: 94%;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+/* ==========================================================================
+   Espaço para imagem
+   Cada foto da página fica dentro de um .slot. Enquanto o arquivo não existe,
+   aparece um quadro tracejado com o nome do espaço (ex.: FOTO 1). Quando o
+   arquivo é colocado em assets/img com o nome indicado, a foto aparece sozinha.
+   ========================================================================== */
+.slot {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  background: #f1f4f8;
+  border: 1px dashed #9fb3cb;
+  color: #6f86a3;
+  font-family: var(--font);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
+.slot::before {
+  content: attr(data-label);
+  padding: 2px;
+}
+
+.slot > img[hidden] {
+  display: none;
+}
+
+.slot > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Com a foto carregada, o quadro tracejado some. */
+.slot:has(> img:not([hidden])) {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* ==========================================================================
+   Página inicial (capa do quiz)
+   ========================================================================== */
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: var(--page-max);
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 47px var(--gutter) 40px;
+  text-align: center;
+}
+
+/* Logo */
+.brand {
+  display: block;
+  width: 157px;
+  flex-shrink: 0;
+}
+
+.brand img {
+  width: 100%;
+  height: auto;
+}
+
+/* Os dois espaçadores repetem o respiro do layout: mais espaço acima do
+   título do que abaixo dele. Em telas menores, eles encolhem juntos. */
+.spacer-top {
+  flex: 1.5 1 0;
+  min-height: 56px;
+  max-height: 214px;
+}
+
+.spacer-bottom {
+  flex: 1 1 0;
+  min-height: 36px;
+  max-height: 140px;
+}
+
+/* Título */
+.hero-title {
+  max-width: 350px;
+  margin: 0 auto;
+  font-family: var(--font);
+  font-size: clamp(28px, 8.6vw, 35.5px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.005em;
+  color: var(--black);
+}
+
+.highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+  font-family: var(--font-condensed);
+  font-stretch: 75%;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Marca-texto azul atrás de "NOVA FASE" */
+.highlight::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0.2em;
+  right: -0.1em;
+  top: 0.5em;
+  bottom: -0.03em;
+  background: var(--blue);
+}
+
+/* Subtítulo */
+.hero-subtitle {
+  max-width: 344px;
+  margin: 18px auto 0;
+  font-size: clamp(16px, 4.6vw, 19px);
+  font-weight: 300;
+  line-height: 1.17;
+  color: var(--gray-text);
+}
+
+/* ==========================================================================
+   Botão principal
+   Animação discreta: o botão "respira", um anel suave se expande ao redor
+   e um brilho passa pela superfície a cada poucos segundos.
+   ========================================================================== */
+.cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 368px;
+  min-height: 58px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: clamp(21px, 6.5vw, 27.5px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 14px var(--blue-glow);
+  isolation: isolate;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  animation: cta-breathe 2.8s ease-in-out infinite;
+}
+
+/* Brilho que atravessa o botão */
+.cta::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+  transform: skewX(-18deg);
+  animation: cta-shine 4.2s ease-in-out infinite;
+}
+
+/* Anel que pulsa em volta do botão (fica fora do botão, por isso usa o wrapper) */
+.cta-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.cta-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: 0 auto;
+  max-width: 368px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0 var(--blue-glow);
+  animation: cta-ring 2.8s ease-out infinite;
+  pointer-events: none;
+}
+
+.cta:hover {
+  filter: brightness(1.03);
+  box-shadow: 0 4px 22px var(--blue-glow);
+}
+
+.cta:active {
+  transform: scale(0.97);
+  animation: none;
+}
+
+.cta:focus-visible {
+  outline: 3px solid #7f9cc0;
+  outline-offset: 3px;
+}
+
+@keyframes cta-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+}
+
+@keyframes cta-ring {
+  0% { box-shadow: 0 0 0 0 rgba(177, 198, 221, 0.6); }
+  70% { box-shadow: 0 0 0 12px rgba(177, 198, 221, 0); }
+  100% { box-shadow: 0 0 0 12px rgba(177, 198, 221, 0); }
+}
+
+@keyframes cta-shine {
+  0%, 55% { left: -60%; }
+  85%, 100% { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta,
+  .cta::after,
+  .cta-wrap::before {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   10 perguntas · 2 minutos · Entrega Grátis
+   ========================================================================== */
+.facts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 15px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--gray-soft);
+  font-size: clamp(11px, 3.4vw, 13.5px);
+  font-style: italic;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.facts svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  stroke: var(--gray-soft);
+}
+
+.facts .icon-truck {
+  width: 27px;
+}
+
+/* ==========================================================================
+   Prova social: fotos + "Evelyn Veras e +1.000 mulheres usam!"
+   ========================================================================== */
+.proof {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 26px;
+}
+
+.avatars {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.avatars .slot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border-width: 1px;
+  box-shadow: 0 0 0 1.5px var(--white);
+}
+
+.avatars .slot + .slot {
+  margin-left: -9px;
+}
+
+.proof-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--black);
+}
+
+.proof-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.verified {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.proof-count strong {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* ==========================================================================
+   Fórmula com tecnologia coreana
+   ========================================================================== */
+.origin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 58px;
+}
+
+.origin .slot {
+  width: 40px;
+  height: 30px;
+  border-radius: 3px;
+}
+
+.origin p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: left;
+  color: var(--gray-dark);
+}
+
+/* ==========================================================================
+   Aviso de privacidade (rodapé da capa)
+   ========================================================================== */
+.legal-note {
+  margin: auto 0 0;
+  padding-top: 52px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--gray-legal);
+}
+
+.legal-note a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+
+/* ==========================================================================
+   Páginas de texto (Política de Privacidade)
+   ========================================================================== */
+.doc {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 36px var(--gutter) 64px;
+  color: #2b2b2b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.doc-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.doc-header .brand {
+  width: 140px;
+}
+
+.doc h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--black);
+}
+
+.doc h1 .highlight {
+  font-size: 1.05em;
+}
+
+.doc-updated {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--gray-text);
+}
+
+.doc h2 {
+  margin: 36px 0 10px;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--black);
+}
+
+.doc h3 {
+  margin: 22px 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.doc p,
+.doc ul {
+  margin: 0 0 12px;
+}
+
+.doc ul {
+  padding-left: 20px;
+}
+
+.doc li + li {
+  margin-top: 6px;
+}
+
+.doc a {
+  color: #3d6a9e;
+}
+
+.doc-summary {
+  margin: 0 0 8px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #f1f5fa;
+}
+
+.doc-summary p:last-child,
+.doc-summary ul:last-child {
+  margin-bottom: 0;
+}
+
+.doc-toc {
+  columns: 2 220px;
+  column-gap: 24px;
+  font-size: 14px;
+}
+
+/* Campos que a empresa precisa preencher (ex.: CNPJ). */
+.fill {
+  padding: 0 4px;
+  border-radius: 3px;
+  background: #fff3c4;
+  color: #6b5200;
+  font-weight: 600;
+}
+
+.doc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 40px;
+  font-weight: 600;
+  text-decoration: none;
+}
