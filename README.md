@@ -109,11 +109,11 @@ textos dos depoimentos ou respostas das dúvidas, edite direto o `oferta.html`. 
 Em seguida vem "VOCÊ ENVELHECE. **MAS SUA PELE NÃO PRECISA TE ACOMPANHAR!**", com degradê azul no fundo e etiquetas
 (rugas, linhas finas…) flutuando de leve. Depois, "CONHEÇA O **SÉRUM REVITALIZADOR**": quando a dobra aparece, a luz azul acende atrás do produto, o frasco sobe e as duas caixas se abrem de trás dele; depois o conjunto flutua de leve.
 
-Em seguida vem "SUA FÓRMULA **PERSONALIZADA**": os 12 ativos do quiz, cada um com a bolinha, a pergunta, o que a pessoa
-respondeu e uma explicação curta de por que aquele ativo é bom para a resposta dela. Aparecem 6 ativos, e os outros 6
-abrem no botão "Ver os outros 6 ativos". Os nomes e as imagens vêm do `quiz-perguntas.js`; as explicações ficam em
-`assets/js/oferta-formula.js` (uma frase para cada resposta possível). Se a pessoa abrir a oferta sem ter feito o quiz,
-aparece só o que cada ativo faz.
+Em seguida vem "SUA FÓRMULA **PERSONALIZADA**": os 12 ativos do quiz em cartões curtos, cada um com a bolinha, o
+nome, o que o ativo faz em uma linha, a pergunta, o que a pessoa respondeu e uma frase breve de por que aquele ativo é bom
+para a resposta dela. Aparecem 6 ativos, e os outros 6 abrem no botão "Ver os outros 6 ativos". Os nomes e as imagens vêm
+do `quiz-perguntas.js`; os textos ficam em `assets/js/oferta-formula.js` (uma frase para cada resposta possível). Se a
+pessoa abrir a oferta sem ter feito o quiz, aparece só o que cada ativo faz.
 
 ## Fonte (Acumin Pro)
 

@@ -1,9 +1,9 @@
 /* Seção "Sua fórmula personalizada" da página de oferta.
    Mostra os 12 ativos do quiz (nome e imagem vêm do quiz-perguntas.js), a
    resposta que a pessoa deu na pergunta de cada ativo e uma explicação curta:
-   - "resposta": por que o ativo é bom para aquela resposta (uma frase por opção)
-   - "base": o que o ativo faz (aparece sempre)
-   Se a pessoa chegou na oferta sem fazer o quiz, aparece só a frase "base".
+   - "beneficio": o que o ativo faz, em uma linha (aparece sempre)
+   - "resposta": por que ele é bom para aquela resposta (uma frase curta por opção)
+   Se a pessoa chegou na oferta sem fazer o quiz, aparece só o "beneficio".
    Para mudar um texto, edite este arquivo. As chaves de "resposta" precisam
    ser iguais ao texto da opção em quiz-perguntas.js. */
 (function () {
@@ -11,103 +11,103 @@
 
   var COPY = {
     "acido-hialuronico": {
-      base: "Atrai e segura a água na pele, devolvendo hidratação profunda e preenchendo visualmente as linhas finas.",
+      beneficio: "Hidratação profunda que preenche as linhas finas",
       resposta: {
-        "Entre 18 - 25 anos": "Nessa fase, manter a pele bem hidratada é a melhor forma de prevenir os primeiros sinais.",
-        "Entre 25 - 35 anos": "É a fase em que a pele começa a perder água com mais facilidade e surgem as primeiras linhas.",
-        "Entre 35 - 40 anos": "Com os anos, a produção natural de ácido hialurônico cai, e a pele sente essa falta.",
-        "+40 anos": "Depois dos 40, a pele produz bem menos ácido hialurônico, por isso a reposição faz tanta diferença.",
+        "Entre 18 - 25 anos": "Hidratar agora adia os primeiros sinais.",
+        "Entre 25 - 35 anos": "Repõe a água que a pele começa a perder nessa fase.",
+        "Entre 35 - 40 anos": "Repõe o que a pele passa a produzir cada vez menos.",
+        "+40 anos": "Compensa a queda natural do ácido hialurônico após os 40.",
       },
     },
     "pdrn": {
-      base: "Estimula a regeneração da pele e fortalece a barreira de proteção, deixando a pele mais resistente.",
+      beneficio: "Regenera e fortalece a barreira da pele",
       resposta: {
-        "Sim, minha pele é bastante sensível.": "Como sua pele é sensível, ele ajuda a acalmar e a recuperar a pele sem agredir.",
-        "Às vezes irrita.": "Ele deixa sua pele mais forte, para que essas irritações aconteçam cada vez menos.",
-        "Raramente.": "Com a pele já equilibrada, ele se concentra em acelerar a renovação e a reparação.",
-        "Minha pele não é sensível.": "Sua pele tolera bem os ativos, então ele trabalha direto na regeneração.",
+        "Sim, minha pele é bastante sensível.": "Acalma e recupera sem agredir a pele sensível.",
+        "Às vezes irrita.": "Deixa a pele mais forte contra as irritações.",
+        "Raramente.": "Foca em acelerar a renovação da sua pele.",
+        "Minha pele não é sensível.": "Sua pele tolera bem, então ele vai direto na regeneração.",
       },
     },
     "ghk-cu": {
-      base: "Peptídeo de cobre que estimula a produção de colágeno e a renovação da pele, devolvendo firmeza.",
+      beneficio: "Estimula o colágeno e devolve a firmeza",
       resposta: {
-        "Sim, inclusive já fiz.": "Ele ajuda a manter e prolongar o resultado dos procedimentos que você já fez.",
-        "Já pensei, mas acho muito invasivo.": "É um caminho para cuidar das linhas e da firmeza sem agulhas e sem tempo de recuperação.",
-        "Nunca pensei.": "Um cuidado diário que trabalha a firmeza aos poucos, sem precisar de procedimentos.",
+        "Sim, inclusive já fiz.": "Ajuda a manter o resultado dos procedimentos.",
+        "Já pensei, mas acho muito invasivo.": "Firmeza sem agulhas e sem tempo de recuperação.",
+        "Nunca pensei.": "Firmeza no dia a dia, sem procedimentos.",
       },
     },
     "acetyl-hexapeptide-8": {
-      base: "Conhecido pelo efeito “botox-like”: suaviza a contração que forma as linhas de expressão.",
+      beneficio: "Relaxa as linhas de expressão (efeito botox-like)",
       resposta: {
-        "Sim, ficam bem marcadas.": "Como as linhas da sua testa já ficam marcadas, ele age para relaxar e suavizar essas marcas.",
-        "Algumas linhas já ficam visíveis.": "Ele suaviza as linhas que já aparecem, antes que fiquem mais profundas.",
-        "Nunca reparei.": "Ele age na prevenção, para as linhas de expressão demorarem mais a aparecer.",
+        "Sim, ficam bem marcadas.": "Suaviza as linhas que já ficam marcadas na testa.",
+        "Algumas linhas já ficam visíveis.": "Suaviza as linhas antes que fiquem profundas.",
+        "Nunca reparei.": "Previne as linhas de expressão da testa.",
       },
     },
     "pentapeptide-4": {
-      base: "Peptídeo que sinaliza para a pele produzir mais colágeno, melhorando a textura com o uso contínuo.",
+      beneficio: "Estimula o colágeno com o uso contínuo",
       resposta: {
-        "Sim, mas sem resultados.": "Diferente de produtos comuns, ele age no colágeno, para você enxergar resultado com constância.",
-        "Sim, mas esquecia de usar.": "Por estar em um único sérum noturno, fica fácil manter a rotina e deixar ele trabalhar.",
-        "Só usei alguns produtos.": "Ele completa o que você já usa, trazendo um cuidado anti-idade de verdade para a rotina.",
-        "Nunca tentei.": "Um ótimo começo: um passo só, à noite, com um ativo que trabalha enquanto você dorme.",
+        "Sim, mas sem resultados.": "Age no colágeno, para o resultado aparecer de verdade.",
+        "Sim, mas esquecia de usar.": "Um passo só, à noite: fácil de manter.",
+        "Só usei alguns produtos.": "Completa sua rotina com um anti-idade de verdade.",
+        "Nunca tentei.": "Um começo simples: um passo só, à noite.",
       },
     },
     "retinal": {
-      base: "O retinaldeído acelera a renovação das células e age mais rápido que o retinol comum.",
-      // Pergunta de várias escolhas: a frase é montada com os sinais marcados
+      beneficio: "Renovação celular mais rápida que o retinol",
+      // Pergunta de várias escolhas: a frase usa os sinais marcados
       lista: function (sinais) {
-        return "Você marcou " + juntar(sinais) + ": ele age justamente na renovação que suaviza esses sinais.";
+        return "Renova a pele e suaviza " + juntar(sinais) + ".";
       },
     },
     "propilenoglicol": {
-      base: "Ajuda os outros ativos a penetrarem na pele e mantém a hidratação por mais tempo.",
+      beneficio: "Leva os ativos mais fundo e prolonga a hidratação",
       resposta: {
-        "Todos os dias.": "Junto com o protetor que você já usa todo dia, ele garante que cada ativo chegue onde precisa.",
-        "Na maioria dos dias.": "Ele mantém a pele hidratada e faz a fórmula render mais. E vale usar o protetor todos os dias.",
-        "Apenas quando fico muito tempo no sol.": "Ele mantém a pele hidratada no dia a dia. E o protetor diário é o melhor aliado do sérum.",
-        "Quase nunca.": "Ele ajuda a recuperar a hidratação. Para proteger os resultados, inclua o protetor solar de manhã.",
+        "Todos os dias.": "Com seu protetor diário, potencializa cada ativo.",
+        "Na maioria dos dias.": "Mantém a hidratação. E use o protetor todos os dias.",
+        "Apenas quando fico muito tempo no sol.": "Hidrata no dia a dia. O protetor diário protege o resultado.",
+        "Quase nunca.": "Recupera a hidratação. Inclua o protetor solar de manhã.",
       },
     },
     "glutationa": {
-      base: "Antioxidante potente que protege o colágeno dos radicais livres e deixa o tom mais uniforme.",
+      beneficio: "Antioxidante que protege o colágeno e ilumina",
       resposta: {
-        "Sim, percebo claramente.": "Como você já percebe a perda de firmeza, ela ajuda a proteger o colágeno da sua pele.",
-        "Comecei a perceber.": "Ela age agora, no começo da perda de firmeza, para preservar o colágeno da sua pele.",
-        "Não percebo.": "Ela ajuda a manter por mais tempo a firmeza que você tem hoje.",
+        "Sim, percebo claramente.": "Protege o colágeno que sustenta a sua pele.",
+        "Comecei a perceber.": "Age logo no começo da perda de firmeza.",
+        "Não percebo.": "Mantém a sua firmeza por mais tempo.",
       },
     },
     "tetrapeptide-7": {
-      base: "Peptídeo que acalma a pele e estimula a renovação, devolvendo o viço e a aparência descansada.",
+      beneficio: "Acalma a pele e devolve o viço",
       resposta: {
-        "Sinto que perdi minha autoestima.": "Ele ajuda a devolver a aparência saudável que faz você voltar a gostar do que vê no espelho.",
-        "Sinto que minha pele está envelhecida.": "Ele trabalha a renovação e a firmeza, para uma pele com aparência mais jovem.",
-        "Percebo uma pele sem viço ou opaca.": "Ele devolve o viço, deixando a pele com aspecto mais luminoso e descansado.",
+        "Sinto que perdi minha autoestima.": "Devolve a aparência saudável que você quer ver.",
+        "Sinto que minha pele está envelhecida.": "Renova a pele para um aspecto mais jovem.",
+        "Percebo uma pele sem viço ou opaca.": "Devolve o brilho e o aspecto descansado.",
       },
     },
     "alfa-arbutina": {
-      base: "Uniformiza o tom e clareia manchas de forma suave, para uma pele mais luminosa.",
+      beneficio: "Uniformiza o tom e clareia manchas",
       resposta: {
-        "Sim, uso retinol ou algum retinoide.": "Combina bem com retinoides e cuida das manchas enquanto eles renovam a pele.",
-        "Uso séruns anti-idade.": "Ela soma ao seu cuidado anti-idade a uniformização do tom, que muitos séruns deixam de lado.",
-        "Já usei, mas parei.": "Suave e fácil de usar, ela ajuda você a retomar o cuidado sem irritar a pele.",
-        "Nunca utilizei.": "Um ativo suave para começar: clareia manchas sem agredir a pele.",
+        "Sim, uso retinol ou algum retinoide.": "Combina com retinoides e cuida das manchas.",
+        "Uso séruns anti-idade.": "Soma a uniformização do tom ao seu anti-idade.",
+        "Já usei, mas parei.": "Suave, ajuda você a retomar sem irritar.",
+        "Nunca utilizei.": "Um começo suave para clarear manchas.",
       },
     },
     "exo-skin": {
-      base: "Tecnologia de exossomos que leva sinais de renovação às células e acelera a recuperação da pele.",
+      beneficio: "Exossomos que aceleram a renovação da pele",
       resposta: {
-        "Sim, uso retinol ou algum retinoide.": "Ajuda a pele a se recuperar mais rápido, deixando a renovação mais confortável.",
-        "Uso séruns anti-idade.": "Leva o seu cuidado anti-idade a outro nível, com uma tecnologia de renovação mais avançada.",
-        "Nunca utilizei.": "Uma tecnologia moderna para você já começar com o que há de mais atual no skincare.",
+        "Sim, uso retinol ou algum retinoide.": "Recuperação mais rápida e confortável da pele.",
+        "Uso séruns anti-idade.": "Um passo além no seu cuidado anti-idade.",
+        "Nunca utilizei.": "Você já começa com a tecnologia mais atual.",
       },
     },
     "niacinamida": {
-      base: "Fortalece a barreira da pele, melhora a elasticidade e deixa o tom mais uniforme.",
+      beneficio: "Fortalece a pele e melhora a elasticidade",
       resposta: {
-        "Sim, inclusive isso me incomoda.": "Ela melhora a elasticidade da região dos olhos, suavizando as linhas que te incomodam.",
-        "Sim, as minhas aparecem até relaxada.": "Ela reforça a pele ao redor dos olhos para que essas linhas fiquem menos marcadas.",
-        "Não percebo.": "Ela mantém a pele firme e elástica, ajudando a prevenir as linhas ao redor dos olhos.",
+        "Sim, inclusive isso me incomoda.": "Melhora a elasticidade ao redor dos olhos.",
+        "Sim, as minhas aparecem até relaxada.": "Deixa as linhas dos olhos menos marcadas.",
+        "Não percebo.": "Previne as linhas ao redor dos olhos.",
       },
     },
   };
@@ -158,30 +158,23 @@
     li.appendChild(bolha);
 
     var corpo = el("div", "fp-corpo");
-    corpo.appendChild(el("span", "fp-numero", "Ativo nº " + (numero < 10 ? "0" : "") + numero));
-    corpo.appendChild(el("h3", "fp-nome", ativo.nome));
+    var topo = el("div", "fp-cabeca");
+    topo.appendChild(el("h3", "fp-nome", ativo.nome));
+    topo.appendChild(el("span", "fp-numero", "Nº " + (numero < 10 ? "0" : "") + numero));
+    corpo.appendChild(topo);
+    corpo.appendChild(el("p", "fp-beneficio", copy.beneficio || ""));
 
     if (temResposta) {
+      var porque = copy.lista && Array.isArray(resposta) ? copy.lista(resposta) : copy.resposta && copy.resposta[resposta];
       var resp = el("div", "fp-resposta");
       resp.appendChild(el("span", "fp-pergunta", p.titulo));
-      var valor = el("span", "fp-valor");
-      valor.appendChild(el("span", "fp-valor-rotulo", "Você respondeu:"));
-      valor.appendChild(el("strong", null, Array.isArray(resposta) ? resposta.join(", ") : resposta));
+      var valor = el("p", "fp-valor");
+      valor.appendChild(el("span", null, "Você respondeu: "));
+      valor.appendChild(el("em", null, "\u201c" + (Array.isArray(resposta) ? resposta.join(", ") : resposta) + "\u201d"));
       resp.appendChild(valor);
+      if (porque) resp.appendChild(el("p", "fp-porque", porque));
       corpo.appendChild(resp);
     }
-
-    var texto = el("p", "fp-texto");
-    var porque = null;
-    if (temResposta) {
-      if (copy.lista && Array.isArray(resposta)) porque = copy.lista(resposta);
-      else if (copy.resposta) porque = copy.resposta[resposta];
-    }
-    if (porque) {
-      texto.appendChild(el("span", "fp-porque", porque + " "));
-    }
-    texto.appendChild(document.createTextNode(copy.base || ""));
-    corpo.appendChild(texto);
 
     li.appendChild(corpo);
     return li;
