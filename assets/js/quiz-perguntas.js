@@ -100,7 +100,7 @@ window.QUIZ_FLUXO = [
         id: "botox-peeling",
         tipo: "C",
         titulo: "Você já pensou em fazer botox ou peeling?",
-        imagem: "assets/img/quiz/botox-peeling.jpg",
+        imagem: "assets/img/quiz/botox-peeling.webp",
         opcoes: [
           "Sim, inclusive já fiz.",
           "Já pensei, mas acho muito invasivo.",

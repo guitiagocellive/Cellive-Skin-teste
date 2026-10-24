@@ -471,8 +471,11 @@
 
     var figura = screenEl.querySelector(".quiz-figura");
     if (figura) {
+      // Mantém a proporção 3:2: se perde altura, perde largura junto
       var hFig = figura.getBoundingClientRect().height;
-      figura.style.height = Math.max(FIGURA_MIN, hFig + sobra) + "px";
+      var novaAlt = Math.max(FIGURA_MIN, hFig + sobra);
+      figura.style.height = novaAlt + "px";
+      figura.style.width = Math.min(figura.parentNode.clientWidth, novaAlt * 1.5) + "px";
       return;
     }
     var fotos = screenEl.querySelectorAll(".quiz-card-foto");
@@ -505,6 +508,7 @@
     // recomeça do tamanho padrão do CSS e reencaixa
     Array.prototype.forEach.call(screenEl.querySelectorAll(".quiz-figura, .quiz-card-foto"), function (e) {
       e.style.height = "";
+      e.style.width = "";
     });
     var grade = screenEl.querySelector(".quiz-cards-retrato");
     if (grade) grade.style.maxWidth = "";

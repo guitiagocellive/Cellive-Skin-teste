@@ -710,12 +710,12 @@ a {
   box-shadow: 0 2px 16px var(--blue-glow);
 }
 
-/* Pergunta tipo C: imagem de exemplo larga, ocupando a largura toda
-   (proporção da referência, ~16:9). Se faltar espaço, ela perde altura. */
+/* Pergunta tipo C: imagem de exemplo em 3:2, ocupando a largura toda.
+   Se faltar altura, ela diminui inteira (sem cortar), centralizada. */
 .quiz-figura {
   display: grid;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   margin: 16px auto 0;
   border-radius: 16px;
   font-size: 9px;
