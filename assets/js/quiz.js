@@ -34,6 +34,8 @@
       });
     } else if (bloco.tipo === "carregamento") {
       telas.push({ tipo: "carregamento", bloco: bloco });
+    } else if (bloco.tipo === "analise") {
+      telas.push({ tipo: "analise", bloco: bloco });
     }
   });
   telas.push({ tipo: "fim" });
@@ -672,11 +674,117 @@
     requestAnimationFrame(quadro);
   }
 
-  /* Tela provisória até as próximas perguntas chegarem */
+  /* ---------- Análise (carregamento depois da fórmula) ----------
+     Anel de 0% a 100% e uma lista de etapas que vão sendo checadas. O anel
+     avança em ondas suaves, uma por etapa, como se cada item fosse analisado. */
+  function telaAnalise(tela) {
+    var b = tela.bloco;
+    var wrap = el("div", "analise");
+    wrap.appendChild(el("h1", "quiz-title analise-titulo", b.titulo));
+    if (b.subtitulo) wrap.appendChild(el("p", "quiz-subtitle analise-sub", b.subtitulo));
+
+    var ring = el("div", "loading-ring analise-ring");
+    ring.setAttribute("role", "progressbar");
+    ring.setAttribute("aria-valuemin", "0");
+    ring.setAttribute("aria-valuemax", "100");
+    ring.setAttribute("aria-valuenow", "0");
+    ring.setAttribute("aria-label", b.titulo);
+    ring.innerHTML =
+      '<svg viewBox="0 0 154 154" aria-hidden="true">' +
+        '<circle class="loading-track" cx="77" cy="77" r="' + RAIO + '"/>' +
+        '<circle class="loading-bar" cx="77" cy="77" r="' + RAIO + '" stroke-dasharray="' + CIRCUNFERENCIA + '" stroke-dashoffset="' + CIRCUNFERENCIA + '"/>' +
+      "</svg>" +
+      '<span class="loading-pct" data-pct>0%</span>';
+    wrap.appendChild(ring);
+
+    var lista = el("ul", "analise-etapas");
+    lista.setAttribute("aria-live", "polite");
+    b.etapas.forEach(function (etapa, i) {
+      var li = el("li", "analise-etapa");
+      li.style.setProperty("--i", i);
+      var icone = el("span", "analise-icone");
+      icone.setAttribute("aria-hidden", "true");
+      li.appendChild(icone);
+      li.appendChild(el("span", "analise-texto", etapa.texto));
+      lista.appendChild(li);
+    });
+    wrap.appendChild(lista);
+    return wrap;
+  }
+
+  function iniciarAnalise(tela, indiceTela) {
+    var etapas = tela.bloco.etapas;
+    var duracoes = etapas.map(function (e) { return e.duracao || 1600; });
+    var total = duracoes.reduce(function (a, d) { return a + d; }, 0);
+    var barra = screenEl.querySelector(".loading-bar");
+    var pct = screenEl.querySelector("[data-pct]");
+    var ring = screenEl.querySelector(".analise-ring");
+    var itens = screenEl.querySelectorAll(".analise-etapa");
+    var controle = { cancelado: false };
+    carregamentoAtivo = controle;
+
+    preCarregar(imagensDasProximasTelas(indiceTela + 1));
+
+    var inicio = null;
+    var ultimo = -1;
+    var etapaAtual = -1;
+
+    function marcar(indice) {
+      for (var i = 0; i < itens.length; i++) {
+        itens[i].classList.toggle("is-feita", i < indice);
+        itens[i].classList.toggle("is-ativa", i === indice);
+      }
+    }
+
+    function quadro(agora) {
+      if (controle.cancelado) return;
+      if (inicio === null) inicio = agora;
+      var passado = Math.min(agora - inicio, total);
+
+      // Em qual etapa estamos e quanto dela já passou
+      var i = 0, acumulado = 0;
+      while (i < duracoes.length - 1 && passado > acumulado + duracoes[i]) {
+        acumulado += duracoes[i];
+        i++;
+      }
+      var local = Math.min((passado - acumulado) / duracoes[i], 1);
+      var v = (i + (reduzirMovimento() ? local : suavizar(local))) / duracoes.length;
+
+      if (i !== etapaAtual) {
+        etapaAtual = i;
+        marcar(i);
+      }
+      barra.style.strokeDashoffset = String(CIRCUNFERENCIA * (1 - v));
+      barra.style.opacity = v > 0.004 ? "1" : "0";
+      var numero = Math.round(v * 100);
+      if (numero !== ultimo) {
+        ultimo = numero;
+        pct.textContent = numero + "%";
+        ring.setAttribute("aria-valuenow", String(numero));
+      }
+
+      if (passado < total) {
+        requestAnimationFrame(quadro);
+      } else {
+        marcar(itens.length); // todas checadas
+        ring.classList.add("is-complete");
+        setTimeout(function () {
+          if (controle.cancelado) return;
+          carregamentoAtivo = null;
+          // A análise não fica no histórico: voltar leva à última pergunta
+          history.replaceState({ s: indiceTela + 1 }, "");
+          mostrar(indiceTela + 1, "forward");
+        }, tela.bloco.pausaFinal || 700);
+      }
+    }
+    requestAnimationFrame(quadro);
+  }
+
+  /* Tela provisória até a próxima etapa chegar */
   function telaFim() {
     var frag = document.createDocumentFragment();
-    frag.appendChild(el("h1", "quiz-title", "Sua fórmula está completa!"));
-    frag.appendChild(el("p", "quiz-note", "A página da oferta entra na próxima etapa."));
+    frag.appendChild(el("h1", "quiz-title", "Estamos montando sua fórmula"));
+    frag.appendChild(el("p", "quiz-note", "Esta tela entra na próxima etapa."));
     return frag;
   }
 
@@ -690,12 +798,13 @@
     var conteudo =
       tela.tipo === "pergunta" ? telaPergunta(tela) :
       tela.tipo === "carregamento" ? telaCarregamento(tela) :
+      tela.tipo === "analise" ? telaAnalise(tela) :
       telaFim();
 
     atual = indice;
     atualizarProgresso(tela);
     sincronizarPainel(tela);
-    backEl.hidden = tela.tipo === "carregamento";
+    backEl.hidden = tela.tipo === "carregamento" || tela.tipo === "analise";
     quizEl.setAttribute("data-tela", tela.tipo);
 
     var trocar = function () {
@@ -708,6 +817,7 @@
       encaixarNaTela();
       bloqueado = false;
       if (tela.tipo === "carregamento") iniciarCarregamento(tela, indice);
+      if (tela.tipo === "analise") iniciarAnalise(tela, indice);
     };
 
     if (!screenEl.firstChild || reduzirMovimento()) {
@@ -783,12 +893,12 @@
     if (t.tipo === "carregamento") preCarregar(t.bloco.imagem ? [t.bloco.imagem] : []);
   });
 
-  // Atalho para testes: quiz.html#formula abre direto na etapa da fórmula
+  // Atalhos para testes: quiz.html#formula abre na etapa da fórmula e
+  // quiz.html#analise abre direto na tela de análise
   var inicio = 0;
-  if (location.hash === "#formula" && blocoFormula) {
-    for (var i = 0; i < telas.length; i++) {
-      if (telas[i].bloco === blocoFormula) { inicio = i; break; }
-    }
+  for (var i = 0; i < telas.length; i++) {
+    if (location.hash === "#formula" && telas[i].bloco === blocoFormula) { inicio = i; break; }
+    if (location.hash === "#analise" && telas[i].tipo === "analise") { inicio = i; break; }
   }
 
   history.replaceState({ s: inicio }, "");

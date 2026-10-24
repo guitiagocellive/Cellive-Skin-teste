@@ -10,7 +10,9 @@
      C = pergunta + imagem de exemplo + lista de respostas
    - "carregamento": tela com o círculo de 0% a 100%. Enquanto ela roda, as
      imagens listadas em "preCarregar" (e as imagens das próximas perguntas)
-     são baixadas, para aparecerem na hora. */
+     são baixadas, para aparecerem na hora.
+   - "analise": tela de análise depois da fórmula: círculo de 0% a 100% e uma
+     lista de etapas que vão sendo checadas (cada uma com sua duração, em ms). */
 window.QUIZ_FLUXO = [
   {
     tipo: "etapa",
@@ -219,5 +221,18 @@ window.QUIZ_FLUXO = [
         ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "assets/img/ativos/niacinamida.jpg" },
       },
     ],
+  },
+  {
+    tipo: "analise",
+    id: "analise",
+    titulo: "Analisando suas respostas",
+    subtitulo: "Estamos cruzando suas respostas com os 12 ativos da sua fórmula.",
+    etapas: [
+      { texto: "Entendendo seu tipo de pele", duracao: 1500 },
+      { texto: "Checando a sensibilidade da sua pele", duracao: 1600 },
+      { texto: "Avaliando linhas e sinais de expressão", duracao: 1500 },
+      { texto: "Selecionando a concentração ideal de cada ativo", duracao: 1900 },
+    ],
+    pausaFinal: 700, // tempo parado em 100% antes de seguir
   },
 ];

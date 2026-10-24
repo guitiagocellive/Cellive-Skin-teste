@@ -1162,6 +1162,148 @@ a {
   }
 }
 
+/* ==========================================================================
+   Análise (carregamento depois da fórmula)
+   ========================================================================== */
+.analise {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* A análise fica centralizada na altura da tela, abaixo da logo */
+.quiz[data-tela="analise"] .quiz-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 36px;
+}
+
+.analise-titulo {
+  margin-top: 28px;
+}
+
+.analise-sub {
+  max-width: 300px;
+  margin-top: 10px;
+}
+
+.analise-ring {
+  width: 150px;
+  height: 150px;
+  margin-top: 34px;
+}
+
+.analise-ring .loading-pct {
+  font-size: 46px;
+}
+
+.analise-etapas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+  margin: 36px auto 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.analise-etapa {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #b9bdc3;
+  font-size: 15.5px;
+  line-height: 1.25;
+  transition: color 0.35s ease;
+  animation: option-in 0.4s ease both;
+  animation-delay: calc(var(--i, 0) * 80ms + 200ms);
+}
+
+.analise-etapa.is-ativa {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.analise-etapa.is-feita {
+  color: #616f7c;
+}
+
+/* Bolinha de cada etapa: vazia → girando → checada */
+.analise-icone {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #e3e5e8;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.analise-etapa.is-ativa .analise-icone {
+  border-top-color: #7f9cc0;
+  animation: analise-gira 0.8s linear infinite;
+}
+
+.analise-etapa.is-feita .analise-icone {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.analise-etapa.is-feita .analise-icone::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  width: 8px;
+  height: 4.5px;
+  border-left: 2px solid var(--white);
+  border-bottom: 2px solid var(--white);
+  transform: rotate(-45deg);
+  animation: analise-check 0.3s ease;
+}
+
+@keyframes analise-gira {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes analise-check {
+  from { opacity: 0; transform: rotate(-45deg) scale(0.4); }
+  to { opacity: 1; transform: rotate(-45deg) scale(1); }
+}
+
+@media (max-height: 700px) {
+  .analise-titulo {
+    margin-top: 22px;
+  }
+
+  .analise-ring {
+    width: 128px;
+    height: 128px;
+    margin-top: 24px;
+  }
+
+  .analise-ring .loading-pct {
+    font-size: 40px;
+  }
+
+  .analise-etapas {
+    gap: 13px;
+    margin-top: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .analise-etapa,
+  .analise-etapa.is-ativa .analise-icone,
+  .analise-etapa.is-feita .analise-icone::after {
+    animation: none;
+  }
+}
+
 /* Elementos escondidos em algumas telas (ex.: carregamento) */
 .quiz-back[hidden],
 .stepper[hidden] {

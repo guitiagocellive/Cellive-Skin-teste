@@ -29,6 +29,10 @@ A bolinha acompanha o selo até ele parar, para pousar exatamente sobre o númer
 Na última resposta, todas as bolinhas entram no pote, ele termina de encher, vai para o meio do painel e o título vira "Fórmula concluída".
 As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `quiz.html#formula`.
 
+Depois da fórmula vem a tela de **análise** ("Analisando suas respostas"): o círculo vai de 0% a 100% em quatro
+etapas que vão sendo checadas (cerca de 7 s no total). Os textos e a duração de cada etapa ficam em
+`quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
+
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
 desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas perguntas e as listadas em
 `preCarregar` são baixadas, para aparecerem na hora. As respostas da pessoa ficam guardadas no navegador durante a visita
