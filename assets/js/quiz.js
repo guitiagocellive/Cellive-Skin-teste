@@ -691,6 +691,21 @@
       '<path class="analise-cabelo" d="M57 102c1-38 20-58 45-58 24 0 39 16 42 46-14-18-32-26-56-22-16 3-26 15-31 34z"/>' +
     "</svg>";
 
+  // Texto curto do balão de uma resposta (ou a própria resposta, se não houver)
+  function rotulosDasRespostas(bloco, ids) {
+    var mapa = bloco.rotulos || {};
+    var lista = [];
+    (ids || []).forEach(function (id) {
+      var r = respostas[id];
+      if (r == null) return;
+      [].concat(r).slice(0, 2).forEach(function (texto) {
+        var curto = mapa[id] && mapa[id][texto];
+        lista.push(curto || String(texto).replace(/\.$/, ""));
+      });
+    });
+    return lista;
+  }
+
   function telaAnalise(tela) {
     var b = tela.bloco;
     var wrap = el("div", "analise");
@@ -718,34 +733,58 @@
     });
     cartao.appendChild(rosto);
     cartao.appendChild(el("span", "analise-scan"));
+
+    // Balões com as respostas da pessoa (sobem ao lado do rosto)
+    // Em cada etapa: 1º balão à esquerda, 2º à direita, 3º à esquerda (mais
+    // baixo); cada etapa começa numa altura diferente para não encavalar.
+    var ALTURAS = [70, 56, 66];
+    b.etapas.forEach(function (etapa, i) {
+      rotulosDasRespostas(b, etapa.respostas).forEach(function (texto, k) {
+        var balao = el("span", "analise-balao " + (k % 2 === 0 ? "analise-balao-esq" : "analise-balao-dir"), texto);
+        balao.setAttribute("data-etapa", i);
+        balao.style.setProperty("--k", k);
+        balao.style.setProperty("--altura", (ALTURAS[i % ALTURAS.length] + (k >= 2 ? 16 : k * 6)) + "%");
+        cartao.appendChild(balao);
+      });
+    });
     wrap.appendChild(cartao);
 
-    // Barra de progresso
+    // Barra de progresso com marcadores das etapas
     var progresso = el("div", "analise-progresso");
     progresso.setAttribute("role", "progressbar");
     progresso.setAttribute("aria-valuemin", "0");
     progresso.setAttribute("aria-valuemax", "100");
     progresso.setAttribute("aria-valuenow", "0");
     progresso.setAttribute("aria-label", b.titulo + (b.destaque ? " " + b.destaque : ""));
-    progresso.innerHTML = '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span></span><span class="analise-pct" data-pct>0%</span>';
+    var marcadores = "";
+    for (var m = 1; m < b.etapas.length; m++) {
+      marcadores += '<span class="analise-marco" data-marco="' + m + '" style="left:' + (m / b.etapas.length) * 100 + '%"></span>';
+    }
+    progresso.innerHTML =
+      '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span>' + marcadores + "</span>" +
+      '<span class="analise-pct" data-pct>0%</span>';
     wrap.appendChild(progresso);
 
-    // Etapas com ícones de pele
-    var lista = el("ul", "analise-etapas");
-    lista.setAttribute("aria-live", "polite");
-    b.etapas.forEach(function (etapa, i) {
-      var li = el("li", "analise-etapa");
-      li.style.setProperty("--i", i);
+    // Uma etapa por vez: aparece, ganha o check, sai e entra a próxima
+    var palco = el("div", "analise-palco");
+    palco.setAttribute("aria-live", "polite");
+    b.etapas.forEach(function (etapa) {
+      var item = el("div", "analise-passo");
       var icone = el("span", "analise-icone");
       icone.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONES_PELE[etapa.icone] || ICONES_PELE.gota) + "</svg>";
-      li.appendChild(icone);
-      li.appendChild(el("span", "analise-texto", etapa.texto));
+      item.appendChild(icone);
+      item.appendChild(el("span", "analise-texto", etapa.texto));
       var status = el("span", "analise-status");
       status.setAttribute("aria-hidden", "true");
-      li.appendChild(status);
-      lista.appendChild(li);
+      item.appendChild(status);
+      palco.appendChild(item);
     });
-    wrap.appendChild(lista);
+    wrap.appendChild(palco);
+
+    var pontinhos = el("div", "analise-pontinhos");
+    pontinhos.setAttribute("aria-hidden", "true");
+    b.etapas.forEach(function () { pontinhos.appendChild(el("span")); });
+    wrap.appendChild(pontinhos);
     return wrap;
   }
 
@@ -756,8 +795,11 @@
     var fill = screenEl.querySelector("[data-fill]");
     var pct = screenEl.querySelector("[data-pct]");
     var barra = screenEl.querySelector(".analise-progresso");
-    var itens = screenEl.querySelectorAll(".analise-etapa");
+    var marcos = screenEl.querySelectorAll(".analise-marco");
+    var passos = screenEl.querySelectorAll(".analise-passo");
+    var pontinhos = screenEl.querySelectorAll(".analise-pontinhos span");
     var pontos = screenEl.querySelectorAll(".analise-ponto");
+    var baloes = screenEl.querySelectorAll(".analise-balao");
     var controle = { cancelado: false };
     carregamentoAtivo = controle;
 
@@ -766,16 +808,28 @@
     var inicio = null;
     var ultimo = -1;
     var etapaAtual = -1;
+    var CHECK_EM = 0.72;  // momento da etapa em que aparece o check
+    var SAI_EM = 0.88;    // momento em que a etapa começa a sair
 
-    function marcar(indice) {
-      for (var i = 0; i < itens.length; i++) {
-        itens[i].classList.toggle("is-feita", i < indice);
-        itens[i].classList.toggle("is-ativa", i === indice);
-      }
+    function entrarNaEtapa(indice) {
+      Array.prototype.forEach.call(passos, function (p, i) {
+        p.classList.toggle("is-ativa", i === indice);
+        if (i < indice) {
+          p.classList.remove("is-ativa", "is-feita");
+          p.classList.add("is-saiu");
+        }
+      });
+      Array.prototype.forEach.call(pontinhos, function (d, i) {
+        d.classList.toggle("is-feito", i < indice);
+        d.classList.toggle("is-atual", i === indice);
+      });
       Array.prototype.forEach.call(pontos, function (p) {
         var e = Number(p.getAttribute("data-etapa"));
         p.classList.toggle("is-visivel", e <= indice);
         p.classList.toggle("is-ativo", e === indice);
+      });
+      Array.prototype.forEach.call(baloes, function (bl) {
+        if (Number(bl.getAttribute("data-etapa")) === indice) bl.classList.add("is-subindo");
       });
     }
 
@@ -785,18 +839,25 @@
       var passado = Math.min(agora - inicio, total);
 
       var i = 0, acumulado = 0;
-      while (i < duracoes.length - 1 && passado > acumulado + duracoes[i]) {
+      while (i < duracoes.length - 1 && passado >= acumulado + duracoes[i]) {
         acumulado += duracoes[i];
         i++;
       }
       var local = Math.min((passado - acumulado) / duracoes[i], 1);
-      var v = (i + (reduzirMovimento() ? local : suavizar(local))) / duracoes.length;
+      var v = (i + (reduzirMovimento() ? local : suavizar(Math.min(local / CHECK_EM, 1)))) / duracoes.length;
 
       if (i !== etapaAtual) {
         etapaAtual = i;
-        marcar(i);
+        entrarNaEtapa(i);
       }
-      fill.style.transform = "scaleX(" + v.toFixed(4) + ")";
+      var passo = passos[i];
+      passo.classList.toggle("is-feita", local >= CHECK_EM);
+      if (i < passos.length - 1) passo.classList.toggle("is-saindo", local >= SAI_EM);
+      Array.prototype.forEach.call(marcos, function (mk) {
+        mk.classList.toggle("is-passou", v * duracoes.length >= Number(mk.getAttribute("data-marco")) - 0.001);
+      });
+
+      fill.style.width = (v * 100).toFixed(2) + "%";
       var numero = Math.round(v * 100);
       if (numero !== ultimo) {
         ultimo = numero;
@@ -807,7 +868,7 @@
       if (passado < total) {
         requestAnimationFrame(quadro);
       } else {
-        marcar(itens.length); // todas checadas
+        Array.prototype.forEach.call(pontinhos, function (d) { d.classList.add("is-feito"); });
         screenEl.querySelector(".analise").classList.add("is-completa");
         setTimeout(function () {
           if (controle.cancelado) return;
@@ -815,7 +876,7 @@
           // A análise não fica no histórico: voltar leva à última pergunta
           history.replaceState({ s: indiceTela + 1 }, "");
           mostrar(indiceTela + 1, "forward");
-        }, tela.bloco.pausaFinal || 350);
+        }, tela.bloco.pausaFinal || 300);
       }
     }
     requestAnimationFrame(quadro);

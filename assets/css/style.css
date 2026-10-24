@@ -1297,30 +1297,74 @@ a {
   to { transform: scale(3.2); opacity: 0; }
 }
 
-/* Barra de progresso */
+/* Barra de progresso: brilho correndo, ponta luminosa e marcos das etapas */
 .analise-progresso {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .analise-barra {
+  position: relative;
   flex: 1;
-  height: 5px;
-  overflow: hidden;
+  height: 6px;
   border-radius: 999px;
   background: #eceded;
 }
 
 .analise-barra-fill {
+  position: relative;
   display: block;
+  width: 0;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--blue), #7f9cc0);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #b1c6dd 0%, #7f9cc0 40%, #c9d8e8 55%, #7f9cc0 70%, #b1c6dd 100%) 0 0 / 220% 100%;
+  animation: analise-brilho 1.1s linear infinite;
+}
+
+.analise-barra-fill::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: #7f9cc0;
+  box-shadow: 0 0 0 4px rgba(127, 156, 192, 0.22), 0 1px 4px rgba(0, 0, 0, 0.15);
+  transform: translateY(-50%);
+  animation: analise-ponta 0.9s ease-in-out infinite;
+}
+
+@keyframes analise-brilho {
+  from { background-position: 100% 0; }
+  to { background-position: -120% 0; }
+}
+
+@keyframes analise-ponta {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(127, 156, 192, 0.25), 0 1px 4px rgba(0, 0, 0, 0.15); }
+  50% { box-shadow: 0 0 0 7px rgba(127, 156, 192, 0.12), 0 1px 4px rgba(0, 0, 0, 0.15); }
+}
+
+.analise-marco {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #dfe2e6;
+  border-radius: 50%;
+  background: var(--white);
+  transform: translate(-50%, -50%);
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.analise-marco.is-passou {
+  border-color: #7f9cc0;
+  background: #7f9cc0;
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
 .analise-pct {
@@ -1333,33 +1377,38 @@ a {
   text-align: right;
 }
 
-/* Etapas com ícones de pele: lista limpa, separada por linhas finas */
-.analise-etapas {
-  display: flex;
-  flex-direction: column;
+/* Uma etapa por vez: entra por baixo, ganha o check e sai por cima */
+.analise-palco {
+  position: relative;
   width: 100%;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-  text-align: left;
+  height: 46px;
+  margin-top: 14px;
 }
 
-.analise-etapa {
+.analise-passo {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 2px;
-  border-bottom: 1px solid #f0f1f2;
-  color: #b5b8bc;
-  font-size: 15px;
-  line-height: 1.2;
-  transition: color 0.3s ease;
-  animation: option-in 0.35s ease both;
-  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
+  justify-content: center;
+  gap: 10px;
+  color: var(--black);
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
 
-.analise-etapa:last-child {
-  border-bottom: 0;
+.analise-passo.is-ativa {
+  opacity: 1;
+  transform: none;
+}
+
+.analise-passo.is-saindo,
+.analise-passo.is-saiu {
+  opacity: 0;
+  transform: translateY(-16px);
 }
 
 .analise-icone {
@@ -1368,8 +1417,7 @@ a {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
-  color: #c4c7cb;
-  transition: color 0.3s ease;
+  color: #7f9cc0;
 }
 
 .analise-icone svg {
@@ -1382,62 +1430,121 @@ a {
   stroke-linejoin: round;
 }
 
-.analise-texto {
-  flex: 1;
-}
-
 .analise-status {
   position: relative;
   flex-shrink: 0;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
-}
-
-.analise-etapa.is-ativa {
-  color: var(--black);
-  font-weight: 600;
-}
-
-.analise-etapa.is-ativa .analise-icone,
-.analise-etapa.is-feita .analise-icone {
-  color: #7f9cc0;
-}
-
-.analise-etapa.is-ativa .analise-status {
   border: 2px solid #e3e8ef;
   border-top-color: #7f9cc0;
+  border-radius: 50%;
   animation: analise-gira 0.7s linear infinite;
 }
 
-.analise-etapa.is-feita {
-  color: #505050;
-}
-
-.analise-etapa.is-feita .analise-status {
+.analise-passo.is-feita .analise-status {
+  border-color: var(--blue);
   background: var(--blue);
+  animation: analise-check-pop 0.3s ease;
 }
 
-.analise-etapa.is-feita .analise-status::after {
+.analise-passo.is-feita .analise-status::after {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 5px;
+  left: 3px;
+  top: 3px;
   width: 7px;
   height: 4px;
   border-left: 2px solid var(--white);
   border-bottom: 2px solid var(--white);
   transform: rotate(-45deg);
-  animation: analise-check 0.25s ease;
 }
 
 @keyframes analise-gira {
   to { transform: rotate(360deg); }
 }
 
-@keyframes analise-check {
-  from { opacity: 0; transform: rotate(-45deg) scale(0.4); }
-  to { opacity: 1; transform: rotate(-45deg) scale(1); }
+@keyframes analise-check-pop {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Três pontinhos: em qual etapa está */
+.analise-pontinhos {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.analise-pontinhos span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e3e5e8;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.analise-pontinhos span.is-atual {
+  width: 18px;
+  background: #7f9cc0;
+}
+
+.analise-pontinhos span.is-feito {
+  background: var(--blue);
+}
+
+/* Balões com as respostas da pessoa, subindo ao lado do rosto */
+.analise-balao {
+  position: absolute;
+  top: var(--altura, 70%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 64%;
+  padding: 6px 11px 6px 9px;
+  overflow: hidden;
+  border: 1px solid #d6e1ec;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 4px 14px rgba(127, 156, 192, 0.2);
+  color: #4c5866;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.analise-balao::before {
+  content: "";
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7f9cc0;
+}
+
+.analise-balao-esq {
+  left: 10px;
+}
+
+.analise-balao-dir {
+  right: 10px;
+}
+
+.analise-balao.is-subindo {
+  animation: analise-balao 1.15s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(var(--k, 0) * 140ms + 80ms);
+}
+
+@keyframes analise-balao {
+  0% { opacity: 0; transform: translateY(18px) scale(0.9); }
+  18% { opacity: 1; transform: translateY(0) scale(1); }
+  72% { opacity: 1; transform: translateY(-30px); }
+  100% { opacity: 0; transform: translateY(-46px); }
 }
 
 /* No fim, a linha de escaneamento some */
@@ -1456,19 +1563,25 @@ a {
     margin-top: 14px;
   }
 
-  .analise-etapa {
-    padding: 9px 2px;
+  .analise-palco {
+    margin-top: 10px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .analise-cartao,
   .analise-scan,
-  .analise-etapa,
   .analise-ponto.is-ativo::before,
-  .analise-etapa.is-ativa .analise-status,
-  .analise-etapa.is-feita .analise-status::after {
+  .analise-barra-fill,
+  .analise-barra-fill::after,
+  .analise-status,
+  .analise-passo.is-feita .analise-status {
     animation: none;
+  }
+
+  .analise-balao.is-subindo {
+    animation: none;
+    opacity: 1;
   }
 }
 
