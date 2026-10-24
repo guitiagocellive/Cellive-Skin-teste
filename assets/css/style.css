@@ -507,7 +507,7 @@ a {
 
 .quiz-title {
   max-width: 310px;
-  margin: 36px auto 0;
+  margin: 30px auto 0;
   font-size: 24.5px;
   font-weight: 700;
   line-height: 1.15;
@@ -629,7 +629,7 @@ a {
 }
 
 .quiz-bar:not([hidden]) + .quiz-screen .quiz-title {
-  margin-top: clamp(24px, 6svh, 54px);
+  margin-top: clamp(16px, 3.4svh, 30px);
 }
 
 .quiz-subtitle {
@@ -671,7 +671,7 @@ a {
 .quiz-card-foto {
   display: grid;
   width: 100%;
-  height: clamp(96px, calc((100svh - 520px) / 2), 160px);
+  aspect-ratio: 1 / 1;
   border-radius: 13px;
   font-size: 9px;
 }
@@ -705,72 +705,61 @@ a {
   box-shadow: 0 2px 16px var(--blue-glow);
 }
 
-/* Pergunta tipo C: imagem de exemplo entre a pergunta e as respostas */
+/* Pergunta tipo C: imagem de exemplo entre a pergunta e as respostas.
+   Proporção 4:3 (mais quadrada); a altura se ajusta ao espaço livre. */
 .quiz-figura {
   display: grid;
-  width: 100%;
-  height: clamp(90px, calc(100svh - 590px), 190px);
-  margin-top: 16px;
+  height: 200px;
+  aspect-ratio: 4 / 3;
+  max-width: 100%;
+  margin: 20px auto 0;
   border-radius: 18px;
   font-size: 9px;
   animation: option-in 0.4s ease 0.05s both;
 }
 
 .quiz-figura + .quiz-options {
-  margin-top: 16px;
+  gap: 14px;
+  margin-top: 20px;
 }
 
-/* Muitos cartões (ex.: 6 sinais): 3 colunas */
-.quiz-cards-3 {
-  grid-template-columns: repeat(3, 1fr);
+/* Seleção de vários (ex.: sinais): cartões horizontais grandes, 2 colunas */
+.quiz-cards-lista {
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.quiz-cards-lista .quiz-card {
+  flex-direction: row;
+  align-items: center;
   gap: 10px;
+  min-height: 76px;
+  padding: 7px 10px 7px 7px;
+  border-radius: 18px;
+  text-align: left;
 }
 
-.quiz-cards-3 .quiz-card {
-  position: relative;
-  padding: 7px 7px 0;
-  border-radius: 16px;
+.quiz-cards-lista .quiz-card-foto {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 13px;
 }
 
-.quiz-cards-3 .quiz-card-foto {
-  height: clamp(64px, calc((100svh - 610px) / 2), 118px);
-  border-radius: 11px;
+.quiz-cards-lista .quiz-card-text {
+  place-items: center start;
+  min-height: 0;
+  padding: 0;
+  font-size: 15.5px;
+  line-height: 1.15;
 }
 
-.quiz-cards-3 .quiz-card-text {
-  min-height: 40px;
-  font-size: 13.5px;
+.quiz-cards-lista .quiz-card.is-selected {
+  background: #f5f8fb;
 }
 
-/* Marcação de "escolhido" nos cartões de seleção múltipla */
-.quiz-card-check {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 2px solid var(--white);
-  border-radius: 50%;
-  background: #e0e0e0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.quiz-card-check::after {
-  content: "";
-  width: 9px;
-  height: 5px;
-  margin-top: -2px;
-  border-left: 2px solid var(--white);
-  border-bottom: 2px solid var(--white);
-  transform: rotate(-45deg);
-}
-
-.quiz-card.is-selected .quiz-card-check {
-  background: var(--blue);
-  transform: scale(1.1);
+.quiz-cards-lista .quiz-card.is-selected .quiz-card-foto {
+  box-shadow: 0 0 0 2px var(--blue);
 }
 
 /* Botão "Continuar" (seleção múltipla) */
@@ -779,7 +768,7 @@ a {
   width: 100%;
   max-width: 330px;
   min-height: 48px;
-  margin: 16px auto 0;
+  margin: 18px auto 0;
   padding: 8px 18px;
   border: 0;
   border-radius: 999px;
@@ -787,7 +776,7 @@ a {
   box-shadow: 0 2px 14px var(--blue-glow);
   color: var(--white);
   font-family: var(--font);
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -810,7 +799,7 @@ a {
   outline-offset: 3px;
 }
 
-/* Telas mais baixas: cartões mais compactos para caber tudo acima do painel */
+/* Telas mais baixas: menos espaço entre os elementos */
 @media (max-height: 720px) {
   .quiz-cards {
     gap: 12px 14px;
@@ -825,20 +814,22 @@ a {
     min-height: 38px;
   }
 
-  .quiz-card-foto {
-    height: clamp(70px, calc((100svh - 470px) / 2), 120px);
-  }
-
   .quiz-subtitle {
     margin-top: 8px;
   }
 
-  .quiz-cards-3 {
-    gap: 8px;
+  .quiz-cards-lista {
+    gap: 10px;
   }
 
-  .quiz-cards-3 .quiz-card-foto {
-    height: clamp(56px, calc((100svh - 560px) / 2), 90px);
+  .quiz-cards-lista .quiz-card {
+    min-height: 68px;
+    padding: 6px 9px 6px 6px;
+  }
+
+  .quiz-cards-lista .quiz-card-foto {
+    width: 54px;
+    height: 54px;
   }
 
   .quiz-bar:not([hidden]) + .quiz-screen .quiz-options {
@@ -846,22 +837,14 @@ a {
   }
 
   .quiz-bar:not([hidden]) + .quiz-screen .quiz-option {
-    min-height: 47px;
+    min-height: 48px;
     padding-top: 8px;
     padding-bottom: 8px;
   }
 
-  .quiz-figura {
-    height: clamp(70px, calc(100svh - 540px), 150px);
-    margin-top: 12px;
-  }
-
+  .quiz-figura,
   .quiz-figura + .quiz-options {
-    margin-top: 12px;
-  }
-
-  .quiz-continuar {
-    margin-top: 12px;
+    margin-top: 16px;
   }
 }
 
@@ -963,34 +946,14 @@ a {
 }
 
 .formula-pote {
-  overflow: visible;
   transform-origin: 50% 100%;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .formula-pote-cheio {
   fill: #1b1b1b;
-  transform: translateY(159px);
-  transition: transform 1.1s cubic-bezier(0.3, 0.7, 0.3, 1);
-}
-
-/* Enquanto enche: o líquido balança e o pote dá um pulinho */
-.formula-pote.is-filling .formula-pote-onda {
-  animation: pote-onda 0.8s linear 2;
-}
-
-.formula-pote.is-filling {
-  animation: pote-pulo 0.6s ease 0.15s;
-}
-
-@keyframes pote-onda {
-  from { transform: translateX(0); }
-  to { transform: translateX(-25px); }
-}
-
-@keyframes pote-pulo {
-  0%, 100% { transform: scale(1); }
-  40% { transform: scale(1.12, 1.06); }
-  70% { transform: scale(0.97, 1); }
+  transform: translateY(157px);
+  transition: transform 1s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
 
 .formula-pote-cheio.sem-transicao {
@@ -1028,7 +991,7 @@ a {
   list-style: none;
 }
 
-/* Selo do último ativo */
+/* Selo do último ativo: branco, borda fina, tipografia de rótulo técnico */
 .ativo {
   position: relative;
   display: inline-flex;
@@ -1036,20 +999,19 @@ a {
   flex-shrink: 0;
   max-width: 290px;
   height: 46px;
-  padding: 3.5px 18px 3.5px 3.5px;
+  padding: 3px 16px 3px 3px;
   overflow: hidden;
-  border: 1.5px solid var(--blue);
+  border: 1px solid #d3d8df;
   border-radius: 999px;
-  background: linear-gradient(90deg, #f3f7fb, var(--white) 60%);
-  box-shadow: 0 3px 12px rgba(177, 198, 221, 0.45);
+  background: var(--white);
   transition:
-    max-width 0.5s cubic-bezier(0.3, 0.7, 0.3, 1),
-    height 0.35s ease,
-    padding 0.35s ease,
-    margin 0.35s ease,
+    max-width 0.55s cubic-bezier(0.3, 0.7, 0.3, 1),
+    height 0.4s ease,
+    padding 0.4s ease,
+    margin 0.4s ease,
     border-color 0.3s ease,
     box-shadow 0.3s ease,
-    opacity 0.2s ease;
+    opacity 0.25s ease;
 }
 
 .ativo + .ativo {
@@ -1059,18 +1021,19 @@ a {
 .ativo-textos {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
   margin-left: 11px;
   white-space: nowrap;
-  transition: opacity 0.3s ease 0.15s;
+  transition: opacity 0.35s ease 0.18s;
 }
 
 .ativo-rotulo {
-  color: #7f9cc0;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.1;
+  color: #8b929b;
+  font-family: var(--font-condensed);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
   text-transform: uppercase;
 }
 
@@ -1078,8 +1041,8 @@ a {
   color: var(--black);
   font-size: 13.5px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   text-transform: uppercase;
 }
 
@@ -1090,7 +1053,7 @@ a {
   padding: 0;
   border-color: var(--white);
   border-width: 2px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0 0 1px #d3d8df;
 }
 
 .ativo.is-collapsed + .ativo {
@@ -1122,14 +1085,33 @@ a {
   opacity: 0;
 }
 
-/* Quando a bolinha chega, o selo abre com um leve brilho */
-.ativo:not(.is-collapsed):not(.is-arriving) {
-  animation: selo-abre 0.6s ease;
+/* Final: as bolinhas entram no pote, que vai para o meio do painel */
+.formula-list {
+  transition: opacity 0.3s ease;
 }
 
-@keyframes selo-abre {
-  0% { box-shadow: 0 0 0 0 rgba(177, 198, 221, 0.9); }
-  100% { box-shadow: 0 3px 12px rgba(177, 198, 221, 0.45); }
+.formula-list.is-emptying,
+.formula.is-concluded .formula-list {
+  opacity: 0;
+}
+
+.formula.is-concluded .formula-pote {
+  transform: translateX(var(--centro, 0px)) scale(1.18);
+}
+
+.formula-title {
+  transition: color 0.3s ease;
+}
+
+.formula.is-concluded .formula-title {
+  color: var(--black);
+  font-weight: 700;
+  animation: titulo-troca 0.5s ease;
+}
+
+@keyframes titulo-troca {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Bolinha do ativo (a imagem entra aqui; sem imagem, mostra bolhas cinza) */
@@ -1155,8 +1137,9 @@ a {
   top: 0;
   z-index: 50;
   pointer-events: none;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
-  will-change: transform;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1170,12 +1153,13 @@ a {
   .quiz-bar-fill {
     transition: none;
   }
-  .formula-pote.is-filling,
-  .formula-pote.is-filling .formula-pote-onda,
-  .ativo:not(.is-collapsed):not(.is-arriving),
   .quiz-figura,
-  .quiz-continuar {
+  .quiz-continuar,
+  .formula.is-concluded .formula-title {
     animation: none;
+  }
+  .formula-pote {
+    transition: none;
   }
 }
 

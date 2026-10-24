@@ -202,7 +202,6 @@ window.QUIZ_FLUXO = [
         opcoes: [
           "Sim, uso retinol ou algum retinoide.",
           "Uso séruns anti-idade.",
-          "Já usei, mas parei.",
           "Nunca utilizei.",
         ],
         ativo: { id: "exo-skin", nome: "Exo Skin", imagem: "assets/img/ativos/exo-skin.jpg" },
@@ -216,7 +215,6 @@ window.QUIZ_FLUXO = [
           "Sim, inclusive isso me incomoda.",
           "Sim, as minhas aparecem até relaxada.",
           "Não percebo.",
-          "Nunca utilizei.",
         ],
         ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "assets/img/ativos/niacinamida.jpg" },
       },

@@ -6,9 +6,9 @@
 
   var STORAGE_KEY = "cellive-quiz-respostas";
   var DELAY_AVANCAR = 380;          // tempo para ver a opção marcada antes de avançar
-  var DELAY_ANTES_DO_VOO = 180;     // espera antes de o ativo sair em direção ao painel
-  var DURACAO_VOO = 760;            // tempo do ativo descendo até o painel
-  var PAUSA_DEPOIS_DO_VOO = 260;    // tempo para ver o ativo entrando na fórmula
+  var DELAY_ANTES_DO_VOO = 120;     // espera antes de o ativo sair em direção ao painel
+  var DURACAO_VOO = 820;            // tempo do ativo descendo até o painel
+  var PAUSA_DEPOIS_DO_VOO = 320;    // tempo para ver o ativo entrando na fórmula
   var PAUSA_FIM_CARREGAMENTO = 350; // fica um instante em 100% antes de seguir
 
   var $ = function (sel) { return document.querySelector(sel); };
@@ -193,37 +193,28 @@
     return n;
   }
 
-  function chipDoAtivo(ativo) {
+  function chipDoAtivo(ativo, numero) {
     var li = el("li", "ativo");
     li.appendChild(slotDeImagem("ativo-icone", "", ativo.imagem, ""));
     var textos = el("span", "ativo-textos");
-    textos.appendChild(el("span", "ativo-rotulo", "Ativo adicionado"));
+    textos.appendChild(el("span", "ativo-rotulo", "Ativo nº " + (numero < 10 ? "0" : "") + numero));
     textos.appendChild(el("span", "ativo-nome", ativo.nome));
     li.appendChild(textos);
     li.title = ativo.nome;
     return li;
   }
 
-  var timerOnda = null;
+  /* Nível do pote: durante as perguntas ele chega até 82%; o último pedaço
+     enche quando os ativos entram todos juntos no final. */
+  var NIVEL_PERGUNTAS = 0.82;
 
-  function atualizarPote(n, animar) {
+  function atualizarPote(n, animar, cheio) {
     var total = blocoFormula.totalAtivos || blocoFormula.perguntas.length;
-    // Mesmo vazio, o pote mostra uma linha fina preta no fundo (como no layout)
-    var nivel = Math.max(Math.min(n / total, 1), 0.035);
+    var nivel = cheio ? 1 : Math.max((n / total) * NIVEL_PERGUNTAS, 0.035);
     poteFillEl.classList.toggle("sem-transicao", !animar);
-    // O líquido tem uma ondinha no topo (4 unidades); por isso o "- 4"
-    poteFillEl.style.transform = "translateY(" + (163 * (1 - nivel) - 4).toFixed(2) + "px)";
+    poteFillEl.style.transform = "translateY(" + (163 * (1 - nivel)).toFixed(2) + "px)";
     formulaCountEl.textContent = n + "/" + total;
     formulaEmptyEl.hidden = n > 0;
-
-    if (animar && !reduzirMovimento()) {
-      // Enquanto enche, o líquido balança e o pote dá um pulinho
-      poteEl.classList.remove("is-filling");
-      void poteEl.getBoundingClientRect();
-      poteEl.classList.add("is-filling");
-      clearTimeout(timerOnda);
-      timerOnda = setTimeout(function () { poteEl.classList.remove("is-filling"); }, 1700);
-    }
   }
 
   /* Deixa só o último ativo aberto (com nome); os anteriores viram bolinhas
@@ -244,16 +235,25 @@
     }
     var ultimo = itens[n - 1];
     var nome = ultimo.querySelector(".ativo-textos");
-    var larguraSelo = (nome ? nome.scrollWidth : 120) + 36 + 4 + 12 + 18 + 3;
+    var larguraSelo = (nome ? nome.scrollWidth : 120) + 36 + 4 + 11 + 16 + 2;
     var espaco = formulaListEl.clientWidth - larguraSelo - 10;
     var passo = n > 2 ? (espaco - BOLINHA) / (n - 2) : BOLINHA;
     passo = Math.max(7, Math.min(BOLINHA - 6, passo));
     formulaListEl.style.setProperty("--sobrepor", (BOLINHA - passo).toFixed(1) + "px");
   }
 
+  function voltarPainelAoNormal() {
+    formulaEl.classList.remove("is-concluding", "is-concluded");
+    formulaListEl.classList.remove("is-emptying");
+    formulaTitleEl.textContent = "Combinação ideal para sua pele:";
+    poteEl.style.removeProperty("--centro");
+  }
+
   // Mostra/esconde o painel e acerta a lista sem animação (ex.: ao voltar)
   function sincronizarPainel(tela) {
-    var mostrar = !!blocoFormula && tela.tipo === "pergunta" && tela.bloco === blocoFormula;
+    var naFormula = !!blocoFormula && tela.tipo === "pergunta" && tela.bloco === blocoFormula;
+    var concluida = !!blocoFormula && tela.tipo === "fim" && formulaConcluida;
+    var mostrar = naFormula || concluida;
     if (mostrar && formulaEl.hidden) {
       formulaEl.hidden = false;
       formulaEl.classList.remove("is-entering");
@@ -265,6 +265,15 @@
     quizEl.classList.toggle("com-formula", mostrar);
     if (!blocoFormula) return;
 
+    if (naFormula && formulaEl.classList.contains("is-concluded")) {
+      voltarPainelAoNormal();
+      formulaConcluida = false;
+    }
+    if (concluida) {
+      if (!formulaEl.classList.contains("is-concluded")) mostrarFormulaConcluida(false);
+      return;
+    }
+
     var alvo = ativosAte(tela);
     var lista = ativosDaFormula();
     var mudou = alvo !== ativosNoPainel;
@@ -273,17 +282,49 @@
       ativosNoPainel--;
     }
     while (ativosNoPainel < alvo) {
-      formulaListEl.appendChild(chipDoAtivo(lista[ativosNoPainel]));
+      formulaListEl.appendChild(chipDoAtivo(lista[ativosNoPainel], ativosNoPainel + 1));
       ativosNoPainel++;
     }
     if (mudou) marcarUltimoAberto();
     atualizarPote(ativosNoPainel, mostrar);
   }
 
+  /* ---------- Movimento suave ----------
+     Faz um elemento percorrer uma curva (Bézier) de A até B, quadro a quadro,
+     só com transform (é o que deixa a animação fluida no celular). */
+  function suavizar(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function voarEmCurva(elemento, de, para, opcoes, aoTerminar) {
+    var duracao = opcoes.duracao;
+    var altura = opcoes.arco; // quanto a curva sobe antes de descer
+    var cx = de.x + (para.x - de.x) * 0.35;
+    var cy = Math.min(de.y, para.y) - altura;
+    var inicio = null;
+    elemento.style.willChange = "transform, opacity";
+
+    function quadro(agora) {
+      if (inicio === null) inicio = agora;
+      var t = Math.min((agora - inicio) / duracao, 1);
+      var e = suavizar(t);
+      var u = 1 - e;
+      var x = u * u * de.x + 2 * u * e * cx + e * e * para.x;
+      var y = u * u * de.y + 2 * u * e * cy + e * e * para.y;
+      var escala = opcoes.escala(t);
+      var opacidade = opcoes.opacidade ? opcoes.opacidade(t) : 1;
+      elemento.style.transform = "translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + escala.toFixed(3) + ")";
+      elemento.style.opacity = String(opacidade);
+      if (t < 1) requestAnimationFrame(quadro);
+      else aoTerminar();
+    }
+    requestAnimationFrame(quadro);
+  }
+
   /* A bolinha do ativo sai da resposta escolhida e desce até o painel;
      ao chegar, o selo abre com o nome e o pote enche um pouco. */
   function adicionarAtivoComAnimacao(ativo, origemEl, aoTerminar) {
-    var chip = chipDoAtivo(ativo);
+    var chip = chipDoAtivo(ativo, ativosNoPainel + 1);
     chip.classList.add("is-arriving");
     formulaListEl.appendChild(chip);
     ativosNoPainel++;
@@ -300,7 +341,7 @@
     };
 
     var alvoEl = chip.querySelector(".ativo-icone");
-    if (reduzirMovimento() || !alvoEl.animate) {
+    if (reduzirMovimento()) {
       concluir();
       return;
     }
@@ -308,35 +349,104 @@
     var o = origemEl.getBoundingClientRect();
     var a = alvoEl.getBoundingClientRect();
     var tamanho = a.width;
-    var x0 = o.left + o.width / 2 - tamanho / 2;
-    var y0 = o.top + o.height / 2 - tamanho / 2;
-    var x1 = a.left;
-    var y1 = a.top;
 
     var bola = slotDeImagem("ativo-icone ativo-voando", "", ativo.imagem, "");
     bola.style.width = bola.style.height = tamanho + "px";
+    bola.style.opacity = "0";
     document.body.appendChild(bola);
 
-    // Aparece na resposta, sobe um pouco e desce em curva até o painel
-    var anim = bola.animate([
-      { transform: "translate(" + x0 + "px," + y0 + "px) scale(0.2)", opacity: 0 },
-      { transform: "translate(" + x0 + "px," + (y0 - 18) + "px) scale(1.15)", opacity: 1, offset: 0.22 },
-      { transform: "translate(" + (x0 + (x1 - x0) * 0.45) + "px," + (y0 + (y1 - y0) * 0.35) + "px) scale(1.05)", opacity: 1, offset: 0.55 },
-      { transform: "translate(" + x1 + "px," + y1 + "px) scale(1)", opacity: 1 }
-    ], { duration: DURACAO_VOO, easing: "cubic-bezier(0.45, 0, 0.25, 1)", fill: "forwards" });
+    voarEmCurva(
+      bola,
+      { x: o.left + o.width / 2 - tamanho / 2, y: o.top + o.height / 2 - tamanho / 2 },
+      { x: a.left, y: a.top },
+      {
+        duracao: DURACAO_VOO,
+        arco: 40,
+        // cresce ao sair da resposta e assenta no tamanho final ao chegar
+        escala: function (t) { return t < 0.2 ? 0.4 + (t / 0.2) * 0.85 : 1.25 - 0.25 * suavizar((t - 0.2) / 0.8); },
+        opacidade: function (t) { return Math.min(1, t / 0.12); },
+      },
+      function () {
+        bola.remove();
+        concluir();
+      }
+    );
+  }
 
-    anim.onfinish = function () {
-      bola.remove();
-      concluir();
-    };
+  /* ---------- Final da fórmula ----------
+     Depois da última resposta, todas as bolinhas dos ativos entram no pote,
+     ele termina de encher, vai para o meio do painel e o título vira
+     "Fórmula concluída". */
+  var formulaConcluida = false;
+  var formulaTitleEl = $(".formula-title");
+
+  function mostrarFormulaConcluida(animar) {
+    formulaConcluida = true;
+    formulaEl.classList.add("is-concluded");
+    formulaEl.classList.remove("is-concluding");
+    formulaTitleEl.textContent = "Fórmula concluída";
+    var body = poteEl.parentNode.getBoundingClientRect();
+    var pote = poteEl.getBoundingClientRect();
+    var centro = body.left + body.width / 2 - (pote.left + pote.width / 2);
+    // posição de origem do pote (sem a transformação atual)
+    var atualDx = parseFloat(poteEl.style.getPropertyValue("--centro")) || 0;
+    poteEl.style.setProperty("--centro", (centro + atualDx).toFixed(1) + "px");
+    atualizarPote(ativosNoPainel, animar, true);
+  }
+
+  function concluirFormula(aoTerminar) {
+    formulaEl.classList.add("is-concluding");
+    if (reduzirMovimento()) {
+      mostrarFormulaConcluida(false);
+      setTimeout(aoTerminar, 600);
+      return;
+    }
+
+    var icones = Array.prototype.slice.call(formulaListEl.querySelectorAll(".ativo-icone"));
+    var p = poteEl.getBoundingClientRect();
+    var boca = { x: p.left + p.width / 2, y: p.top + p.height * 0.12 };
+    var restantes = icones.length;
+    var ESPACO_ENTRE = 55;
+
+    icones.reverse().forEach(function (icone, i) {
+      var r = icone.getBoundingClientRect();
+      var copia = icone.cloneNode(true);
+      copia.classList.add("ativo-voando");
+      copia.style.width = copia.style.height = r.width + "px";
+      document.body.appendChild(copia);
+      copia.style.transform = "translate3d(" + r.left + "px," + r.top + "px,0)";
+      setTimeout(function () {
+        voarEmCurva(
+          copia,
+          { x: r.left, y: r.top },
+          { x: boca.x - r.width / 2, y: boca.y - r.height / 2 },
+          {
+            duracao: 620,
+            arco: 34,
+            escala: function (t) { return 1 - 0.75 * suavizar(t); },
+            opacidade: function (t) { return t < 0.75 ? 1 : 1 - (t - 0.75) / 0.25; },
+          },
+          function () {
+            copia.remove();
+            restantes--;
+            if (restantes === 0) {
+              mostrarFormulaConcluida(true);
+              setTimeout(aoTerminar, 1100);
+            }
+          }
+        );
+      }, i * ESPACO_ENTRE);
+    });
+    // a lista some enquanto as cópias voam para o pote
+    formulaListEl.classList.add("is-emptying");
   }
 
   /* ---------- Encaixe na tela ----------
      Na etapa da fórmula, a imagem de exemplo (tipo C) e as fotos dos cartões
      (tipo B) mudam de altura para que tudo caiba acima do painel fixo, sem a
      pessoa precisar rolar. */
-  var FIGURA_MIN = 56, FIGURA_MAX = 190;
-  var FOTO_MIN = 50, FOTO_MAX = 160;
+  var FIGURA_MIN = 100, FIGURA_MAX = 236;  // altura da imagem de exemplo (proporção 4:3)
+  var FOTO_PROPORCAO_MIN = 0.74;            // fotos dos cartões: de quadrada até 74% da largura
 
   function encaixarNaTela() {
     if (formulaEl.hidden) return;
@@ -344,7 +454,7 @@
     if (!lista) return;
     var ultimo = screenEl.querySelector(".quiz-continuar") || lista;
     // Posição final do painel (sem contar a animação de entrada dele)
-    var limite = window.innerHeight - formulaEl.offsetHeight - 10;
+    var limite = window.innerHeight - formulaEl.offsetHeight - 18;
     var sobra = limite - ultimo.getBoundingClientRect().bottom;
 
     var figura = screenEl.querySelector(".quiz-figura");
@@ -353,12 +463,12 @@
       figura.style.height = Math.max(FIGURA_MIN, Math.min(FIGURA_MAX, hFig + sobra)) + "px";
       return;
     }
+    if (lista.classList.contains("quiz-cards-lista")) return;
     var fotos = screenEl.querySelectorAll(".quiz-card-foto");
-    if (fotos.length) {
-      var colunas = lista.classList.contains("quiz-cards-3") ? 3 : 2;
-      var linhas = Math.ceil(fotos.length / colunas);
-      var hFoto = fotos[0].getBoundingClientRect().height;
-      var nova = Math.max(FOTO_MIN, Math.min(FOTO_MAX, hFoto + sobra / linhas));
+    if (fotos.length && sobra < 0) {
+      var linhas = Math.ceil(fotos.length / 2);
+      var r = fotos[0].getBoundingClientRect();
+      var nova = Math.max(r.width * FOTO_PROPORCAO_MIN, r.height + sobra / linhas);
       Array.prototype.forEach.call(fotos, function (f) { f.style.height = nova + "px"; });
     }
   }
@@ -389,7 +499,7 @@
     }
 
     var classeLista = p.tipo === "B" ? "quiz-cards" : "quiz-options";
-    if (p.tipo === "B" && p.opcoes.length > 4) classeLista += " quiz-cards-3";
+    if (multipla) classeLista += " quiz-cards-lista";
     var lista = el("div", classeLista);
     lista.setAttribute("role", multipla ? "group" : "radiogroup");
     lista.setAttribute("aria-labelledby", "quiz-pergunta");
@@ -410,11 +520,6 @@
       if (p.tipo === "B") {
         botao.appendChild(slotDeImagem("quiz-card-foto", "Foto " + (i + 1), op.imagem, ""));
         botao.appendChild(el("span", "quiz-card-text", texto));
-        if (multipla) {
-          var check = el("span", "quiz-card-check");
-          check.setAttribute("aria-hidden", "true");
-          botao.appendChild(check);
-        }
       } else {
         var radio = el("span", "quiz-radio");
         radio.setAttribute("aria-hidden", "true");
@@ -427,7 +532,7 @@
           var ligado = !botao.classList.contains("is-selected");
           botao.classList.toggle("is-selected", ligado);
           botao.setAttribute("aria-checked", ligado ? "true" : "false");
-          botaoContinuar.disabled = !lista.querySelector(".is-selected");
+          atualizarContinuar();
         } else {
           escolher(tela, texto, botao, lista);
         }
@@ -438,10 +543,16 @@
     frag.appendChild(lista);
 
     // Seleção múltipla: confirma no botão "Continuar"
+    function atualizarContinuar() {
+      var n = lista.querySelectorAll(".is-selected").length;
+      botaoContinuar.disabled = n === 0;
+      botaoContinuar.textContent = n === 0 ? "Escolha ao menos um" : "Continuar (" + n + ")";
+    }
+
     if (multipla) {
-      botaoContinuar = el("button", "quiz-continuar", "Continuar");
+      botaoContinuar = el("button", "quiz-continuar");
       botaoContinuar.type = "button";
-      botaoContinuar.disabled = salvas.length === 0;
+      atualizarContinuar();
       botaoContinuar.addEventListener("click", function () {
         var escolhidas = Array.prototype.filter.call(lista.children, function (b) {
           return b.classList.contains("is-selected");
@@ -630,7 +741,11 @@
       setTimeout(function () {
         if (atual !== origem) return;
         var origemEl = origemBotao.querySelector(".quiz-card-foto, .quiz-radio") || origemBotao;
-        adicionarAtivoComAnimacao(p.ativo, origemEl, avancar);
+        var ultima = tela.indice === tela.bloco.perguntas.length - 1;
+        adicionarAtivoComAnimacao(p.ativo, origemEl, ultima ? function () {
+          if (atual !== origem) return;
+          concluirFormula(avancar);
+        } : avancar);
       }, DELAY_ANTES_DO_VOO);
     } else {
       setTimeout(avancar, DELAY_AVANCAR);

@@ -25,6 +25,7 @@ Os textos das perguntas, das respostas e da tela de carregamento ficam em
 Depois do carregamento vem a etapa da **fórmula** (12 perguntas, 12 ativos): cada pergunta acrescenta um ativo. Ao responder,
 a bolinha do ativo desce até o painel "Combinação ideal para sua pele", o selo abre com o nome, o
 contador sobe (1/12, 2/12...) e o pote enche. Os ativos anteriores viram bolinhas que vão se juntando ao lado do pote.
+Na última resposta, todas as bolinhas entram no pote, ele termina de encher, vai para o meio do painel e o título vira "Fórmula concluída".
 As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `quiz.html#formula`.
 
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
@@ -43,27 +44,27 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | FOTO 2 (rosto 2, prova social) | `assets/img/foto-2.jpg` | quadrada, 200 × 200 px |
 | FOTO 3 (rosto 3, prova social) | `assets/img/foto-3.jpg` | quadrada, 200 × 200 px |
 | Imagem do carregamento (quiz) | `assets/img/carregamento.jpg` | 1404 × 880 px (provisória, recortada do layout) |
-| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.jpg` | vertical, 600 × 650 px |
-| Idade: Entre 26 - 30 anos | `assets/img/quiz/idade-26-30.jpg` | vertical, 600 × 650 px |
-| Idade: Entre 30 - 35 anos | `assets/img/quiz/idade-30-35.jpg` | vertical, 600 × 650 px |
-| Idade: +35 anos | `assets/img/quiz/idade-35-mais.jpg` | vertical, 600 × 650 px |
-| Ativo: Ácido Hialurônico (bolinha) | `assets/img/ativos/acido-hialuronico.jpg` | quadrada, 150 × 150 px |
-| Ativo: PDRN (bolinha) | `assets/img/ativos/pdrn.jpg` | quadrada, 150 × 150 px |
-| Pergunta 3 (exemplo): Você já pensou em fazer botox ou peeling? | `assets/img/quiz/botox-peeling.jpg` | horizontal, 760 × 400 px |
-| Pergunta 4 (exemplo): Quando seu rosto está relaxado, você ainda percebe linhas na testa? | `assets/img/quiz/linhas-testa.jpg` | horizontal, 760 × 400 px |
+| Idade: Entre 18 - 25 anos | `assets/img/quiz/idade-18-25.jpg` | quadrada, 600 × 600 px |
+| Idade: Entre 26 - 30 anos | `assets/img/quiz/idade-26-30.jpg` | quadrada, 600 × 600 px |
+| Idade: Entre 30 - 35 anos | `assets/img/quiz/idade-30-35.jpg` | quadrada, 600 × 600 px |
+| Idade: +35 anos | `assets/img/quiz/idade-35-mais.jpg` | quadrada, 600 × 600 px |
+| Ativo: Ácido Hialurônico (bolinha) | `assets/img/ativos/acido-hialuronico.jpg` | ✅ já colocada |
+| Ativo: PDRN (bolinha) | `assets/img/ativos/pdrn.jpg` | ✅ já colocada |
+| Pergunta 3 (exemplo): Você já pensou em fazer botox ou peeling? | `assets/img/quiz/botox-peeling.jpg` | 4:3, 800 × 600 px |
+| Pergunta 4 (exemplo): Quando seu rosto está relaxado, você ainda percebe linhas na testa? | `assets/img/quiz/linhas-testa.jpg` | 4:3, 800 × 600 px |
 | Pergunta 6: Pé de galinha | `assets/img/quiz/sinal-pe-de-galinha.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Linhas 11 | `assets/img/quiz/sinal-linhas-11.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Bigode chinês | `assets/img/quiz/sinal-bigode-chines.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Linhas na testa | `assets/img/quiz/sinal-linhas-testa.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Aspecto envelhecido | `assets/img/quiz/sinal-aspecto-envelhecido.jpg` | quadrada, 300 × 300 px |
 | Pergunta 6: Manchas | `assets/img/quiz/sinal-manchas.jpg` | quadrada, 300 × 300 px |
-| Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.jpg` | horizontal, 760 × 400 px |
-| Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.jpg` | horizontal, 760 × 400 px |
-| Pergunta 11 (exemplo): Você já utiliza algum ativo específico para rejuvenescimento? | `assets/img/quiz/rejuvenescimento.jpg` | horizontal, 760 × 400 px |
-| Pergunta 12 (exemplo): Você percebe linhas ao redor dos olhos quando sorri? | `assets/img/quiz/linhas-olhos.jpg` | horizontal, 760 × 400 px |
-| Ativo: GHK-Cu (bolinha) | `assets/img/ativos/ghk-cu.jpg` | quadrada, 150 × 150 px |
-| Ativo: Acetyl Hexapeptide-8 (bolinha) | `assets/img/ativos/acetyl-hexapeptide-8.jpg` | quadrada, 150 × 150 px |
-| Ativo: Pentapeptide-4 (bolinha) | `assets/img/ativos/pentapeptide-4.jpg` | quadrada, 150 × 150 px |
+| Pergunta 8 (exemplo): Você sente que a pele do seu rosto está menos firme do que antes? | `assets/img/quiz/firmeza.jpg` | 4:3, 800 × 600 px |
+| Pergunta 9 (exemplo): Quando você se olha no espelho sem maquiagem, como sente sua pele? | `assets/img/quiz/espelho.jpg` | 4:3, 800 × 600 px |
+| Pergunta 11 (exemplo): Você já utiliza algum ativo específico para rejuvenescimento? | `assets/img/quiz/rejuvenescimento.jpg` | 4:3, 800 × 600 px |
+| Pergunta 12 (exemplo): Você percebe linhas ao redor dos olhos quando sorri? | `assets/img/quiz/linhas-olhos.jpg` | 4:3, 800 × 600 px |
+| Ativo: GHK-Cu (bolinha) | `assets/img/ativos/ghk-cu.jpg` | ✅ já colocada |
+| Ativo: Acetyl Hexapeptide-8 (bolinha) | `assets/img/ativos/acetyl-hexapeptide-8.jpg` | ✅ já colocada |
+| Ativo: Pentapeptide-4 (bolinha) | `assets/img/ativos/pentapeptide-4.jpg` | ✅ já colocada |
 | Ativo: Retinal (bolinha) | `assets/img/ativos/retinal.jpg` | quadrada, 150 × 150 px |
 | Ativo: Propilenoglicol (bolinha) | `assets/img/ativos/propilenoglicol.jpg` | quadrada, 150 × 150 px |
 | Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | quadrada, 150 × 150 px |
