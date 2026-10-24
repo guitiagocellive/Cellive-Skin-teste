@@ -5,7 +5,9 @@
      enchendo o pote. Barra de progresso no topo.
    Tipos de pergunta:
      A = pergunta normal (lista de respostas)
-     B = seleção única por imagens (cartões com foto, em grade 2 × 2)
+     B = seleção por imagens (cartões com foto). Com "multipla: true", a pessoa
+         pode marcar mais de um cartão e confirma no botão "Continuar".
+     C = pergunta + imagem de exemplo + lista de respostas
    - "carregamento": tela com o círculo de 0% a 100%. Enquanto ela roda, as
      imagens listadas em "preCarregar" (e as imagens das próximas perguntas)
      são baixadas, para aparecerem na hora. */
@@ -90,6 +92,133 @@ window.QUIZ_FLUXO = [
           "Minha pele não é sensível.",
         ],
         ativo: { id: "pdrn", nome: "PDRN", imagem: "assets/img/ativos/pdrn.jpg" },
+      },
+      {
+        id: "botox-peeling",
+        tipo: "C",
+        titulo: "Você já pensou em fazer botox ou peeling?",
+        imagem: "assets/img/quiz/botox-peeling.jpg",
+        opcoes: [
+          "Sim, inclusive já fiz.",
+          "Já pensei, mas acho muito invasivo.",
+          "Nunca pensei.",
+        ],
+        ativo: { id: "ghk-cu", nome: "GHK-Cu", imagem: "assets/img/ativos/ghk-cu.jpg" },
+      },
+      {
+        id: "linhas-testa",
+        tipo: "C",
+        titulo: "Quando seu rosto está relaxado, você ainda percebe linhas na testa?",
+        imagem: "assets/img/quiz/linhas-testa.jpg",
+        opcoes: [
+          "Sim, ficam bem marcadas.",
+          "Algumas linhas já ficam visíveis.",
+          "Nunca reparei.",
+        ],
+        ativo: { id: "acetyl-hexapeptide-8", nome: "Acetyl Hexapeptide-8", imagem: "assets/img/ativos/acetyl-hexapeptide-8.jpg" },
+      },
+      {
+        id: "rotina-skincare",
+        tipo: "A",
+        titulo: "Você já tentou seguir uma rotina de skincare antes?",
+        opcoes: [
+          "Sim, mas sem resultados.",
+          "Sim, mas esquecia de usar.",
+          "Só usei alguns produtos.",
+          "Nunca tentei.",
+        ],
+        ativo: { id: "pentapeptide-4", nome: "Pentapeptide-4", imagem: "assets/img/ativos/pentapeptide-4.jpg" },
+      },
+      {
+        id: "sinais",
+        tipo: "B",
+        multipla: true,
+        titulo: "Qual desses sinais mais incomoda você hoje?",
+        subtitulo: "Escolha os sinais abaixo que mais te trazem insegurança e aperte continuar.",
+        opcoes: [
+          { texto: "Pé de galinha", imagem: "assets/img/quiz/sinal-pe-de-galinha.jpg" },
+          { texto: "Linhas 11", imagem: "assets/img/quiz/sinal-linhas-11.jpg" },
+          { texto: "Bigode chinês", imagem: "assets/img/quiz/sinal-bigode-chines.jpg" },
+          { texto: "Linhas na testa", imagem: "assets/img/quiz/sinal-linhas-testa.jpg" },
+          { texto: "Aspecto envelhecido", imagem: "assets/img/quiz/sinal-aspecto-envelhecido.jpg" },
+          { texto: "Manchas", imagem: "assets/img/quiz/sinal-manchas.jpg" },
+        ],
+        ativo: { id: "retinal", nome: "Retinal", imagem: "assets/img/ativos/retinal.jpg" },
+      },
+      {
+        id: "protetor-solar",
+        tipo: "A",
+        titulo: "Com que frequência você usa protetor solar?",
+        opcoes: [
+          "Todos os dias.",
+          "Na maioria dos dias.",
+          "Apenas quando fico muito tempo no sol.",
+          "Quase nunca.",
+        ],
+        ativo: { id: "propilenoglicol", nome: "Propilenoglicol", imagem: "assets/img/ativos/propilenoglicol.jpg" },
+      },
+      {
+        id: "firmeza",
+        tipo: "C",
+        titulo: "Você sente que a pele do seu rosto está menos firme do que antes?",
+        imagem: "assets/img/quiz/firmeza.jpg",
+        opcoes: [
+          "Sim, percebo claramente.",
+          "Comecei a perceber.",
+          "Não percebo.",
+        ],
+        ativo: { id: "glutationa", nome: "Glutationa", imagem: "assets/img/ativos/glutationa.jpg" },
+      },
+      {
+        id: "espelho",
+        tipo: "C",
+        titulo: "Quando você se olha no espelho sem maquiagem, como sente sua pele?",
+        imagem: "assets/img/quiz/espelho.jpg",
+        opcoes: [
+          "Sinto que perdi minha autoestima.",
+          "Sinto que minha pele está envelhecida.",
+          "Percebo uma pele sem viço ou opaca.",
+        ],
+        ativo: { id: "tetrapeptide-7", nome: "Tetrapeptide-7", imagem: "assets/img/ativos/tetrapeptide-7.jpg" },
+      },
+      {
+        id: "ativo-rejuvenescimento",
+        tipo: "A",
+        titulo: "Você já utiliza algum ativo específico para rejuvenescimento?",
+        opcoes: [
+          "Sim, uso retinol ou algum retinoide.",
+          "Uso séruns anti-idade.",
+          "Já usei, mas parei.",
+          "Nunca utilizei.",
+        ],
+        ativo: { id: "alfa-arbutina", nome: "Alfa-arbutina", imagem: "assets/img/ativos/alfa-arbutina.jpg" },
+      },
+      {
+        // ATENÇÃO: texto repetido da pergunta anterior, aguardando o texto final.
+        id: "ativo-rejuvenescimento-2",
+        tipo: "C",
+        titulo: "Você já utiliza algum ativo específico para rejuvenescimento?",
+        imagem: "assets/img/quiz/rejuvenescimento.jpg",
+        opcoes: [
+          "Sim, uso retinol ou algum retinoide.",
+          "Uso séruns anti-idade.",
+          "Já usei, mas parei.",
+          "Nunca utilizei.",
+        ],
+        ativo: { id: "exo-skin", nome: "Exo Skin", imagem: "assets/img/ativos/exo-skin.jpg" },
+      },
+      {
+        id: "linhas-olhos",
+        tipo: "C",
+        titulo: "Você percebe linhas ao redor dos olhos quando sorri?",
+        imagem: "assets/img/quiz/linhas-olhos.jpg",
+        opcoes: [
+          "Sim, inclusive isso me incomoda.",
+          "Sim, as minhas aparecem até relaxada.",
+          "Não percebo.",
+          "Nunca utilizei.",
+        ],
+        ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "assets/img/ativos/niacinamida.jpg" },
       },
     ],
   },

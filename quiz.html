@@ -57,7 +57,10 @@
         </defs>
         <g clip-path="url(#pote-forma)">
           <rect class="formula-pote-vazio" width="50" height="163"/>
-          <rect class="formula-pote-cheio" width="50" height="163" data-pote-fill/>
+          <!-- Líquido preto com uma ondinha no topo; sobe a cada ativo -->
+          <g class="formula-pote-cheio" data-pote-fill>
+            <path class="formula-pote-onda" d="M0 4Q6.25 0 12.5 4T25 4T37.5 4T50 4T62.5 4T75 4T87.5 4T100 4V175H0Z"/>
+          </g>
         </g>
       </svg>
       <p class="formula-empty" data-formula-empty>Responda para revelar o primeiro ativo</p>
