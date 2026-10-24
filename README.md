@@ -66,11 +66,11 @@ Para preencher, salve o arquivo em `assets/img/` com o nome abaixo e a foto apar
 | Ativo: GHK-Cu (bolinha) | `assets/img/ativos/ghk-cu.jpg` | ✅ já colocada |
 | Ativo: Acetyl Hexapeptide-8 (bolinha) | `assets/img/ativos/acetyl-hexapeptide-8.jpg` | ✅ já colocada |
 | Ativo: Pentapeptide-4 (bolinha) | `assets/img/ativos/pentapeptide-4.jpg` | ✅ já colocada |
-| Ativo: Retinal (bolinha) | `assets/img/ativos/retinal.jpg` | quadrada, 150 × 150 px |
-| Ativo: Propilenoglicol (bolinha) | `assets/img/ativos/propilenoglicol.jpg` | quadrada, 150 × 150 px |
-| Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | quadrada, 150 × 150 px |
-| Ativo: Tetrapeptide-7 (bolinha) | `assets/img/ativos/tetrapeptide-7.jpg` | quadrada, 150 × 150 px |
-| Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | quadrada, 150 × 150 px |
+| Ativo: Retinal (bolinha) | `assets/img/ativos/retinal.jpg` | ✅ já colocada |
+| Ativo: Propilenoglicol (bolinha) | `assets/img/ativos/propilenoglicol.jpg` | ✅ já colocada |
+| Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | ✅ já colocada |
+| Ativo: Tetrapeptide-7 (bolinha) | `assets/img/ativos/tetrapeptide-7.jpg` | ✅ já colocada |
+| Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | ✅ já colocada |
 | Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | quadrada, 150 × 150 px |
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | quadrada, 150 × 150 px |
 
