@@ -1297,7 +1297,7 @@ a {
   to { transform: scale(3.2); opacity: 0; }
 }
 
-/* Barra de progresso: brilho correndo, ponta luminosa e marcos das etapas */
+/* Barra de progresso lisa */
 .analise-progresso {
   display: flex;
   align-items: center;
@@ -1307,64 +1307,22 @@ a {
 }
 
 .analise-barra {
-  position: relative;
   flex: 1;
   height: 6px;
+  overflow: hidden;
   border-radius: 999px;
   background: #eceded;
 }
 
 .analise-barra-fill {
-  position: relative;
   display: block;
-  width: 0;
+  width: 100%;
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #b1c6dd 0%, #7f9cc0 40%, #c9d8e8 55%, #7f9cc0 70%, #b1c6dd 100%) 0 0 / 220% 100%;
-  animation: analise-brilho 1.1s linear infinite;
-}
-
-.analise-barra-fill::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -6px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--white);
-  border-radius: 50%;
-  background: #7f9cc0;
-  box-shadow: 0 0 0 4px rgba(127, 156, 192, 0.22), 0 1px 4px rgba(0, 0, 0, 0.15);
-  transform: translateY(-50%);
-  animation: analise-ponta 0.9s ease-in-out infinite;
-}
-
-@keyframes analise-brilho {
-  from { background-position: 100% 0; }
-  to { background-position: -120% 0; }
-}
-
-@keyframes analise-ponta {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(127, 156, 192, 0.25), 0 1px 4px rgba(0, 0, 0, 0.15); }
-  50% { box-shadow: 0 0 0 7px rgba(127, 156, 192, 0.12), 0 1px 4px rgba(0, 0, 0, 0.15); }
-}
-
-.analise-marco {
-  position: absolute;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  border: 2px solid #dfe2e6;
-  border-radius: 50%;
-  background: var(--white);
-  transform: translate(-50%, -50%);
-  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
-}
-
-.analise-marco.is-passou {
-  border-color: #7f9cc0;
-  background: #7f9cc0;
-  transform: translate(-50%, -50%) scale(1.15);
+  background: #8eabcf;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
 }
 
 .analise-pct {
@@ -1494,59 +1452,6 @@ a {
   background: var(--blue);
 }
 
-/* Balões com as respostas da pessoa, subindo ao lado do rosto */
-.analise-balao {
-  position: absolute;
-  top: var(--altura, 70%);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 64%;
-  padding: 6px 11px 6px 9px;
-  overflow: hidden;
-  border: 1px solid #d6e1ec;
-  border-radius: 999px;
-  background: var(--white);
-  box-shadow: 0 4px 14px rgba(127, 156, 192, 0.2);
-  color: #4c5866;
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.analise-balao::before {
-  content: "";
-  flex-shrink: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #7f9cc0;
-}
-
-.analise-balao-esq {
-  left: 10px;
-}
-
-.analise-balao-dir {
-  right: 10px;
-}
-
-.analise-balao.is-subindo {
-  animation: analise-balao 1.15s cubic-bezier(0.2, 0.7, 0.3, 1) both;
-  animation-delay: calc(var(--k, 0) * 140ms + 80ms);
-}
-
-@keyframes analise-balao {
-  0% { opacity: 0; transform: translateY(18px) scale(0.9); }
-  18% { opacity: 1; transform: translateY(0) scale(1); }
-  72% { opacity: 1; transform: translateY(-30px); }
-  100% { opacity: 0; transform: translateY(-46px); }
-}
-
 /* No fim, a linha de escaneamento some */
 .analise.is-completa .analise-scan {
   opacity: 0;
@@ -1572,17 +1477,11 @@ a {
   .analise-cartao,
   .analise-scan,
   .analise-ponto.is-ativo::before,
-  .analise-barra-fill,
-  .analise-barra-fill::after,
   .analise-status,
   .analise-passo.is-feita .analise-status {
     animation: none;
   }
 
-  .analise-balao.is-subindo {
-    animation: none;
-    opacity: 1;
-  }
 }
 
 /* Elementos escondidos em algumas telas (ex.: carregamento) */

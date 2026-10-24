@@ -230,40 +230,12 @@ window.QUIZ_FLUXO = [
     titulo: "Fazendo uma análise",
     destaque: "do seu caso",
     // Uma etapa por vez. Cada etapa: texto, ícone (gota, escudo ou linhas),
-    // duração em ms, pontos que acendem no rosto (desenho de 200 × 240) e as
-    // respostas da pessoa que sobem em balões (pelo id da pergunta).
+    // duração em ms e pontos que acendem no rosto (desenho de 200 × 240).
     etapas: [
-      { texto: "Entendendo seu tipo de pele", icone: "gota", duracao: 850, pontos: [{ x: 126, y: 140 }, { x: 74, y: 140 }], respostas: ["idade", "rotina-skincare"] },
-      { texto: "Checando a sensibilidade", icone: "escudo", duracao: 850, pontos: [{ x: 112, y: 84 }], respostas: ["sensibilidade", "protetor-solar"] },
-      { texto: "Mapeando linhas e sinais", icone: "linhas", duracao: 850, pontos: [{ x: 66, y: 116 }, { x: 134, y: 116 }, { x: 88, y: 160 }], respostas: ["sinais", "ativo-rejuvenescimento"] },
+      { texto: "Entendendo seu tipo de pele", icone: "gota", duracao: 850, pontos: [{ x: 126, y: 140 }, { x: 74, y: 140 }] },
+      { texto: "Checando a sensibilidade", icone: "escudo", duracao: 850, pontos: [{ x: 112, y: 84 }] },
+      { texto: "Mapeando linhas e sinais", icone: "linhas", duracao: 850, pontos: [{ x: 66, y: 116 }, { x: 134, y: 116 }, { x: 88, y: 160 }] },
     ],
-    // Texto curto de cada resposta nos balões (se faltar, usa a própria resposta)
-    rotulos: {
-      "rotina-skincare": {
-        "Sim, mas sem resultados.": "Já teve rotina de skincare",
-        "Sim, mas esquecia de usar.": "Rotina de skincare irregular",
-        "Só usei alguns produtos.": "Já usou alguns produtos",
-        "Nunca tentei.": "Sem rotina de skincare",
-      },
-      sensibilidade: {
-        "Sim, minha pele é bastante sensível.": "Pele bastante sensível",
-        "Às vezes irrita.": "Pele irrita às vezes",
-        "Raramente.": "Raramente irrita",
-        "Minha pele não é sensível.": "Pele não sensível",
-      },
-      "protetor-solar": {
-        "Todos os dias.": "Protetor solar todo dia",
-        "Na maioria dos dias.": "Protetor quase todo dia",
-        "Apenas quando fico muito tempo no sol.": "Protetor só no sol forte",
-        "Quase nunca.": "Quase não usa protetor",
-      },
-      "ativo-rejuvenescimento": {
-        "Sim, uso retinol ou algum retinoide.": "Usa retinoide",
-        "Uso séruns anti-idade.": "Usa séruns anti-idade",
-        "Já usei, mas parei.": "Já usou anti-idade",
-        "Nunca utilizei.": "Nunca usou anti-idade",
-      },
-    },
     pausaFinal: 300, // tempo parado em 100% antes de seguir (total ≈ 2,85 s)
   },
 ];

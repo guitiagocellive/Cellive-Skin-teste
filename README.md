@@ -30,10 +30,9 @@ Na última resposta, todas as bolinhas entram no pote, ele termina de encher, va
 As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `quiz.html#formula`.
 
 Depois da fórmula vem a tela de **análise** ("FAZENDO UMA ANÁLISE **DO SEU CASO**"): o contorno de um rosto com cabelo
-é escaneado e pontos acendem na pele. As etapas aparecem uma por vez (entra, ganha o check, sai e entra a próxima),
-a barra avança com brilho e marcos, e balões com as respostas da pessoa sobem ao lado do rosto (ex.: "Entre 18 - 25
-anos", "Sem rotina de skincare"). Tudo leva menos de 3 s. Textos, ícones, pontos, respostas mostradas, textos curtos
-dos balões e tempos ficam em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
+é escaneado e pontos acendem na pele, a barra lisa avança de forma contínua de 0% a 100% e as etapas aparecem uma
+por vez (entra, ganha o check, sai e entra a próxima). Tudo leva menos de 3 s. Textos, ícones, pontos e tempos ficam
+em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
 
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
 desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas perguntas e as listadas em

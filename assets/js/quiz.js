@@ -691,21 +691,6 @@
       '<path class="analise-cabelo" d="M57 102c1-38 20-58 45-58 24 0 39 16 42 46-14-18-32-26-56-22-16 3-26 15-31 34z"/>' +
     "</svg>";
 
-  // Texto curto do balão de uma resposta (ou a própria resposta, se não houver)
-  function rotulosDasRespostas(bloco, ids) {
-    var mapa = bloco.rotulos || {};
-    var lista = [];
-    (ids || []).forEach(function (id) {
-      var r = respostas[id];
-      if (r == null) return;
-      [].concat(r).slice(0, 2).forEach(function (texto) {
-        var curto = mapa[id] && mapa[id][texto];
-        lista.push(curto || String(texto).replace(/\.$/, ""));
-      });
-    });
-    return lista;
-  }
-
   function telaAnalise(tela) {
     var b = tela.bloco;
     var wrap = el("div", "analise");
@@ -734,34 +719,17 @@
     cartao.appendChild(rosto);
     cartao.appendChild(el("span", "analise-scan"));
 
-    // Balões com as respostas da pessoa (sobem ao lado do rosto)
-    // Em cada etapa: 1º balão à esquerda, 2º à direita, 3º à esquerda (mais
-    // baixo); cada etapa começa numa altura diferente para não encavalar.
-    var ALTURAS = [70, 56, 66];
-    b.etapas.forEach(function (etapa, i) {
-      rotulosDasRespostas(b, etapa.respostas).forEach(function (texto, k) {
-        var balao = el("span", "analise-balao " + (k % 2 === 0 ? "analise-balao-esq" : "analise-balao-dir"), texto);
-        balao.setAttribute("data-etapa", i);
-        balao.style.setProperty("--k", k);
-        balao.style.setProperty("--altura", (ALTURAS[i % ALTURAS.length] + (k >= 2 ? 16 : k * 6)) + "%");
-        cartao.appendChild(balao);
-      });
-    });
     wrap.appendChild(cartao);
 
-    // Barra de progresso com marcadores das etapas
+    // Barra de progresso lisa
     var progresso = el("div", "analise-progresso");
     progresso.setAttribute("role", "progressbar");
     progresso.setAttribute("aria-valuemin", "0");
     progresso.setAttribute("aria-valuemax", "100");
     progresso.setAttribute("aria-valuenow", "0");
     progresso.setAttribute("aria-label", b.titulo + (b.destaque ? " " + b.destaque : ""));
-    var marcadores = "";
-    for (var m = 1; m < b.etapas.length; m++) {
-      marcadores += '<span class="analise-marco" data-marco="' + m + '" style="left:' + (m / b.etapas.length) * 100 + '%"></span>';
-    }
     progresso.innerHTML =
-      '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span>' + marcadores + "</span>" +
+      '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span></span>' +
       '<span class="analise-pct" data-pct>0%</span>';
     wrap.appendChild(progresso);
 
@@ -795,11 +763,9 @@
     var fill = screenEl.querySelector("[data-fill]");
     var pct = screenEl.querySelector("[data-pct]");
     var barra = screenEl.querySelector(".analise-progresso");
-    var marcos = screenEl.querySelectorAll(".analise-marco");
     var passos = screenEl.querySelectorAll(".analise-passo");
     var pontinhos = screenEl.querySelectorAll(".analise-pontinhos span");
     var pontos = screenEl.querySelectorAll(".analise-ponto");
-    var baloes = screenEl.querySelectorAll(".analise-balao");
     var controle = { cancelado: false };
     carregamentoAtivo = controle;
 
@@ -828,9 +794,6 @@
         p.classList.toggle("is-visivel", e <= indice);
         p.classList.toggle("is-ativo", e === indice);
       });
-      Array.prototype.forEach.call(baloes, function (bl) {
-        if (Number(bl.getAttribute("data-etapa")) === indice) bl.classList.add("is-subindo");
-      });
     }
 
     function quadro(agora) {
@@ -844,7 +807,9 @@
         i++;
       }
       var local = Math.min((passado - acumulado) / duracoes[i], 1);
-      var v = (i + (reduzirMovimento() ? local : suavizar(Math.min(local / CHECK_EM, 1)))) / duracoes.length;
+      // Barra contínua: uma curva só, suave, do começo ao fim
+      var x = passado / total;
+      var v = reduzirMovimento() ? x : 0.55 * x + 0.45 * (0.5 - Math.cos(Math.PI * x) / 2);
 
       if (i !== etapaAtual) {
         etapaAtual = i;
@@ -853,11 +818,8 @@
       var passo = passos[i];
       passo.classList.toggle("is-feita", local >= CHECK_EM);
       if (i < passos.length - 1) passo.classList.toggle("is-saindo", local >= SAI_EM);
-      Array.prototype.forEach.call(marcos, function (mk) {
-        mk.classList.toggle("is-passou", v * duracoes.length >= Number(mk.getAttribute("data-marco")) - 0.001);
-      });
 
-      fill.style.width = (v * 100).toFixed(2) + "%";
+      fill.style.transform = "scaleX(" + v.toFixed(4) + ")";
       var numero = Math.round(v * 100);
       if (numero !== ultimo) {
         ultimo = numero;
