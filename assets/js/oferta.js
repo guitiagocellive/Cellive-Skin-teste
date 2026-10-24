@@ -119,6 +119,43 @@
     });
   });
 
+  /* ---------- Partes que entram ao aparecer na tela ---------- */
+  var aparecer = document.querySelectorAll("[data-aparecer]");
+  if ("IntersectionObserver" in window) {
+    var obsAparecer = new IntersectionObserver(function (itens) {
+      itens.forEach(function (item) {
+        if (item.isIntersecting) {
+          item.target.classList.add("is-visivel");
+          obsAparecer.unobserve(item.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    Array.prototype.forEach.call(aparecer, function (el) { obsAparecer.observe(el); });
+  } else {
+    Array.prototype.forEach.call(aparecer, function (el) { el.classList.add("is-visivel"); });
+  }
+
+  /* ---------- Embalagens desfocadas que "deitam" com a rolagem ----------
+     --p vai de 0 (a dobra ainda está entrando por baixo) a 1 (dobra no lugar,
+     embalagens na posição final). */
+  var conheca = document.querySelector("[data-conheca]");
+  var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (conheca && !semMovimento) {
+    var pedido = 0;
+    var atualizarConheca = function () {
+      pedido = 0;
+      var alto = window.innerHeight;
+      var p = (alto - conheca.getBoundingClientRect().top) / (alto * 0.9);
+      p = Math.min(1, Math.max(0, p));
+      p = 1 - Math.pow(1 - p, 2); // desacelera no final
+      conheca.style.setProperty("--p", p.toFixed(3));
+    };
+    var pedirConheca = function () { if (!pedido) pedido = requestAnimationFrame(atualizarConheca); };
+    window.addEventListener("scroll", pedirConheca, { passive: true });
+    window.addEventListener("resize", pedirConheca);
+    atualizarConheca();
+  }
+
   /* ---------- Barra de compra fixa ----------
      Aparece depois que a pessoa passa do botão "Comprar Agora" e some quando
      ela volta para os planos. O botão leva até a escolha do plano. */

@@ -1022,6 +1022,244 @@
   .barra-compra-botao { padding: 0 20px; font-size: 19px; }
 }
 
+/* ---------- Dobra 5: você envelhece ---------- */
+.oferta-body {
+  overflow-x: hidden; /* as embalagens das laterais passam da borda */
+}
+
+.oferta-envelhece {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 480px;
+  margin: 30px calc(-1 * var(--gutter)) 0;
+  padding: 0 var(--gutter) 40px;
+  background:
+    radial-gradient(ellipse 62% 30% at 50% 45%, rgba(177, 198, 221, 0.5), rgba(177, 198, 221, 0.18) 55%, transparent 80%);
+}
+
+.envelhece-titulo {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1.12;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.envelhece-titulo .titulo-leve {
+  display: block;
+  color: #2b2b2b;
+  font-size: clamp(22px, 6.6vw, 27px);
+}
+
+.envelhece-titulo strong {
+  display: block;
+  margin: 8px 0 0;
+  font-size: clamp(24px, 7.9vw, 33px);
+  font-weight: 700;
+}
+
+/* Etiquetas soltas que ficam flutuando */
+.sinais {
+  position: absolute;
+  inset: 0;
+}
+
+.sinal {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  padding: 7px 13px 6px;
+  border-radius: 6px;
+  background: #dce6f1;
+  box-shadow: 0 3px 10px rgba(120, 152, 190, 0.18);
+  color: #1c1c1c;
+  font-family: var(--font-condensed);
+  font-size: clamp(15px, 4.5vw, 18px);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%) rotate(var(--r));
+  opacity: 0;
+  scale: 0.85;
+  transition: opacity 0.6s ease calc(var(--i) * 0.09s), scale 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) calc(var(--i) * 0.09s);
+  animation: sinal-flutua 6s ease-in-out var(--d) infinite alternate;
+}
+
+.sinal:nth-child(even) {
+  animation-duration: 7.2s;
+  animation-direction: alternate-reverse;
+}
+
+.is-visivel .sinal {
+  opacity: 1;
+  scale: 1;
+}
+
+@keyframes sinal-flutua {
+  0% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 4px -7px; rotate: 1.5deg; }
+  100% { translate: -3px 5px; rotate: -1.5deg; }
+}
+
+/* ---------- Dobra 6: conheça o sérum ---------- */
+.oferta-conheca {
+  position: relative;
+  margin: 10px calc(-1 * var(--gutter)) 0;
+  padding: 40px var(--gutter) 10px;
+  overflow-x: clip;
+  --p: 1; /* andamento da rolagem (0 → 1), controlado pelo oferta.js */
+}
+
+/* Embalagens desfocadas (o desfoque já vem na imagem, para pesar pouco) */
+.conheca-desfoque {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.desfocada {
+  position: absolute;
+  height: auto;
+  will-change: transform;
+  transform:
+    translate(-50%, -50%)
+    translateY(calc((1 - var(--p)) * 150px))
+    rotate(calc(var(--r0) + (var(--r1) - var(--r0)) * var(--p)));
+}
+
+.desfocada-caixa {
+  --r0: -2deg;
+  --r1: 15deg;
+  left: calc(50% + 175px);
+  top: 175px;
+  width: 210px;
+  opacity: 0.85;
+}
+
+.desfocada-frasco {
+  --r0: -6deg;
+  --r1: 22deg;
+  left: calc(50% - 165px);
+  top: 330px;
+  width: 112px;
+  opacity: 0.8;
+}
+
+/* Composição do produto */
+.conheca-palco {
+  position: relative;
+  z-index: 1;
+  height: 238px;
+  margin: 0 auto;
+  background: radial-gradient(circle at 50% 55%, #fff 30%, rgba(255, 255, 255, 0) 70%);
+}
+
+.palco-caixa,
+.palco-frasco {
+  position: absolute;
+  left: calc(50% + var(--x));
+  bottom: var(--b);
+  width: auto;
+  transform: translateX(-50%);
+  opacity: 0;
+  translate: var(--dx, 0) 26px;
+  rotate: 0deg;
+  transition:
+    opacity 0.7s ease var(--atraso, 0s),
+    translate 0.9s cubic-bezier(0.25, 0.8, 0.3, 1) var(--atraso, 0s),
+    rotate 0.9s cubic-bezier(0.25, 0.8, 0.3, 1) var(--atraso, 0s);
+}
+
+.palco-caixa {
+  height: 224px;
+}
+
+.palco-caixa-esq {
+  --x: -56px;
+  --b: 2px;
+  --dx: 60px;
+  --giro: -5deg;
+  --atraso: 0.25s;
+}
+
+.palco-caixa-dir {
+  --x: 80px;
+  --b: 18px;
+  --dx: -60px;
+  --giro: 17deg;
+  --atraso: 0.35s;
+}
+
+.palco-frasco {
+  --x: 14px;
+  --b: 0px;
+  --giro: 3deg;
+  z-index: 1;
+  height: 206px;
+  filter: drop-shadow(0 8px 12px rgba(90, 110, 140, 0.18));
+}
+
+.conheca-palco.is-visivel > img {
+  opacity: 1;
+  translate: 0 0;
+  rotate: var(--giro);
+}
+
+.conheca-titulo {
+  position: relative;
+  z-index: 1;
+  margin-top: 46px;
+  line-height: 1.25;
+}
+
+.conheca-titulo .titulo-leve {
+  display: block;
+  font-size: clamp(22px, 6.6vw, 27px);
+}
+
+.conheca-titulo strong {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(27px, 8.4vw, 34px);
+}
+
+/* Traço azul embaixo de "SÉRUM" */
+.sublinhado-forte {
+  position: relative;
+  display: inline-block;
+}
+
+.sublinhado-forte::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--blue);
+}
+
+.conheca-texto {
+  position: relative;
+  z-index: 1;
+  margin: 22px 0 0;
+  color: #1f1f1f;
+  font-size: 16.5px;
+  line-height: 1.38;
+  text-align: center;
+}
+
+.conheca-texto strong {
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -1029,7 +1267,14 @@
 
   .circulado path,
   .faq-resposta,
-  .barra-compra {
+  .barra-compra,
+  .sinal,
+  .palco-caixa,
+  .palco-frasco {
     transition: none;
+  }
+
+  .sinal {
+    animation: none;
   }
 }
