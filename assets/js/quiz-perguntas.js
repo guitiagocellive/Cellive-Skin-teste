@@ -254,8 +254,8 @@ window.QUIZ_FLUXO = [
     // ativos entrando e tempo na tela final, com o rótulo do produto
     // aparecendo (total ≈ 5 s)
     surgir: 40,
-    espera: 200,
-    entrar: 170,
-    final: 1800,
+    espera: 150,
+    entrar: 150,
+    final: 2100,
   },
 ];

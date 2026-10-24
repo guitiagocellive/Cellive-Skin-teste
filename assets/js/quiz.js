@@ -895,29 +895,29 @@
     "</linearGradient></defs>" +
     '<g class="rotulo" fill="#fff">' +
       '<g class="rotulo-parte" style="--d:0">' +
-        '<text class="rotulo-mini" x="6.3" y="57.6">ÁCIDO HIALURÔNICO</text>' +
-        '<text class="rotulo-mini" x="6.3" y="59.6">NANO ARBUTIN</text>' +
-        '<text class="rotulo-mini" x="6.3" y="61.6">NIACINAMIDA</text>' +
-        '<text class="rotulo-mini" x="6.3" y="63.6">NANO TRANEXAMIC ACID</text>' +
-        '<text class="rotulo-mini" x="30.3" y="57.6">PDRN</text>' +
-        '<text class="rotulo-mini" x="30.3" y="59.6">GHK-CU</text>' +
-        '<text class="rotulo-mini" x="30.3" y="61.6">EXOS SKIN</text>' +
+        '<text class="rotulo-mini" x="6" y="58.6">ÁCIDO HIALURÔNICO</text>' +
+        '<text class="rotulo-mini" x="6" y="61.3">NANO ARBUTIN</text>' +
+        '<text class="rotulo-mini" x="6" y="64">NIACINAMIDA</text>' +
+        '<text class="rotulo-mini" x="6" y="66.7">NANO TRANEXAMIC ACID</text>' +
+        '<text class="rotulo-mini" x="31.6" y="58.6">PDRN</text>' +
+        '<text class="rotulo-mini" x="31.6" y="61.3">GHK-CU</text>' +
+        '<text class="rotulo-mini" x="31.6" y="64">EXOS SKIN</text>' +
       "</g>" +
-      '<rect class="rotulo-parte" style="--d:1" x="6.3" y="69.6" width="6.2" height=".45"/>' +
+      '<rect class="rotulo-parte" style="--d:1" x="6" y="71" width="6.6" height=".5"/>' +
       '<g class="rotulo-parte" style="--d:2">' +
-        '<text class="rotulo-forte" x="6.3" y="75.2">PELE MAIS FIRME</text>' +
-        '<text class="rotulo-forte" x="6.3" y="79">HIDRATA</text>' +
-        '<text class="rotulo-forte" x="6.3" y="82.8">LUMINOSA</text>' +
-        '<text class="rotulo-forte" x="6.3" y="86.6">REVITALIZADA</text>' +
+        '<text class="rotulo-forte" x="6" y="77.4">PELE MAIS FIRME</text>' +
+        '<text class="rotulo-forte" x="6" y="81.9">HIDRATA</text>' +
+        '<text class="rotulo-forte" x="6" y="86.4">LUMINOSA</text>' +
+        '<text class="rotulo-forte" x="6" y="90.9">REVITALIZADA</text>' +
       "</g>" +
-      '<text class="rotulo-parte rotulo-forte" style="--d:3" x="6.3" y="94.4">RETINALDEÍDO 0,05%</text>' +
+      '<text class="rotulo-parte rotulo-forte" style="--d:3" x="6" y="99">RETINALDEÍDO 0,05%</text>' +
       // Logo na vertical (de baixo para cima)
-      '<g class="rotulo-parte" style="--d:4"><g transform="translate(5.2 144.3) rotate(-90)">' +
-        '<image href="assets/img/logo-cellive-skin-branco.svg" x="0" y="0" width="42.6" height="4.8"/>' +
+      '<g class="rotulo-parte" style="--d:4"><g transform="translate(5.3 148.6) rotate(-90)">' +
+        '<image href="assets/img/logo-cellive-skin-branco.svg" x="0" y="0" width="44" height="4.96"/>' +
       "</g></g>" +
       '<g class="rotulo-parte" style="--d:4">' +
-        '<text class="rotulo-mini" x="44" y="155.6" text-anchor="end">30ml</text>' +
-        '<text class="rotulo-mini" x="44" y="157.8" text-anchor="end">1,01fl oz</text>' +
+        '<text class="rotulo-mini" x="44.2" y="155" text-anchor="end">30ml</text>' +
+        '<text class="rotulo-mini" x="44.2" y="157.9" text-anchor="end">1,01fl oz</text>' +
       "</g>" +
     "</g>";
 

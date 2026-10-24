@@ -37,7 +37,7 @@ em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
 
 Depois da análise vem a **montagem da fórmula** ("MONTANDO SUA **FÓRMULA**"): os 12 ativos surgem num anel
 tracejado que gira em volta do pote, entram um a um ("+NOME DO ATIVO") e o pote enche. No fim aparece
-"FÓRMULA **CONCLUÍDA!**" com o check, a luz azul cresce e o pote vira o produto: um brilho passa e o rótulo aparece (lista de ativos, "PELE MAIS FIRME…", "RETINALDEÍDO 0,05%", logo na vertical e "30ml"). Cerca de 4,8 s no total. A cada ativo que entra, o pote dá uma leve "engolida". Textos e tempos ficam em
+"FÓRMULA **CONCLUÍDA!**" com o check, o anel some, o pote cresce, a luz azul aumenta e o pote vira o produto: um brilho passa e o rótulo aparece (lista de ativos, "PELE MAIS FIRME…", "RETINALDEÍDO 0,05%", logo na vertical e "30ml"). Cerca de 4,8 s no total. A cada ativo que entra, o pote dá uma leve "engolida". Textos e tempos ficam em
 `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#montagem`.
 
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
