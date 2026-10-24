@@ -1540,7 +1540,7 @@ a {
 
 .montagem {
   --palco: min(330px, 86vw, 46svh);
-  --palco-grande: min(500px, 57svh);
+  --palco-grande: min(400px, 46svh);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1838,7 +1838,7 @@ a {
 
 @media (max-height: 700px) {
   .montagem {
-    --palco-grande: 54svh;
+    --palco-grande: 46svh;
   }
 
   .montagem-palco {
