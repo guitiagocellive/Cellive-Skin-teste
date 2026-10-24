@@ -675,37 +675,80 @@
   }
 
   /* ---------- Análise (carregamento depois da fórmula) ----------
-     Anel de 0% a 100% e uma lista de etapas que vão sendo checadas. O anel
-     avança em ondas suaves, uma por etapa, como se cada item fosse analisado. */
+     Um rosto em traço fino é "escaneado"; a cada etapa, um ponto pulsa numa
+     região da pele com uma etiqueta, a barra avança e a etapa é checada. */
+  var ICONES_PELE = {
+    gota: '<path d="M12 3.5s-5.5 6.2-5.5 10.2a5.5 5.5 0 0 0 11 0C17.5 9.7 12 3.5 12 3.5z"/><path d="M9.6 14.6a2.6 2.6 0 0 0 2.4 2.2"/>',
+    escudo: '<path d="M12 3.5l6.5 2.6v5.2c0 4.3-2.8 7.3-6.5 9.2-3.7-1.9-6.5-4.9-6.5-9.2V6.1z"/><path d="M9.3 12.2l1.9 1.9 3.6-3.8"/>',
+    linhas: '<path d="M4.5 8.5c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M4.5 13c2.5-2 5-2 7.5 0s5 2 7.5 0"/><path d="M4.5 17.5c2.5-2 5-2 7.5 0s5 2 7.5 0"/>',
+  };
+
+  // Rosto em traço fino (viewBox 200 × 240): cabelo e franja em azul
+  // acinzentado suave, rosto branco, traços em azul médio
+  var ROSTO_SVG =
+    '<svg class="analise-rosto-svg" viewBox="0 0 200 240" aria-hidden="true">' +
+      '<path fill="#dbe4ef" stroke="none" d="M100 20C56 20 36 56 38 100c2 40-6 72 4 106 14 10 28 10 38 0v-56h40v56c10 10 24 10 38 0 10-34 2-66 4-106 2-44-18-80-62-80z"/>' +
+      '<path d="M86 192v20c0 8-14 13-38 22M114 192v20c0 8 14 13 38 22"/>' +
+      '<path fill="#ffffff" d="M100 40C68 40 54 72 56 108c2 38 20 76 44 86 24-10 42-48 44-86 2-36-12-68-44-68z"/>' +
+      '<path fill="#dbe4ef" stroke="none" d="M57 102c1-38 20-58 45-58 24 0 39 16 42 46-14-18-32-26-56-22-16 3-26 15-31 34z"/>' +
+      '<circle fill="#b1c6dd" fill-opacity=".35" stroke="none" cx="74" cy="142" r="9"/>' +
+      '<circle fill="#b1c6dd" fill-opacity=".35" stroke="none" cx="126" cy="142" r="9"/>' +
+      '<path d="M72 106q9-5 19-2M109 104q10-3 19 2"/>' +
+      '<path d="M73 118q8 5 16 0M111 118q8 5 16 0"/>' +
+      '<path d="M100 122q-2 12-4 18 3 3 8 1"/>' +
+      '<path d="M89 163q5-4 11-2 6-2 11 2-11 8-22 0z"/>' +
+    "</svg>";
+
   function telaAnalise(tela) {
     var b = tela.bloco;
     var wrap = el("div", "analise");
     wrap.appendChild(el("h1", "quiz-title analise-titulo", b.titulo));
     if (b.subtitulo) wrap.appendChild(el("p", "quiz-subtitle analise-sub", b.subtitulo));
 
-    var ring = el("div", "loading-ring analise-ring");
-    ring.setAttribute("role", "progressbar");
-    ring.setAttribute("aria-valuemin", "0");
-    ring.setAttribute("aria-valuemax", "100");
-    ring.setAttribute("aria-valuenow", "0");
-    ring.setAttribute("aria-label", b.titulo);
-    ring.innerHTML =
-      '<svg viewBox="0 0 154 154" aria-hidden="true">' +
-        '<circle class="loading-track" cx="77" cy="77" r="' + RAIO + '"/>' +
-        '<circle class="loading-bar" cx="77" cy="77" r="' + RAIO + '" stroke-dasharray="' + CIRCUNFERENCIA + '" stroke-dashoffset="' + CIRCUNFERENCIA + '"/>' +
-      "</svg>" +
-      '<span class="loading-pct" data-pct>0%</span>';
-    wrap.appendChild(ring);
+    // Cartão com o rosto sendo escaneado
+    var cartao = el("div", "analise-cartao");
+    var rosto = el("div", "analise-rosto");
+    rosto.innerHTML = ROSTO_SVG;
+    b.etapas.forEach(function (etapa, i) {
+      (etapa.pontos || []).forEach(function (ponto) {
+        var pino = el("span", "analise-ponto");
+        pino.setAttribute("data-etapa", i);
+        pino.style.left = (ponto.x / 200) * 100 + "%";
+        pino.style.top = (ponto.y / 240) * 100 + "%";
+        if (ponto.rotulo) {
+          var rot = el("span", "analise-rotulo analise-rotulo-" + (ponto.lado || "direita"), ponto.rotulo);
+          pino.appendChild(rot);
+        }
+        rosto.appendChild(pino);
+      });
+    });
+    cartao.appendChild(rosto);
+    cartao.appendChild(el("span", "analise-scan"));
+    wrap.appendChild(cartao);
 
+    // Barra de progresso
+    var progresso = el("div", "analise-progresso");
+    progresso.setAttribute("role", "progressbar");
+    progresso.setAttribute("aria-valuemin", "0");
+    progresso.setAttribute("aria-valuemax", "100");
+    progresso.setAttribute("aria-valuenow", "0");
+    progresso.setAttribute("aria-label", b.titulo);
+    progresso.innerHTML = '<span class="analise-barra"><span class="analise-barra-fill" data-fill></span></span><span class="analise-pct" data-pct>0%</span>';
+    wrap.appendChild(progresso);
+
+    // Etapas com ícones de pele
     var lista = el("ul", "analise-etapas");
     lista.setAttribute("aria-live", "polite");
     b.etapas.forEach(function (etapa, i) {
       var li = el("li", "analise-etapa");
       li.style.setProperty("--i", i);
       var icone = el("span", "analise-icone");
-      icone.setAttribute("aria-hidden", "true");
+      icone.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONES_PELE[etapa.icone] || ICONES_PELE.gota) + "</svg>";
       li.appendChild(icone);
       li.appendChild(el("span", "analise-texto", etapa.texto));
+      var status = el("span", "analise-status");
+      status.setAttribute("aria-hidden", "true");
+      li.appendChild(status);
       lista.appendChild(li);
     });
     wrap.appendChild(lista);
@@ -714,12 +757,13 @@
 
   function iniciarAnalise(tela, indiceTela) {
     var etapas = tela.bloco.etapas;
-    var duracoes = etapas.map(function (e) { return e.duracao || 1600; });
+    var duracoes = etapas.map(function (e) { return e.duracao || 850; });
     var total = duracoes.reduce(function (a, d) { return a + d; }, 0);
-    var barra = screenEl.querySelector(".loading-bar");
+    var fill = screenEl.querySelector("[data-fill]");
     var pct = screenEl.querySelector("[data-pct]");
-    var ring = screenEl.querySelector(".analise-ring");
+    var barra = screenEl.querySelector(".analise-progresso");
     var itens = screenEl.querySelectorAll(".analise-etapa");
+    var pontos = screenEl.querySelectorAll(".analise-ponto");
     var controle = { cancelado: false };
     carregamentoAtivo = controle;
 
@@ -734,6 +778,11 @@
         itens[i].classList.toggle("is-feita", i < indice);
         itens[i].classList.toggle("is-ativa", i === indice);
       }
+      Array.prototype.forEach.call(pontos, function (p) {
+        var e = Number(p.getAttribute("data-etapa"));
+        p.classList.toggle("is-visivel", e <= indice);
+        p.classList.toggle("is-ativo", e === indice);
+      });
     }
 
     function quadro(agora) {
@@ -741,7 +790,6 @@
       if (inicio === null) inicio = agora;
       var passado = Math.min(agora - inicio, total);
 
-      // Em qual etapa estamos e quanto dela já passou
       var i = 0, acumulado = 0;
       while (i < duracoes.length - 1 && passado > acumulado + duracoes[i]) {
         acumulado += duracoes[i];
@@ -754,27 +802,26 @@
         etapaAtual = i;
         marcar(i);
       }
-      barra.style.strokeDashoffset = String(CIRCUNFERENCIA * (1 - v));
-      barra.style.opacity = v > 0.004 ? "1" : "0";
+      fill.style.transform = "scaleX(" + v.toFixed(4) + ")";
       var numero = Math.round(v * 100);
       if (numero !== ultimo) {
         ultimo = numero;
         pct.textContent = numero + "%";
-        ring.setAttribute("aria-valuenow", String(numero));
+        barra.setAttribute("aria-valuenow", String(numero));
       }
 
       if (passado < total) {
         requestAnimationFrame(quadro);
       } else {
         marcar(itens.length); // todas checadas
-        ring.classList.add("is-complete");
+        screenEl.querySelector(".analise").classList.add("is-completa");
         setTimeout(function () {
           if (controle.cancelado) return;
           carregamentoAtivo = null;
           // A análise não fica no histórico: voltar leva à última pergunta
           history.replaceState({ s: indiceTela + 1 }, "");
           mostrar(indiceTela + 1, "forward");
-        }, tela.bloco.pausaFinal || 700);
+        }, tela.bloco.pausaFinal || 350);
       }
     }
     requestAnimationFrame(quadro);

@@ -225,14 +225,30 @@ window.QUIZ_FLUXO = [
   {
     tipo: "analise",
     id: "analise",
-    titulo: "Analisando suas respostas",
-    subtitulo: "Estamos cruzando suas respostas com os 12 ativos da sua fórmula.",
+    titulo: "Analisando sua pele",
+    subtitulo: "Estamos cruzando as suas respostas para entender a sua pele.",
+    // Cada etapa: texto, ícone (gota, escudo ou linhas), duração em ms e os
+    // pontos que acendem no rosto (posição no desenho de 200 × 240).
     etapas: [
-      { texto: "Entendendo seu tipo de pele", duracao: 1500 },
-      { texto: "Checando a sensibilidade da sua pele", duracao: 1600 },
-      { texto: "Avaliando linhas e sinais de expressão", duracao: 1500 },
-      { texto: "Selecionando a concentração ideal de cada ativo", duracao: 1900 },
+      {
+        texto: "Entendendo seu tipo de pele",
+        icone: "gota",
+        duracao: 800,
+        pontos: [{ x: 128, y: 144, rotulo: "Textura e hidratação", lado: "direita" }, { x: 72, y: 144 }],
+      },
+      {
+        texto: "Checando a sensibilidade",
+        icone: "escudo",
+        duracao: 800,
+        pontos: [{ x: 112, y: 84, rotulo: "Sensibilidade", lado: "direita" }],
+      },
+      {
+        texto: "Mapeando linhas e sinais",
+        icone: "linhas",
+        duracao: 800,
+        pontos: [{ x: 64, y: 118, rotulo: "Linhas de expressão", lado: "esquerda" }, { x: 86, y: 156 }, { x: 136, y: 118 }],
+      },
     ],
-    pausaFinal: 700, // tempo parado em 100% antes de seguir
+    pausaFinal: 300, // tempo parado em 100% antes de seguir (total ≈ 2,7 s)
   },
 ];

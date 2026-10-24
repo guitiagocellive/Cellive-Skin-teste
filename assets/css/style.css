@@ -1164,48 +1164,188 @@ a {
 
 /* ==========================================================================
    Análise (carregamento depois da fórmula)
+   Rosto em traço fino sendo "escaneado" dentro de um cartão azul suave.
    ========================================================================== */
+.quiz[data-tela="analise"] .quiz-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 28px;
+}
+
 .analise {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* A análise fica centralizada na altura da tela, abaixo da logo */
-.quiz[data-tela="analise"] .quiz-screen {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  padding-bottom: 36px;
-}
-
 .analise-titulo {
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 .analise-sub {
   max-width: 300px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
-.analise-ring {
-  width: 150px;
-  height: 150px;
-  margin-top: 34px;
+/* Cartão do rosto */
+.analise-cartao {
+  position: relative;
+  width: 100%;
+  height: clamp(210px, 34svh, 270px);
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle, rgba(127, 156, 192, 0.18) 1px, transparent 1.3px) 0 0 / 14px 14px,
+    radial-gradient(120% 90% at 50% 0%, #e6eef7 0%, #f1f5fa 55%, #f7f9fc 100%);
+  box-shadow: inset 0 0 0 1px #e3eaf3;
+  animation: option-in 0.4s ease both;
 }
 
-.analise-ring .loading-pct {
-  font-size: 46px;
+.analise-rosto {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 96%;
+  aspect-ratio: 200 / 240;
+  transform: translate(-50%, -46%);
 }
 
+.analise-rosto-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #8ea3bd;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Linha de escaneamento que sobe e desce */
+.analise-scan {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 0;
+  height: 30px;
+  background: linear-gradient(180deg, rgba(177, 198, 221, 0) 0%, rgba(177, 198, 221, 0.32) 100%);
+  border-bottom: 1.5px solid rgba(127, 156, 192, 0.85);
+  box-shadow: 0 6px 14px -6px rgba(127, 156, 192, 0.7);
+  animation: analise-scan 1.35s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes analise-scan {
+  from { transform: translateY(-40px); }
+  to { transform: translateY(calc(clamp(210px, 34svh, 270px) - 10px)); }
+}
+
+/* Pontos que acendem no rosto, com etiqueta */
+.analise-ponto {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 2px solid var(--white);
+  border-radius: 50%;
+  background: #7f9cc0;
+  box-shadow: 0 1px 4px rgba(97, 111, 124, 0.35);
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.analise-ponto.is-visivel {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.analise-ponto.is-ativo::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid #7f9cc0;
+  animation: analise-pulso 0.9s ease-out infinite;
+}
+
+@keyframes analise-pulso {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(3.2); opacity: 0; }
+}
+
+.analise-rotulo {
+  position: absolute;
+  top: 50%;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 2px 10px rgba(97, 111, 124, 0.16);
+  color: #4c5866;
+  font-family: var(--font-condensed);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.analise-rotulo-direita {
+  left: 16px;
+}
+
+.analise-rotulo-esquerda {
+  right: 16px;
+}
+
+/* Barra de progresso */
+.analise-progresso {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.analise-barra {
+  flex: 1;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e6ebf1;
+}
+
+.analise-barra-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blue), #7f9cc0);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.analise-pct {
+  min-width: 42px;
+  color: #616f7c;
+  font-family: var(--font-condensed);
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Etapas com ícones de pele */
 .analise-etapas {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
-  max-width: 320px;
-  margin: 36px auto 0;
+  margin: 16px 0 0;
   padding: 0;
   list-style: none;
   text-align: left;
@@ -1215,55 +1355,94 @@ a {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #b9bdc3;
-  font-size: 15.5px;
-  line-height: 1.25;
-  transition: color 0.35s ease;
-  animation: option-in 0.4s ease both;
-  animation-delay: calc(var(--i, 0) * 80ms + 200ms);
+  padding: 7px 12px 7px 7px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: #f6f8fb;
+  color: #a7adb5;
+  font-size: 15px;
+  line-height: 1.2;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  animation: option-in 0.35s ease both;
+  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
+}
+
+.analise-icone {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: #e9eef4;
+  color: #8ea3bd;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.analise-icone svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.analise-texto {
+  flex: 1;
+}
+
+.analise-status {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 .analise-etapa.is-ativa {
+  border-color: var(--blue);
+  background: var(--white);
   color: var(--black);
   font-weight: 600;
 }
 
-.analise-etapa.is-feita {
-  color: #616f7c;
-}
-
-/* Bolinha de cada etapa: vazia → girando → checada */
-.analise-icone {
-  position: relative;
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  border: 2px solid #e3e5e8;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
 .analise-etapa.is-ativa .analise-icone {
+  background: #eef3f9;
+  color: #7f9cc0;
+}
+
+.analise-etapa.is-ativa .analise-status {
+  border: 2px solid #e3e8ef;
   border-top-color: #7f9cc0;
-  animation: analise-gira 0.8s linear infinite;
+  animation: analise-gira 0.7s linear infinite;
+}
+
+.analise-etapa.is-feita {
+  color: #4c5866;
 }
 
 .analise-etapa.is-feita .analise-icone {
-  border-color: var(--blue);
   background: var(--blue);
+  color: var(--white);
 }
 
-.analise-etapa.is-feita .analise-icone::after {
+.analise-etapa.is-feita .analise-status {
+  background: #7f9cc0;
+}
+
+.analise-etapa.is-feita .analise-status::after {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 4px;
+  left: 6px;
+  top: 5.5px;
   width: 8px;
   height: 4.5px;
   border-left: 2px solid var(--white);
   border-bottom: 2px solid var(--white);
   transform: rotate(-45deg);
-  animation: analise-check 0.3s ease;
+  animation: analise-check 0.25s ease;
 }
 
 @keyframes analise-gira {
@@ -1275,31 +1454,38 @@ a {
   to { opacity: 1; transform: rotate(-45deg) scale(1); }
 }
 
+/* No fim, a linha de escaneamento some */
+.analise.is-completa .analise-scan {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
 @media (max-height: 700px) {
   .analise-titulo {
-    margin-top: 22px;
+    margin-top: 14px;
   }
 
-  .analise-ring {
-    width: 128px;
-    height: 128px;
-    margin-top: 24px;
+  .analise-cartao {
+    margin-top: 14px;
   }
 
-  .analise-ring .loading-pct {
-    font-size: 40px;
+  .analise-etapa {
+    padding: 5px 10px 5px 5px;
   }
 
-  .analise-etapas {
-    gap: 13px;
-    margin-top: 26px;
+  .analise-icone {
+    width: 30px;
+    height: 30px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .analise-cartao,
+  .analise-scan,
   .analise-etapa,
-  .analise-etapa.is-ativa .analise-icone,
-  .analise-etapa.is-feita .analise-icone::after {
+  .analise-ponto.is-ativo::before,
+  .analise-etapa.is-ativa .analise-status,
+  .analise-etapa.is-feita .analise-status::after {
     animation: none;
   }
 }
