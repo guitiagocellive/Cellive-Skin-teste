@@ -15,6 +15,7 @@ para o ar (README, configurações e a pasta `.git`).
 | `index.html` | Capa do quiz (primeira página) |
 | `politica-de-privacidade.html` | Política de Privacidade (LGPD) |
 | `quiz.html` | Quiz: uma pergunta por vez, com progresso 1 · 2 · 3 e botão de voltar |
+| `oferta.html` | Página de oferta (o quiz leva até ela no final) |
 | `404.html` | Página de "não encontrada" |
 
 ## Perguntas do quiz
@@ -84,11 +85,19 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | ✅ já colocada |
 | Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | ✅ já colocada |
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
+| Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
 A bandeira da Coreia do Sul é desenhada direto no código (SVG), sem arquivo de imagem.
 O pote do painel da fórmula é um vetor (`assets/img/pote.svg`, também embutido no `quiz.html`),
 redesenhado a partir da imagem de referência.
+
+## Página de oferta
+
+`oferta.html` mostra o produto (galeria com 6 fotos, selos, avaliação e benefícios) e os planos. Os preços, o resumo e o
+link de checkout de cada plano ficam nos atributos `data-` de cada plano no próprio `oferta.html`
+(`data-resumo`, `data-parcela`, `data-avista` e `data-link`). A contagem regressiva começa em 3h37m45s e continua
+de onde parou se a pessoa recarregar a página.
 
 ## Fonte (Acumin Pro)
 

@@ -1019,6 +1019,13 @@
     }
 
     var tela = telas[indice];
+
+    // Fim do quiz: vai para a página de oferta
+    if (tela.tipo === "fim") {
+      window.location.href = "oferta.html";
+      return;
+    }
+
     var conteudo =
       tela.tipo === "pergunta" ? telaPergunta(tela) :
       tela.tipo === "carregamento" ? telaCarregamento(tela) :
