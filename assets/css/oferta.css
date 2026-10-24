@@ -1133,22 +1133,24 @@
     rotate(calc(var(--r0) + (var(--r1) - var(--r0)) * var(--p)));
 }
 
+/* Caixa: grande, só a faixa da frente (com o logo) aparece na borda */
 .desfocada-caixa {
-  --r0: -2deg;
-  --r1: 15deg;
-  left: calc(50% + 175px);
-  top: 175px;
-  width: 210px;
-  opacity: 0.85;
+  --r0: -3deg;
+  --r1: 9deg;
+  left: calc(50% + 302px);
+  top: -6px;
+  width: 367px;
+  opacity: 0.95;
 }
 
+/* Frasco: só o topo aparece, o resto fica para fora da tela */
 .desfocada-frasco {
-  --r0: -6deg;
+  --r0: -4deg;
   --r1: 22deg;
-  left: calc(50% - 165px);
-  top: 330px;
-  width: 112px;
-  opacity: 0.8;
+  left: calc(50% - 213px);
+  top: 449px;
+  width: 176px;
+  opacity: 0.95;
 }
 
 /* Composição do produto */
@@ -1249,10 +1251,11 @@
 .conheca-texto {
   position: relative;
   z-index: 1;
-  margin: 22px 0 0;
+  max-width: 300px;
+  margin: 20px auto 0;
   color: #1f1f1f;
-  font-size: 16.5px;
-  line-height: 1.38;
+  font-size: 15px;
+  line-height: 1.42;
   text-align: center;
 }
 
