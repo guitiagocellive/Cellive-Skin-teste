@@ -419,6 +419,68 @@
     }
   }
 
+  /* ---------- Jornada "como ele age na pele" ----------
+     Avança sozinha a cada 6 s (barrinha enchendo, como stories) enquanto a
+     seção está na tela. Ao tocar numa etapa ou arrastar o cartão, para de
+     avançar sozinha e fica na escolha da pessoa. */
+  var jornada = document.querySelector("[data-jornada]");
+  if (jornada) {
+    var abasJor = Array.prototype.slice.call(jornada.querySelectorAll("[data-jor-aba]"));
+    var paineisJor = Array.prototype.slice.call(jornada.querySelectorAll("[data-jor-painel]"));
+    var atualJor = 0;
+
+    var irJor = function (i) {
+      atualJor = (i + abasJor.length) % abasJor.length;
+      abasJor.forEach(function (aba, k) {
+        aba.classList.toggle("is-ativa", k === atualJor);
+        aba.classList.toggle("is-feita", k < atualJor);
+        aba.setAttribute("aria-selected", k === atualJor ? "true" : "false");
+        // reinicia a barrinha da etapa atual
+        var cheia = aba.querySelector(".jor-barra-cheia");
+        cheia.style.animation = "none";
+        void cheia.offsetWidth;
+        cheia.style.animation = "";
+      });
+      paineisJor.forEach(function (painel, k) {
+        var ativo = k === atualJor;
+        painel.classList.toggle("is-ativo", ativo);
+        painel.hidden = !ativo;
+      });
+    };
+    var manual = function () { jornada.classList.add("is-manual"); };
+
+    if (semMovimento) manual();
+
+    abasJor.forEach(function (aba, k) {
+      aba.addEventListener("click", function () { manual(); irJor(k); });
+      // quando a barrinha termina de encher, vai para a próxima etapa
+      aba.querySelector(".jor-barra-cheia").addEventListener("animationend", function () {
+        if (!jornada.classList.contains("is-manual") && k === atualJor) irJor(atualJor + 1);
+      });
+    });
+
+    // arrastar o cartão para o lado
+    var area = jornada.querySelector("[data-jor-paineis]");
+    var x0 = null, y0 = null;
+    area.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    area.addEventListener("touchend", function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { manual(); irJor(atualJor + (dx < 0 ? 1 : -1)); }
+    }, { passive: true });
+
+    // só avança enquanto está na tela
+    jornada.classList.add("is-pausada");
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens) {
+        jornada.classList.toggle("is-pausada", !itens[0].isIntersecting);
+      }, { threshold: 0.5 }).observe(jornada);
+    } else {
+      jornada.classList.remove("is-pausada");
+    }
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {

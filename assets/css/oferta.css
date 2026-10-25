@@ -3330,6 +3330,255 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- Dobra 20: entenda como ele age na pele ---------- */
+.oferta-age {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.age-foto {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-top: 22px;
+  border-radius: 22px;
+  font-size: 10px;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+.age-foto.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+/* Jornada: cartão que sobe por cima da foto */
+.jornada {
+  position: relative;
+  margin: -34px 8px 0;
+  padding: 20px 18px 16px;
+  border: 1px solid #e6ecf2;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgba(120, 152, 190, 0.22);
+}
+
+.jor-intro {
+  margin: 0;
+  color: #a9bed6;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Abas com barrinhas de progresso (estilo stories) */
+.jor-abas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.jor-aba {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 4px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jor-barra {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e6ebf1;
+}
+
+.jor-barra-cheia {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* etapas já vistas: barra cheia; etapa atual: enche com o tempo */
+.jor-aba.is-feita .jor-barra-cheia,
+.jornada.is-manual .jor-aba.is-ativa .jor-barra-cheia {
+  transform: none;
+}
+
+.jornada:not(.is-manual) .jor-aba.is-ativa .jor-barra-cheia {
+  animation: jor-enche var(--jor-tempo, 6s) linear forwards;
+}
+
+.jornada.is-pausada .jor-aba.is-ativa .jor-barra-cheia {
+  animation-play-state: paused;
+}
+
+@keyframes jor-enche {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.jor-aba-texto {
+  color: #a7abb1;
+  font-family: var(--font-condensed);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.jor-aba-texto small {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.jor-aba.is-ativa .jor-aba-texto,
+.jor-aba.is-feita .jor-aba-texto {
+  color: #4d74a8;
+}
+
+/* Painéis: todos no mesmo lugar (a altura não pula ao trocar) */
+.jor-paineis {
+  display: grid;
+  margin-top: 14px;
+  padding-top: 16px;
+  border-top: 1px solid #edf1f5;
+  touch-action: pan-y;
+}
+
+.jor-painel {
+  position: relative;
+  grid-area: 1 / 1;
+  text-align: left;
+}
+
+.jor-painel[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+.jor-num {
+  position: absolute;
+  right: 0;
+  top: -6px;
+  color: #eef2f7;
+  font-family: var(--font-condensed);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.jor-quando,
+.jor-nome,
+.jor-texto,
+.jor-checks li {
+  position: relative;
+  opacity: 0;
+  transform: translateX(14px);
+}
+
+.jor-painel.is-ativo :is(.jor-quando, .jor-nome, .jor-texto, .jor-checks li) {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jor-painel.is-ativo .jor-nome { transition-delay: 0.06s; }
+.jor-painel.is-ativo .jor-texto { transition-delay: 0.12s; }
+.jor-painel.is-ativo .jor-checks li { transition-delay: calc(0.2s + var(--k) * 0.08s); }
+
+.jor-quando {
+  margin: 0;
+  color: #8a8e94;
+  font-size: 13.5px;
+}
+
+.jor-nome {
+  margin: 2px 0 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.jor-nome .titulo-leve {
+  font-size: 22px;
+}
+
+.jor-nome strong {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.jor-texto {
+  margin: 10px 0 0;
+  color: #505050;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.jor-checks {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jor-checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: #f3f6fa;
+  color: #1f1f1f;
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.jor-checks svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.jor-checks circle {
+  fill: var(--blue);
+}
+
+.jor-checks path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.jor-dica {
+  margin: 14px 0 0;
+  color: #b4b8bd;
+  font-size: 11.5px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -3387,8 +3636,14 @@
   }
 
   .conf-luz,
-  .conf-anel {
+  .conf-anel,
+  .jornada .jor-aba.is-ativa .jor-barra-cheia {
     animation: none;
+  }
+
+  .age-foto,
+  .jor-painel.is-ativo :is(.jor-quando, .jor-nome, .jor-texto, .jor-checks li) {
+    transition: none;
   }
 
   .cli-trilho,

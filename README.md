@@ -93,6 +93,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Oferta: imagem do microagulhamento | `assets/img/oferta/microagulhamento.webp` | ✅ já colocada |
 | Oferta: frasco com tampa (cartão da garantia) | `assets/img/oferta/frasco-tampa.webp` | ✅ já colocada |
 | Oferta: frasco das laterais ("Os números falam por si") | `assets/img/oferta/numeros-frasco.webp` | ✅ já colocada |
+| Oferta: foto do rosto ("Entenda como ele age na pele") | `assets/img/oferta/age-rosto.webp` | paisagem 4:3, 800 × 600 px |
 | Oferta: fotos das clientes 1 a 6 ("Um pouco dos nossos clientes") | `assets/img/oferta/cliente-1.webp` … `cliente-6.webp` | quadrada, 160 × 160 px |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
@@ -154,6 +155,10 @@ segura e Frete grátis), com ícones que se desenham ao aparecer.
 Em seguida, "SERÁ QUE VALE A PENA MESMO? – OS NÚMEROS **FALAM POR SI**": seis barras com os percentuais que crescem e
 contam até o valor ao aparecer, e o frasco nas duas laterais, entrando com a rolagem como na ação SRRP. Os textos e
 números das barras ficam no `oferta.html` (o número aparece em `--v` e no texto).
+
+Depois, "POR TRÁS DOS RESULTADOS – ENTENDA COMO **ELE AGE NA PELE.**": a foto e, por cima dela, a jornada em 4 etapas
+(Adaptação, Ativação, Renovação e Evolução). As etapas avançam sozinhas como stories, com uma barrinha enchendo,
+enquanto a seção está na tela; a pessoa pode tocar numa etapa ou arrastar o cartão para o lado. Textos no `oferta.html`.
 
 ## Fonte (Acumin Pro)
 

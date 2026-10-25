@@ -859,6 +859,90 @@
       </ul>
     </section>
 
+    <!-- ===================== DOBRA 20: entenda como ele age na pele =====================
+         Jornada em etapas: avança sozinha (como stories) enquanto está na tela;
+         a pessoa pode tocar numa etapa ou arrastar o cartão para o lado. -->
+    <section class="oferta-age" aria-labelledby="age-titulo">
+      <p class="chamada-italico" data-revelar="palavras">Por trás dos resultados</p>
+      <h2 class="aliado-titulo age-titulo" id="age-titulo" data-revelar="palavras" style="--atraso: 0.2s">
+        <span class="titulo-leve">Entenda como</span> <strong>ele age na pele.</strong>
+      </h2>
+
+      <!-- Foto: assets/img/oferta/age-rosto.webp (paisagem 4:3, 800 × 600 px) -->
+      <span class="slot age-foto" data-label="Foto: rosto (entenda como ele age)" data-aparecer>
+        <img src="assets/img/oferta/age-rosto.webp" alt="Mulher sorrindo com a pele bonita e viçosa" loading="lazy" onerror="this.hidden=true">
+      </span>
+
+      <div class="jornada" data-jornada>
+        <p class="jor-intro">Sua jornada com o Sérum</p>
+        <div class="jor-abas" role="tablist" aria-label="Etapas da jornada">
+          <button type="button" class="jor-aba is-ativa" role="tab" id="jor-aba-0" aria-controls="jor-painel-0" aria-selected="true" data-jor-aba="0">
+            <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
+            <span class="jor-aba-texto"><small>Semana</small>1–2</span>
+          </button>
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-1" aria-controls="jor-painel-1" aria-selected="false" data-jor-aba="1">
+            <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
+            <span class="jor-aba-texto"><small>Semana</small>3–4</span>
+          </button>
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-2" aria-controls="jor-painel-2" aria-selected="false" data-jor-aba="2">
+            <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
+            <span class="jor-aba-texto"><small>Semana</small>5–12</span>
+          </button>
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-3" aria-controls="jor-painel-3" aria-selected="false" data-jor-aba="3">
+            <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
+            <span class="jor-aba-texto"><small>Semana</small>+12</span>
+          </button>
+        </div>
+        <div class="jor-paineis" data-jor-paineis>
+          <article class="jor-painel is-ativo" role="tabpanel" id="jor-painel-0" aria-labelledby="jor-aba-0" data-jor-painel>
+            <span class="jor-num" aria-hidden="true">01</span>
+            <p class="jor-quando">Semana 1–2</p>
+            <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Adaptação</strong></h3>
+            <p class="jor-texto">Sua pele se acostuma com a nova rotina de autocuidado e tem os primeiros contatos com o Sérum.</p>
+            <ul class="jor-checks">
+              <li style="--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Sensação de pele mais hidratada.</span></li>
+              <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Início da rotina de autocuidado.</span></li>
+              <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Experiência das microespículas + efeito cooling.</span></li>
+            </ul>
+          </article>
+          <article class="jor-painel" role="tabpanel" id="jor-painel-1" aria-labelledby="jor-aba-1" data-jor-painel hidden>
+            <span class="jor-num" aria-hidden="true">02</span>
+            <p class="jor-quando">Semana 3–4</p>
+            <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Ativação</strong></h3>
+            <p class="jor-texto">Os ativos começam a agir na renovação e na sinalização das células. É o início da ação SRRP.</p>
+            <ul class="jor-checks">
+              <li style="--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Começa a reparação da barreira cutânea.</span></li>
+              <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>O viço da pele começa a aparecer.</span></li>
+              <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Sensação de pele mais macia.</span></li>
+            </ul>
+          </article>
+          <article class="jor-painel" role="tabpanel" id="jor-painel-2" aria-labelledby="jor-aba-2" data-jor-painel hidden>
+            <span class="jor-num" aria-hidden="true">03</span>
+            <p class="jor-quando">Semana 5–12</p>
+            <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Renovação</strong></h3>
+            <p class="jor-texto">Com as células em renovação, os resultados ficam cada vez mais visíveis no espelho.</p>
+            <ul class="jor-checks">
+              <li style="--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Linhas finas e rugas menos evidentes.</span></li>
+              <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>O tom começa a se equilibrar.</span></li>
+              <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Sensação de pele mais firme.</span></li>
+            </ul>
+          </article>
+          <article class="jor-painel" role="tabpanel" id="jor-painel-3" aria-labelledby="jor-aba-3" data-jor-painel hidden>
+            <span class="jor-num" aria-hidden="true">04</span>
+            <p class="jor-quando">+12 semanas</p>
+            <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Evolução</strong></h3>
+            <p class="jor-texto">A reparação da pele fica constante e os resultados, cada vez mais consistentes.</p>
+            <ul class="jor-checks">
+              <li style="--k:0"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Pele com aparência mais jovem.</span></li>
+              <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Resultados cada vez mais visíveis.</span></li>
+              <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Uma rotina que virou hábito.</span></li>
+            </ul>
+          </article>
+        </div>
+        <p class="jor-dica" aria-hidden="true">Toque nas etapas ou arraste para o lado</p>
+      </div>
+    </section>
+
   </main>
 
   <!-- Barra de compra fixa: aparece depois que a pessoa passa do botão "Comprar Agora" -->
