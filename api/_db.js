@@ -8,7 +8,8 @@ let tabelaPronta = false;
 
 async function conexao() {
   if (consultar) return consultar;
-  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  // nome da variável depende do prefixo escolhido ao conectar o Neon na Vercel
+  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.STORAGE_URL;
   if (!url) return null;
   if (process.env.BANCO_LOCAL === "1") {
     const { default: pg } = await import("pg");
