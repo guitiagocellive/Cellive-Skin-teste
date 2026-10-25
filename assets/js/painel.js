@@ -89,7 +89,10 @@
     var max = Math.max.apply(null, valores.concat(opc.min || 0.0001));
     var topo = opc.folga == null ? 6 : opc.folga;
     var m = opc.margem || 0;
-    var pts = valores.map(function (v, i) { return [m + (W - 2 * m) * i / (valores.length - 1), topo + (H - topo - 2) * (1 - v / max)]; });
+    // relativo: a escala vai do menor ao maior valor (mostra melhor a variação)
+    var min = opc.relativo ? Math.min.apply(null, valores) : 0;
+    if (opc.relativo && max - min < 1e-9) min = max - 1;
+    var pts = valores.map(function (v, i) { return [m + (W - 2 * m) * i / (valores.length - 1), topo + (H - topo - 8) * (1 - (v - min) / (max - min))]; });
     var linha = "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
     svg.appendChild(svgEl("path", { d: linha + "L" + pts[pts.length - 1][0] + " " + H + "L" + pts[0][0] + " " + H + "Z", fill: degrade(svg, cor, opc.forca || 0.28), class: "surgir" }));
     svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: cor, "stroke-width": opc.espessura || 2, "stroke-linejoin": "round", "stroke-linecap": "round", pathLength: 1, class: "desenhar", filter: brilho(svg, opc.luz || 2.5) }));
@@ -421,7 +424,7 @@
     if (dias.length > 2) {
       var g = el("div", "heroi-graf");
       var W = Math.max(280, no.clientWidth || 340);
-      g.appendChild(faisca(dias.map(function (x) { return x.conv; }), "#b1c7de", W, 78, { classe: "", forca: 0.32, espessura: 2.5, luz: 4, ponto: true, folga: 10, margem: 10 }));
+      g.appendChild(faisca(dias.map(function (x) { return x.conv; }), "#b1c7de", W, 78, { classe: "heroi-faisca", forca: 0.32, espessura: 2.5, luz: 4, ponto: true, folga: 14, margem: 12, relativo: true }));
       no.appendChild(g);
     } else {
       no.appendChild(el("div", "espaco"));
