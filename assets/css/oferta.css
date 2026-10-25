@@ -3896,7 +3896,7 @@
   box-shadow: 0 0 0 1.5px #7e7d80;
   color: #fff;
   font-family: var(--font-condensed);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -3916,17 +3916,17 @@
 .aval-nome strong {
   color: #1a1a1a;
   font-weight: 700;
-  text-transform: uppercase;
 }
 
 .aval-verificada {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   margin: 4px 0 0;
-  color: #7e7d80;
-  font-size: 12px;
-  font-weight: 700;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .aval-verif {
@@ -3993,8 +3993,143 @@
   to { opacity: 1; transform: none; }
 }
 
+.aval-mais {
+  display: block;
+  margin: 10px auto 0;
+  padding: 12px 30px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: #1a1a1a;
+  color: #fff;
+  font-family: var(--font-condensed);
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+.aval-mais:active {
+  transform: scale(0.97);
+}
+
 .aval-mais[hidden] {
   display: none;
+}
+
+.oferta-avaliacoes {
+  padding-bottom: 36px;
+}
+
+#duvidas {
+  scroll-margin-top: 64px;
+}
+
+/* ---------- Rodapé ---------- */
+.oferta-body {
+  padding-bottom: 0;
+}
+
+.rodape {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  color: #fff;
+}
+
+.rodape-dentro {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 34px 18px 0;
+}
+
+.rodape-logo {
+  display: block;
+  width: 210px;
+  height: auto;
+}
+
+.rodape-missao {
+  margin: 18px 0 0;
+  color: #fff;
+  font-family: var(--font-condensed);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.rodape-insta {
+  display: inline-block;
+  margin-top: 26px;
+  color: #fff;
+}
+
+.rodape-insta svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.rodape-insta .ig-ponto {
+  fill: currentColor;
+  stroke: none;
+}
+
+.rodape-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 26px;
+  padding: 0 4px 14px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.35);
+}
+
+.rodape-links a,
+.rodape-suporte a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.rodape-links a {
+  font-family: var(--font-condensed);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rodape-suporte {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 26px 4px 22px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.35);
+  font-family: var(--font-condensed);
+  font-size: 17px;
+}
+
+.rodape-suporte strong {
+  font-weight: 700;
+}
+
+.rodape-legal {
+  margin: 22px 0 0;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+/* logo grande e apagado no fim, cortado na borda; o espaço embaixo é para
+   a barra de compra fixa não cobrir o conteúdo */
+.rodape-marca {
+  display: block;
+  width: 118%;
+  max-width: none;
+  height: auto;
+  margin: 40px 0 0 -4%;
+  padding-bottom: 104px;
+  opacity: 0.08;
 }
 
 @media (prefers-reduced-motion: reduce) {

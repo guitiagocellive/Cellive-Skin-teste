@@ -29,6 +29,20 @@
       texto: "Comprei e estou usando há um mês, e realmente ajudou muito. Estou me sentindo bonita sem maquiagem. O que mais me incomodava eram os pés de galinha quando sorria.",
       fotos: 0,
     },
+    {
+      nome: "Monique Araujo",
+      idade: 33,
+      quando: "2 meses atrás",
+      texto: "Já tinha comprado alguns produtos no TikTok e nenhum tinha funcionado. Comprei esse quando vi um vídeo e, depois que comecei a usar, minhas rugas na testa estão sumindo, estou amando. Sem contar o cheiro, nunca tinha visto um skincare tão bom de usar. AMEI!!!",
+      fotos: 1,
+    },
+    {
+      nome: "Maria Eduarda",
+      idade: 31,
+      quando: "2 meses atrás",
+      texto: "Estou gostando muito da experiência. Estou usando faz uns 47 dias e sinto que minha pele está muito melhor. Sinto um viço INCRÍVEL. Recomendo muito.",
+      fotos: 0,
+    },
   ];
 
   var POR_VEZ = 5;

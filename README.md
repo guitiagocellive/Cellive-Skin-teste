@@ -169,6 +169,9 @@ com foto, idade, "Compra Verificada" e as fotos enviadas. As avaliações ficam 
 `assets/js/oferta-avaliacoes.js` (instruções no topo do arquivo): aparecem 5 e o botão "Ver mais avaliações" mostra mais
 5 por vez.
 
+No fim, o **rodapé** preto com o logo, a frase da marca, o Instagram, os links (planos, dúvidas e WhatsApp), o suporte
+(WhatsApp e e-mail) e os dados da empresa.
+
 ## Fonte (Acumin Pro)
 
 O site usa **Acumin Pro** e **Acumin Pro Condensed**, carregadas pelo projeto web da Adobe Fonts
