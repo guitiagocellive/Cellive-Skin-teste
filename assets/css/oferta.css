@@ -2906,12 +2906,14 @@
   background: var(--blue);
 }
 
-/* ---------- Dobra 18: confiança ---------- */
+/* ---------- Dobra 18: confiança ----------
+   Mesmo estilo das outras seções: cartões brancos com sombra azulada e
+   ícones em quadrados com o degradê azul das letras da ação SRRP. */
 .oferta-confianca {
   margin: 0 calc(-1 * var(--gutter));
-  padding: 44px var(--gutter) 40px;
+  padding: 46px var(--gutter) 44px;
   text-align: center;
-  background: linear-gradient(180deg, #fff 0%, #f1f5fa 45%, #f1f5fa 70%, #fff 100%);
+  background: linear-gradient(180deg, #fff 0%, #f1f5fa 30%, #eaf0f7 75%, #fff 100%);
 }
 
 .confianca-titulo {
@@ -2927,9 +2929,10 @@
   font-size: clamp(28px, 8.4vw, 34px);
 }
 
+/* Dois pontos principais */
 .conf-lista {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   margin: 26px 0 0;
   padding: 0;
   list-style: none;
@@ -2937,50 +2940,48 @@
 
 .conf-item {
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: 54px 1fr;
   grid-template-rows: auto auto;
-  column-gap: 16px;
+  column-gap: 14px;
   align-items: center;
-  padding: 18px 18px 18px 16px;
-  text-align: left;
+  padding: 16px 16px 16px 14px;
   border: 1px solid #e6ecf2;
-  border-radius: 22px;
+  border-radius: 20px;
   background: #fff;
   box-shadow: 0 8px 22px rgba(120, 152, 190, 0.16);
+  text-align: left;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: calc(var(--i) * 0.15s);
 }
 
-.conf-lista.is-visivel .conf-item {
-  opacity: 1;
-  transform: none;
-}
-
-/* ícone num círculo azul; os traços se desenham quando aparece */
+/* ícone num quadrado com degradê azul (igual às letras S R R P) */
 .conf-icone {
   grid-row: span 2;
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #eef3f9;
-  box-shadow: inset 0 0 0 1.5px #d6e0ec;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: linear-gradient(160deg, #c3d3e5, #9fb5cf);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.06), 0 4px 10px rgba(120, 152, 190, 0.3);
 }
 
 .conf-icone svg {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   fill: none;
-  stroke: #4d74a8;
-  stroke-width: 2.4;
+  stroke: #fff;
+  stroke-width: 2.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.conf-icone path {
+/* os traços se desenham quando o cartão aparece */
+.conf-icone path,
+.conf-icone circle,
+.conf-icone rect {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   transition: stroke-dashoffset 1.1s cubic-bezier(0.65, 0, 0.35, 1);
@@ -2988,13 +2989,19 @@
 }
 
 .conf-icone .conf-check {
-  stroke: #22b14c;
-  stroke-width: 3;
-  transition-delay: calc(var(--i) * 0.15s + 1.1s);
+  stroke-width: 3.4;
   transition-duration: 0.5s;
+  transition-delay: calc(var(--i) * 0.15s + 1.1s);
 }
 
-.conf-lista.is-visivel .conf-icone path {
+.conf-lista.is-visivel .conf-item,
+.conf-grade.is-visivel .conf-mini {
+  opacity: 1;
+  transform: none;
+}
+
+.conf-lista.is-visivel .conf-icone :is(path, circle, rect),
+.conf-grade.is-visivel .conf-icone :is(path, circle, rect) {
   stroke-dashoffset: 0;
 }
 
@@ -3003,7 +3010,7 @@
   margin: 0;
   color: #1a1a1a;
   font-family: var(--font-condensed);
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
@@ -3011,10 +3018,67 @@
 
 .conf-texto {
   align-self: start;
-  margin: 5px 0 0;
+  margin: 4px 0 0;
   color: #6b6f75;
   font-size: 13.5px;
   line-height: 1.35;
+}
+
+/* Mais pontos: grade 2 x 2 */
+.conf-grade {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.conf-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 10px 15px;
+  border: 1px solid #e6ecf2;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(120, 152, 190, 0.14);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.1s);
+}
+
+.conf-icone-mini {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+}
+
+.conf-icone-mini svg {
+  width: 26px;
+  height: 26px;
+}
+
+.conf-grade .conf-icone :is(path, circle, rect) {
+  transition-delay: calc(var(--i) * 0.1s + 0.25s);
+}
+
+.conf-mini-nome {
+  margin: 10px 0 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.conf-mini-texto {
+  margin: 4px 0 0;
+  color: #6b6f75;
+  font-size: 12.5px;
+  line-height: 1.3;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3066,7 +3130,8 @@
   .garantia-frasco,
   .garantia-selo,
   .conf-item,
-  .conf-icone path {
+  .conf-mini,
+  .conf-icone :is(path, circle, rect) {
     transition: none;
   }
 

@@ -145,8 +145,9 @@ Logo abaixo, uma faixa azul com os benefícios (ícone + texto) andando em loop,
 destaque, tocar nele dá play/pausa e só um toca por vez. Coloque os vídeos em `assets/video/depoimento-1.mp4` …
 `depoimento-4.mp4` (em pé, 9:16) e as capas em `assets/img/oferta/video-1.webp` … `video-4.webp`.
 
-Depois, "CUIDADO COM RESPONSABILIDADE – RESULTADO PARA **CONFIAR**": dois cartões lado a lado, "Testado
-dermatologicamente" e "Aprovado pela Anvisa", com ícones que se desenham e ganham um check verde ao aparecer.
+Depois, "CUIDADO COM RESPONSABILIDADE – RESULTADO PARA **CONFIAR**": dois cartões em destaque ("Testado
+dermatologicamente" e "Aprovado pela Anvisa") e mais quatro em grade (Tecnologia coreana, Garantia de 30 dias, Compra
+segura e Frete grátis), com ícones que se desenham ao aparecer.
 
 ## Fonte (Acumin Pro)
 
