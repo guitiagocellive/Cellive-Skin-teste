@@ -3719,6 +3719,270 @@
   font-weight: 700;
 }
 
+/* ---------- Dobra 21: principais dúvidas (sacola em cima) ---------- */
+.duvidas-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 210px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.duvidas-visual.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+.duvidas-circulo {
+  position: absolute;
+  width: 176px;
+  height: 176px;
+  border-radius: 50%;
+  background: #dce6f1;
+}
+
+.duvidas-sacola {
+  position: relative;
+  display: grid;
+  width: 160px;
+  height: 150px;
+  margin-top: -6px;
+  border-radius: 14px;
+  font-size: 9px;
+}
+
+.duvidas-sacola > img {
+  object-fit: contain;
+}
+
+.duvidas-titulo {
+  margin-top: 26px;
+}
+
+.duvidas-titulo .titulo-leve {
+  font-size: clamp(22px, 6.6vw, 27px);
+}
+
+.duvidas-titulo strong {
+  font-size: clamp(28px, 8.4vw, 34px);
+}
+
+/* ---------- Dobra 22: avaliação dos clientes ---------- */
+.oferta-avaliacoes {
+  margin-top: 56px;
+}
+
+.aval-titulo .titulo-leve {
+  font-size: clamp(22px, 6.6vw, 27px);
+}
+
+.aval-titulo strong {
+  font-size: clamp(28px, 8.4vw, 34px);
+}
+
+.aval-resumo {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.aval-media {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.aval-numero {
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: 66px;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+.aval-estrelas {
+  width: 136px;
+  height: 25px;
+  margin-top: 6px;
+  background-position: left center;
+}
+
+.aval-base {
+  margin-top: 6px;
+  color: #7e7d80;
+  font-size: 11.5px;
+}
+
+.aval-distribuicao {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aval-linha {
+  display: grid;
+  grid-template-columns: 26px 1fr 34px;
+  align-items: center;
+  gap: 6px;
+  color: #7e7d80;
+  font-size: 11.5px;
+}
+
+.aval-nota {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.aval-nota svg {
+  width: 12px;
+  height: 12px;
+  fill: #f9c80e;
+}
+
+.aval-trilho {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e6e6e8;
+}
+
+.aval-cheio {
+  display: block;
+  width: max(var(--v), 7px);
+  height: 100%;
+  border-radius: inherit;
+  background: #7e7d80;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.1s);
+}
+
+.aval-resumo.is-visivel .aval-cheio {
+  transform: none;
+}
+
+.aval-lista {
+  margin-top: 30px;
+}
+
+.aval-item {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1.5px solid #e4e6e9;
+}
+
+.aval-item:first-child {
+  border-top: 0;
+}
+
+.aval-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #7e7d80;
+  box-shadow: 0 0 0 1.5px #7e7d80;
+  color: #fff;
+  font-family: var(--font-condensed);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.aval-corpo {
+  min-width: 0;
+}
+
+.aval-nome {
+  margin: 0;
+  color: #7e7d80;
+  font-family: var(--font-condensed);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.aval-nome strong {
+  color: #1a1a1a;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.aval-verificada {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  color: #7e7d80;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.aval-verif {
+  width: 14px;
+  height: 14px;
+}
+
+.aval-verif circle {
+  fill: #b1c6dd;
+}
+
+.aval-verif path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.aval-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  color: #d0d2d5;
+  font-family: var(--font-condensed);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.aval-meta .estrelas {
+  width: 96px;
+  height: 18px;
+}
+
+.aval-texto {
+  margin: 10px 0 0;
+  color: #1f1f1f;
+  font-size: 13.5px;
+  line-height: 1.38;
+}
+
+.aval-fotos {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.aval-foto {
+  display: grid;
+  width: 92px;
+  height: 92px;
+  border-radius: 14px;
+  font-size: 8px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -3771,7 +4035,9 @@
   .conf-mini,
   .conf-frasco,
   .conf-icone :is(path, circle, rect),
-  .num-preenche {
+  .num-preenche,
+  .duvidas-visual,
+  .aval-cheio {
     transition: none;
   }
 

@@ -94,6 +94,8 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Oferta: frasco com tampa (cartão da garantia) | `assets/img/oferta/frasco-tampa.webp` | ✅ já colocada |
 | Oferta: frasco das laterais ("Os números falam por si") | `assets/img/oferta/numeros-frasco.webp` | ✅ já colocada |
 | Oferta: foto do rosto ("Entenda como ele age na pele") | `assets/img/oferta/age-rosto.webp` | paisagem 4:3, 800 × 600 px |
+| Oferta: sacola com os produtos (dúvidas) | `assets/img/oferta/sacola.webp` | fundo transparente, 600 × 520 px |
+| Oferta: fotos das avaliações | `assets/img/oferta/avaliacao-1-1.webp`, `avaliacao-1-2.webp` … | quadrada, 300 × 300 px |
 | Oferta: fotos das clientes 1 a 6 ("Um pouco dos nossos clientes") | `assets/img/oferta/cliente-1.webp` … `cliente-6.webp` | quadrada, 160 × 160 px |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
@@ -110,7 +112,7 @@ link de checkout de cada plano ficam nos atributos `data-` de cada plano no pró
 de onde parou se a pessoa recarregar a página.
 
 Depois dos planos vêm os **depoimentos** ("AMADO POR **+5.000 MULHERES**", com o traço azul que se desenha em volta),
-num carrossel que a pessoa arrasta para o lado, e as **principais dúvidas**, que abrem uma por vez. Para mudar nomes,
+num carrossel que a pessoa arrasta para o lado. Para mudar nomes,
 textos dos depoimentos ou respostas das dúvidas, edite direto o `oferta.html`. Depois que a pessoa passa do botão
 "Comprar Agora", aparece uma barra fixa no rodapé com o botão "Comprar", que leva de volta à escolha do plano.
 
@@ -160,6 +162,10 @@ Depois, "POR TRÁS DOS RESULTADOS – ENTENDA COMO **ELE AGE NA PELE.**": a foto
 com um gráfico ilustrativo (sem números) do colágeno e da renovação celular subindo a cada etapa
 (Adaptação, Transformação — resultados visíveis em 30 dias —, Potencialização e Evolução). As etapas avançam sozinhas como stories (9,5 s cada), com uma barrinha enchendo,
 enquanto a seção está na tela; a pessoa pode tocar numa etapa ou arrastar o cartão para o lado. Textos no `oferta.html`.
+
+No fim da página, a sacola com os produtos e as **principais dúvidas** (abrem uma por vez; a primeira já vem aberta) e a
+"AVALIAÇÃO DOS **CLIENTES**": nota 4,9, as barras com a quantidade de cada nota (crescem ao aparecer) e as avaliações
+com foto, idade, "Compra Verificada" e as fotos enviadas.
 
 ## Fonte (Acumin Pro)
 

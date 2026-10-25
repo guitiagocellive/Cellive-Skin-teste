@@ -523,6 +523,18 @@
     }
   }
 
+  /* ---------- Avaliações: barras de distribuição crescem ao aparecer ---------- */
+  var resumoAval = document.querySelector("[data-aval-resumo]");
+  if (resumoAval) {
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens, obs) {
+        if (itens[0].isIntersecting) { resumoAval.classList.add("is-visivel"); obs.disconnect(); }
+      }, { threshold: 0.4 }).observe(resumoAval);
+    } else {
+      resumoAval.classList.add("is-visivel");
+    }
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {
