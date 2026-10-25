@@ -19,7 +19,7 @@ de onde a pessoa veio (Instagram, Facebook, TikTok, Google…).
 Os eventos vão para `/api/evento` (`api/evento.js`) e ficam num banco Postgres (Neon) conectado ao projeto na Vercel. A
 tabela é criada sozinha no primeiro evento. Os números do painel vêm de `/api/painel` (`api/painel.js`).
 
-O painel fica em **`/painel.html`** e pede senha. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
+O painel fica em **`/painel.html`** e pede senha. Abas: Resumo, Funil, Quiz, Oferta e Público. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
 cliques no checkout e conversão (com comparação ao período anterior), evolução diária, funil completo com o maior
 gargalo, onde as pessoas pararam, tempo por pergunta, todas as respostas com a conversão de cada uma, kits escolhidos,
 até onde leram a oferta, cliques, fontes, campanhas, aparelhos, sistemas, países, horários de acesso e erros. Filtros
@@ -32,6 +32,17 @@ Abrindo `/painel.html?demo=1` (ou "Ver em modo demonstração") aparecem número
 2. Senha: projeto → **Settings** → **Environment Variables** → nome `PAINEL_SENHA`, valor = a senha escolhida
    (marque Production e Preview) → Save.
 3. **Deployments** → no último deploy, "…" → **Redeploy**, para as funções lerem as variáveis novas.
+
+**Análise inteligente (topo do painel):** um relatório com a nota de saúde do funil, o maior gargalo, os pontos de
+melhoria (com prioridade, o que fazer e o ganho estimado em cliques no checkout) e o que já está funcionando.
+- Sempre funciona, sem custo: a análise automática roda no próprio painel (`assets/js/painel-analise.js`), com regras
+  de conversão e metas de referência para funis de quiz.
+- Com o Claude (opcional): crie uma chave em console.anthropic.com (API Keys; a API é paga por uso, alguns centavos
+  de dólar por relatório) e adicione na Vercel a variável `ANTHROPIC_API_KEY` → Redeploy. O painel passa a pedir o
+  relatório ao Claude (`api/analise.js`), mandando só números agregados (nenhum dado pessoal). Cada período + filtro
+  gera no máximo um relatório a cada 6 horas (o botão "Atualizar análise" força um novo) e há um limite de
+  `IA_LIMITE_DIA` relatórios por dia (padrão 20). O modelo padrão é o Claude Opus 5.5; para um mais barato, crie a
+  variável `IA_MODELO` (por exemplo `claude-haiku-5-5`).
 
 Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
 `DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).

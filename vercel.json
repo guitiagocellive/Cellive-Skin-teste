@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/analise.js": { "maxDuration": 120 }
+  },
   "headers": [
     { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
     { "source": "/painel.html", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }

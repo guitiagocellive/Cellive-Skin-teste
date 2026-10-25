@@ -14,7 +14,7 @@
   }
   function svgEl(tag, attrs) {
     var e = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    for (var k in attrs) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
     return e;
   }
   function limpar(no) { while (no.firstChild) no.removeChild(no.firstChild); return no; }
@@ -41,6 +41,63 @@
     var m = Math.floor(l.length / 2);
     return l.length % 2 ? l[m] : (l[m - 1] + l[m]) / 2;
   }
+  // número que "conta" até o valor final (só quando a tela foi aberta agora)
+  var SEM_MOVIMENTO = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function contar(no, alvo, fmt) {
+    if (estado.silencioso || SEM_MOVIMENTO || !isFinite(alvo)) { no.textContent = fmt(alvo); return; }
+    var t0 = null, dur = 1000;
+    var passo = function (t) {
+      if (!t0) t0 = t;
+      var k = Math.min(1, (t - t0) / dur);
+      no.textContent = fmt(alvo * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(passo);
+    };
+    no.textContent = fmt(0);
+    requestAnimationFrame(passo);
+  }
+
+  // brilho (luz) em volta de linhas e formas do SVG
+  var proxId = 0;
+  function brilho(svg, desvio) {
+    var id = "luz" + (++proxId);
+    var defs = svg.querySelector("defs") || svg.insertBefore(svgEl("defs", {}), svg.firstChild);
+    var f = svgEl("filter", { id: id, x: "-30%", y: "-60%", width: "160%", height: "220%" });
+    f.appendChild(svgEl("feGaussianBlur", { stdDeviation: desvio || 3, result: "b" }));
+    var m = svgEl("feMerge", {});
+    m.appendChild(svgEl("feMergeNode", { in: "b" }));
+    m.appendChild(svgEl("feMergeNode", { in: "SourceGraphic" }));
+    f.appendChild(m);
+    defs.appendChild(f);
+    return "url(#" + id + ")";
+  }
+  // degradê vertical (cor forte em cima, some embaixo) para as áreas
+  function degrade(svg, cor, forca) {
+    var id = "deg" + (++proxId);
+    var defs = svg.querySelector("defs") || svg.insertBefore(svgEl("defs", {}), svg.firstChild);
+    var g = svgEl("linearGradient", { id: id, x1: 0, y1: 0, x2: 0, y2: 1 });
+    g.appendChild(svgEl("stop", { offset: "0%", "stop-color": cor, "stop-opacity": forca || 0.3 }));
+    g.appendChild(svgEl("stop", { offset: "100%", "stop-color": cor, "stop-opacity": 0 }));
+    defs.appendChild(g);
+    return "url(#" + id + ")";
+  }
+
+  // mini gráfico de linha (dentro dos cartões)
+  function faisca(valores, cor, W, H, opc) {
+    opc = opc || {};
+    var svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", class: opc.classe || "kpi-faisca", "aria-hidden": "true" });
+    if (!valores || valores.length < 2) return svg;
+    var max = Math.max.apply(null, valores.concat(opc.min || 0.0001));
+    var topo = opc.folga == null ? 6 : opc.folga;
+    var m = opc.margem || 0;
+    var pts = valores.map(function (v, i) { return [m + (W - 2 * m) * i / (valores.length - 1), topo + (H - topo - 2) * (1 - v / max)]; });
+    var linha = "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
+    svg.appendChild(svgEl("path", { d: linha + "L" + pts[pts.length - 1][0] + " " + H + "L" + pts[0][0] + " " + H + "Z", fill: degrade(svg, cor, opc.forca || 0.28), class: "surgir" }));
+    svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: cor, "stroke-width": opc.espessura || 2, "stroke-linejoin": "round", "stroke-linecap": "round", pathLength: 1, class: "desenhar", filter: brilho(svg, opc.luz || 2.5) }));
+    var u = pts[pts.length - 1];
+    if (opc.ponto) svg.appendChild(svgEl("circle", { cx: u[0], cy: u[1], r: 3.5, fill: cor, class: "surgir ponto-vivo", filter: brilho(svg, 3) }));
+    return svg;
+  }
+
   function dataBR(iso) { var p = iso.split("-"); return p[2] + "/" + p[1]; }
   function isoDia(d) {
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -110,7 +167,7 @@
   /* ================= estado ================= */
   var estado = {
     senha: null, demo: false, periodo: "7", de: null, ate: null,
-    filtros: { fonte: "", campanha: "", aparelho: "" }, aba: "geral", dados: null,
+    filtros: { fonte: "", campanha: "", aparelho: "" }, aba: "geral", dados: null, silencioso: false,
   };
   try { estado.senha = sessionStorage.getItem("cl-painel-senha"); } catch (e) { /* sem armazenamento */ }
 
@@ -145,11 +202,15 @@
     $("[data-status-texto]").textContent = texto;
   }
 
-  function carregar() {
+  function carregar(silencioso) {
     var r = intervalo();
-    conteudo.classList.add("is-carregando");
+    if (typeof contarFiltros === "function") contarFiltros();
+    estado.silencioso = !!silencioso;
+    if (!silencioso) conteudo.classList.add("is-carregando");
+    $("[data-atualizar]").classList.add("is-girando");
     if (estado.demo) {
       estado.dados = gerarDemo(r);
+      $("[data-atualizar]").classList.remove("is-girando");
       montar();
       status("Modo demonstração", "demo");
       conteudo.classList.remove("is-carregando");
@@ -163,6 +224,7 @@
       })
       .then(function (x) {
         conteudo.classList.remove("is-carregando");
+        $("[data-atualizar]").classList.remove("is-girando");
         if (x.resp.status === 401) {
           try { sessionStorage.removeItem("cl-painel-senha"); } catch (e) { /* ok */ }
           return mostrarEntrada("Senha incorreta.");
@@ -178,6 +240,7 @@
       })
       .catch(function () {
         conteudo.classList.remove("is-carregando");
+        $("[data-atualizar]").classList.remove("is-girando");
         mostrarEntrada("Não foi possível conectar ao servidor do painel.");
       });
   }
@@ -185,13 +248,17 @@
   /* ================= montagem das abas ================= */
   function montar() {
     var d = estado.dados;
+    // na atualização automática (a cada minuto) nada se mexe na tela
+    conteudo.classList.toggle("estatico", estado.silencioso);
     preencherFiltros(d.opcoes || []);
     montarGeral(d);
+    montarIA(d);
     montarFunil(d);
     montarRespostas(d);
     montarOferta(d);
     montarOrigem(d);
     requestAnimationFrame(ajustarRotulos);
+    estado.silencioso = false;
   }
 
   function preencherFiltros(opcoes) {
@@ -215,17 +282,29 @@
     return v;
   }
 
-  function cartaoKpi(rotulo, valor, sub, dlt, destaque) {
-    var c = el("article", "kpi" + (destaque ? " destaque" : ""));
+  /* Cartão de número. opc: { num: valor numérico para "contar", fmt: formato,
+     serie: valores por dia para o mini gráfico, cor } */
+  var ICONE_SOBE = '<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M6 2 10 8H2z" fill="currentColor"/></svg>';
+  var ICONE_DESCE = '<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M6 10 2 4h8z" fill="currentColor"/></svg>';
+  function seloDelta(dlt) {
+    var s = el("span", "kpi-delta " + (dlt >= 0 ? "sobe" : "desce"));
+    s.innerHTML = dlt >= 0 ? ICONE_SOBE : ICONE_DESCE;
+    s.appendChild(document.createTextNode(Math.abs(Math.round(dlt)) + "%"));
+    s.title = "Comparado ao período anterior de mesmo tamanho";
+    return s;
+  }
+  function cartaoKpi(rotulo, valor, sub, dlt, destaque, opc) {
+    opc = opc || {};
+    var c = el("article", "kpi revelar" + (destaque ? " destaque" : ""));
     c.appendChild(el("p", "kpi-rotulo", rotulo));
-    var v = el("div", "kpi-valor", valor);
-    if (dlt != null) {
-      var s = el("span", "kpi-delta " + (dlt >= 0 ? "sobe" : "desce"), (dlt >= 0 ? "▲ " : "▼ ") + Math.abs(Math.round(dlt)) + "%");
-      s.title = "Comparado ao período anterior de mesmo tamanho";
-      v.appendChild(s);
-    }
+    var v = el("div", "kpi-valor");
+    var num = el("span", null, valor);
+    v.appendChild(num);
+    if (opc.num != null) contar(num, opc.num, opc.fmt);
+    if (dlt != null) v.appendChild(seloDelta(dlt));
     c.appendChild(v);
     if (sub) c.appendChild(el("p", "kpi-sub", sub));
+    if (opc.serie && opc.serie.length > 2) c.appendChild(faisca(opc.serie, opc.cor || "#b1c7de", 170, 34));
     return c;
   }
 
@@ -278,45 +357,84 @@
     return Number(k.entrada) || Math.max(k.capa || 0, k.quiz || 0) || k.sessoes || 0;
   }
 
-  /* ---------- Visão geral ---------- */
+  /* ---------- Resumo ---------- */
+  var PRECO = { "1": 197.9, "2": 297.9, "3": 397.9 };
+  var REAL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
   function montarGeral(d) {
     var k = d.kpi, a = d.kpiAnt || {};
     var base = visitasDe(k);
     var baseAnt = visitasDe(a);
+    var dias = diasDoPeriodo(d);
+    var serie = function (campo) { return dias.map(function (x) { return x[campo] || 0; }); };
+    var inteiro = function (v) { return n(v); };
+
+    montarHeroi(d, base, baseAnt, dias);
+
     var kpis = limpar($("[data-kpis]"));
     var novos = 0, total = 0;
     (d.novos || []).forEach(function (x) { total += x.n; if (x.novo) novos += x.n; });
-
-    kpis.appendChild(cartaoKpi("Visitas", n(base), n(k.visitantes) + " visitantes únicos · " + pct(novos, total, 0) + " novos", delta(base, baseAnt)));
-    kpis.appendChild(cartaoKpi("Iniciaram", pct(k.iniciaram, base), n(k.iniciaram) + " responderam a 1ª pergunta", delta(k.iniciaram, a.iniciaram)));
-    kpis.appendChild(cartaoKpi("Concluíram o quiz", n(k.concluiram), pct(k.concluiram, k.iniciaram) + " de quem iniciou", delta(k.concluiram, a.concluiram)));
-    kpis.appendChild(cartaoKpi("Viram a fórmula", n(k.oferta), pct(k.oferta, base) + " das visitas", delta(k.oferta, a.oferta)));
-    kpis.appendChild(cartaoKpi("Cliques no checkout", n(k.checkout), pct(k.checkout, k.oferta) + " de quem viu a fórmula", delta(k.checkout, a.checkout), true));
-    kpis.appendChild(cartaoKpi("Conversão total", pct(k.checkout, base, 2), "visita → checkout", delta(base ? k.checkout / base : 0, baseAnt ? a.checkout / baseAnt : 0)));
-    kpis.appendChild(cartaoKpi("Tempo até a fórmula", tempo(mediana(d.duracoes)), "mediana de quem concluiu o quiz"));
     var kits = (d.checkoutPlano || []).slice().sort(function (x, y) { return y.n - x.n; });
     var totalKits = kits.reduce(function (s, x) { return s + x.n; }, 0);
-    kpis.appendChild(cartaoKpi("Kit mais escolhido", kits[0] ? "Kit " + kits[0].valor : "–", kits[0] ? pct(kits[0].n, totalKits, 0) + " dos cliques no checkout" : "sem cliques no período"));
-    kpis.appendChild(cartaoKpi("Ao vivo agora", n(d.aoVivo), "pessoas nos últimos 5 minutos"));
+    var receita = kits.reduce(function (s, x) { return s + x.n * (PRECO[x.valor] || 0); }, 0);
 
-    var lista = etapasFunil(d);
-    mostrarAlerta($("[data-alerta]"), lista, gargalo(lista));
+    var cartoes = [
+      cartaoKpi("Visitas", n(base), n(k.visitantes) + " pessoas únicas · " + pct(novos, total, 0) + " novas", delta(base, baseAnt), false,
+        { num: base, fmt: inteiro, serie: serie("visitas"), cor: "#3987e5" }),
+      cartaoKpi("Começaram o quiz", pct(k.iniciaram, base, 0), n(k.iniciaram) + " responderam a 1ª pergunta", delta(k.iniciaram, a.iniciaram), false,
+        { num: base ? 100 * k.iniciaram / base : 0, fmt: function (v) { return Math.round(v) + "%"; }, serie: serie("iniciaram"), cor: "#b1c7de" }),
+      cartaoKpi("Viram a fórmula", n(k.oferta), pct(k.oferta, base, 0) + " das visitas", delta(k.oferta, a.oferta), false,
+        { num: k.oferta, fmt: inteiro, serie: serie("formulas"), cor: "#d95926" }),
+      cartaoKpi("Clicaram em comprar", n(k.checkout), pct(k.checkout, k.oferta, 0) + " de quem viu a fórmula", delta(k.checkout, a.checkout), true,
+        { num: k.checkout, fmt: inteiro, serie: serie("checkouts"), cor: "#199e70" }),
+      cartaoKpi("Concluíram o quiz", n(k.concluiram), pct(k.concluiram, k.iniciaram, 0) + " de quem começou", delta(k.concluiram, a.concluiram), false,
+        { num: k.concluiram, fmt: inteiro }),
+      cartaoKpi("Tempo até a fórmula", tempo(mediana(d.duracoes)), "metade das pessoas leva menos que isso"),
+      cartaoKpi("Kit mais escolhido", kits[0] ? "Kit " + kits[0].valor : "–", kits[0] ? pct(kits[0].n, totalKits, 0) + " dos cliques em comprar" : "sem cliques no período"),
+      cartaoKpi("Ticket médio", totalKits ? REAL.format(receita / totalKits) : "–", "estimado pelos kits escolhidos"),
+    ];
+    cartoes.forEach(function (c, i) { c.style.setProperty("--i", i + 2); kpis.appendChild(c); });
+
     montarFunilVisual(d);
     montarDiario(d);
+  }
 
-    // funil resumido: marcos principais
-    var ids = ["capa", "cta", TELAS[0] && TELAS[0].id, "carregamento-1", "idade", "sinais", "montagem", "oferta", "planos", "checkout"];
-    var resumo = lista.filter(function (e) { return ids.indexOf(e.id) !== -1; });
-    desenharFunil($("[data-funil-resumo]"), resumo, base, null);
+  // cartão grande com a conversão total (visita → clique em comprar)
+  function montarHeroi(d, base, baseAnt, dias) {
+    var k = d.kpi, a = d.kpiAnt || {};
+    var no = limpar($("[data-heroi]"));
+    no.appendChild(el("p", "heroi-rot", "Conversão total"));
+    var linha = el("div", "heroi-linha");
+    var valor = el("span", "heroi-valor", pct(k.checkout, base, 2));
+    linha.appendChild(valor);
+    var conv = base ? 100 * k.checkout / base : 0;
+    contar(valor, conv, function (v) { return v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; });
+    var dl = delta(base ? k.checkout / base : 0, baseAnt ? (a.checkout || 0) / baseAnt : 0);
+    if (dl != null) linha.appendChild(seloDelta(dl));
+    no.appendChild(linha);
+    var sub = el("p", "heroi-sub");
+    sub.appendChild(el("b", null, n(k.checkout)));
+    sub.appendChild(document.createTextNode(" cliques em comprar de "));
+    sub.appendChild(el("b", null, n(base)));
+    sub.appendChild(document.createTextNode(" visitas"));
+    no.appendChild(sub);
+    if (dias.length > 2) {
+      var g = el("div", "heroi-graf");
+      var W = Math.max(280, no.clientWidth || 340);
+      g.appendChild(faisca(dias.map(function (x) { return x.conv; }), "#b1c7de", W, 78, { classe: "", forca: 0.32, espessura: 2.5, luz: 4, ponto: true, folga: 10, margem: 10 }));
+      no.appendChild(g);
+    } else {
+      no.appendChild(el("div", "espaco"));
+    }
   }
 
   /* ---------- Evolução diária: um painel por medida (cada um com a sua
      escala), mesma linha do tempo e uma linha-guia que acompanha o dedo ---------- */
   var SERIES = [
-    { k: "visitas", nome: "Visitas", cor: "var(--s1)" },
-    { k: "formulas", nome: "Viram a fórmula", cor: "var(--s2)" },
-    { k: "checkouts", nome: "Cliques no checkout", cor: "var(--s3)" },
-    { k: "conv", nome: "Conversão (visita → checkout)", cor: "var(--blue)", pct: true },
+    { k: "visitas", nome: "Visitas", cor: "#3987e5" },
+    { k: "formulas", nome: "Viram a fórmula", cor: "#d95926" },
+    { k: "checkouts", nome: "Cliques no checkout", cor: "#199e70" },
+    { k: "conv", nome: "Conversão (visita → checkout)", cor: "#b1c7de", pct: true },
   ];
 
   function diasDoPeriodo(d) {
@@ -328,7 +446,7 @@
     if (estado.periodo === "tudo" && d.diario && d.diario.length) inicio = new Date(d.diario[0].dia + "T00:00:00");
     for (var t = new Date(inicio); t < r.ate && dias.length < 400; t.setDate(t.getDate() + 1)) {
       var iso = isoDia(t);
-      var x = mapa[iso] || { dia: iso, visitas: 0, formulas: 0, checkouts: 0 };
+      var x = mapa[iso] || { dia: iso, visitas: 0, iniciaram: 0, formulas: 0, checkouts: 0 };
       x.conv = x.visitas ? 100 * x.checkouts / x.visitas : 0;
       dias.push(x);
     }
@@ -386,14 +504,15 @@
       var pts = vals.map(function (v, i) { return [xDe(i), yDe(v)]; });
       if (pts.length > 1) {
         var linha = "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
-        svg.appendChild(svgEl("path", { d: linha + "L" + pts[pts.length - 1][0].toFixed(1) + " " + yDe(0) + "L" + pts[0][0].toFixed(1) + " " + yDe(0) + "Z", fill: s.cor, "fill-opacity": 0.12 }));
-        svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: s.cor, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+        var atraso = "--atraso:" + (k * 0.15) + "s";
+        svg.appendChild(svgEl("path", { d: linha + "L" + pts[pts.length - 1][0].toFixed(1) + " " + yDe(0) + "L" + pts[0][0].toFixed(1) + " " + yDe(0) + "Z", fill: degrade(svg, s.cor, 0.3), class: "surgir", style: atraso }));
+        svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: s.cor, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round", pathLength: 1, class: "desenhar", style: atraso, filter: brilho(svg, 2.5) }));
       }
       // ponto final com anel da cor do fundo
       var ult = pts[pts.length - 1];
-      svg.appendChild(svgEl("circle", { cx: ult[0], cy: ult[1], r: 4, fill: s.cor, stroke: "var(--cartao)", "stroke-width": 2 }));
+      svg.appendChild(svgEl("circle", { cx: ult[0], cy: ult[1], r: 4, fill: s.cor, stroke: "#161617", "stroke-width": 2, class: "surgir", style: "--atraso:" + (k * 0.15 + 0.9) + "s" }));
       // ponto que acompanha a guia
-      var guiaPonto = svgEl("circle", { cx: 0, cy: 0, r: 4.5, fill: s.cor, stroke: "var(--cartao)", "stroke-width": 2, visibility: "hidden" });
+      var guiaPonto = svgEl("circle", { cx: 0, cy: 0, r: 4.5, fill: s.cor, stroke: "#161617", "stroke-width": 2, visibility: "hidden" });
       svg.appendChild(guiaPonto);
       paineis.push({ s: s, pts: pts, ponto: guiaPonto });
     });
@@ -480,6 +599,13 @@
     var H = etapas.length * linhaH;
     var base = Math.max(1, etapas[0].n);
     var svg = svgEl("svg", { width: W, height: H, viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Funil de vendas: " + etapas.map(function (e) { return e.nome + " " + n(e.n); }).join(", ") });
+    var luz = brilho(svg, 7);
+    // reflexo de vidro: mais claro no meio da faixa
+    var reflexo = "ref" + (++proxId);
+    var defs = svg.querySelector("defs");
+    var gr = svgEl("linearGradient", { id: reflexo, x1: 0, y1: 0, x2: 1, y2: 0 });
+    [[0, 0], [0.5, 0.28], [1, 0]].forEach(function (st) { gr.appendChild(svgEl("stop", { offset: st[0], "stop-color": "#ffffff", "stop-opacity": st[1] })); });
+    defs.appendChild(gr);
     var largDe = function (v) { return Math.max(F * 0.12, F * v / base); };
     var cx = F / 2;
 
@@ -490,38 +616,38 @@
       var t = etapas.length > 1 ? i / (etapas.length - 1) : 0;
       var c = corEtapa(t);
       var ehGargalo = g && g.i === i;
-      var forma = svgEl("path", {
-        d: "M" + (cx - wTopo / 2) + " " + y + "H" + (cx + wTopo / 2) + "L" + (cx + wBase / 2) + " " + (y + faixaH) + "H" + (cx - wBase / 2) + "Z",
-        fill: c.cor, class: "funil-faixa",
-      });
-      svg.appendChild(forma);
+      var dForma = "M" + (cx - wTopo / 2) + " " + y + "H" + (cx + wTopo / 2) + "L" + (cx + wBase / 2) + " " + (y + faixaH) + "H" + (cx - wBase / 2) + "Z";
+      svg.appendChild(svgEl("path", { d: dForma, fill: c.cor, class: "funil-faixa", style: "--i:" + i, filter: luz }));
+      svg.appendChild(svgEl("path", { d: dForma, fill: "url(#" + reflexo + ")", class: "funil-faixa", style: "--i:" + i }));
+      var grupo = svgEl("g", { class: "funil-txt", style: "--i:" + i });
+      svg.appendChild(grupo);
 
       // % do total dentro da faixa, se couber
       var pTxt = pct(e.n, base, i === 0 ? 0 : 1);
       if (Math.min(wTopo, wBase) > 54) {
         var tp = svgEl("text", { x: cx, y: y + faixaH / 2 + 5, "text-anchor": "middle", class: "funil-pct" + (c.escuro ? " claro" : "") });
         tp.textContent = pTxt;
-        svg.appendChild(tp);
+        grupo.appendChild(tp);
       }
 
       // textos à direita
       var xT = F + 14;
       var nome = svgEl("text", { x: xT, y: y + 16, class: "funil-nome" });
       nome.textContent = e.nome;
-      svg.appendChild(nome);
+      grupo.appendChild(nome);
       var num = svgEl("text", { x: xT, y: y + 40, class: "funil-num" });
       num.textContent = n(e.n);
-      svg.appendChild(num);
+      grupo.appendChild(num);
       if (i > 0) {
         var ant = etapas[i - 1].n;
         var perda = ant ? (ant - e.n) / ant : 0;
         var sub = svgEl("text", { x: xT, y: y + 57, class: "funil-sub" + (ehGargalo ? " gargalo" : "") });
         sub.textContent = (perda > 0 ? "▼ " + Math.round(perda * 100) + "% saíram" : "sem perda") + " · " + pct(e.n, ant, 0) + " seguiram";
-        svg.appendChild(sub);
+        grupo.appendChild(sub);
       } else {
         var sub0 = svgEl("text", { x: xT, y: y + 57, class: "funil-sub" });
         sub0.textContent = "100% · ponto de partida";
-        svg.appendChild(sub0);
+        grupo.appendChild(sub0);
       }
 
       // área de toque da linha inteira
@@ -595,12 +721,12 @@
     var vals = pts.map(function (e) { return 100 * e.n / base; });
     var c = vals.map(function (v, i) { return [xDe(i), yDe(v)]; });
     var linha = "M" + c.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
-    svg.appendChild(svgEl("path", { d: linha + "L" + c[c.length - 1][0] + " " + yDe(0) + "L" + c[0][0] + " " + yDe(0) + "Z", fill: "var(--s1)", "fill-opacity": 0.12 }));
-    svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: "var(--s1)", "stroke-width": 2, "stroke-linejoin": "round" }));
+    svg.appendChild(svgEl("path", { d: linha + "L" + c[c.length - 1][0] + " " + yDe(0) + "L" + c[0][0] + " " + yDe(0) + "Z", fill: degrade(svg, "#3987e5", 0.32), class: "surgir" }));
+    svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: "#3987e5", "stroke-width": 2, "stroke-linejoin": "round", pathLength: 1, class: "desenhar", filter: brilho(svg, 3) }));
     var gId = g ? lista[g.i].id : null;
     pts.forEach(function (e, i) {
       var ehG = e.id === gId;
-      svg.appendChild(svgEl("circle", { cx: c[i][0], cy: c[i][1], r: ehG ? 6 : 4, fill: ehG ? "var(--alerta)" : "var(--s1)", stroke: "var(--cartao)", "stroke-width": 2 }));
+      svg.appendChild(svgEl("circle", { cx: c[i][0], cy: c[i][1], r: ehG ? 6 : 4, fill: ehG ? "#f0a830" : "#3987e5", stroke: "#161617", "stroke-width": 2, class: "surgir" + (ehG ? " ponto-vivo" : ""), style: "--atraso:" + (0.8 * i / pts.length) + "s", filter: ehG ? brilho(svg, 4) : null }));
       // rótulos do eixo: P1, P3… e as telas especiais
       var cod = e.id === "oferta" ? "Fórm." : (numeroPergunta[e.id] || "");
       var mostra = e.id === "oferta" || (cod && (Number(cod.slice(1)) % 2 === 1 || pts.length < 12));
@@ -611,7 +737,7 @@
       }
       var alvo = svgEl("rect", { x: c[i][0] - (W - mE - mD) / pts.length / 2, y: 0, width: (W - mE - mD) / pts.length, height: H, fill: "transparent", class: "alvo", tabindex: 0 });
       var mostrar = function (ev) {
-        var linhas = [{ cor: "var(--s1)", valor: pct(e.n, base, 0), nome: "ainda no quiz" }, { cor: "transparent", valor: n(e.n), nome: "pessoas" }];
+        var linhas = [{ cor: "#3987e5", valor: pct(e.n, base, 0), nome: "ainda no quiz" }, { cor: "transparent", valor: n(e.n), nome: "pessoas" }];
         if (i > 0) linhas.push({ cor: "transparent", valor: n(pts[i - 1].n - e.n), nome: "saíram na tela anterior" });
         dica(ev, e.nome, linhas);
       };
@@ -633,7 +759,7 @@
   }
 
   /* ---------- Barra 100% (ex.: divisão entre os kits) ---------- */
-  var CORES_CAT = ["var(--s1)", "var(--s2)", "var(--s3)"];
+  var CORES_CAT = ["#3987e5", "#d95926", "#199e70"];
   function barraPartes(no, partes) {
     var total = partes.reduce(function (a, p) { return a + p.n; }, 0);
     var wrap = el("div", "partes");
@@ -643,6 +769,7 @@
       var seg = el("div", "partes-seg");
       seg.style.flexGrow = p.n;
       seg.style.background = CORES_CAT[i % CORES_CAT.length];
+      seg.style.setProperty("--i", i);
       seg.title = p.nome + ": " + n(p.n) + " (" + pct(p.n, total, 0) + ")";
       var r = el("span", "barra-rot", pct(p.n, total, 0));
       seg.appendChild(r);
@@ -725,7 +852,13 @@
      vai para logo depois dela (medido de verdade, depois de desenhar). */
   function rotuloBarra(barra, w, texto) {
     var cheia = el("div", "barra-cheia");
-    cheia.style.width = w + "%";
+    barra.setAttribute("data-w", w);
+    // a barra cresce do zero quando a tela é aberta
+    if (estado.silencioso || SEM_MOVIMENTO) cheia.style.width = w + "%";
+    else {
+      cheia.style.width = "0%";
+      requestAnimationFrame(function () { requestAnimationFrame(function () { cheia.style.width = w + "%"; }); });
+    }
     var dentro = el("span", "barra-rot", texto);
     cheia.appendChild(dentro);
     barra.appendChild(cheia);
@@ -738,7 +871,8 @@
     $$(".barra").forEach(function (barra) {
       var cheia = barra.querySelector(".barra-cheia"), dentro = barra.querySelector(".barra-rot"), fora = barra.querySelector(".barra-valor-fora");
       if (!dentro || !cheia.offsetParent) return;
-      var cabe = cheia.clientWidth >= dentro.offsetWidth + 14;
+      // mede pelo tamanho final (a barra pode ainda estar crescendo)
+      var cabe = barra.clientWidth * Number(barra.getAttribute("data-w") || 0) / 100 >= dentro.offsetWidth + 14;
       dentro.style.visibility = cabe ? "" : "hidden";
       fora.hidden = cabe;
     });
@@ -832,6 +966,7 @@
     kp.appendChild(cartaoKpi("Cliques no checkout", n(k.checkout), n(k.checkout_cliques) + " cliques no total", null, true));
     kp.appendChild(cartaoKpi("Tempo na oferta", tempo(mediana(d.tempoOferta)), "mediana por visita"));
     kp.appendChild(cartaoKpi("Rolagem média", mediaRol == null ? "–" : Math.round(mediaRol) + "%", "da altura da página"));
+    kp.appendChild(cartaoKpi("Tocaram num kit", pct(k.escolheram_plano, k.viram_planos, 0), n(k.escolheram_plano) + " de quem viu os planos"));
 
     // kits
     var no = limpar($("[data-kits]"));
@@ -908,7 +1043,7 @@
       if (!linhas.length) { no.appendChild(el("p", "vazio", "Sem dados no período.")); return; }
       var tab = el("table", "tabela");
       var cab = el("tr");
-      ["Nome", "Visitas", "Iniciaram", "Fórmula", "Checkout", "Conv."].forEach(function (h) { cab.appendChild(el("th", null, h)); });
+      ["Nome", "Visitas", "Quiz", "Fórmula", "Compra", "Conv."].forEach(function (h) { cab.appendChild(el("th", null, h)); });
       tab.appendChild(cab);
       linhas.forEach(function (l) {
         var tr = el("tr");
@@ -950,11 +1085,203 @@
     else desenharLista(noE, d.erros.map(function (e) { return { nome: e.valor, n: e.n, extra: n(e.n) + "×" }; }));
   }
 
-  function redesenhar() {
+  // redesenha os gráficos que dependem da largura da tela
+  function redesenhar(silencioso) {
     var d = estado.dados;
     if (!d) return;
-    if (estado.aba === "geral") { montarFunilVisual(d); montarDiario(d); }
+    estado.silencioso = !!silencioso;
+    conteudo.classList.toggle("estatico", !!silencioso);
+    if (estado.aba === "geral") montarGeral(d);
     if (estado.aba === "funil") { var l = etapasFunil(d); retencao($("[data-retencao]"), l, gargalo(l)); }
+    requestAnimationFrame(ajustarRotulos);
+    estado.silencioso = false;
+  }
+
+  /* ================= relatório da IA (pontos de melhoria) =================
+     Sempre mostra na hora a análise automática (feita aqui, sem custo).
+     Se a chave do Claude estiver na Vercel, pede o relatório ao Claude e
+     troca quando ele chegar. */
+  var ia = { claude: {}, pedindo: {}, fechouPrimeiro: false };
+  var MOTIVOS = {
+    limite: "o limite diário de análises foi atingido", chave: "a chave do Claude na Vercel parece inválida",
+    ocupado: "o Claude está ocupado agora", recusa: "o Claude não conseguiu analisar este resumo", "sem-ia": "a chave do Claude não está configurada",
+  };
+
+  function chaveIA() {
+    var r = intervalo();
+    return JSON.stringify({ de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)), filtros: estado.filtros });
+  }
+
+  function auxAnalise(d) {
+    var r = intervalo();
+    return {
+      visitas: visitasDe, comparar: estado.periodo !== "tudo",
+      periodo: { de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)), dias: Math.round((r.ate - r.de) / 864e5), filtros: estado.filtros },
+      etapasFunil: etapasFunil(d), telas: TELAS, perguntas: PERGUNTAS, numeroPergunta: numeroPergunta,
+      curtos: CURTOS, secoes: SECOES, nomeClique: nomeClique,
+    };
+  }
+
+  function montarIA(d) {
+    if (!window.PainelAnalise) return;
+    var resumo = window.PainelAnalise.resumir(d, auxAnalise(d));
+    estado.resumoIA = resumo;
+    var chave = chaveIA();
+    var c = ia.claude[chave];
+    if (c && c.relatorio) desenharIA(c.relatorio, { fonte: "claude", criado: c.criado });
+    else desenharIA(window.PainelAnalise.analisar(resumo), { fonte: "local", erro: c && c.erro });
+    if (d.ia && !estado.demo && !c && !ia.pedindo[chave] && resumo.volume.visitas > 0) pedirClaude(false);
+  }
+
+  function pedirClaude(forcar) {
+    var chave = chaveIA();
+    ia.pedindo[chave] = true;
+    $("[data-ia-carregando]").hidden = false;
+    var botao = $("[data-ia-gerar]");
+    if (botao) botao.disabled = true;
+    var fim = function (resultado) {
+      ia.pedindo[chave] = false;
+      ia.claude[chave] = resultado;
+      $("[data-ia-carregando]").hidden = true;
+      if (chave === chaveIA() && estado.dados) montarIA(estado.dados);
+    };
+    fetch("/api/analise", {
+      method: "POST",
+      headers: { authorization: "Bearer " + estado.senha, "content-type": "application/json" },
+      body: JSON.stringify({ contexto: JSON.parse(chave), resumo: estado.resumoIA, forcar: !!forcar }),
+    })
+      .then(function (resp) { return resp.json().catch(function () { return {}; }).then(function (b) { return { ok: resp.ok, b: b }; }); })
+      .then(function (x) {
+        if (x.ok && x.b.relatorio) fim({ relatorio: x.b.relatorio, criado: x.b.criado });
+        else fim({ erro: MOTIVOS[x.b.erro] || "houve uma falha ao falar com o Claude" });
+      })
+      .catch(function () { fim({ erro: "houve uma falha de conexão" }); });
+  }
+
+  function haQuanto(ms) {
+    var m = Math.round((Date.now() - ms) / 60000);
+    if (m < 1) return "agora";
+    if (m < 60) return "há " + m + " min";
+    var h = Math.round(m / 60);
+    return "há " + h + " h";
+  }
+
+  var ICONE_GARGALO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17.5v.5"/></svg>';
+  var ICONE_IMPACTO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16l6-6 4 4 6-7"/><path d="M15 7h5v5"/></svg>';
+  var ICONE_OK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/></svg>';
+  var PRIORIDADE = { alta: "Alta prioridade", media: "Média prioridade", baixa: "Baixa prioridade" };
+
+  function anelNota(no, nota) {
+    limpar(no);
+    var R = 40, C = 2 * Math.PI * R;
+    var est = nota == null ? { cor: "#7c7d81", rot: "Sem dados" }
+      : nota >= 80 ? { cor: "#2fbf7a", rot: "Saudável" }
+      : nota >= 60 ? { cor: "#f0a830", rot: "Pode melhorar" }
+      : { cor: "#e5534b", rot: "Precisa de atenção" };
+    var svg = svgEl("svg", { viewBox: "0 0 92 92", "aria-hidden": "true" });
+    svg.appendChild(svgEl("circle", { cx: 46, cy: 46, r: R, class: "anel-fundo" }));
+    var anel = svgEl("circle", { cx: 46, cy: 46, r: R, class: "anel", stroke: est.cor, "stroke-dasharray": C.toFixed(1), "stroke-dashoffset": C.toFixed(1), filter: brilho(svg, 3) });
+    svg.appendChild(anel);
+    no.appendChild(svg);
+    var alvo = (C * (1 - (nota || 0) / 100)).toFixed(1);
+    if (estado.silencioso || SEM_MOVIMENTO) anel.setAttribute("stroke-dashoffset", alvo);
+    else requestAnimationFrame(function () { requestAnimationFrame(function () { anel.setAttribute("stroke-dashoffset", alvo); }); });
+    var num = el("span", "ia-nota-num", nota == null ? "–" : String(nota));
+    if (nota != null) contar(num, nota, function (v) { return String(Math.round(v)); });
+    no.appendChild(num);
+    var rot = el("span", "ia-nota-rot");
+    rot.appendChild(el("b", null, est.rot));
+    rot.appendChild(document.createTextNode("saúde do funil"));
+    no.appendChild(rot);
+    no.setAttribute("aria-label", "Saúde do funil: " + (nota == null ? "sem dados" : nota + " de 100, " + est.rot));
+    no.setAttribute("role", "img");
+  }
+
+  function desenharIA(rel, meta) {
+    var claude = meta.fonte === "claude";
+    $("[data-ia-fonte]").textContent = claude ? "Escrita pelo Claude · " + haQuanto(meta.criado) : "Automática · sem custo";
+    anelNota($("[data-ia-nota]"), rel.nota);
+    $("[data-ia-titulo]").textContent = rel.titulo || "";
+    $("[data-ia-resumo]").textContent = rel.resumo || "";
+
+    var g = $("[data-ia-gargalo]");
+    limpar(g);
+    g.hidden = !(rel.gargalo && rel.gargalo.etapa);
+    if (!g.hidden) {
+      g.insertAdjacentHTML("afterbegin", ICONE_GARGALO);
+      var gp = el("p");
+      gp.appendChild(el("strong", null, "Maior gargalo"));
+      gp.appendChild(el("b", null, rel.gargalo.etapa + ". "));
+      gp.appendChild(document.createTextNode(rel.gargalo.explicacao || ""));
+      g.appendChild(gp);
+    }
+
+    var corpo = limpar($("[data-ia-corpo]"));
+    var pontos = rel.pontos || [];
+    if (pontos.length) {
+      corpo.appendChild(el("h3", "ia-secao", "Pontos de melhoria · toque para ver o que fazer"));
+      var ol = el("ol", "ia-pontos");
+      pontos.forEach(function (pt, i) {
+        var li = el("li");
+        var det = el("details", "ia-ponto p-" + (PRIORIDADE[pt.prioridade] ? pt.prioridade : "media"));
+        det.style.setProperty("--i", i);
+        if (i === 0 && !ia.fechouPrimeiro) det.open = true;
+        if (i === 0) det.addEventListener("toggle", function () { if (!det.open) ia.fechouPrimeiro = true; });
+        var sum = el("summary");
+        var tags = el("div", "ia-ponto-tags");
+        tags.appendChild(el("span", "ia-tag prio", PRIORIDADE[pt.prioridade] || "Média prioridade"));
+        if (pt.area) tags.appendChild(el("span", "ia-tag", pt.area));
+        sum.appendChild(tags);
+        sum.appendChild(el("h3", null, pt.titulo));
+        if (pt.impacto) {
+          var im = el("div", "ia-impacto");
+          im.innerHTML = ICONE_IMPACTO;
+          im.appendChild(el("span", null, pt.impacto));
+          sum.appendChild(im);
+        }
+        det.appendChild(sum);
+        var cp = el("div", "ia-ponto-corpo");
+        if (pt.detalhe) cp.appendChild(el("p", null, pt.detalhe));
+        if (pt.acao) {
+          var ac = el("div", "ia-acao");
+          ac.appendChild(el("span", null, "O que fazer"));
+          ac.appendChild(el("p", null, pt.acao));
+          cp.appendChild(ac);
+        }
+        det.appendChild(cp);
+        li.appendChild(det);
+        ol.appendChild(li);
+      });
+      corpo.appendChild(ol);
+    }
+    if ((rel.positivos || []).length) {
+      corpo.appendChild(el("h3", "ia-secao", "O que está funcionando"));
+      var ul = el("ul", "ia-positivos");
+      rel.positivos.forEach(function (t) {
+        var li = el("li");
+        li.innerHTML = ICONE_OK;
+        li.appendChild(el("span", null, t));
+        ul.appendChild(li);
+      });
+      corpo.appendChild(ul);
+    }
+
+    var rod = limpar($("[data-ia-rodape]"));
+    var d = estado.dados || {};
+    var txt;
+    if (estado.demo) txt = "Modo demonstração: análise automática feita sobre números fictícios.";
+    else if (claude) txt = "O Claude leu só os números agregados deste período (nenhum dado pessoal) e escreveu este relatório.";
+    else if (d.ia) txt = meta.erro ? "Não deu para falar com o Claude agora (" + meta.erro + "). Esta é a análise automática do painel." : "Esta é a análise automática do painel. O relatório do Claude aparece aqui em instantes.";
+    else txt = "Análise automática, feita pelo próprio painel com regras de conversão, sem custo. Para o relatório escrito pelo Claude, adicione a chave ANTHROPIC_API_KEY na Vercel.";
+    rod.appendChild(el("p", null, txt));
+    if (d.ia && !estado.demo) {
+      var b = el("button", "botao-claro", claude ? "Atualizar análise" : "Gerar com o Claude");
+      b.type = "button";
+      b.setAttribute("data-ia-gerar", "");
+      b.disabled = !!ia.pedindo[chaveIA()];
+      b.addEventListener("click", function () { pedirClaude(claude); });
+      rod.appendChild(b);
+    }
   }
 
   /* ================= dica (tooltip) ================= */
@@ -1115,7 +1442,20 @@
     $("[data-painel]").hidden = false;
     carregar();
   });
-  $("[data-atualizar]").addEventListener("click", carregar);
+  $("[data-atualizar]").addEventListener("click", function () { carregar(false); });
+
+  // filtros extras (datas, fonte, campanha, aparelho) ficam recolhidos
+  $("[data-filtros-abrir]").addEventListener("click", function () {
+    var mais = $("[data-filtros-mais]");
+    mais.hidden = !mais.hidden;
+    this.setAttribute("aria-expanded", String(!mais.hidden));
+  });
+  function contarFiltros() {
+    var q = Object.keys(estado.filtros).filter(function (k) { return estado.filtros[k]; }).length + (estado.de && estado.ate ? 1 : 0);
+    var b = $("[data-filtros-qtd]");
+    b.hidden = !q;
+    b.textContent = q;
+  }
   $("[data-exportar]").addEventListener("click", exportar);
   $("[data-sair]").addEventListener("click", function () {
     try { sessionStorage.removeItem("cl-painel-senha"); } catch (e) { /* ok */ }
@@ -1154,18 +1494,17 @@
       estado.aba = b.getAttribute("data-aba");
       $$("[data-aba]").forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
       $$("[data-painel-aba]").forEach(function (p) { p.hidden = p.getAttribute("data-painel-aba") !== estado.aba; });
-      redesenhar();
-      requestAnimationFrame(ajustarRotulos);
+      redesenhar(false);
     });
   });
   var redimensionar = 0;
   window.addEventListener("resize", function () {
     clearTimeout(redimensionar);
-    redimensionar = setTimeout(redesenhar, 200);
+    redimensionar = setTimeout(function () { redesenhar(true); }, 200);
   });
 
   // atualiza sozinho a cada 60 s (só com dados reais)
-  setInterval(function () { if (!estado.demo && estado.senha && !document.hidden && !$("[data-painel]").hidden) carregar(); }, 60000);
+  setInterval(function () { if (!estado.demo && estado.senha && !document.hidden && !$("[data-painel]").hidden) carregar(true); }, 60000);
 
   /* ================= início ================= */
   if (/[?&]demo=1/.test(location.search)) {

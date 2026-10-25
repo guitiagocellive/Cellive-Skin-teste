@@ -3,6 +3,8 @@
    Para testar no computador com um Postgres comum, use BANCO_LOCAL=1.
    Arquivos que começam com "_" dentro de /api não viram endereços públicos. */
 
+import { timingSafeEqual } from "node:crypto";
+
 let consultar = null;
 let tabelaPronta = false;
 
@@ -38,9 +40,22 @@ export async function banco() {
     await q("CREATE INDEX IF NOT EXISTS ev_ts ON eventos(ts)");
     await q("CREATE INDEX IF NOT EXISTS ev_sessao ON eventos(sessao, id)");
     await q("CREATE INDEX IF NOT EXISTS ev_tipo ON eventos(tipo, ts)");
+    // relatórios da IA já gerados (para não pagar duas vezes pela mesma análise)
+    await q(`CREATE TABLE IF NOT EXISTS analises (
+      chave TEXT PRIMARY KEY, criado BIGINT NOT NULL, dados JSONB NOT NULL
+    )`);
     tabelaPronta = true;
   }
   return q;
+}
+
+/* Confere a senha do painel (variável PAINEL_SENHA na Vercel). */
+export function autorizado(request) {
+  const senha = process.env.PAINEL_SENHA;
+  if (!senha) return "sem-senha";
+  const recebida = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+  const a = Buffer.from(recebida), b = Buffer.from(senha);
+  return a.length === b.length && timingSafeEqual(a, b) ? "ok" : "negado";
 }
 
 export function json(dados, status = 200) {

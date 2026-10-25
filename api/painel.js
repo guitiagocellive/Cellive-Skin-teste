@@ -1,8 +1,7 @@
 /* GET /api/painel                — números do painel (precisa da senha).
    GET /api/painel?formato=csv    — baixa os eventos do período em CSV.
    A senha fica na variável PAINEL_SENHA (Vercel > Settings > Environment Variables). */
-import { timingSafeEqual } from "node:crypto";
-import { banco, json } from "./_db.js";
+import { autorizado, banco, json } from "./_db.js";
 
 const FUSO = "America/Sao_Paulo";
 const DIA = `to_char(to_timestamp(ts / 1000.0) AT TIME ZONE '${FUSO}', 'YYYY-MM-DD')`;
@@ -27,14 +26,6 @@ function numeros(linhas) {
 function sql(texto) {
   let i = 0;
   return texto.replace(/\?/g, () => "$" + ++i);
-}
-
-function autorizado(request) {
-  const senha = process.env.PAINEL_SENHA;
-  if (!senha) return "sem-senha";
-  const recebida = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
-  const a = Buffer.from(recebida), b = Buffer.from(senha);
-  return a.length === b.length && timingSafeEqual(a, b) ? "ok" : "negado";
 }
 
 function filtros(url, deslocamento = 0) {
@@ -128,6 +119,7 @@ async function painel(q, url) {
 
   return json({
     gerado: Date.now(),
+    ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },
     porHora, duracoes: duracoes.map((d) => d.ms), tempoOferta: tempoOferta.map((d) => d.ms), rolagem, opcoes, aoVivo: aoVivo[0].n, erros, novos,
