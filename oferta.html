@@ -765,22 +765,32 @@
       </div>
     </section>
 
-    <!-- ===================== DOBRA 18: confiança ===================== -->
+    <!-- ===================== DOBRA 18: confiança (tema escuro) ===================== -->
     <section class="oferta-confianca" aria-labelledby="confianca-titulo">
-      <p class="chamada-italico" data-revelar="palavras">Cuidado com responsabilidade</p>
+      <p class="chamada-italico conf-chamada" data-revelar="palavras">Cuidado com responsabilidade</p>
       <h2 class="secao-titulo confianca-titulo" id="confianca-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">Resultado para</span> <strong>confiar</strong>
       </h2>
 
+      <!-- Frasco em destaque, com luz azul e um anel girando devagar -->
+      <div class="conf-palco" data-aparecer aria-hidden="true">
+        <span class="conf-luz"></span>
+        <span class="conf-anel"></span>
+        <span class="conf-anel conf-anel-2"></span>
+        <img class="conf-frasco" src="assets/img/oferta/frasco-tampa.webp" alt="" width="126" height="422" loading="lazy">
+      </div>
+
       <!-- Os dois pontos principais -->
       <ul class="conf-lista" data-aparecer>
         <li class="conf-item" style="--i:0">
-          <span class="conf-icone" aria-hidden="true"><svg viewBox="0 0 48 48"><path pathLength="1" d="M19 6h10M21 6v12L11 36a4 4 0 0 0 3.5 6h19a4 4 0 0 0 3.5-6L27 18V6"/><path pathLength="1" d="M15.5 29h17"/><path class="conf-check" pathLength="1" d="m19 35 3.5 3.5L30 31"/></svg></span>
+          <span class="conf-num">01</span>
+          <span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M19 6h10M21 6v12L11 36a4 4 0 0 0 3.5 6h19a4 4 0 0 0 3.5-6L27 18V6"/><path pathLength="1" d="M15.5 29h17"/><path class="conf-check" pathLength="1" d="m19 35 3.5 3.5L30 31"/></svg></span>
           <h3 class="conf-nome">Testado dermatologicamente</h3>
           <p class="conf-texto">Passou por testes de eficácia que comprovam seus resultados na pele.</p>
         </li>
         <li class="conf-item" style="--i:1">
-          <span class="conf-icone" aria-hidden="true"><svg viewBox="0 0 48 48"><path pathLength="1" d="M24 5l15 6v11c0 10-6.4 17.2-15 21-8.6-3.8-15-11-15-21V11z"/><path class="conf-check" pathLength="1" d="m16.5 24 5.5 5.5L32 19"/></svg></span>
+          <span class="conf-num">02</span>
+          <span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M24 5l15 6v11c0 10-6.4 17.2-15 21-8.6-3.8-15-11-15-21V11z"/><path class="conf-check" pathLength="1" d="m16.5 24 5.5 5.5L32 19"/></svg></span>
           <h3 class="conf-nome">Aprovado pela Anvisa</h3>
           <p class="conf-texto">Sua segurança vem primeiro: todos os nossos produtos são aprovados pela Anvisa.</p>
         </li>
@@ -788,26 +798,10 @@
 
       <!-- Mais pontos de confiança -->
       <ul class="conf-grade" data-aparecer>
-        <li class="conf-mini" style="--i:0">
-          <span class="conf-icone conf-icone-mini" aria-hidden="true"><svg viewBox="0 0 48 48"><circle pathLength="1" cx="24" cy="24" r="16"/><path pathLength="1" d="M8 24a8 8 0 0 1 16 0 8 8 0 0 0 16 0"/></svg></span>
-          <h3 class="conf-mini-nome">Tecnologia coreana</h3>
-          <p class="conf-mini-texto">Ativos e tecnologias do skincare coreano.</p>
-        </li>
-        <li class="conf-mini" style="--i:1">
-          <span class="conf-icone conf-icone-mini" aria-hidden="true"><svg viewBox="0 0 48 48"><path pathLength="1" d="M10 22a14 14 0 0 1 24.5-9.2M38 26a14 14 0 0 1-24.5 9.2"/><path pathLength="1" d="m35 7 .5 6.5-6.5.5M13 41l-.5-6.5 6.5-.5"/><path pathLength="1" d="M20 20h6.5a2.5 2.5 0 0 1 0 5H21.5a2.5 2.5 0 0 0 0 5H28M24 17.5v2.5M24 30v2.5"/></svg></span>
-          <h3 class="conf-mini-nome">Garantia de 30 dias</h3>
-          <p class="conf-mini-texto">Não gostou? Devolvemos 100% do valor.</p>
-        </li>
-        <li class="conf-mini" style="--i:2">
-          <span class="conf-icone conf-icone-mini" aria-hidden="true"><svg viewBox="0 0 48 48"><rect pathLength="1" x="11" y="21" width="26" height="20" rx="4"/><path pathLength="1" d="M16 21v-5a8 8 0 0 1 16 0v5"/><path pathLength="1" d="M24 29v4"/></svg></span>
-          <h3 class="conf-mini-nome">Compra segura</h3>
-          <p class="conf-mini-texto">Ambiente protegido e seus dados em segurança.</p>
-        </li>
-        <li class="conf-mini" style="--i:3">
-          <span class="conf-icone conf-icone-mini" aria-hidden="true"><svg viewBox="0 0 48 48"><path pathLength="1" d="M5 13h22v18H5zM27 19h8l6 6v6H27z"/><circle pathLength="1" cx="13" cy="34" r="3.5"/><circle pathLength="1" cx="34" cy="34" r="3.5"/></svg></span>
-          <h3 class="conf-mini-nome">Frete grátis</h3>
-          <p class="conf-mini-texto">Entrega sem custo em todos os planos.</p>
-        </li>
+        <li class="conf-mini" style="--i:0"><span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><circle pathLength="1" cx="24" cy="24" r="16"/><path pathLength="1" d="M8 24a8 8 0 0 1 16 0 8 8 0 0 0 16 0"/></svg></span><h3 class="conf-mini-nome">Tecnologia coreana</h3><p class="conf-mini-texto">Ativos e tecnologias do skincare coreano.</p></li>
+        <li class="conf-mini" style="--i:1"><span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M10 22a14 14 0 0 1 24.5-9.2M38 26a14 14 0 0 1-24.5 9.2"/><path pathLength="1" d="m35 7 .5 6.5-6.5.5M13 41l-.5-6.5 6.5-.5"/><path pathLength="1" d="M20 20h6.5a2.5 2.5 0 0 1 0 5H21.5a2.5 2.5 0 0 0 0 5H28M24 17.5v2.5M24 30v2.5"/></svg></span><h3 class="conf-mini-nome">Garantia de 30 dias</h3><p class="conf-mini-texto">Não gostou? Devolvemos 100% do valor.</p></li>
+        <li class="conf-mini" style="--i:2"><span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><rect pathLength="1" x="11" y="21" width="26" height="20" rx="4"/><path pathLength="1" d="M16 21v-5a8 8 0 0 1 16 0v5"/><path pathLength="1" d="M24 29v4"/></svg></span><h3 class="conf-mini-nome">Compra segura</h3><p class="conf-mini-texto">Ambiente protegido e seus dados em segurança.</p></li>
+        <li class="conf-mini" style="--i:3"><span class="conf-icone"><svg viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M5 13h22v18H5zM27 19h8l6 6v6H27z"/><circle pathLength="1" cx="13" cy="34" r="3.5"/><circle pathLength="1" cx="34" cy="34" r="3.5"/></svg></span><h3 class="conf-mini-nome">Frete grátis</h3><p class="conf-mini-texto">Entrega sem custo em todos os planos.</p></li>
       </ul>
     </section>
 
