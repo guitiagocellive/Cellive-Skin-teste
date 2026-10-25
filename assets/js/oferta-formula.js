@@ -118,61 +118,64 @@
 
   /* ---------- V2 (oferta direta, sem quiz): os 24 ativos da fórmula, por grupo ----------
      "img": foto do ativo (quando existe); sem foto, aparece o ícone do grupo.
-     "beneficio" vazio = o cartão mostra só o nome (o texto do grupo explica). */
+     "beneficio": o que o ativo faz, em uma frase simples. */
   var A = "assets/img/ativos/";
+  /* Textos escritos a partir de pesquisa sobre cada ativo (função cosmética
+     conhecida; nos peptídeos do complexo EXOS, o material técnico da Glia
+     Innovation). Frases curtas, sem promessa de resultado. */
   var GRUPOS_V2 = [
     {
-      nome: "Renovação e regeneração", icone: "renova", chip: "de renovação",
+      nome: "Renovação e regeneração", chip: "de renovação", icone: "renova",
       texto: "Aceleram a troca das células e ajudam a pele a se reconstruir.",
       ativos: [
-        { nome: "Retinal (Retinaldeído)", img: A + "retinal.jpg", beneficio: "Renovação celular mais rápida que o retinol" },
-        { nome: "Sodium DNA (PDRN)", img: A + "pdrn.jpg", beneficio: "Regenera e fortalece a barreira da pele" },
-        { nome: "Hydrolyzed Sponge (Microespículas)", beneficio: "Abrem microcanais que levam os ativos mais fundo" },
+        { nome: "Retinal (Retinaldeído)", img: A + "retinal.jpg", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
+        { nome: "Sodium DNA (PDRN)", img: A + "pdrn.jpg", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
+        { nome: "Hydrolyzed Sponge (Microespículas)", beneficio: "Microespículas naturais que abrem caminho para os ativos irem mais fundo" },
       ],
     },
     {
-      nome: "Peptídeos", icone: "peptideo", chip: "peptídeos",
-      texto: "Pequenas cadeias de proteína que sinalizam para a pele produzir colágeno e elastina.",
+      nome: "Peptídeos", chip: "peptídeos", icone: "peptideo",
+      texto: "Pequenas cadeias de proteína que dão sinais à pele. Os biomiméticos imitam os sinais que a própria pele produz.",
       ativos: [
-        { nome: "Copper Tripeptide-1 (GHK-Cu)", img: A + "ghk-cu.jpg", beneficio: "Estimula o colágeno e devolve a firmeza" },
-        { nome: "Acetyl Hexapeptide-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Relaxa as linhas de expressão (efeito botox-like)" },
-        { nome: "Palmitoyl Pentapeptide-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula o colágeno com o uso contínuo" },
-        { nome: "Palmitoyl Tetrapeptide-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a pele e devolve o viço" },
-        { nome: "SH-Oligopeptide-1", beneficio: "Fator de crescimento que estimula a renovação da pele" },
-        { nome: "SH-Oligopeptide-2", beneficio: "Fator de crescimento que apoia a firmeza e a elasticidade" },
-        { nome: "SH-Polypeptide-9", beneficio: "Fator de crescimento que ajuda a revitalizar a pele" },
-        { nome: "SH-Oligopeptide-5", beneficio: "" },
-        { nome: "Acetyl Glycyl SH-Oligopeptide-118 SP Amide", beneficio: "" },
-        { nome: "Oligopeptide-34", beneficio: "" },
-        { nome: "Oligopeptide-7", beneficio: "" },
-        { nome: "Palmitoyl SH-Heptapeptide-14 Aspartyl Hydroxytryptophan", beneficio: "" },
+        { nome: "Copper Tripeptide-1 (GHK-Cu)", img: A + "ghk-cu.jpg", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
+        { nome: "Acetyl Hexapeptide-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
+        { nome: "Palmitoyl Pentapeptide-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
+        { nome: "Palmitoyl Tetrapeptide-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
+        { nome: "SH-Oligopeptide-1", beneficio: "Imita o fator de crescimento da pele (EGF) e acelera a renovação" },
+        { nome: "SH-Oligopeptide-2", beneficio: "Imita o fator de crescimento IGF-1 e ajuda a pele a se regenerar" },
+        { nome: "SH-Polypeptide-9", beneficio: "Imita o fator de crescimento VEGF e ajuda a nutrir e oxigenar a pele" },
+        { nome: "SH-Oligopeptide-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
+        { nome: "Acetyl Glycyl SH-Oligopeptide-118 SP Amide", beneficio: "Peptídeo biomimético que estimula a renovação das células" },
+        { nome: "Oligopeptide-34", beneficio: "Peptídeo clareador que reduz a produção de melanina nas manchas" },
+        { nome: "Oligopeptide-7", beneficio: "Peptídeo biomimético que reforça a comunicação entre as células" },
+        { nome: "Palmitoyl SH-Heptapeptide-14 Aspartyl Hydroxytryptophan", beneficio: "Peptídeo antienvelhecimento que estimula o colágeno" },
       ],
     },
     {
-      nome: "Uniformização e luminosidade", icone: "luz", chip: "de luminosidade",
+      nome: "Uniformização e luminosidade", chip: "de luminosidade", icone: "luz",
       texto: "Atuam nas manchas e devolvem o brilho natural da pele.",
       ativos: [
-        { nome: "Niacinamida", img: A + "niacinamida.jpg", beneficio: "Fortalece a pele e melhora a elasticidade" },
-        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina.jpg", beneficio: "Uniformiza o tom e clareia manchas" },
-        { nome: "Ácido Tranexâmico", beneficio: "Ajuda a clarear manchas e uniformizar o tom" },
-        { nome: "Glutationa", img: A + "glutationa.jpg", beneficio: "Antioxidante que protege o colágeno e ilumina" },
+        { nome: "Niacinamida", img: A + "niacinamida.jpg", beneficio: "Vitamina B3 que uniformiza o tom, fortalece a barreira e refina os poros" },
+        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina.jpg", beneficio: "Clareia manchas reduzindo a produção de melanina" },
+        { nome: "Ácido Tranexâmico", beneficio: "Clareia manchas teimosas e uniformiza o tom da pele" },
+        { nome: "Glutationa", img: A + "glutationa.jpg", beneficio: "Antioxidante que protege a pele e deixa o tom mais luminoso" },
       ],
     },
     {
-      nome: "Hidratação", icone: "gota", chip: "de hidratação",
+      nome: "Hidratação", chip: "de hidratação", icone: "gota",
       texto: "Seguram a água na pele e preenchem as linhas finas.",
       ativos: [
-        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico.jpg", beneficio: "Hidratação profunda que preenche as linhas finas" },
-        { nome: "Hialuronato de Sódio", beneficio: "Forma do ácido hialurônico que retém água na superfície da pele" },
+        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico.jpg", beneficio: "Segura a água na pele e preenche as linhas finas" },
+        { nome: "Hialuronato de Sódio", beneficio: "Molécula menor do ácido hialurônico, que hidrata por mais tempo" },
       ],
     },
     {
-      nome: "Calmantes e antioxidantes", icone: "folha", chip: "calmantes e antioxidantes",
+      nome: "Calmantes e antioxidantes", chip: "calmantes e antioxidantes", icone: "folha",
       texto: "Acalmam a pele e a protegem das agressões do dia a dia.",
       ativos: [
-        { nome: "Bisabolol", beneficio: "Acalma a pele e ajuda a reduzir a vermelhidão" },
-        { nome: "Extrato de Calêndula", beneficio: "Calmante natural que suaviza e conforta a pele" },
-        { nome: "Tocoferol (Vitamina E)", beneficio: "Antioxidante que protege a pele dos radicais livres" },
+        { nome: "Bisabolol", beneficio: "Ativo da camomila que acalma a pele e reduz a vermelhidão" },
+        { nome: "Extrato de Calêndula", beneficio: "Calmante natural que suaviza irritações e conforta a pele" },
+        { nome: "Tocoferol (Vitamina E)", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
       ],
     },
   ];
@@ -287,18 +290,17 @@
     return li;
   }
   function montarV2() {
-    var numero = 0, destino = lista, iVis = 0;
+    var numero = 0, iVis = 0;
     GRUPOS_V2.forEach(function (g) {
       var cabecalhoFeito = false;
       g.ativos.forEach(function (a) {
         numero++;
         var vaiProExtra = numero > VISIVEIS;
         var alvo = vaiProExtra ? extra.querySelector("ol") : lista;
-        // título do grupo antes do primeiro ativo dele (e de novo se o grupo continua no "ver mais")
-        if (!cabecalhoFeito || alvo !== destino) {
-          alvo.appendChild(grupoV2(g, cabecalhoFeito));
+        // título do grupo antes do primeiro ativo dele (se o grupo continua no "ver mais", segue sem repetir)
+        if (!cabecalhoFeito) {
+          alvo.appendChild(grupoV2(g, false));
           cabecalhoFeito = true;
-          destino = alvo;
         }
         alvo.appendChild(cartaoV2(a, numero, g.icone, vaiProExtra ? 0 : iVis++));
       });
