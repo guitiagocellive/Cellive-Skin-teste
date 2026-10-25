@@ -167,8 +167,8 @@
           try { sessionStorage.removeItem("cl-painel-senha"); } catch (e) { /* ok */ }
           return mostrarEntrada("Senha incorreta.");
         }
-        if (x.corpo.erro === "sem-senha") return mostrarEntrada("A senha do painel ainda não foi configurada na Cloudflare (segredo PAINEL_SENHA).");
-        if (x.corpo.erro === "sem-banco") return mostrarEntrada("O banco de dados ainda não foi criado. Faça um novo deploy na Cloudflare.");
+        if (x.corpo.erro === "sem-senha") return mostrarEntrada("A senha do painel ainda não foi configurada na Vercel (variável PAINEL_SENHA).");
+        if (x.corpo.erro === "sem-banco") return mostrarEntrada("O banco de dados ainda não foi conectado ao projeto na Vercel (Storage > Neon).");
         if (!x.resp.ok) { status("Erro ao carregar", "demo"); return; }
         estado.dados = x.corpo;
         $("[data-entrar]").hidden = true;
@@ -801,7 +801,7 @@
     }
     var q = new URLSearchParams({ de: r.de.getTime(), ate: r.ate.getTime() });
     for (var k in estado.filtros) if (estado.filtros[k]) q.set(k, estado.filtros[k]);
-    fetch("/api/painel/csv?" + q.toString(), { headers: { authorization: "Bearer " + estado.senha } })
+    fetch("/api/painel?formato=csv&" + q.toString(), { headers: { authorization: "Bearer " + estado.senha } })
       .then(function (resp) { if (!resp.ok) throw new Error(); return resp.blob(); })
       .then(function (blob) { baixar(blob, "cellive-eventos-" + isoDia(r.de) + ".csv"); })
       .catch(function () { status("Erro ao exportar", "demo"); });

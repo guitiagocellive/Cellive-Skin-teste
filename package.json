@@ -1,0 +1,15 @@
+{
+  "name": "cellive-skin-teste",
+  "private": true,
+  "type": "module",
+  "description": "Site do quiz Cellive Skin (páginas estáticas) e funções da Vercel para o painel.",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.2.0"
+  },
+  "devDependencies": {
+    "pg": "8.16.3"
+  }
+}

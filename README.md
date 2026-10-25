@@ -2,11 +2,10 @@
 
 Site estático (HTML + CSS), sem instalação. Para ver, abra o `index.html` no navegador.
 
-## Publicação (Cloudflare)
+## Publicação (Vercel)
 
-O site é publicado pela Cloudflare (Workers) direto deste repositório. A configuração está em
-`wrangler.jsonc`, e não precisa de comando de build. O `.assetsignore` lista os arquivos que não vão
-para o ar (README, configurações e a pasta `.git`).
+O site é publicado pela Vercel direto deste repositório, sem comando de build (as páginas são estáticas). As funções
+do painel ficam na pasta `api/` e a Vercel publica sozinha. O `.vercelignore` lista os arquivos que não vão para o ar.
 
 ## Painel e rastreamento
 
@@ -17,8 +16,8 @@ o kit escolhido, os cliques no checkout (com o kit), dúvidas abertas, vídeos, 
 A origem vem das UTMs dos anúncios (`utm_source`, `utm_campaign`, `utm_medium`, `utm_content`) ou, sem elas, do site
 de onde a pessoa veio (Instagram, Facebook, TikTok, Google…).
 
-Os eventos vão para `/api/evento` e ficam num banco D1 da Cloudflare (`cellive-eventos`), criado sozinho no deploy. O
-servidor é o `worker.js`.
+Os eventos vão para `/api/evento` (`api/evento.js`) e ficam num banco Postgres (Neon) conectado ao projeto na Vercel. A
+tabela é criada sozinha no primeiro evento. Os números do painel vêm de `/api/painel` (`api/painel.js`).
 
 O painel fica em **`/painel.html`** e pede senha. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
 cliques no checkout e conversão (com comparação ao período anterior), evolução diária, funil completo com o maior
@@ -27,12 +26,15 @@ até onde leram a oferta, cliques, fontes, campanhas, aparelhos, sistemas, país
 de período, fonte, campanha e aparelho; botão para baixar todos os eventos em CSV; atualiza sozinho a cada minuto.
 Abrindo `/painel.html?demo=1` (ou "Ver em modo demonstração") aparecem números fictícios só para ver o layout.
 
-**Configurar a senha (uma vez):** Cloudflare → Workers e Pages → `cellive-skin-teste` → Configurações → Variáveis e
-segredos → Adicionar → tipo **Segredo**, nome `PAINEL_SENHA`, valor = a senha escolhida → Implantar.
-Se o deploy não conseguir criar o banco sozinho: Cloudflare → Armazenamento e bancos de dados → D1 → Criar banco
-`cellive-eventos`; depois, no Worker → Vinculações → Adicionar → Banco D1, nome da variável `DB`.
+**Configurar (uma vez), na Vercel:**
+1. Banco: projeto → **Storage** → **Create Database** → **Neon** (Postgres, tem plano grátis) → conecte ao projeto.
+   A Vercel cria sozinha a variável `DATABASE_URL`.
+2. Senha: projeto → **Settings** → **Environment Variables** → nome `PAINEL_SENHA`, valor = a senha escolhida
+   (marque Production e Preview) → Save.
+3. **Deployments** → no último deploy, "…" → **Redeploy**, para as funções lerem as variáveis novas.
 
-Para testar no computador: crie um arquivo `.dev.vars` com `PAINEL_SENHA=uma-senha` e rode `npx wrangler dev`.
+Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
+`DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).
 
 ## Páginas
 

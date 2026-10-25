@@ -1,10 +1,6 @@
 # Arquivos que NÃO vão para o site publicado
-.git
-.assetsignore
-.gitignore
-wrangler.jsonc
-worker.js
 README.md
+.dev.vars
+.env*
 node_modules
 .wrangler
-.dev.vars
