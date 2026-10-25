@@ -19,6 +19,7 @@ do painel ficam na pasta `api/` e a Vercel publica sozinha. O `.vercelignore` li
 - **Voltar atrás:** Vercel → Deployments → a versão anterior de produção → "…" → **Instant Rollback**.
 - Na Vercel: Settings → Environments → Production → **Branch Tracking** = `main`. As variáveis (`PAINEL_SENHA`,
   `ANTHROPIC_API_KEY`, `META_TOKEN`…) precisam estar marcadas também em **Preview** para o painel funcionar nas prévias.
+  Se a Vercel disser "No deployments found for main", é só enviar qualquer commit novo para o `main` e salvar de novo.
 
 ## Painel e rastreamento
 
