@@ -4167,6 +4167,78 @@
   opacity: 0.08;
 }
 
+/* ---------- Fórmula na v2 (sem quiz): ativos por grupo ---------- */
+.fp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 340px;
+}
+
+.fp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px 5px 8px;
+  border: 1px solid var(--blue-soft);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--gray);
+  font-size: 12.5px;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(77, 116, 168, 0.08);
+}
+
+.fp-chip svg, .fp-bolha-icone svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: #7f9cbf;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fp-chip b { color: var(--ink); font-weight: 700; }
+
+.fp-grupo { margin: 14px 2px 2px; list-style: none; }
+.fp-lista > .fp-grupo:first-child { margin-top: 0; }
+
+.fp-grupo-nome {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-condensed);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fp-grupo-nome span {
+  flex: none;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.fp-grupo-texto { margin: 3px 0 0; color: var(--gray); font-size: 13.5px; line-height: 1.35; }
+
+.fp-bolha-icone {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, var(--white), var(--blue-mist) 60%, var(--blue-soft));
+}
+
+.fp-bolha-icone svg { width: 20px; height: 20px; }
+.fp-item-curto { align-items: center; }
+.fp-item-curto .fp-cabeca { align-items: center; }
+
 /* ==========================================================================
    Espaço entre as seções (padronizado)
    O vão entre o fim do conteúdo de uma seção e o começo da próxima é sempre
