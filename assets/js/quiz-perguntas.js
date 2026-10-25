@@ -44,7 +44,7 @@ window.QUIZ_FLUXO = [
       {
         id: "ha-quanto-tempo",
         tipo: "A",
-        titulo: "Há quanto tempo que você reparou que sua pele não está como antes?",
+        titulo: "Há quanto tempo você reparou que sua pele não está como antes?",
         opcoes: [
           "Poucas semanas.",
           "Alguns meses.",
@@ -59,7 +59,7 @@ window.QUIZ_FLUXO = [
     // Texto: "destaque" aparece em preto, negrito e itálico, no começo da
     // primeira linha. Cada item de "linhas" começa numa linha nova.
     destaque: "A cada",
-    linhas: ["100 mulheres,", "99 sentiram melhora na sua aparência."],
+    linhas: ["100 mulheres,", "99 sentiram melhora na aparência da pele."],
     imagem: "assets/img/carregamento.jpg",
     imagemAlt: "Mulher com a pele bonita e saudável",
     duracao: 3300, // em milissegundos (0% → 100%)
@@ -138,8 +138,8 @@ window.QUIZ_FLUXO = [
         id: "sinais",
         tipo: "B",
         multipla: true,
-        titulo: "Qual desses sinais mais incomoda você hoje?",
-        subtitulo: "Escolha os sinais abaixo que mais te trazem insegurança e aperte continuar.",
+        titulo: "Quais desses sinais mais incomodam você hoje?",
+        subtitulo: "Escolha os sinais que mais te trazem insegurança e toque em “Continuar”.",
         opcoes: [
           { texto: "Pé de galinha", imagem: "assets/img/quiz/sinal-pe-de-galinha.webp" },
           { texto: "Linhas 11", imagem: "assets/img/quiz/sinal-linhas-11.webp" },
@@ -218,7 +218,7 @@ window.QUIZ_FLUXO = [
         imagem: "assets/img/quiz/linhas-olhos.webp",
         opcoes: [
           "Sim, inclusive isso me incomoda.",
-          "Sim, as minhas aparecem até relaxada.",
+          "Sim, aparecem até com o rosto relaxado.",
           "Não percebo.",
         ],
         ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "assets/img/ativos/niacinamida.jpg" },

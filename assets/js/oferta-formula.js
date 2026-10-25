@@ -106,7 +106,7 @@
       beneficio: "Fortalece a pele e melhora a elasticidade",
       resposta: {
         "Sim, inclusive isso me incomoda.": "Melhora a elasticidade ao redor dos olhos.",
-        "Sim, as minhas aparecem até relaxada.": "Deixa as linhas dos olhos menos marcadas.",
+        "Sim, aparecem até com o rosto relaxado.": "Deixa as linhas dos olhos menos marcadas.",
         "Não percebo.": "Previne as linhas ao redor dos olhos.",
       },
     },
