@@ -1,4 +1,9 @@
-/* Estrategista: chat de IA do painel.
+/* Estrategista: IA de dados e conversão do painel. Duas formas de usar:
+   1) "Resumo para o meu Claude" (sem custo): monta o briefing estratégico
+      com os números do período (visitas, conversões, connect rate, gargalo,
+      ponto forte, pontos de melhoria), copia e abre o Claude ou o ChatGPT da
+      assinatura da pessoa, para ela só colar e conversar.
+   2) "Chat no painel" (API do Claude, custo por uso):
    - Texto, voz (o navegador transcreve a fala), imagens, PDFs e planilhas.
    - Manda a conversa para /api/agente, que consulta os números da
      plataforma e responde. A resposta chega aos poucos (status → resposta).
@@ -39,9 +44,14 @@
     painel.hidden = false;
     document.body.classList.add("agente-aberto");
     requestAnimationFrame(function () { painel.classList.add("is-aberto"); });
+    var temApi = !!(app.estado.dados && app.estado.dados.ia) && !app.estado.demo;
+    // com pergunta pronta e a API ligada, vai direto para o chat; sem API, mostra o resumo grátis
+    if (pergunta && temApi) mudarModo("chat");
+    else if (pergunta) mudarModo("resumo");
+    else mudarModo(modo);
     if (!lista.children.length) desenharTudo();
-    if (pergunta) { campo.value = pergunta; enviar(); }
-    else setTimeout(function () { campo.focus({ preventScroll: true }); }, 350);
+    if (pergunta && temApi) { campo.value = pergunta; enviar(); }
+    else if (modo === "chat") setTimeout(function () { campo.focus({ preventScroll: true }); }, 350);
   }
   function fechar() {
     painel.classList.remove("is-aberto");
@@ -60,6 +70,271 @@
   });
   // outros pontos do painel podem abrir o chat já com uma pergunta
   window.abrirEstrategista = abrir;
+
+  /* ================= modo: resumo (grátis) ou chat (API) ================= */
+  var caixaResumo = $("[data-agente-resumo]");
+  var modo = "resumo";
+  try { modo = localStorage.getItem("cl-agente-modo") === "chat" ? "chat" : "resumo"; } catch (e) { /* ok */ }
+  function mudarModo(m) {
+    modo = m;
+    try { localStorage.setItem("cl-agente-modo", m); } catch (e) { /* ok */ }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-agente-modo]"), function (b) {
+      b.setAttribute("aria-selected", b.getAttribute("data-agente-modo") === m ? "true" : "false");
+    });
+    caixaResumo.hidden = m !== "resumo";
+    lista.hidden = form.hidden = m !== "chat";
+    $("[data-agente-limpar]").hidden = m !== "chat";
+    if (m === "resumo") desenharResumo();
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-agente-modo]"), function (b) {
+    b.addEventListener("click", function () { mudarModo(b.getAttribute("data-agente-modo")); });
+  });
+  // quando os números do painel mudam (outro período), o resumo se refaz
+  app.depoisDeMontar = function () { if (!painel.hidden && modo === "resumo") desenharResumo(); };
+
+  /* ---------- números do briefing ---------- */
+  var NUM = new Intl.NumberFormat("pt-BR");
+  var REAL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+  var PRECO = { "1": 197.9, "2": 297.9, "3": 397.9 };
+  var FONTES_META = ["facebook", "fb", "ig", "instagram", "messenger", "msg", "an", "meta"];
+  function n(v) { return NUM.format(Math.round(v || 0)); }
+  function p(a, b, casas) {
+    if (!b) return "–";
+    return (100 * a / b).toLocaleString("pt-BR", { minimumFractionDigits: casas == null ? 1 : casas, maximumFractionDigits: casas == null ? 1 : casas }) + "%";
+  }
+  function br(iso) { return iso ? iso.slice(8, 10) + "/" + iso.slice(5, 7) : ""; }
+  function variacao(at, ant) {
+    if (!ant || app.estado.periodo === "tudo") return null;
+    var v = Math.round(100 * (at - ant) / ant);
+    return (v >= 0 ? "+" : "") + v + "% vs período anterior";
+  }
+
+  function lerMeta(chave) {
+    try { return JSON.parse(localStorage.getItem("cl-meta-" + chave)) || {}; } catch (e) { return {}; }
+  }
+  function gravarMeta(chave, v) {
+    try { localStorage.setItem("cl-meta-" + chave, JSON.stringify(v)); } catch (e) { /* ok */ }
+  }
+
+  function calcular() {
+    var e = app.estado, d = e.dados;
+    if (!d || !d.kpi) return null;
+    var k = d.kpi, a = d.kpiAnt || {}, v2 = e.versao === "v2";
+    var per = app.periodo();
+    var visitas = app.visitasDe(k), visitasAnt = app.visitasDe(a);
+    var rel = app.analisar() || { gargalo: {}, pontos: [], positivos: [] };
+    // visitas vindas da Meta (para o connect rate)
+    var meta = 0;
+    ((d.origem && d.origem.fonte) || []).forEach(function (f) { if (FONTES_META.indexOf(String(f.nome).toLowerCase()) !== -1) meta += Number(f.visitas) || 0; });
+    var kits = (d.checkoutPlano || []).slice().sort(function (x, y) { return y.n - x.n; });
+    var totalKits = kits.reduce(function (s2, x) { return s2 + x.n; }, 0);
+    var receita = kits.reduce(function (s2, x) { return s2 + x.n * (PRECO[x.valor] || 0); }, 0);
+    return {
+      e: e, d: d, k: k, a: a, v2: v2, per: per, visitas: visitas, visitasAnt: visitasAnt, rel: rel,
+      visitasMeta: meta, chaveMeta: per.de + "_" + per.ate,
+      kitTop: kits[0] ? "Kit " + kits[0].valor + " (" + p(kits[0].n, totalKits, 0) + " dos cliques em comprar)" : "–",
+      ticket: totalKits ? receita / totalKits : null,
+    };
+  }
+
+  /* ---------- tela do resumo ---------- */
+  var PERIODOS = [["hoje", "Hoje"], ["ontem", "Ontem"], ["7", "7 dias"], ["30", "30 dias"]];
+  function desenharResumo() {
+    while (caixaResumo.firstChild) caixaResumo.removeChild(caixaResumo.firstChild);
+    var c = calcular();
+
+    var intro = el("div", "resumo-intro");
+    intro.appendChild(el("h3", null, "Briefing estratégico"));
+    intro.appendChild(el("p", null, "Os números do período, já organizados. Copie e cole no seu Claude ou ChatGPT para conversar sobre eles. Usa a sua assinatura: sem custo extra."));
+    caixaResumo.appendChild(intro);
+
+    var chips = el("div", "resumo-periodos");
+    PERIODOS.forEach(function (pp) {
+      var b = el("button", "resumo-periodo" + (app.estado.periodo === pp[0] && !app.estado.de ? " is-ativo" : ""), pp[1]);
+      b.type = "button";
+      b.addEventListener("click", function () { app.trocarPeriodo(pp[0]); });
+      chips.appendChild(b);
+    });
+    caixaResumo.appendChild(chips);
+
+    if (!c) { caixaResumo.appendChild(el("p", "resumo-vazio", "Carregando os números…")); return; }
+    var k = c.k;
+    caixaResumo.appendChild(el("p", "resumo-legenda", (c.v2 ? "Oferta direta (v2)" : "Funil com quiz") + " · " + br(c.per.de) + (c.per.de !== c.per.ate ? " a " + br(c.per.ate) : "") + (app.estado.demo ? " · números de demonstração" : "")));
+
+    // números principais
+    var grade = el("div", "resumo-kpis");
+    var kpi = function (rot, val, det, destaque) {
+      var b = el("div", "resumo-kpi" + (destaque ? " destaque" : ""));
+      b.appendChild(el("span", "resumo-kpi-rot", rot));
+      b.appendChild(el("strong", null, val));
+      if (det) b.appendChild(el("span", "resumo-kpi-det", det));
+      grade.appendChild(b);
+      return b;
+    };
+    kpi("Pessoas que entraram", n(c.visitas), variacao(c.visitas, c.visitasAnt) || n(k.visitantes) + " pessoas únicas");
+    if (c.v2) {
+      kpi("Viram os planos", p(k.viram_planos, c.visitas, 0), n(k.viram_planos) + " pessoas");
+    } else {
+      kpi("Conversão do quiz", p(k.concluiram, k.iniciaram, 0), n(k.concluiram) + " de " + n(k.iniciaram) + " terminaram");
+    }
+    kpi("Conversão total", p(k.checkout, c.visitas, 2), n(k.checkout) + " cliques em comprar", true);
+    var kConnect = kpi("Connect rate", "–", "informe os cliques no link abaixo");
+    caixaResumo.appendChild(grade);
+
+    // gargalo e ponto forte
+    var g = c.rel.gargalo || {};
+    if (g.etapa) {
+      var bg = el("div", "resumo-caixa gargalo");
+      bg.appendChild(el("span", "resumo-caixa-rot", "Maior gargalo"));
+      bg.appendChild(el("strong", null, g.etapa));
+      bg.appendChild(el("p", null, g.explicacao || ""));
+      caixaResumo.appendChild(bg);
+    }
+    if ((c.rel.positivos || []).length) {
+      var bf = el("div", "resumo-caixa forte");
+      bf.appendChild(el("span", "resumo-caixa-rot", "Ponto forte"));
+      bf.appendChild(el("p", null, c.rel.positivos[0]));
+      caixaResumo.appendChild(bf);
+    }
+
+    // dados da Meta (connect rate e custo)
+    var m = lerMeta(c.chaveMeta);
+    var caixaMeta = el("div", "resumo-meta");
+    caixaMeta.appendChild(el("span", "resumo-caixa-rot", "Dados do Gerenciador de Anúncios (opcional)"));
+    var linhaMeta = el("div", "resumo-meta-campos");
+    var campoNum = function (rot, chave, dica) {
+      var l = el("label");
+      l.appendChild(el("span", null, rot));
+      var i = el("input");
+      i.type = "number"; i.inputMode = "decimal"; i.min = "0"; i.step = "any"; i.placeholder = dica;
+      i.value = m[chave] != null ? m[chave] : "";
+      i.addEventListener("input", function () { m[chave] = i.value === "" ? null : Number(i.value); gravarMeta(c.chaveMeta, m); atualizarMeta(); });
+      l.appendChild(i);
+      linhaMeta.appendChild(l);
+    };
+    campoNum("Cliques no link", "cliques", "ex.: 420");
+    campoNum("Valor gasto (R$)", "gasto", "ex.: 350");
+    caixaMeta.appendChild(linhaMeta);
+    var resultadoMeta = el("p", "resumo-meta-res");
+    caixaMeta.appendChild(resultadoMeta);
+    caixaResumo.appendChild(caixaMeta);
+
+    function atualizarMeta() {
+      var base = c.visitasMeta || c.visitas;
+      var partes = [];
+      if (m.cliques) {
+        kConnect.querySelector("strong").textContent = p(base, m.cliques, 0);
+        kConnect.querySelector(".resumo-kpi-det").textContent = n(base) + " visitas de " + n(m.cliques) + " cliques" + (c.visitasMeta ? " (vindas da Meta)" : "");
+      } else {
+        kConnect.querySelector("strong").textContent = "–";
+        kConnect.querySelector(".resumo-kpi-det").textContent = "informe os cliques no link abaixo";
+      }
+      if (m.gasto) {
+        if (k.checkout) partes.push("Custo por clique em comprar: " + REAL.format(m.gasto / k.checkout));
+        if (base) partes.push("Custo por visita: " + REAL.format(m.gasto / base));
+      }
+      resultadoMeta.textContent = partes.join(" · ") || "Connect rate = visitas que chegaram ao site ÷ cliques no link do anúncio.";
+    }
+    atualizarMeta();
+
+    // pontos de melhoria
+    if ((c.rel.pontos || []).length) {
+      var bp = el("div", "resumo-caixa");
+      bp.appendChild(el("span", "resumo-caixa-rot", "Pontos de melhoria do painel"));
+      var ul = el("ul");
+      c.rel.pontos.slice(0, 4).forEach(function (pt) { ul.appendChild(el("li", null, pt.titulo)); });
+      bp.appendChild(ul);
+      caixaResumo.appendChild(bp);
+    }
+
+    // ações
+    var acoes = el("div", "resumo-acoes");
+    var botao = function (rot, url, cls) {
+      var b = el("button", "resumo-botao " + (cls || ""), rot);
+      b.type = "button";
+      b.addEventListener("click", function () {
+        var texto = montarBriefing(c, m);
+        copiar(texto);
+        if (url) window.open(url, "_blank", "noopener");
+        aviso(url ? "Briefing copiado! No app, toque e segure no campo de mensagem e escolha Colar." : "Briefing copiado!");
+      });
+      acoes.appendChild(b);
+    };
+    botao("Copiar e abrir no Claude", "https://claude.ai/new", "claude");
+    botao("Copiar e abrir no ChatGPT", "https://chatgpt.com/", "chatgpt");
+    botao("Só copiar", null, "leve");
+    caixaResumo.appendChild(acoes);
+  }
+
+  function copiar(texto) {
+    var ok = false;
+    try {
+      var t = document.createElement("textarea");
+      t.value = texto;
+      t.setAttribute("readonly", "");
+      t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t);
+      t.select();
+      ok = document.execCommand("copy");
+      t.remove();
+    } catch (e) { ok = false; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texto).catch(function () {});
+    return ok;
+  }
+
+  /* ---------- o texto que vai para o Claude/ChatGPT ---------- */
+  function montarBriefing(c, m) {
+    var k = c.k, a = c.a, d = c.d, L = [];
+    var base = c.visitasMeta || c.visitas;
+    L.push("Você é um estrategista sênior de dados e conversão (CRO/growth) de e-commerce. Analise os números abaixo da Cellive Skin, marca brasileira de skincare que vende o Sérum Revitalizador Noturno online.");
+    L.push("Funil: " + (c.v2 ? "anúncio → página de oferta direta (v2, sem quiz) → escolha do kit → clique em comprar." : "anúncio → capa → quiz de pele → página da fórmula personalizada (oferta) → escolha do kit → clique em comprar.") + " O painel mede até o clique em comprar (a compra paga acontece no checkout, fora do painel).");
+    L.push("Período: " + br(c.per.de) + (c.per.de !== c.per.ate ? " a " + br(c.per.ate) : "") + (c.e.demo ? " (ATENÇÃO: números de demonstração)" : ""));
+    L.push("");
+    L.push("## Números principais");
+    L.push("- Pessoas que entraram (visitas): " + n(c.visitas) + (c.visitasAnt ? " | período anterior: " + n(c.visitasAnt) : "") + " | pessoas únicas: " + n(k.visitantes));
+    if (!c.v2) {
+      L.push("- Começaram o quiz: " + n(k.iniciaram) + " (" + p(k.iniciaram, c.visitas) + " das visitas)");
+      L.push("- Terminaram o quiz: " + n(k.concluiram) + " (conversão do quiz: " + p(k.concluiram, k.iniciaram) + " de quem começou)");
+    }
+    L.push("- Viram a oferta: " + n(k.oferta) + " (" + p(k.oferta, c.visitas) + " das visitas)");
+    L.push("- Viram os planos/preços: " + n(k.viram_planos) + " (" + p(k.viram_planos, k.oferta) + " de quem viu a oferta)");
+    L.push("- Tocaram num kit: " + n(k.escolheram_plano));
+    L.push("- Clicaram em comprar: " + n(k.checkout) + " (" + p(k.checkout, k.viram_planos) + " de quem viu os planos)" + (a.checkout != null ? " | período anterior: " + n(a.checkout) : ""));
+    L.push("- Conversão total (visita → clique em comprar): " + p(k.checkout, c.visitas, 2) + (c.visitasAnt ? " | período anterior: " + p(a.checkout, c.visitasAnt, 2) : ""));
+    L.push("- Kit mais escolhido: " + c.kitTop + " | ticket médio estimado: " + (c.ticket ? REAL.format(c.ticket) : "–") + " | preços: Kit 1 R$ 197,90 · Kit 2 R$ 297,90 (vem marcado) · Kit 3 R$ 397,90");
+    if (m.cliques) L.push("- Connect rate (Meta): " + p(base, m.cliques, 1) + " (" + n(base) + " visitas ÷ " + n(m.cliques) + " cliques no link)");
+    if (m.gasto) {
+      L.push("- Valor gasto em anúncios: " + REAL.format(m.gasto) + (k.checkout ? " | custo por clique em comprar: " + REAL.format(m.gasto / k.checkout) : "") + (base ? " | custo por visita: " + REAL.format(m.gasto / base) : ""));
+    }
+    L.push("- Pessoas no site agora: " + n(d.aoVivo));
+    var g = c.rel.gargalo || {};
+    if (g.etapa) { L.push(""); L.push("## Maior gargalo (análise do painel)"); L.push(g.etapa + ". " + (g.explicacao || "")); }
+    if ((c.rel.positivos || []).length) { L.push(""); L.push("## Pontos fortes"); c.rel.positivos.forEach(function (t) { L.push("- " + t); }); }
+    if ((c.rel.pontos || []).length) {
+      L.push(""); L.push("## Pontos de melhoria identificados pelo painel");
+      c.rel.pontos.forEach(function (pt) { L.push("- [" + pt.prioridade + "] " + pt.titulo + ": " + (pt.detalhe || "") + (pt.impacto ? " (" + pt.impacto + ")" : "")); });
+    }
+    var R = app.estado.resumoIA || {};
+    if (!c.v2 && R.quiz && R.quiz.length) {
+      var piores = R.quiz.filter(function (t) { return t.saiu_antes > 0; }).sort(function (x, y) { return y.saiu_antes - x.saiu_antes; }).slice(0, 5);
+      if (piores.length) { L.push(""); L.push("## Telas do quiz onde mais gente sai"); piores.forEach(function (t) { L.push("- " + t.tela + ": " + n(t.saiu_antes) + " saíram (" + String(t.perda_pct).replace(".", ",") + "%)"); }); }
+    }
+    var fontes = ((d.origem && d.origem.fonte) || []).slice(0, 6);
+    if (fontes.length) { L.push(""); L.push("## Fontes de tráfego"); fontes.forEach(function (f) { L.push("- " + f.nome + ": " + n(f.visitas) + " visitas, " + n(f.checkouts) + " cliques em comprar (" + p(f.checkouts, f.visitas) + ")"); }); }
+    var camp = ((d.origem && d.origem.campanha) || []).slice(0, 6);
+    if (camp.length) { L.push(""); L.push("## Campanhas"); camp.forEach(function (f) { L.push("- " + f.nome + ": " + n(f.visitas) + " visitas, " + n(f.checkouts) + " cliques em comprar (" + p(f.checkouts, f.visitas) + ")"); }); }
+    var ap = ((d.origem && d.origem.aparelho) || []).slice(0, 3);
+    if (ap.length) { L.push(""); L.push("## Aparelhos"); ap.forEach(function (f) { L.push("- " + f.nome + ": " + n(f.visitas) + " visitas, conversão " + p(f.checkouts, f.visitas)); }); }
+    if (R.horarios && R.horarios.horas_de_pico && R.horarios.horas_de_pico.length) { L.push(""); L.push("## Horários de pico: " + R.horarios.horas_de_pico.join(", ") + (R.horarios.dia_de_pico ? " · dia com mais visitas: " + R.horarios.dia_de_pico : "")); }
+    L.push("");
+    L.push("## O que eu quero de você");
+    L.push("1. Uma leitura curta do período: o que foi bem e o que foi mal, com os números.");
+    L.push("2. O maior gargalo e a causa mais provável.");
+    L.push("3. As 3 ações mais importantes, em ordem de impacto x esforço, bem práticas (página, quiz, oferta ou anúncios).");
+    L.push("4. Um teste A/B para rodar agora: o que mudar, o que medir e quanto tempo esperar.");
+    L.push("Regras: use só os números acima (não invente dados); com menos de ~100 visitas, trate como preliminar; não sugira depoimentos ou números falsos nem promessas de resultado sem comprovação (CDC, CONAR, Anvisa). Responda em português simples.");
+    return L.join("\n");
+  }
 
   /* ================= memória da conversa (só nesta aba) ================= */
   function salvar() {
@@ -343,8 +618,8 @@
 
   function aviso(t) {
     var m = el("div", "agente-aviso", t);
-    lista.appendChild(m);
-    rolarFim();
+    if (modo === "resumo") { caixaResumo.appendChild(m); m.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+    else { lista.appendChild(m); rolarFim(); }
     setTimeout(function () { m.remove(); }, 5000);
   }
 

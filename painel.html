@@ -244,9 +244,8 @@
     <div class="dica" role="tooltip" data-dica hidden></div>
 
     <!-- ============ Estrategista: chat de IA (texto, voz, imagem, PDF) ============ -->
-    <button type="button" class="agente-botao" data-agente-abrir aria-label="Conversar com o Estrategista">
-      <span class="agente-orb" aria-hidden="true"></span>
-      <span>Estrategista</span>
+    <button type="button" class="agente-botao" data-agente-abrir aria-label="Abrir o Estrategista (IA de dados e conversão)" title="Estrategista">
+      <span class="orbe" aria-hidden="true"><span class="orbe-luz"></span><span class="orbe-cor"></span><span class="orbe-brilho"></span></span>
     </button>
 
     <section class="agente" data-agente hidden role="dialog" aria-modal="true" aria-labelledby="agente-titulo">
@@ -268,9 +267,17 @@
         </div>
       </header>
 
-      <div class="agente-mensagens" data-agente-mensagens aria-live="polite"></div>
+      <div class="agente-abas" role="tablist" aria-label="Como usar o Estrategista">
+        <button type="button" role="tab" data-agente-modo="resumo" aria-selected="true">Meu Claude · grátis</button>
+        <button type="button" role="tab" data-agente-modo="chat" aria-selected="false">Chat no painel</button>
+      </div>
 
-      <form class="agente-campo" data-agente-form>
+      <!-- Resumo estratégico: monta o briefing com os números e abre o Claude/ChatGPT da assinatura -->
+      <div class="agente-resumo" data-agente-resumo></div>
+
+      <div class="agente-mensagens" data-agente-mensagens aria-live="polite" hidden></div>
+
+      <form class="agente-campo" data-agente-form hidden>
         <div class="agente-anexos" data-agente-anexos hidden></div>
         <div class="agente-ouvindo" data-agente-ouvindo hidden>
           <span class="agente-onda" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>

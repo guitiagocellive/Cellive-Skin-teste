@@ -178,6 +178,10 @@
   // o chat do Estrategista (painel-agente.js) lê daqui a senha, o período e os números da tela
   window.PainelApp = {
     estado: estado,
+    visitasDe: function (k) { return visitasDe(k); },
+    analisar: function () { return estado.resumoIA && window.PainelAnalise ? window.PainelAnalise.analisar(estado.resumoIA) : null; },
+    depoisDeMontar: null, // o Estrategista se registra aqui para se atualizar
+    trocarPeriodo: function (p) { var b = document.querySelector('[data-periodo="' + p + '"]'); if (b) b.click(); },
     periodo: function () { var r = intervalo(); return { de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)) }; },
   };
 
@@ -269,6 +273,7 @@
     montarOrigem(d);
     requestAnimationFrame(ajustarRotulos);
     estado.silencioso = false;
+    if (window.PainelApp && typeof window.PainelApp.depoisDeMontar === "function") window.PainelApp.depoisDeMontar();
   }
 
   function preencherFiltros(opcoes) {
@@ -1174,7 +1179,7 @@
     var c = ia.claude[chave];
     if (c && c.relatorio) desenharIA(c.relatorio, { fonte: "claude", criado: c.criado });
     else desenharIA(window.PainelAnalise.analisar(resumo), { fonte: "local", erro: c && c.erro });
-    if (d.ia && !estado.demo && !c && !ia.pedindo[chave] && resumo.volume.visitas > 0) pedirClaude(false);
+    // o Claude só é chamado quando a pessoa toca em "Gerar com o Claude" (para não gastar à toa)
   }
 
   function pedirClaude(forcar) {
@@ -1315,7 +1320,7 @@
     var txt;
     if (estado.demo) txt = "Modo demonstração: análise automática feita sobre números fictícios.";
     else if (claude) txt = "O Claude leu só os números agregados deste período (nenhum dado pessoal) e escreveu este relatório.";
-    else if (d.ia) txt = meta.erro ? "Não deu para falar com o Claude agora (" + meta.erro + "). Esta é a análise automática do painel." : "Esta é a análise automática do painel. O relatório do Claude aparece aqui em instantes.";
+    else if (d.ia) txt = meta.erro ? "Não deu para falar com o Claude agora (" + meta.erro + "). Esta é a análise automática do painel." : "Esta é a análise automática do painel (sem custo). Toque em “Gerar com o Claude” para um relatório escrito pelo Claude (usa a API, custo por uso).";
     else txt = "Análise automática, feita pelo próprio painel com regras de conversão, sem custo. Para o relatório escrito pelo Claude, adicione a chave ANTHROPIC_API_KEY na Vercel.";
     rod.appendChild(el("p", null, txt));
     // atalho para conversar sobre o relatório com o Estrategista (chat)
