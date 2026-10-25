@@ -833,3 +833,26 @@ table.tabela { width: 100%; margin-top: 10px; border-collapse: collapse; font-si
 .ia-ponto-corpo { padding: 0 14px 14px 16px; animation: subir 0.4s var(--curva) both; }
 .ia-ponto-corpo > p:first-child { margin-top: 0; }
 .ia-ponto[open] { background: rgba(255, 255, 255, 0.04); }
+
+/* escolha do funil: com quiz ou oferta direta (v2) */
+.versoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  width: 100%;
+  padding: 4px;
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.versoes button {
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: var(--texto-2);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.versoes button.is-ativo { background: rgba(177, 199, 222, 0.16); color: var(--texto); font-weight: 600; box-shadow: inset 0 0 0 1px rgba(177, 199, 222, 0.35); }

@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "has": [{ "type": "host", "value": { "pre": "v2." } }], "destination": "/v2" }
+  ],
   "functions": {
     "api/analise.js": { "maxDuration": 120 }
   },

@@ -15,6 +15,8 @@
 
   var ENDERECO = "/api/evento";
   var pagina = document.documentElement.getAttribute("data-pagina") || "outra";
+  // versão do funil: "v2" = oferta direta para anúncios (sem quiz); sem marca = funil com quiz
+  var versao = document.documentElement.getAttribute("data-versao") || null;
 
   function id() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -95,7 +97,7 @@
     fila.push({
       t: tipo, ts: Date.now(), v: visitante, s: sessao, p: dados.p || pagina,
       e: dados.e == null ? null : String(dados.e), val: dados.val == null ? null : String(dados.val),
-      x: dados.x || null, u: origem, ap: aparelho, so: sistema, nav: navegador, novo: novo,
+      x: dados.x || null, u: origem, ap: aparelho, so: sistema, nav: navegador, novo: novo, ver: versao,
     });
     if (fila.length >= 20) enviar();
     else if (!timer) timer = setTimeout(enviar, 1500);

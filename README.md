@@ -47,6 +47,21 @@ melhoria (com prioridade, o que fazer e o ganho estimado em cliques no checkout)
 Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
 `DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).
 
+## Oferta direta para anúncios (v2)
+
+`v2.html` é a mesma página de oferta, sem o quiz: em vez de "Sua fórmula personalizada", fala da fórmula em geral
+("Uma fórmula completa", botão "Quero o meu Sérum"). Ela é **gerada** a partir do `oferta.html`, então qualquer
+mudança na oferta chega na v2 rodando `node scripts/gerar-v2.mjs` (as trocas de texto ficam nesse script; se algum
+texto não for encontrado, ele avisa em vez de gerar pela metade). Não edite o `v2.html` à mão.
+
+- Endereço: qualquer domínio que comece com `v2.` (ex.: `v2.celliveskin.com.br`) abre a v2 na página inicial
+  (regra `rewrites` no `vercel.json`). Também abre em `/v2` no domínio principal.
+- Para ligar o domínio: Vercel → projeto → **Settings → Domains → Add** → `v2.celliveskin.com.br`; depois, no
+  lugar onde o domínio foi comprado (ex.: Registro.br), crie o registro DNS que a Vercel mostrar (normalmente um
+  CNAME `v2` apontando para `cname.vercel-dns.com`).
+- Painel: as visitas da v2 ficam marcadas (`versao = 'v2'`) e não se misturam com o funil do quiz. No topo do
+  painel, escolha **Funil com quiz** ou **Oferta direta (v2)**.
+
 ## Páginas
 
 Os endereços não levam ".html" (opção `cleanUrls` no `vercel.json`): `/quiz`, `/oferta`, `/politica-de-privacidade`
@@ -58,6 +73,7 @@ e `/painel`. Quem abrir um endereço antigo com ".html" é levado sozinho para o
 | `politica-de-privacidade.html` | Política de Privacidade (LGPD) |
 | `quiz.html` | Quiz: uma pergunta por vez, com progresso 1 · 2 · 3 e botão de voltar |
 | `oferta.html` | Página de oferta (o quiz leva até ela no final) |
+| `v2.html` | Oferta direta para anúncios, sem quiz (gerada a partir do `oferta.html`) |
 | `404.html` | Página de "não encontrada" |
 | `painel.html` | Painel com os números do quiz e da oferta (pede senha) |
 

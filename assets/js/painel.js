@@ -171,8 +171,10 @@
   var estado = {
     senha: null, demo: false, periodo: "7", de: null, ate: null,
     filtros: { fonte: "", campanha: "", aparelho: "" }, aba: "geral", dados: null, silencioso: false,
+    versao: "v1", // v1 = funil com quiz; v2 = oferta direta (anúncios)
   };
   try { estado.senha = sessionStorage.getItem("cl-painel-senha"); } catch (e) { /* sem armazenamento */ }
+  var ehV2 = function () { return estado.versao === "v2"; };
 
   function intervalo() {
     var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
@@ -219,7 +221,7 @@
       conteudo.classList.remove("is-carregando");
       return;
     }
-    var q = new URLSearchParams({ de: r.de.getTime(), ate: r.ate.getTime() });
+    var q = new URLSearchParams({ de: r.de.getTime(), ate: r.ate.getTime(), versao: estado.versao });
     for (var k in estado.filtros) if (estado.filtros[k]) q.set(k, estado.filtros[k]);
     fetch("/api/painel?" + q.toString(), { headers: { authorization: "Bearer " + estado.senha } })
       .then(function (resp) {
@@ -357,6 +359,7 @@
   /* "Visitas" = sessões que abriram a capa ou o quiz (mesma conta nos
      cartões, no funil e no gráfico diário) */
   function visitasDe(k) {
+    if (ehV2()) return Number(k.entrada) || Number(k.oferta) || k.sessoes || 0;
     return Number(k.entrada) || Math.max(k.capa || 0, k.quiz || 0) || k.sessoes || 0;
   }
 
@@ -381,7 +384,7 @@
     var totalKits = kits.reduce(function (s, x) { return s + x.n; }, 0);
     var receita = kits.reduce(function (s, x) { return s + x.n * (PRECO[x.valor] || 0); }, 0);
 
-    var cartoes = [
+    var cartoes = ehV2() ? cartoesV2(d, base, baseAnt, serie, inteiro, kits, totalKits, receita) : [
       cartaoKpi("Visitas", n(base), n(k.visitantes) + " pessoas únicas · " + pct(novos, total, 0) + " novas", delta(base, baseAnt), false,
         { num: base, fmt: inteiro, serie: serie("visitas"), cor: "#3987e5" }),
       cartaoKpi("Começaram o quiz", pct(k.iniciaram, base, 0), n(k.iniciaram) + " responderam a 1ª pergunta", delta(k.iniciaram, a.iniciaram), false,
@@ -400,6 +403,26 @@
 
     montarFunilVisual(d);
     montarDiario(d);
+  }
+
+  // números da v2 (oferta direta): sem as etapas do quiz
+  function cartoesV2(d, base, baseAnt, serie, inteiro, kits, totalKits, receita) {
+    var k = d.kpi, a = d.kpiAnt || {};
+    var rol = (d.rolagem || []).filter(function (x) { return x.pagina === "oferta" && x.r != null; });
+    var mediaRol = rol.length ? rol.reduce(function (s, x) { return s + x.r; }, 0) / rol.length : null;
+    return [
+      cartaoKpi("Visitas na oferta", n(base), n(k.visitantes) + " pessoas únicas", delta(base, baseAnt), false,
+        { num: base, fmt: inteiro, serie: serie("visitas"), cor: "#3987e5" }),
+      cartaoKpi("Viram os planos", pct(k.viram_planos, base, 0), n(k.viram_planos) + " chegaram nos preços", delta(k.viram_planos, a.viram_planos), false,
+        { num: base ? 100 * k.viram_planos / base : 0, fmt: function (v) { return Math.round(v) + "%"; } }),
+      cartaoKpi("Clicaram em comprar", n(k.checkout), pct(k.checkout, k.viram_planos, 0) + " de quem viu os planos", delta(k.checkout, a.checkout), true,
+        { num: k.checkout, fmt: inteiro, serie: serie("checkouts"), cor: "#199e70" }),
+      cartaoKpi("Tocaram num kit", pct(k.escolheram_plano, k.viram_planos, 0), n(k.escolheram_plano) + " de quem viu os planos"),
+      cartaoKpi("Tempo na oferta", tempo(mediana(d.tempoOferta)), "metade das pessoas fica menos que isso"),
+      cartaoKpi("Rolagem média", mediaRol == null ? "–" : Math.round(mediaRol) + "%", "da altura da página"),
+      cartaoKpi("Kit mais escolhido", kits[0] ? "Kit " + kits[0].valor : "–", kits[0] ? pct(kits[0].n, totalKits, 0) + " dos cliques em comprar" : "sem cliques no período"),
+      cartaoKpi("Ticket médio", totalKits ? REAL.format(receita / totalKits) : "–", "estimado pelos kits escolhidos"),
+    ];
   }
 
   // cartão grande com a conversão total (visita → clique em comprar)
@@ -433,12 +456,15 @@
 
   /* ---------- Evolução diária: um painel por medida (cada um com a sua
      escala), mesma linha do tempo e uma linha-guia que acompanha o dedo ---------- */
-  var SERIES = [
+  var SERIES_V1 = [
     { k: "visitas", nome: "Visitas", cor: "#3987e5" },
     { k: "formulas", nome: "Viram a fórmula", cor: "#d95926" },
     { k: "checkouts", nome: "Cliques no checkout", cor: "#199e70" },
     { k: "conv", nome: "Conversão (visita → checkout)", cor: "#b1c7de", pct: true },
   ];
+  // na v2 a visita já é a oferta: a série "viram a fórmula" repetiria as visitas
+  var SERIES = SERIES_V1;
+  function escolherSeries() { SERIES = ehV2() ? SERIES_V1.filter(function (x) { return x.k !== "formulas"; }) : SERIES_V1; }
 
   function diasDoPeriodo(d) {
     var r = intervalo();
@@ -465,6 +491,7 @@
   }
 
   function montarDiario(d) {
+    escolherSeries();
     var dias = diasDoPeriodo(d);
     var caixa = limpar($("[data-grafico-diario]"));
     var largura = caixa.clientWidth || 340;
@@ -679,6 +706,13 @@
   function etapasPrincipais(d) {
     var k = d.kpi;
     var base = visitasDe(k);
+    if (ehV2()) {
+      return [
+        { id: "visitas", nome: "Visitas na oferta", n: base },
+        { id: "planos", nome: "Viram os planos", n: k.viram_planos },
+        { id: "checkout", nome: "Clicaram em comprar", n: k.checkout },
+      ];
+    }
     return [
       { id: "visitas", nome: "Visitas", n: base },
       { id: "iniciaram", nome: "Começaram o quiz", n: k.iniciaram },
@@ -693,7 +727,9 @@
     var etapas = etapasPrincipais(d);
     // maior queda até a fórmula (planos → checkout é decisão de compra)
     var g = null;
-    for (var i = 1; i <= 3; i++) {
+    // na v2 não há quiz: vale qualquer passagem
+    var ate = ehV2() ? etapas.length - 1 : 3;
+    for (var i = 1; i <= ate; i++) {
       var ant = etapas[i - 1].n;
       if (ant < 10) continue;
       var perda = (ant - etapas[i].n) / ant;
@@ -1112,13 +1148,13 @@
 
   function chaveIA() {
     var r = intervalo();
-    return JSON.stringify({ de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)), filtros: estado.filtros });
+    return JSON.stringify({ de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)), filtros: estado.filtros, versao: estado.versao });
   }
 
   function auxAnalise(d) {
     var r = intervalo();
     return {
-      visitas: visitasDe, comparar: estado.periodo !== "tudo",
+      visitas: visitasDe, comparar: estado.periodo !== "tudo", versao: estado.versao,
       periodo: { de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)), dias: Math.round((r.ate - r.de) / 864e5), filtros: estado.filtros },
       etapasFunil: etapasFunil(d), telas: TELAS, perguntas: PERGUNTAS, numeroPergunta: numeroPergunta,
       curtos: CURTOS, secoes: SECOES, nomeClique: nomeClique,
@@ -1311,7 +1347,24 @@
   function esconderDica() { dicaEl.hidden = true; }
 
   /* ================= modo demonstração ================= */
+  // demonstração da v2: só a oferta (sem quiz), com os mesmos números da oferta
   function gerarDemo(r) {
+    var d = gerarDemoBase(r);
+    if (!ehV2()) return d;
+    var V = d.kpi.entrada, F = d.kpi.oferta;
+    d.kpi.entrada = F; d.kpiAnt.entrada = d.kpiAnt.oferta;
+    ["capa", "cta_capa", "quiz", "iniciaram", "concluiram"].forEach(function (c) { d.kpi[c] = 0; d.kpiAnt[c] = 0; });
+    d.diario.forEach(function (x) { x.visitas = x.formulas; x.iniciaram = 0; });
+    d.etapas = []; d.paradas = []; d.respostas = []; d.tempoPergunta = []; d.duracoes = [];
+    d.cliques = d.cliques.filter(function (c) { return c.pagina === "oferta"; });
+    Object.keys(d.origem).forEach(function (campo) {
+      d.origem[campo].forEach(function (l) { l.visitas = Math.round(l.visitas * F / V); l.iniciaram = 0; l.formulas = l.visitas; });
+    });
+    d.novos = d.novos.map(function (x) { return { novo: x.novo, n: Math.round(x.n * F / V) }; });
+    return d;
+  }
+
+  function gerarDemoBase(r) {
     var semente = 7;
     var rnd = function () { semente = (semente * 16807) % 2147483647; return (semente - 1) / 2147483646; };
     var dias = [];
@@ -1415,7 +1468,7 @@
       baixar(new Blob(["﻿" + linhas.join("\n")], { type: "text/csv" }), "cellive-funil-demo.csv");
       return;
     }
-    var q = new URLSearchParams({ de: r.de.getTime(), ate: r.ate.getTime() });
+    var q = new URLSearchParams({ de: r.de.getTime(), ate: r.ate.getTime(), versao: estado.versao });
     for (var k in estado.filtros) if (estado.filtros[k]) q.set(k, estado.filtros[k]);
     fetch("/api/painel?formato=csv&" + q.toString(), { headers: { authorization: "Bearer " + estado.senha } })
       .then(function (resp) { if (!resp.ok) throw new Error(); return resp.blob(); })
@@ -1446,6 +1499,24 @@
     carregar();
   });
   $("[data-atualizar]").addEventListener("click", function () { carregar(false); });
+
+  // funil com quiz (v1) ou oferta direta (v2)
+  function aplicarVersao() {
+    $$("[data-versao]").forEach(function (b) { b.classList.toggle("is-ativo", b.getAttribute("data-versao") === estado.versao); });
+    ["funil", "respostas"].forEach(function (aba) {
+      var b = $('[data-aba="' + aba + '"]');
+      b.hidden = ehV2();
+      if (ehV2() && estado.aba === aba) $('[data-aba="geral"]').click();
+    });
+  }
+  $$("[data-versao]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (estado.versao === b.getAttribute("data-versao")) return;
+      estado.versao = b.getAttribute("data-versao");
+      aplicarVersao();
+      carregar(false);
+    });
+  });
 
   // filtros extras (datas, fonte, campanha, aparelho) ficam recolhidos
   $("[data-filtros-abrir]").addEventListener("click", function () {

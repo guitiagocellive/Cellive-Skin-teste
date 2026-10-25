@@ -28,6 +28,8 @@ function sql(texto) {
   return texto.replace(/\?/g, () => "$" + ++i);
 }
 
+const ehV2 = (url) => url.searchParams.get("versao") === "v2";
+
 function filtros(url, deslocamento = 0) {
   const de = Number(url.searchParams.get("de")) || 0;
   const ate = Number(url.searchParams.get("ate")) || Date.now();
@@ -38,6 +40,8 @@ function filtros(url, deslocamento = 0) {
     const v = url.searchParams.get(campo);
     if (v) { cond.push(`${campo} = ?`); args.push(v); }
   }
+  // versão do funil: "v2" = oferta direta (anúncios); padrão = funil com quiz
+  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS DISTINCT FROM 'v2'");
   return { where: cond.join(" AND "), args };
 }
 
@@ -45,11 +49,13 @@ async function painel(q, url) {
   const todos = async (texto, args) => numeros(await q(sql(texto), args));
   const F = filtros(url), ANT = filtros(url, 1);
   const W = F.where, A = F.args;
+  // "visita" = abriu a primeira página do funil (capa/quiz; na v2, a própria oferta)
+  const ENTRADA = ehV2(url) ? "pagina = 'oferta'" : "pagina IN ('capa','quiz')";
 
   const kpiSql = (w) => `SELECT
       COUNT(DISTINCT sessao) AS sessoes,
       COUNT(DISTINCT visitante) AS visitantes,
-      COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina IN ('capa','quiz') THEN sessao END) AS entrada,
+      COUNT(DISTINCT CASE WHEN tipo='pagina' AND ${ENTRADA} THEN sessao END) AS entrada,
       COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='capa' THEN sessao END) AS capa,
       COUNT(DISTINCT CASE WHEN tipo='clique' AND etapa='cta-capa' THEN sessao END) AS cta_capa,
       COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='quiz' THEN sessao END) AS quiz,
@@ -77,7 +83,7 @@ async function painel(q, url) {
     todos(kpiSql(W), A),
     todos(kpiSql(ANT.where), ANT.args),
     todos(`SELECT ${DIA} AS dia,
-        COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina IN ('capa','quiz') THEN sessao END) AS visitas,
+        COUNT(DISTINCT CASE WHEN tipo='pagina' AND ${ENTRADA} THEN sessao END) AS visitas,
         COUNT(DISTINCT CASE WHEN tipo='resposta' THEN sessao END) AS iniciaram,
         COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='oferta' THEN sessao END) AS formulas,
         COUNT(DISTINCT CASE WHEN tipo='checkout' THEN sessao END) AS checkouts
@@ -119,6 +125,7 @@ async function painel(q, url) {
 
   return json({
     gerado: Date.now(),
+    versao: ehV2(url) ? "v2" : "v1",
     ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },
@@ -129,7 +136,7 @@ async function painel(q, url) {
 async function csv(q, url) {
   const F = filtros(url);
   const linhas = await q(sql(`SELECT * FROM eventos WHERE ${F.where} ORDER BY id LIMIT 100000`), F.args);
-  const cols = ["id", "ts", "visitante", "sessao", "tipo", "pagina", "etapa", "valor", "extra", "fonte", "campanha", "midia", "conteudo", "aparelho", "sistema", "navegador", "pais", "novo"];
+  const cols = ["id", "ts", "visitante", "sessao", "tipo", "pagina", "etapa", "valor", "extra", "fonte", "campanha", "midia", "conteudo", "aparelho", "sistema", "navegador", "pais", "novo", "versao"];
   const texto = (v) => (v == null ? "" : typeof v === "object" ? JSON.stringify(v) : String(v));
   const esc = (v) => { const t = texto(v); return /[",\n;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
   const corpo = [cols.concat("data_hora").join(",")]

@@ -34,20 +34,26 @@
   function resumir(d, aux) {
     var k = d.kpi || {}, a = d.kpiAnt || null;
     var visitas = aux.visitas(k);
+    var v2 = aux.versao === "v2";
     var R = {
+      funil: v2 ? "oferta direta (v2): a pessoa vem do anúncio direto para a página de oferta, sem quiz" : "com quiz: anúncio → capa → quiz → oferta",
       periodo: aux.periodo,
       dados_de_exemplo: !!d.demo,
       metas_de_referencia_pct: METAS,
       volume: {
-        visitas: visitas, visitantes_unicos: k.visitantes || 0, comecaram_quiz: k.iniciaram || 0,
-        concluiram_quiz: k.concluiram || 0, viram_formula: k.oferta || 0, viram_planos: k.viram_planos || 0,
+        visitas: visitas, visitantes_unicos: k.visitantes || 0, comecaram_quiz: v2 ? null : k.iniciaram || 0,
+        concluiram_quiz: v2 ? null : k.concluiram || 0, viram_formula: k.oferta || 0, viram_planos: k.viram_planos || 0,
         clicaram_checkout: k.checkout || 0, cliques_checkout_total: k.checkout_cliques || 0,
       },
       conversao_total_pct: taxa(k.checkout, visitas),
     };
 
     // etapas principais e taxa de cada passagem
-    var E = [
+    var E = v2 ? [
+      { nome: "Visitas na oferta", n: visitas },
+      { nome: "Viram os planos", n: k.viram_planos || 0, chave: "planos" },
+      { nome: "Clicaram em comprar", n: k.checkout || 0, chave: "checkout" },
+    ] : [
       { nome: "Visitas", n: visitas },
       { nome: "Começaram o quiz", n: k.iniciaram || 0, chave: "quiz" },
       { nome: "Concluíram o quiz", n: k.concluiram || 0, chave: "conclusao" },
@@ -77,7 +83,7 @@
     var ini = lista.findIndex(function (e) { return aux.telas[0] && e.id === aux.telas[0].id; });
     var fim = lista.findIndex(function (e) { return e.id === "oferta"; });
     R.quiz = [];
-    if (ini >= 0 && fim > ini) {
+    if (!v2 && ini >= 0 && fim > ini) {
       for (var i = ini; i <= fim; i++) {
         var e = lista[i], antes = i > ini ? lista[i - 1].n : null;
         var t = tempos[e.id];
@@ -135,7 +141,7 @@
     };
 
     // respostas que mais e menos levam à compra
-    R.respostas_destaque = respostasDestaque(d, aux, k);
+    R.respostas_destaque = v2 ? null : respostasDestaque(d, aux, k);
 
     R.erros = (d.erros || []).slice(0, 3).map(function (e) { return { erro: String(e.valor).slice(0, 120), vezes: e.n }; });
     return R;
@@ -244,7 +250,7 @@
           prioridade: "media", area: "Tráfego", _ganho: ganhoF,
           titulo: "“" + melhor.nome + "” converte bem mais que “" + pior.nome + "”",
           detalhe: melhor.nome + " leva " + p(melhor.conversao_pct) + " das visitas ao checkout; " + pior.nome + " leva " + p(pior.conversao_pct) + " (" + n(pior.visitas) + " visitas).",
-          acao: "Aumente aos poucos a verba onde converte mais. Em “" + pior.nome + "”, revise o anúncio e o público: muitas vezes o anúncio promete algo diferente do que a capa mostra.",
+          acao: "Aumente aos poucos a verba onde converte mais. Em “" + pior.nome + "”, revise o anúncio e o público: muitas vezes o anúncio promete algo diferente do que a página mostra.",
           impacto: ganhoF >= 1 ? "Se “" + pior.nome + "” chegar à média: ≈ +" + n(ganhoF) + " cliques no checkout" : "",
         });
       }

@@ -133,7 +133,11 @@
   }
 
   var respostas = {};
-  try { respostas = JSON.parse(sessionStorage.getItem("cellive-quiz-respostas")) || {}; } catch (e) { /* sem quiz */ }
+  // na v2 (oferta direta, sem quiz) a fórmula é sempre a geral
+  var semQuiz = document.documentElement.getAttribute("data-versao") === "v2";
+  if (!semQuiz) {
+    try { respostas = JSON.parse(sessionStorage.getItem("cellive-quiz-respostas")) || {}; } catch (e) { /* sem quiz */ }
+  }
 
   var formula = window.QUIZ_FLUXO.filter(function (b) { return b.tipo === "formula"; })[0];
   if (!formula) return;

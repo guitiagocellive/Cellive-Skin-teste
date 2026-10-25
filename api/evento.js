@@ -24,7 +24,7 @@ export async function POST(request) {
   // país vem do cabeçalho da Vercel
   const pais = corta(request.headers.get("x-vercel-ip-country"), 4);
   const agora = Date.now();
-  const COLS = 17;
+  const COLS = 18;
   const valores = [];
   const linhas = lista.map((e, i) => {
     const ts = typeof e.ts === "number" && Math.abs(agora - e.ts) < 6 * 3600e3 ? Math.round(e.ts) : agora;
@@ -36,14 +36,14 @@ export async function POST(request) {
     valores.push(
       ts, corta(e.v, 40), corta(e.s, 40), e.t, corta(e.p, 40), corta(e.e, 80), corta(e.val, 300), extra,
       corta(e.u && e.u.fonte, 80) || "direto", corta(e.u && e.u.campanha, 120), corta(e.u && e.u.midia, 80), corta(e.u && e.u.conteudo, 120),
-      corta(e.ap, 20), corta(e.so, 20), corta(e.nav, 20), pais, !!e.novo
+      corta(e.ap, 20), corta(e.so, 20), corta(e.nav, 20), pais, !!e.novo, e.ver === "v2" ? "v2" : null
     );
     const base = i * COLS;
     return "(" + Array.from({ length: COLS }, (_, k) => "$" + (base + k + 1) + (k === 7 ? "::jsonb" : "")).join(",") + ")";
   });
   try {
     await q(`INSERT INTO eventos
-      (ts, visitante, sessao, tipo, pagina, etapa, valor, extra, fonte, campanha, midia, conteudo, aparelho, sistema, navegador, pais, novo)
+      (ts, visitante, sessao, tipo, pagina, etapa, valor, extra, fonte, campanha, midia, conteudo, aparelho, sistema, navegador, pais, novo, versao)
       VALUES ${linhas.join(",")}`, valores);
   } catch (e) {
     return json({ ok: false }, 500);
