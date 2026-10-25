@@ -51,6 +51,13 @@ planilhas CSV. O agente (`api/agente.js`) consulta sozinho os números da plataf
 Usa a mesma chave `ANTHROPIC_API_KEY`; limite de `AGENTE_LIMITE_DIA` mensagens por dia (padrão 150). O painel mede
 até o clique em comprar: vendas pagas só aparecem quando o checkout for ligado ao painel.
 
+**Anúncios da Meta (opcional):** com `META_TOKEN` (token de acesso com permissão `ads_read`, de um usuário do
+sistema no Gerenciador de Negócios) e `META_CONTA` (ID da conta de anúncios) na Vercel, o painel busca na API de
+Insights da Meta o gasto, os cliques no link, impressões, CPM, CTR e visualizações da página de cada período
+(`api/meta.js`, guardado por 30 min). O resumo do Estrategista calcula sozinho o connect rate (visitas vindas da
+Meta ÷ cliques no link) e o custo por clique em comprar; o chat também usa esses números. Sem as variáveis, os
+mesmos campos podem ser digitados à mão.
+
 Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
 `DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).
 

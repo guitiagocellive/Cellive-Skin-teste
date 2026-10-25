@@ -17,6 +17,9 @@ import { readFile } from "node:fs/promises";
 import Anthropic from "@anthropic-ai/sdk";
 import { autorizado, banco, json } from "./_db.js";
 import { dadosPainel } from "./painel.js";
+import { insightsMeta, metaLigada } from "./_meta.js";
+
+const FONTES_META = ["facebook", "fb", "ig", "instagram", "messenger", "msg", "an", "meta"];
 
 const MODELO = process.env.IA_MODELO || "claude-opus-5-5";
 const LIMITE_DIA = Number(process.env.AGENTE_LIMITE_DIA) || 150;
@@ -114,6 +117,7 @@ function compactar(d, nomes, pedido) {
     cliques_na_pagina: (d.cliques || []).sort((x, y) => y.n - x.n).slice(0, 15).map((x) => ({ elemento: x.etapa, valor: x.valor, pagina: x.pagina, pessoas: x.n, cliques: x.cliques })),
     origem: { fontes: origem(d.origem && d.origem.fonte), campanhas: origem(d.origem && d.origem.campanha), aparelhos: origem(d.origem && d.origem.aparelho), sistemas: origem(d.origem && d.origem.sistema) },
     visitas_por_hora_do_dia: Object.keys(horas).sort((x, y) => horas[y] - horas[x]).slice(0, 6).map((h) => ({ hora: h + "h", visitas: horas[h] })),
+    cliques_em_comprar_por_hora: (d.compraPorHora || []).sort((x, y) => y.n - x.n).slice(0, 8).map((x) => ({ hora: x.hora + "h", pessoas: x.n })),
     tempo_ate_a_oferta_mediana_s: d.duracoes && d.duracoes.length ? Math.round(mediana(d.duracoes) / 1000) : null,
     tempo_na_oferta_mediana_s: d.tempoOferta && d.tempoOferta.length ? Math.round(mediana(d.tempoOferta) / 1000) : null,
     rolagem_media_da_oferta_pct: rol.length ? Math.round(rol.reduce((s, x) => s + x.r, 0) / rol.length) : null,
@@ -158,7 +162,23 @@ export async function consultar(q, entrada, nomes) {
   if (entrada.versao === "v2") url.searchParams.set("versao", "v2");
   for (const c of ["fonte", "campanha", "aparelho"]) if (entrada[c]) url.searchParams.set(c, String(entrada[c]).slice(0, 120));
   const dados = await dadosPainel(q, url);
-  return compactar(dados, nomes, { de, ate, versao: entrada.versao, fonte: entrada.fonte || "todas", campanha: entrada.campanha || "todas", aparelho: entrada.aparelho || "todos" });
+  const r = compactar(dados, nomes, { de, ate, versao: entrada.versao, fonte: entrada.fonte || "todas", campanha: entrada.campanha || "todas", aparelho: entrada.aparelho || "todos" });
+  // anúncios da Meta (quando a API da Meta está ligada): connect rate e custos
+  if (metaLigada()) {
+    const m = await insightsMeta(q, de, ate, entrada.campanha || "");
+    if (m && m.ok) {
+      const visitasMeta = (r.origem.fontes || []).filter((f) => FONTES_META.includes(String(f.nome).toLowerCase())).reduce((s, f) => s + (f.visitas || 0), 0);
+      r.anuncios_meta = {
+        gasto: m.gasto, moeda: m.moeda, impressoes: m.impressoes, cliques_no_link: m.cliques_no_link, cpm: m.cpm, ctr_pct: m.ctr_pct,
+        visualizacoes_da_pagina_segundo_a_meta: m.visualizacoes_da_pagina,
+        visitas_vindas_da_meta_no_site: visitasMeta,
+        connect_rate_pct: m.cliques_no_link ? pct(visitasMeta || r.totais.visitas, m.cliques_no_link) : null,
+        custo_por_clique_em_comprar: r.totais.clicaram_comprar ? Math.round((100 * m.gasto) / r.totais.clicaram_comprar) / 100 : null,
+        por_dia: m.por_dia,
+      };
+    } else if (m && m.erro) r.anuncios_meta = { erro: m.detalhe || m.erro };
+  }
+  return r;
 }
 
 function statusDaConsulta(e) {
@@ -186,6 +206,8 @@ COMO TRABALHAR
 - Compare com o período anterior de mesmo tamanho (a ferramenta já traz) e, se ajudar, faça mais de uma consulta (ex.: hoje x ontem, esta semana x semana passada, quiz x v2, fonte por fonte).
 - Pense como estrategista: 1) responda direto; 2) mostre onde está o maior vazamento (a etapa que mais perde gente, pesando quanto isso custa em cliques em comprar); 3) explique a causa provável; 4) dê ações priorizadas (impacto x esforço), concretas, para página, quiz ou anúncios; 5) quando sugerir teste A/B, diga o que medir e quanto tempo/volume esperar.
 - Com poucos dados (menos de ~100 visitas no período), avise que as conclusões são preliminares.
+- Se o resultado trouxer "anuncios_meta" (API da Meta ligada), use gasto, cliques no link, CPM, CTR e o connect rate (visitas vindas da Meta ÷ cliques no link). Sem isso, peça um print do Gerenciador quando a pergunta envolver custo ou anúncios.
+- Para horário de pico, use cliques_em_comprar_por_hora e visitas_por_hora_do_dia, e mostre num bloco barras.
 - Anexos: prints do Gerenciador de Anúncios (gasto, CPM, CTR, CPC, resultados) → cruze com o funil (ex.: custo por clique em comprar = gasto ÷ cliques em comprar do mesmo período, consultando as datas do print). Criativos → avalie se a promessa do anúncio conversa com a capa/oferta. PDFs e planilhas → resuma o que importa e conecte com os dados.
 - Mensagens podem vir de áudio transcrito: ignore erros de digitação e entenda a intenção.
 - Regras: nunca sugira depoimentos, avaliações ou números inventados, nem promessas de resultado sem comprovação ou afirmações de saúde (CDC, CONAR, Anvisa). Não peça dados pessoais de clientes (LGPD).

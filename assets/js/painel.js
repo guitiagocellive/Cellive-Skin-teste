@@ -1441,6 +1441,12 @@
       var pico = Math.exp(-Math.pow((h - 21) / 3.2, 2)) + 0.5 * Math.exp(-Math.pow((h - 12.5) / 2, 2));
       porHora.push({ semana: s, hora: h, n: Math.round(V / 120 * pico * (0.7 + rnd() * 0.6)) });
     }
+    // cliques em comprar por hora (demonstração): segue as visitas, com pico à noite
+    var compraPorHora = [];
+    for (var hh = 0; hh < 24; hh++) {
+      var vh = porHora.filter(function (x) { return x.hora === hh; }).reduce(function (a, x) { return a + x.n; }, 0);
+      compraPorHora.push({ hora: hh, n: Math.round(vh * (C / V) * (0.75 + rnd() * 0.5) * (hh >= 20 && hh <= 22 ? 1.4 : 1)) });
+    }
     var amostra = function (q, centro, var_) { var l = []; for (var i = 0; i < Math.min(q, 400); i++) l.push(Math.round(centro * (1 + (rnd() - 0.5) * var_))); return l; };
     var kpi = {
       entrada: V, sessoes: Math.round(V * 1.04), visitantes: Math.round(V * 0.86), capa: capa, cta_capa: cta, quiz: Math.round(cta * 0.99), iniciaram: I,
@@ -1473,7 +1479,7 @@
         sistema: origemDe(["iOS", "Android", "Windows"], [0.55, 0.37, 0.08]),
         pais: origemDe(["BR", "PT", "US"], [0.96, 0.03, 0.01]),
       },
-      porHora: porHora, duracoes: amostra(F, 169000, 0.6), tempoOferta: amostra(F, 96000, 1.2),
+      porHora: porHora, compraPorHora: compraPorHora, duracoes: amostra(F, 169000, 0.6), tempoOferta: amostra(F, 96000, 1.2),
       rolagem: amostra(F, 58, 1).map(function (r2) { return { pagina: "oferta", r: Math.min(100, r2) }; }),
       opcoes: [{ campo: "fonte", v: "facebook" }, { campo: "fonte", v: "instagram" }, { campo: "fonte", v: "tiktok" }, { campo: "aparelho", v: "celular" }, { campo: "aparelho", v: "computador" }, { campo: "campanha", v: "anti-idade-30" }],
       aoVivo: 4, erros: [], novos: [{ novo: 1, n: Math.round(V * 0.82) }, { novo: 0, n: Math.round(V * 0.18) }],

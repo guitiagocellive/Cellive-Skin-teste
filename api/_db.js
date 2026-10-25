@@ -44,6 +44,8 @@ export async function banco() {
     await q("ALTER TABLE eventos ADD COLUMN IF NOT EXISTS versao TEXT");
     // uso do chat do Estrategista (para o limite diário)
     await q("CREATE TABLE IF NOT EXISTS agente_uso (ts BIGINT NOT NULL)");
+    // números da Meta guardados por 30 min
+    await q(`CREATE TABLE IF NOT EXISTS meta_cache (chave TEXT PRIMARY KEY, criado BIGINT NOT NULL, dados JSONB NOT NULL)`);
     // relatórios da IA já gerados (para não pagar duas vezes pela mesma análise)
     await q(`CREATE TABLE IF NOT EXISTS analises (
       chave TEXT PRIMARY KEY, criado BIGINT NOT NULL, dados JSONB NOT NULL

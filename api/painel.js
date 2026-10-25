@@ -80,7 +80,7 @@ export async function dadosPainel(q, url) {
 
   const [
     kpi, kpiAnt, diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
-    porFonte, porCampanha, porAparelho, porSistema, porPais, porHora, duracoes, tempoOferta, rolagem, opcoes, aoVivo, erros, novos,
+    porFonte, porCampanha, porAparelho, porSistema, porPais, porHora, compraPorHora, duracoes, tempoOferta, rolagem, opcoes, aoVivo, erros, novos,
   ] = await Promise.all([
     todos(kpiSql(W), A),
     todos(kpiSql(ANT.where), ANT.args),
@@ -114,6 +114,9 @@ export async function dadosPainel(q, url) {
     origem("fonte"), origem("campanha"), origem("aparelho"), origem("sistema"), origem("pais"),
     todos(`SELECT ${HORA} AS hora, ${SEMANA} AS semana, COUNT(DISTINCT sessao) AS n
       FROM eventos WHERE tipo='pagina' AND ${W} GROUP BY 1, 2`, A),
+    // cliques em comprar por hora do dia (para achar o horário de pico)
+    todos(`SELECT ${HORA} AS hora, COUNT(DISTINCT sessao) AS n
+      FROM eventos WHERE tipo='checkout' AND ${W} GROUP BY 1`, A),
     todos(`SELECT valor::bigint AS ms FROM eventos WHERE tipo='quiz_fim' AND valor ~ '^[0-9]+$' AND ${W} ORDER BY 1 LIMIT 20000`, A),
     todos(`SELECT ${MS}::bigint AS ms FROM eventos WHERE tipo='saida' AND pagina='oferta' AND jsonb_exists(extra, 'ms') AND ${W} ORDER BY 1 LIMIT 20000`, A),
     todos(`SELECT pagina, (extra->>'rolagem')::int AS r FROM eventos WHERE tipo='saida' AND ${W} LIMIT 40000`, A),
@@ -131,7 +134,7 @@ export async function dadosPainel(q, url) {
     ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },
-    porHora, duracoes: duracoes.map((d) => d.ms), tempoOferta: tempoOferta.map((d) => d.ms), rolagem, opcoes, aoVivo: aoVivo[0].n, erros, novos,
+    porHora, compraPorHora, duracoes: duracoes.map((d) => d.ms), tempoOferta: tempoOferta.map((d) => d.ms), rolagem, opcoes, aoVivo: aoVivo[0].n, erros, novos,
   };
 }
 

@@ -1370,3 +1370,71 @@ body.agente-aberto .agente-botao { transform: translateX(-50%) scale(0.6); }
 
 /* no painel, deixa espaço embaixo para a esfera não cobrir o fim da página */
 .painel { padding-bottom: 110px; }
+
+/* ---------- gráficos animados do resumo (Estrategista) ---------- */
+.resumo-graficos { display: grid; gap: 10px; }
+.resumo-graf-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.resumo-graf-topo .resumo-caixa-rot { margin: 0; }
+.resumo-toggle { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--linha); border-radius: 999px; background: rgba(0, 0, 0, 0.25); }
+.resumo-toggle button { padding: 5px 10px; border: 0; border-radius: 999px; background: none; color: var(--texto-2); font-size: 12px; cursor: pointer; }
+.resumo-toggle button.is-ativo { background: linear-gradient(120deg, #8b5cf6, #ec4899); color: #ffffff; font-weight: 600; }
+.resumo-graf-titulo { margin: 4px 0 0 !important; color: var(--texto-2) !important; font-size: 13.5px !important; }
+.resumo-graf-titulo strong { display: inline !important; color: #ffffff; font-size: 15px !important; }
+
+.graf-colunas {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  align-items: end;
+  gap: 3px;
+  height: 120px;
+  padding-top: 18px;
+}
+.graf-dias { height: 70px; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.graf-col {
+  position: relative;
+  display: block;
+  height: var(--h, 3%);
+  min-height: 3px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08));
+  cursor: pointer;
+  transform-origin: bottom center;
+  animation: coluna-sobe 0.9s var(--curva) both;
+  animation-delay: calc(var(--i, 0) * 28ms);
+  -webkit-tap-highlight-color: transparent;
+}
+.graf-col.tocada { background: linear-gradient(180deg, rgba(34, 211, 238, 0.9), rgba(34, 211, 238, 0.25)); }
+.graf-col.pico {
+  background: linear-gradient(180deg, #fb923c, #ec4899 55%, #8b5cf6);
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.75), 0 0 28px rgba(139, 92, 246, 0.45);
+  animation: coluna-sobe 0.9s var(--curva) both, coluna-brilha 2.4s ease-in-out 1s infinite;
+  animation-delay: calc(var(--i, 0) * 28ms), 1s;
+}
+.graf-col-rot { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); color: #ffffff; font-size: 11px; font-weight: 700; white-space: nowrap; }
+@keyframes coluna-sobe { from { transform: scaleY(0); opacity: 0.2; } to { transform: none; opacity: 1; } }
+@keyframes coluna-brilha { 50% { box-shadow: 0 0 6px rgba(236, 72, 153, 0.4), 0 0 12px rgba(139, 92, 246, 0.25); } }
+
+.graf-eixo { position: relative; height: 16px; color: var(--texto-3); font-size: 10.5px; }
+.graf-eixo span { position: absolute; top: 2px; transform: translateX(-50%); white-space: nowrap; }
+.graf-eixo span:first-child { transform: none; left: 0 !important; }
+.graf-eixo span:last-child { transform: translateX(-100%); left: 100% !important; }
+.graf-leitura { margin: 0 !important; color: var(--texto-3) !important; font-size: 12.5px !important; }
+
+.graf-funil { display: grid; gap: 7px; }
+.graf-funil-linha { display: grid; grid-template-columns: 40% minmax(0, 1fr) 84px; align-items: center; gap: 8px; font-size: 12.5px; animation: subir 0.5s var(--curva) both; animation-delay: calc(var(--i, 0) * 70ms); }
+.graf-funil-nome { overflow: hidden; color: var(--texto); text-overflow: ellipsis; white-space: nowrap; }
+.graf-funil-trilho { height: 9px; overflow: hidden; border-radius: 6px; background: rgba(255, 255, 255, 0.06); }
+.graf-funil-cheio {
+  display: block;
+  width: var(--w, 0%);
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899, #fb923c);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  transform-origin: left center;
+  animation: encher 1s var(--curva) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 150ms);
+}
+.graf-funil-num { color: var(--texto-2); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }

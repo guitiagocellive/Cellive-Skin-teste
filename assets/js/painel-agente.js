@@ -109,6 +109,21 @@
     return (v >= 0 ? "+" : "") + v + "% vs período anterior";
   }
 
+  // números da Meta vindos da API (quando ligada na Vercel)
+  var metaApi = {}; // chave do período -> { estado: "carregando"|"ok"|"sem"|"erro", dados }
+  function buscarMeta(c) {
+    var e = app.estado, chave = c.chaveMeta;
+    if (e.demo || !e.senha || metaApi[chave]) return;
+    metaApi[chave] = { estado: "carregando" };
+    fetch("/api/meta?de=" + c.per.de + "&ate=" + c.per.ate, { headers: { authorization: "Bearer " + e.senha } })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        metaApi[chave] = j.ok ? { estado: "ok", dados: j } : { estado: j.erro === "sem-meta" ? "sem" : "erro", detalhe: j.detalhe };
+        if (!painel.hidden && modo === "resumo") desenharResumo();
+      })
+      .catch(function () { metaApi[chave] = { estado: "erro" }; });
+  }
+
   function lerMeta(chave) {
     try { return JSON.parse(localStorage.getItem("cl-meta-" + chave)) || {}; } catch (e) { return {}; }
   }
@@ -197,10 +212,18 @@
       caixaResumo.appendChild(bf);
     }
 
-    // dados da Meta (connect rate e custo)
+    // dados da Meta (connect rate e custo): da API quando ligada, senão digitados
+    buscarMeta(c);
+    var api = metaApi[c.chaveMeta] || {};
     var m = lerMeta(c.chaveMeta);
+    if (api.estado === "ok") {
+      if (m.cliques == null) m.cliques = api.dados.cliques_no_link;
+      if (m.gasto == null) m.gasto = api.dados.gasto;
+      m.daApi = true;
+      m.meta = api.dados;
+    }
     var caixaMeta = el("div", "resumo-meta");
-    caixaMeta.appendChild(el("span", "resumo-caixa-rot", "Dados do Gerenciador de Anúncios (opcional)"));
+    caixaMeta.appendChild(el("span", "resumo-caixa-rot", api.estado === "ok" ? "Anúncios da Meta · vindos da API" : "Dados do Gerenciador de Anúncios (opcional)"));
     var linhaMeta = el("div", "resumo-meta-campos");
     var campoNum = function (rot, chave, dica) {
       var l = el("label");
@@ -233,9 +256,17 @@
         if (k.checkout) partes.push("Custo por clique em comprar: " + REAL.format(m.gasto / k.checkout));
         if (base) partes.push("Custo por visita: " + REAL.format(m.gasto / base));
       }
-      resultadoMeta.textContent = partes.join(" · ") || "Connect rate = visitas que chegaram ao site ÷ cliques no link do anúncio.";
+      if (api.estado === "ok") partes.push("CPM " + REAL.format(api.dados.cpm) + " · CTR " + api.dados.ctr_pct.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + "%");
+      var dica = api.estado === "carregando" ? "Buscando os números da Meta…"
+        : api.estado === "sem" ? "Dica: ligando a API da Meta na Vercel, estes campos se preenchem sozinhos."
+        : api.estado === "erro" ? "Não consegui ler a Meta agora; preencha à mão."
+        : "Connect rate = visitas que chegaram ao site ÷ cliques no link do anúncio.";
+      resultadoMeta.textContent = partes.join(" · ") || dica;
     }
     atualizarMeta();
+
+    // gráficos: horário de pico, por dia e funil
+    graficos(c);
 
     // pontos de melhoria
     if ((c.rel.pontos || []).length) {
@@ -264,6 +295,121 @@
     botao("Copiar e abrir no ChatGPT", "https://chatgpt.com/", "chatgpt");
     botao("Só copiar", null, "leve");
     caixaResumo.appendChild(acoes);
+  }
+
+  /* ---------- gráficos animados do resumo ---------- */
+  var metrica = "compras"; // "compras" (cliques em comprar) ou "visitas"
+  function porHora(d) {
+    var v = [], cp = [];
+    for (var h = 0; h < 24; h++) { v.push(0); cp.push(0); }
+    (d.porHora || []).forEach(function (x) { v[x.hora] += Number(x.n) || 0; });
+    (d.compraPorHora || []).forEach(function (x) { cp[x.hora] += Number(x.n) || 0; });
+    return { visitas: v, compras: cp };
+  }
+  function pico(lista) {
+    var i = 0;
+    lista.forEach(function (x, j) { if (x > lista[i]) i = j; });
+    return lista[i] > 0 ? i : -1;
+  }
+
+  function graficos(c) {
+    var d = c.d, horas = porHora(d);
+    var box = el("div", "resumo-caixa resumo-graficos");
+    var topo = el("div", "resumo-graf-topo");
+    topo.appendChild(el("span", "resumo-caixa-rot", "Quando as pessoas agem"));
+    var tg = el("div", "resumo-toggle");
+    [["compras", "Cliques em comprar"], ["visitas", "Visitas"]].forEach(function (op) {
+      var b = el("button", metrica === op[0] ? "is-ativo" : "", op[1]);
+      b.type = "button";
+      b.addEventListener("click", function () { metrica = op[0]; desenharResumo(); });
+      tg.appendChild(b);
+    });
+    topo.appendChild(tg);
+    box.appendChild(topo);
+
+    // horário de pico (24 colunas)
+    var serie = horas[metrica];
+    var ip = pico(serie);
+    var nomeM = metrica === "compras" ? "cliques em comprar" : "visitas";
+    var titulo = el("p", "resumo-graf-titulo");
+    if (ip >= 0) {
+      titulo.appendChild(document.createTextNode("Pico de " + nomeM + ": "));
+      titulo.appendChild(el("strong", null, ip + "h"));
+      titulo.appendChild(document.createTextNode(" (" + n(serie[ip]) + ")"));
+    } else titulo.textContent = "Ainda sem " + nomeM + " no período.";
+    box.appendChild(titulo);
+    var max = Math.max.apply(null, serie.concat(1));
+    var colunas = el("div", "graf-colunas");
+    var legenda = el("p", "graf-leitura", "Toque numa barra para ver a hora.");
+    serie.forEach(function (val, h) {
+      var col = el("button", "graf-col" + (h === ip ? " pico" : ""));
+      col.type = "button";
+      col.style.setProperty("--h", Math.max(3, 100 * val / max) + "%");
+      col.style.setProperty("--i", h);
+      col.setAttribute("aria-label", h + "h: " + n(val) + " " + nomeM);
+      if (h === ip) col.appendChild(el("span", "graf-col-rot", n(val)));
+      col.addEventListener("click", function () {
+        legenda.textContent = h + "h: " + n(horas.compras[h]) + " cliques em comprar · " + n(horas.visitas[h]) + " visitas";
+        Array.prototype.forEach.call(colunas.children, function (x) { x.classList.toggle("tocada", x === col); });
+      });
+      colunas.appendChild(col);
+    });
+    box.appendChild(colunas);
+    var eixo = el("div", "graf-eixo");
+    [0, 6, 12, 18, 23].forEach(function (h) { var s2 = el("span", null, h + "h"); s2.style.left = (100 * (h + 0.5) / 24) + "%"; eixo.appendChild(s2); });
+    box.appendChild(eixo);
+    box.appendChild(legenda);
+
+    // por dia
+    var dias = (d.diario || []).slice(-31);
+    if (dias.length > 1) {
+      var campo2 = metrica === "compras" ? "checkouts" : "visitas";
+      var valsD = dias.map(function (x) { return Number(x[campo2]) || 0; });
+      var ipd = pico(valsD);
+      var td = el("p", "resumo-graf-titulo");
+      if (ipd >= 0) {
+        td.appendChild(document.createTextNode("Melhor dia: "));
+        td.appendChild(el("strong", null, br(dias[ipd].dia)));
+        td.appendChild(document.createTextNode(" (" + n(valsD[ipd]) + " " + nomeM + ")"));
+      }
+      box.appendChild(td);
+      var maxD = Math.max.apply(null, valsD.concat(1));
+      var colD = el("div", "graf-colunas graf-dias");
+      valsD.forEach(function (val, i) {
+        var col = el("span", "graf-col" + (i === ipd ? " pico" : ""));
+        col.style.setProperty("--h", Math.max(3, 100 * val / maxD) + "%");
+        col.style.setProperty("--i", i);
+        col.title = br(dias[i].dia) + ": " + n(val);
+        colD.appendChild(col);
+      });
+      box.appendChild(colD);
+      var eixoD = el("div", "graf-eixo");
+      [0, dias.length - 1].forEach(function (i) { var s3 = el("span", null, br(dias[i].dia)); s3.style.left = (100 * (i + 0.5) / dias.length) + "%"; eixoD.appendChild(s3); });
+      box.appendChild(eixoD);
+    }
+
+    // funil
+    var k = c.k;
+    var etapas = c.v2
+      ? [["Visitas", c.visitas], ["Viram os planos", k.viram_planos], ["Clicaram em comprar", k.checkout]]
+      : [["Visitas", c.visitas], ["Começaram o quiz", k.iniciaram], ["Terminaram o quiz", k.concluiram], ["Viram a oferta", k.oferta], ["Viram os planos", k.viram_planos], ["Clicaram em comprar", k.checkout]];
+    box.appendChild(el("p", "resumo-graf-titulo", "Funil do período"));
+    var fun = el("div", "graf-funil");
+    var topoF = Math.max(1, etapas[0][1] || 1);
+    etapas.forEach(function (et, i) {
+      var linha = el("div", "graf-funil-linha");
+      linha.style.setProperty("--i", i);
+      linha.appendChild(el("span", "graf-funil-nome", et[0]));
+      var trilho = el("span", "graf-funil-trilho");
+      var cheio = el("span", "graf-funil-cheio");
+      cheio.style.setProperty("--w", Math.max(1.5, 100 * (et[1] || 0) / topoF) + "%");
+      trilho.appendChild(cheio);
+      linha.appendChild(trilho);
+      linha.appendChild(el("span", "graf-funil-num", n(et[1]) + (i ? " · " + p(et[1], etapas[i - 1][1], 0) : "")));
+      fun.appendChild(linha);
+    });
+    box.appendChild(fun);
+    caixaResumo.appendChild(box);
   }
 
   function copiar(texto) {
@@ -325,13 +471,19 @@
     if (camp.length) { L.push(""); L.push("## Campanhas"); camp.forEach(function (f) { L.push("- " + f.nome + ": " + n(f.visitas) + " visitas, " + n(f.checkouts) + " cliques em comprar (" + p(f.checkouts, f.visitas) + ")"); }); }
     var ap = ((d.origem && d.origem.aparelho) || []).slice(0, 3);
     if (ap.length) { L.push(""); L.push("## Aparelhos"); ap.forEach(function (f) { L.push("- " + f.nome + ": " + n(f.visitas) + " visitas, conversão " + p(f.checkouts, f.visitas)); }); }
-    if (R.horarios && R.horarios.horas_de_pico && R.horarios.horas_de_pico.length) { L.push(""); L.push("## Horários de pico: " + R.horarios.horas_de_pico.join(", ") + (R.horarios.dia_de_pico ? " · dia com mais visitas: " + R.horarios.dia_de_pico : "")); }
+    var hs = porHora(d);
+    var ordem = function (lista) { return lista.map(function (v, h) { return [h, v]; }).filter(function (x) { return x[1] > 0; }).sort(function (x, y) { return y[1] - x[1]; }).slice(0, 6); };
+    if (ordem(hs.compras).length) { L.push(""); L.push("## Cliques em comprar por hora (as 6 maiores)"); L.push(ordem(hs.compras).map(function (x) { return x[0] + "h: " + x[1]; }).join(" · ")); }
+    if (ordem(hs.visitas).length) { L.push(""); L.push("## Visitas por hora (as 6 maiores)"); L.push(ordem(hs.visitas).map(function (x) { return x[0] + "h: " + x[1]; }).join(" · ")); }
+    if ((d.diario || []).length > 1) { L.push(""); L.push("## Por dia (visitas / cliques em comprar)"); L.push(d.diario.slice(-31).map(function (x) { return br(x.dia) + ": " + n(x.visitas) + " / " + n(x.checkouts); }).join(" · ")); }
+    if (m.meta) { L.push(""); L.push("## Anúncios da Meta no período (dados da API da Meta)"); L.push("Gasto " + REAL.format(m.meta.gasto) + " · impressões " + n(m.meta.impressoes) + " · cliques no link " + n(m.meta.cliques_no_link) + " · CPM " + REAL.format(m.meta.cpm) + " · CTR " + m.meta.ctr_pct.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + "% · visualizações da página (Meta) " + n(m.meta.visualizacoes_da_pagina)); }
     L.push("");
     L.push("## O que eu quero de você");
     L.push("1. Uma leitura curta do período: o que foi bem e o que foi mal, com os números.");
     L.push("2. O maior gargalo e a causa mais provável.");
     L.push("3. As 3 ações mais importantes, em ordem de impacto x esforço, bem práticas (página, quiz, oferta ou anúncios).");
     L.push("4. Um teste A/B para rodar agora: o que mudar, o que medir e quanto tempo esperar.");
+    L.push("5. Se puder, monte gráficos para ilustrar: horário de pico (por hora), evolução por dia e o funil.");
     L.push("Regras: use só os números acima (não invente dados); com menos de ~100 visitas, trate como preliminar; não sugira depoimentos ou números falsos nem promessas de resultado sem comprovação (CDC, CONAR, Anvisa). Responda em português simples.");
     return L.join("\n");
   }
