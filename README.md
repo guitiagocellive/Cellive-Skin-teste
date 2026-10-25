@@ -19,12 +19,12 @@ de onde a pessoa veio (Instagram, Facebook, TikTok, Google…).
 Os eventos vão para `/api/evento` (`api/evento.js`) e ficam num banco Postgres (Neon) conectado ao projeto na Vercel. A
 tabela é criada sozinha no primeiro evento. Os números do painel vêm de `/api/painel` (`api/painel.js`).
 
-O painel fica em **`/painel.html`** e pede senha. Abas: Resumo, Funil, Quiz, Oferta e Público. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
+O painel fica em **`/painel`** e pede senha. Abas: Resumo, Funil, Quiz, Oferta e Público. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
 cliques no checkout e conversão (com comparação ao período anterior), evolução diária, funil completo com o maior
 gargalo, onde as pessoas pararam, tempo por pergunta, todas as respostas com a conversão de cada uma, kits escolhidos,
 até onde leram a oferta, cliques, fontes, campanhas, aparelhos, sistemas, países, horários de acesso e erros. Filtros
 de período, fonte, campanha e aparelho; botão para baixar todos os eventos em CSV; atualiza sozinho a cada minuto.
-Abrindo `/painel.html?demo=1` (ou "Ver em modo demonstração") aparecem números fictícios só para ver o layout.
+Abrindo `/painel?demo=1` (ou "Ver em modo demonstração") aparecem números fictícios só para ver o layout.
 
 **Configurar (uma vez), na Vercel:**
 1. Banco: projeto → **Storage** → **Create Database** → **Neon** (Postgres, tem plano grátis) → conecte ao projeto.
@@ -49,6 +49,9 @@ Para testar no computador com um Postgres comum: `npm install` e rode as funçõ
 
 ## Páginas
 
+Os endereços não levam ".html" (opção `cleanUrls` no `vercel.json`): `/quiz`, `/oferta`, `/politica-de-privacidade`
+e `/painel`. Quem abrir um endereço antigo com ".html" é levado sozinho para o novo.
+
 | Arquivo | O que é |
 | --- | --- |
 | `index.html` | Capa do quiz (primeira página) |
@@ -68,17 +71,17 @@ a bolinha do ativo desce até o painel "Combinação ideal para sua pele", o sel
 contador sobe (1/12, 2/12...) e o pote enche. Os ativos anteriores viram bolinhas que vão se juntando ao lado do pote.
 A bolinha acompanha o selo até ele parar, para pousar exatamente sobre o número e o nome do ativo.
 Na última resposta, todas as bolinhas vêm da direita e entram pela lateral do pote, ele termina de encher, vai para o meio do painel e o título vira "Fórmula concluída".
-As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `quiz.html#formula`.
+As imagens de exemplo e as fotos dos cartões se ajustam à altura da tela para tudo caber acima do painel. Para testar direto essa etapa, abra `/quiz#formula`.
 
 Depois da fórmula vem a tela de **análise** ("FAZENDO UMA ANÁLISE **DO SEU CASO**"): o contorno de um rosto com cabelo
 é escaneado e pontos acendem na pele, a barra lisa avança de forma contínua de 0% a 100% e as etapas aparecem uma
 por vez (entra, ganha o check, sai e entra a próxima). Tudo leva menos de 3 s. Textos, ícones, pontos e tempos ficam
-em `quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#analise`.
+em `quiz-perguntas.js`. Para testar direto essa tela, abra `/quiz#analise`.
 
 Depois da análise vem a **montagem da fórmula** ("MONTANDO SUA **FÓRMULA**"): os 12 ativos surgem num anel
 tracejado que gira em volta do pote, entram um a um ("+NOME DO ATIVO") e o pote enche. No fim aparece
 "FÓRMULA **CONCLUÍDA!**" com o check, o anel some, o pote cresce, a luz azul aumenta e o pote vira o produto: um brilho passa e o rótulo aparece (lista de ativos, "PELE MAIS FIRME…", "RETINALDEÍDO 0,05%", logo na vertical e "30ml"). Cerca de 4,8 s no total. A cada ativo que entra, o pote dá uma leve "engolida". Textos e tempos ficam em
-`quiz-perguntas.js`. Para testar direto essa tela, abra `quiz.html#montagem`.
+`quiz-perguntas.js`. Para testar direto essa tela, abra `/quiz#montagem`.
 
 Depois da 3ª pergunta, a pessoa vai direto para a tela de carregamento (0% → 100% em cerca de 3,5 s,
 desacelerando de 90% a 100%). Enquanto ela roda, as imagens das próximas perguntas e as listadas em

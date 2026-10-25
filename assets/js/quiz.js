@@ -1077,7 +1077,7 @@
       var inicioQuiz = 0;
       try { inicioQuiz = Number(sessionStorage.getItem("cl-quiz-inicio")) || 0; } catch (e) { /* sem armazenamento */ }
       rastrear("quiz_fim", { val: inicioQuiz ? Date.now() - inicioQuiz : null });
-      window.location.href = "oferta.html";
+      window.location.href = "/oferta";
       return;
     }
 
@@ -1196,8 +1196,8 @@
     if (t.tipo === "carregamento") preCarregar(t.bloco.imagem ? [t.bloco.imagem] : []);
   });
 
-  // Atalhos para testes: quiz.html#formula abre na etapa da fórmula e
-  // quiz.html#analise abre direto na tela de análise
+  // Atalhos para testes: /quiz#formula abre na etapa da fórmula e
+  // /quiz#analise abre direto na tela de análise
   var inicio = 0;
   for (var i = 0; i < telas.length; i++) {
     if (location.hash === "#formula" && telas[i].bloco === blocoFormula) { inicio = i; break; }
