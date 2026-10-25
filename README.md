@@ -87,7 +87,8 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 | Oferta: caixa e frasco (dobra "Conheça o Sérum") | `assets/img/oferta/caixa.webp`, `frasco.webp` | ✅ já colocadas (fundo transparente) |
-| Oferta: foto das microespículas (ação SRRP) | `assets/img/oferta/srrp-microespiculas.webp` | 400 × 121 px (faixa) |
+| Oferta: foto das microespículas (ação SRRP) | `assets/img/oferta/srrp-microespiculas.webp` | ✅ já colocada |
+| Oferta: foto do rosto ("O reset") | `assets/img/oferta/reset-rosto.webp` | paisagem 1,6 : 1, 800 × 500 px |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
@@ -120,6 +121,9 @@ Depois vem "FÓRMULA COM AÇÃO **SRRP**": o frasco entra pela esquerda conforme
 do título, com "CELLIVE SKIN" bem clarinho na vertical ao fundo. Abaixo, a linha do tempo das 4 frentes (Sinalização,
 Renovação, Regeneração e Potencialização): a linha azul vai se preenchendo com a rolagem e cada etapa acende quando a
 linha chega nela, com o cartão do ativo (GHK-Cu, Retinal, PDRN e microespículas).
+
+Em seguida, "O VERDADEIRO INIMIGO" (título e texto entram suavemente) e "O RESET. **QUE SUA PELE PRECISA!**", com o traço
+azul desenhado em volta do título, a foto do rosto e o texto sobre a ação SRRP com uma luz azul atrás.
 
 ## Fonte (Acumin Pro)
 

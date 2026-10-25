@@ -1709,8 +1709,8 @@
   content: "";
   position: absolute;
   left: calc(276 * var(--u));
-  top: calc(137 * var(--u));
-  bottom: calc(138 * var(--u));
+  top: calc(146 * var(--u));
+  bottom: calc(146 * var(--u));
   width: calc(4 * var(--u));
   border-radius: 2px;
 }
@@ -1727,11 +1727,11 @@
 
 .srrp-item {
   position: relative;
-  height: calc(275 * var(--u));
+  height: calc(292 * var(--u));
 }
 
 .srrp-item + .srrp-item {
-  margin-top: calc(39 * var(--u));
+  margin-top: calc(30 * var(--u));
 }
 
 .srrp-frente {
@@ -1806,7 +1806,7 @@
 }
 
 .srrp-texto {
-  margin: calc(16 * var(--u)) calc(16 * var(--u)) 0;
+  margin: calc(14 * var(--u)) calc(8 * var(--u)) 0;
   color: #505050;
   font-size: calc(22.5 * var(--u));
   line-height: calc(25 * var(--u));
@@ -1826,6 +1826,168 @@
 .srrp-item.is-visivel .srrp-cartao {
   opacity: 1;
   transform: none;
+}
+
+/* Animação extra da SRRP: a foto do cartão "aproxima" ao entrar e o número
+   solta um anel quando a linha chega nele */
+.srrp-foto > img {
+  transform: scale(1.18);
+  transition: transform 1.4s cubic-bezier(0.25, 0.8, 0.3, 1) 0.1s;
+}
+
+.srrp-item.is-visivel .srrp-foto > img {
+  transform: scale(1);
+}
+
+.srrp-num::after {
+  content: "";
+  position: absolute;
+  inset: calc(-4 * var(--u));
+  border-radius: 50%;
+  border: calc(4 * var(--u)) solid var(--blue);
+  opacity: 0;
+}
+
+.srrp-item.is-visivel .srrp-num::after {
+  animation: srrp-anel 1s ease-out 0.1s;
+}
+
+@keyframes srrp-anel {
+  from { opacity: 0.9; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.7); }
+}
+
+/* ---------- Dobra 9: o verdadeiro inimigo ---------- */
+.chamada-italico {
+  margin: 0;
+  color: #a9bed6;
+  font-family: var(--font-condensed);
+  font-size: clamp(23px, 7vw, 28px);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.oferta-inimigo {
+  margin-top: 54px;
+  text-align: center;
+}
+
+.inimigo-titulo {
+  margin: 6px 0 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: clamp(28px, 8.6vw, 34px);
+  font-weight: 700;
+  line-height: 1.16;
+  text-transform: uppercase;
+}
+
+.inimigo-texto {
+  margin: 20px 0 0;
+  color: #1f1f1f;
+  font-size: clamp(15px, 4.25vw, 17px);
+  line-height: 1.2;
+}
+
+.oferta-inimigo > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+.oferta-inimigo > :nth-child(2) { transition-delay: 0.1s; }
+.oferta-inimigo > :nth-child(3) { transition-delay: 0.2s; }
+
+.oferta-inimigo.is-visivel > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Dobra 10: o reset ---------- */
+.oferta-reset {
+  position: relative;
+  margin: 66px calc(-1 * var(--gutter)) 0;
+  padding: 0 var(--gutter) 20px;
+  overflow-x: clip;
+  text-align: center;
+}
+
+.reset-titulo {
+  margin: 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.reset-circulado {
+  display: inline-block;
+  padding: 0 4px;
+  white-space: normal;
+}
+
+.reset-circulado svg {
+  top: 6%;
+  left: 12%;
+  width: 76%;
+  height: 112%;
+}
+
+.reset-titulo .titulo-leve {
+  display: block;
+  font-size: clamp(23px, 7vw, 28px);
+}
+
+.reset-titulo strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(28px, 8.6vw, 34px);
+  font-weight: 700;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.reset-foto {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1.6;
+  margin-top: 26px;
+  border-radius: 14px;
+  font-size: 10px;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+.reset-foto.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+.reset-texto {
+  position: relative;
+  max-width: 300px;
+  margin: 30px auto 0;
+  padding: 10px 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: clamp(16px, 4.75vw, 18.5px);
+  line-height: 1.17;
+}
+
+/* luz azul atrás do texto */
+.reset-texto::before {
+  content: "";
+  position: absolute;
+  inset: -30px -40px;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(177, 198, 221, 0.4), rgba(177, 198, 221, 0));
+}
+
+.reset-texto strong {
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1853,7 +2015,10 @@
   .fp-extra,
   .srrp-frente,
   .srrp-num,
-  .srrp-cartao {
+  .srrp-cartao,
+  .srrp-foto > img,
+  .oferta-inimigo > *,
+  .reset-foto {
     transition: none;
   }
 

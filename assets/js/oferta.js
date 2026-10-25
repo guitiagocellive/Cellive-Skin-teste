@@ -72,18 +72,19 @@
   window.addEventListener("scroll", rolou, { passive: true });
   rolou();
 
-  /* ---------- Traço circulando "+5.000 mulheres" ---------- */
-  var circulo = document.querySelector("[data-circulo]");
-  if (circulo && "IntersectionObserver" in window) {
+  /* ---------- Traços azuis desenhados à mão em volta dos títulos ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-circulo]"), function (circulo) {
+    if (!("IntersectionObserver" in window)) {
+      circulo.classList.add("is-visivel");
+      return;
+    }
     new IntersectionObserver(function (itens, obs) {
       if (itens[0].isIntersecting) {
         circulo.classList.add("is-visivel");
         obs.disconnect();
       }
     }, { threshold: 0.8 }).observe(circulo);
-  } else if (circulo) {
-    circulo.classList.add("is-visivel");
-  }
+  });
 
   /* ---------- Depoimentos: pontinhos acompanham o cartão da vez ---------- */
   var depos = document.querySelector("[data-depos]");
