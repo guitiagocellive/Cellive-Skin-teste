@@ -1347,7 +1347,8 @@
   margin: 4px calc(-1 * var(--gutter)) 0;
   padding: 34px var(--gutter) 14px;
   background:
-    radial-gradient(ellipse 80% 22% at 50% 0%, rgba(177, 199, 222, 0.28), transparent 75%),
+    /* brilho afastado da borda de cima: some antes de chegar nela, sem "linha" entre as seções */
+    radial-gradient(ellipse 80% 160px at 50% 150px, rgba(177, 199, 222, 0.28), transparent 75%),
     linear-gradient(180deg, rgba(243, 247, 250, 0) 0%, var(--blue-mist) 18%, var(--blue-mist) 82%, rgba(243, 247, 250, 0) 100%);
 }
 
@@ -4165,6 +4166,39 @@
   padding-bottom: 104px;
   opacity: 0.08;
 }
+
+/* ==========================================================================
+   Espaço entre as seções (padronizado)
+   O vão entre o fim do conteúdo de uma seção e o começo da próxima é sempre
+   --vao-secao. Cada valor abaixo já desconta o respiro que a própria seção tem
+   por dentro (medido no celular). Onde o fundo continua de uma seção para a
+   outra (clientes → garantia → resultados → faixa → vídeos), o ajuste é no
+   padding, para o fundo não ganhar uma faixa branca no meio.
+   ========================================================================== */
+:root { --vao-secao: 64px; }
+
+.oferta-planos { margin-top: calc(var(--vao-secao) - 6px); }
+.oferta-depoimentos { margin-top: calc(var(--vao-secao) + 17px); }
+.oferta-envelhece { margin-top: calc(var(--vao-secao) - 10px); }
+.oferta-conheca { margin-top: calc(var(--vao-secao) - 43px); }
+.oferta-formula { margin-top: calc(var(--vao-secao) - 64px); }
+.oferta-srrp { margin-top: calc(var(--vao-secao) - 22px); }
+.oferta-inimigo { margin-top: calc(var(--vao-secao) - 19px); }
+.oferta-reset { margin-top: var(--vao-secao); }
+.oferta-aliado { margin-top: calc(var(--vao-secao) - 30px); }
+.oferta-micro { margin-top: var(--vao-secao); }
+.oferta-clientes { margin-top: calc(var(--vao-secao) - 58px); }
+.oferta-garantia { padding-top: calc(var(--vao-secao) - 14px); }
+.oferta-resultados { padding-top: calc(var(--vao-secao) - 8px); padding-bottom: var(--vao-secao); }
+/* a faixa azul fica sobre um fundo contínuo: o tom de cima continua embaixo e some devagar */
+.oferta-videos {
+  padding-top: var(--vao-secao);
+  background: linear-gradient(180deg, var(--blue-mist) 0, rgba(243, 247, 250, 0) 180px);
+}
+.oferta-confianca { margin-top: calc(var(--vao-secao) - 37px); }
+.oferta-numeros { margin-top: calc(var(--vao-secao) - 4px); padding-bottom: var(--vao-secao); }
+.oferta-duvidas { margin-top: calc(var(--vao-secao) - 37px); }
+.oferta-avaliacoes { margin-top: calc(var(--vao-secao) - 20px); padding-bottom: calc(var(--vao-secao) - 48px); }
 
 @media (prefers-reduced-motion: reduce) {
   .comprar,
