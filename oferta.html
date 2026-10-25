@@ -272,7 +272,7 @@
     <!-- ===================== DOBRA 4: dúvidas ===================== -->
     <section class="oferta-duvidas" aria-labelledby="duvidas-titulo">
       <h2 class="secao-titulo" id="duvidas-titulo">
-        <span class="titulo-leve titulo-sublinhado">Principais</span> <strong>dúvidas</strong>
+        <span class="titulo-leve titulo-sublinhado" data-linha>Principais</span> <strong>dúvidas</strong>
       </h2>
       <div class="faq" data-faq>
         <div class="faq-item">
@@ -383,7 +383,7 @@
 
       <h2 class="conheca-titulo">
         <span class="titulo-leve">Conheça o</span>
-        <strong><span class="sublinhado-forte">Sérum</span> Revitalizador</strong>
+        <strong><span class="sublinhado-forte" data-linha>Sérum</span> Revitalizador</strong>
       </h2>
       <p class="conheca-texto">
         O primeiro <strong>Sérum Facial</strong> desenvolvido com o foco no rejuvenescimento da pele. Com
@@ -430,7 +430,7 @@
       <div class="srrp-cabeca">
         <h2 class="srrp-titulo" id="srrp-titulo">
           <span class="titulo-leve">Fórmula com ação</span>
-          <strong>SRRP</strong>
+          <strong data-linha>SRRP</strong>
         </h2>
         <p class="srrp-intro">Nossa fórmula foi pensada de ativo, por ativo. Com isso, temos 4 ingredientes em especial na fórmula, onde cada um tem um objetivo em específico.</p>
       </div>
@@ -477,15 +477,15 @@
     </section>
 
     <!-- ===================== DOBRA 9: o verdadeiro inimigo ===================== -->
-    <section class="oferta-inimigo" data-aparecer aria-labelledby="inimigo-titulo">
-      <p class="chamada-italico">O verdadeiro inimigo</p>
-      <h2 class="inimigo-titulo" id="inimigo-titulo">O que era natural, está ficando escasso</h2>
-      <p class="inimigo-texto">A partir dos nossos 25 anos, nosso corpo vai parando de fabricar colágeno como antes. E a Cellive uniu 25 ativos em um único Sérum para estimular o colágeno, elastina e melhorar a barreira cutânea, trazendo uma pele jovem.</p>
+    <section class="oferta-inimigo" aria-labelledby="inimigo-titulo">
+      <p class="chamada-italico" data-revelar="palavras">O verdadeiro inimigo</p>
+      <h2 class="inimigo-titulo" id="inimigo-titulo" data-revelar="palavras" style="--atraso: 0.25s">O que era natural, está ficando escasso</h2>
+      <p class="inimigo-texto" data-revelar="bloco" style="--atraso: 0.55s">A partir dos nossos 25 anos, nosso corpo vai parando de fabricar colágeno como antes. E a Cellive uniu 25 ativos em um único Sérum para estimular o colágeno, elastina e melhorar a barreira cutânea, trazendo uma pele jovem.</p>
     </section>
 
     <!-- ===================== DOBRA 10: o reset ===================== -->
     <section class="oferta-reset" aria-labelledby="reset-titulo">
-      <h2 class="reset-titulo" id="reset-titulo">
+      <h2 class="reset-titulo" id="reset-titulo" data-revelar="palavras">
         <span class="circulado reset-circulado" data-circulo>
           <span class="titulo-leve">O reset.</span>
           <strong>Que sua pele precisa!</strong>
@@ -500,7 +500,79 @@
         <img src="assets/img/oferta/reset-rosto.webp" alt="Rosto de mulher com a pele jovem e viçosa" loading="lazy" onerror="this.hidden=true">
       </span>
 
-      <p class="reset-texto">Unimos o poder das <strong>TECNOLOGIAS COREANAS</strong> em uma fórmula com ação <strong>SRRP: SINALIZAR, RENOVAR, REGENERAR e POTENCIALIZAR</strong>. Ela age nos fibroblastos e demais células do rosto, auxiliando na produção de colágeno e elastina para <strong>devolver uma pele jovem, radiante e viçosa.</strong></p>
+      <p class="reset-texto" data-revelar="bloco">Unimos o poder das <strong>TECNOLOGIAS COREANAS</strong> em uma fórmula com ação <strong>SRRP: SINALIZAR, RENOVAR, REGENERAR e POTENCIALIZAR</strong>. Ela age nos fibroblastos e demais células do rosto, auxiliando na produção de colágeno e elastina para <strong>devolver uma pele jovem, radiante e viçosa.</strong></p>
+    </section>
+
+    <!-- ===================== DOBRA 11: o seu novo aliado ===================== -->
+    <section class="oferta-aliado" aria-labelledby="aliado-titulo">
+      <p class="chamada-italico" data-revelar="palavras">O seu novo aliado</p>
+      <h2 class="aliado-titulo" id="aliado-titulo" data-revelar="palavras" style="--atraso: 0.2s">
+        <span class="titulo-leve">O que ele</span> <strong>te proporciona.</strong>
+      </h2>
+      <!-- Fotos: assets/img/oferta/aliado-1.webp, -2.webp e -3.webp (retrato 4:5) -->
+      <ul class="aliado-lista">
+        <li class="aliado-item aliado-esq aliado-1">
+          <h3 class="aliado-texto" data-revelar="palavras">
+            <span class="circulado aliado-circulado" data-circulo>
+              <span class="titulo-leve">Redução de</span>
+              <strong>Rugas e<br>linhas finas.</strong>
+              <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M206 93C128 99 22 88 13 60 4 31 96 7 186 6c74-1 116 16 107 44-7 24-62 37-118 40"/></svg>
+            </span>
+          </h3>
+          <span class="slot aliado-foto" data-label="Foto 1" data-aparecer>
+            <img src="assets/img/oferta/aliado-1.webp" alt="Mulher com a pele lisa e sem linhas" loading="lazy" onerror="this.hidden=true">
+          </span>
+        </li>
+        <li class="aliado-item aliado-dir aliado-2">
+          <span class="slot aliado-foto" data-label="Foto 2" data-aparecer>
+            <img src="assets/img/oferta/aliado-2.webp" alt="Rosto com a pele firme e uniforme" loading="lazy" onerror="this.hidden=true">
+          </span>
+          <h3 class="aliado-texto" data-revelar="palavras">
+            <span class="circulado aliado-circulado" data-circulo>
+              <span class="titulo-leve">Sensação de</span>
+              <strong>Pele mais<br>jovem, firme e<br>uniforme.</strong>
+              <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M206 93C128 99 22 88 13 60 4 31 96 7 186 6c74-1 116 16 107 44-7 24-62 37-118 40"/></svg>
+            </span>
+          </h3>
+        </li>
+        <li class="aliado-item aliado-esq aliado-3">
+          <h3 class="aliado-texto" data-revelar="palavras">
+            <span class="circulado aliado-circulado" data-circulo>
+              <span class="titulo-leve">Redução de</span>
+              <strong>Marcas de<br>acne e sol.</strong>
+              <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M206 93C128 99 22 88 13 60 4 31 96 7 186 6c74-1 116 16 107 44-7 24-62 37-118 40"/></svg>
+            </span>
+          </h3>
+          <span class="slot aliado-foto" data-label="Foto 3" data-aparecer>
+            <img src="assets/img/oferta/aliado-3.webp" alt="Pele do rosto uniforme, sem marcas" loading="lazy" onerror="this.hidden=true">
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ===================== DOBRA 12: efeito de microagulhamento ===================== -->
+    <section class="oferta-micro" aria-labelledby="micro-titulo">
+      <p class="chamada-italico" data-revelar="palavras">Tecnologia coreana</p>
+      <h2 class="micro-titulo" id="micro-titulo" data-revelar="palavras" style="--atraso: 0.2s">
+        <span class="titulo-leve">O efeito de</span> <strong>microagulhamento</strong>
+      </h2>
+
+      <!-- Vídeo em loop (sem som). O fundo branco do vídeo some na página. -->
+      <figure class="micro-figura" data-aparecer>
+        <video class="micro-video" autoplay muted loop playsinline preload="metadata"
+               poster="assets/img/oferta/microagulhamento.webp" aria-label="Camadas da pele com as microespículas">
+          <source src="assets/img/oferta/microagulhamento.mp4" type="video/mp4">
+        </video>
+        <figcaption class="micro-ponto micro-ponto-esq">
+          <span class="micro-legenda">Auxilia na produção de colágeno</span>
+        </figcaption>
+        <figcaption class="micro-ponto micro-ponto-dir">
+          <span class="micro-legenda">Potencializa a absorção dos ativos</span>
+        </figcaption>
+      </figure>
+
+      <!-- TEXTO PROVISÓRIO a partir de "Essa tecnologia": o print cortou o final -->
+      <p class="micro-texto" data-revelar="bloco">As <strong>MICROESPÍCULAS</strong> do <strong>SÉRUM REVITALIZADOR</strong> criam microcanais na pele que favorecem a absorção dos ativos. Essa tecnologia, inspirada no microagulhamento, potencializa a ação de cada ativo da fórmula, de forma suave e sem agulhas.</p>
     </section>
 
   </main>

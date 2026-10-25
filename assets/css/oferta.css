@@ -658,6 +658,7 @@
 /* Palavra circulada à mão (o traço se desenha ao aparecer na tela) */
 .circulado {
   position: relative;
+  isolation: isolate; /* o traço fica atrás do texto */
   display: inline-block;
   padding: 0 2px;
   white-space: nowrap;
@@ -665,6 +666,7 @@
 
 .circulado svg {
   position: absolute;
+  z-index: -1;
   top: -58%;
   left: -8%;
   width: 116%;
@@ -681,7 +683,12 @@
   vector-effect: non-scaling-stroke;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1.1s cubic-bezier(0.55, 0.1, 0.3, 1) 0.15s;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.65, 0, 0.35, 1) var(--traco-atraso, 0.2s);
+}
+
+/* No "O reset" o traço começa depois que as palavras aparecem */
+.reset-circulado {
+  --traco-atraso: 0.75s;
 }
 
 .circulado.is-visivel path {
@@ -1892,20 +1899,6 @@
   line-height: 1.2;
 }
 
-.oferta-inimigo > * {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.25, 0.8, 0.3, 1);
-}
-
-.oferta-inimigo > :nth-child(2) { transition-delay: 0.1s; }
-.oferta-inimigo > :nth-child(3) { transition-delay: 0.2s; }
-
-.oferta-inimigo.is-visivel > * {
-  opacity: 1;
-  transform: none;
-}
-
 /* ---------- Dobra 10: o reset ---------- */
 .oferta-reset {
   position: relative;
@@ -1990,6 +1983,310 @@
   font-weight: 700;
 }
 
+/* ---------- Entrada dos textos e traços azuis ----------
+   [data-revelar="palavras"]: cada palavra sobe de leve e aparece, uma depois
+   da outra. [data-revelar="bloco"]: o parágrafo inteiro aparece depois.
+   [data-linha]: o sublinhado azul cresce da esquerda para a direita. */
+.rv-palavra {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition:
+    opacity 0.6s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--atraso, 0s) + var(--w, 0) * 0.055s);
+}
+
+[data-revelar].is-visivel .rv-palavra {
+  opacity: 1;
+  transform: none;
+}
+
+[data-revelar="bloco"] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.9s ease var(--atraso, 0.35s),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--atraso, 0.35s);
+}
+
+[data-revelar="bloco"].is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+[data-linha]::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1) 0.35s;
+}
+
+[data-linha].is-visivel::after {
+  transform: scaleX(1);
+}
+
+/* ---------- Dobra 11: o seu novo aliado ---------- */
+.oferta-aliado {
+  margin: 56px calc(-1 * var(--gutter)) 0;
+  padding: 0 var(--gutter);
+  overflow-x: clip;
+  text-align: center;
+}
+
+.aliado-titulo,
+.micro-titulo {
+  margin: 4px 0 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.aliado-titulo .titulo-leve,
+.micro-titulo .titulo-leve {
+  font-size: clamp(21px, 6.4vw, 26px);
+}
+
+.aliado-titulo strong,
+.micro-titulo strong {
+  font-size: clamp(26px, 8vw, 32px);
+  font-weight: 700;
+}
+
+.aliado-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aliado-item {
+  display: grid;
+  grid-template-columns: 1fr 48%;
+  align-items: center;
+  gap: 14px;
+}
+
+.aliado-dir {
+  grid-template-columns: 48% 1fr;
+}
+
+.aliado-foto {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  font-size: 9px;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+.aliado-foto.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+.aliado-texto {
+  margin: 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1.22;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.aliado-dir .aliado-texto {
+  text-align: right;
+}
+
+.aliado-texto .titulo-leve {
+  display: block;
+  font-size: clamp(17px, 5vw, 20px);
+}
+
+.aliado-texto strong {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(21px, 6.3vw, 25px);
+  font-weight: 700;
+}
+
+.aliado-circulado {
+  padding: 0;
+  white-space: normal;
+  --traco-atraso: 0.6s;
+}
+
+/* Cada traço com uma inclinação, como na referência */
+.aliado-1 .aliado-circulado svg {
+  top: -6%;
+  left: -18%;
+  width: 128%;
+  height: 112%;
+  transform: rotate(32deg);
+}
+
+.aliado-2 .aliado-circulado svg {
+  top: 10%;
+  left: -14%;
+  width: 124%;
+  height: 92%;
+  transform: rotate(-14deg);
+}
+
+.aliado-3 .aliado-circulado svg {
+  top: -14%;
+  left: -8%;
+  width: 110%;
+  height: 130%;
+  transform: rotate(68deg);
+}
+
+/* ---------- Dobra 12: efeito de microagulhamento ---------- */
+.oferta-micro {
+  position: relative;
+  margin: 60px calc(-1 * var(--gutter)) 0;
+  padding: 0 var(--gutter) 10px;
+  overflow-x: clip;
+  text-align: center;
+}
+
+.micro-figura {
+  position: relative;
+  margin: 18px 0 0;
+  padding-top: 52px; /* espaço para as legendas em cima */
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.micro-figura.is-visivel {
+  opacity: 1;
+}
+
+.micro-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 600 / 488;
+  background: #fff;
+  /* o fundo branco do vídeo "some" e fica só o desenho da pele */
+  mix-blend-mode: multiply;
+}
+
+/* Legendas com a linha descendo até um ponto na pele */
+.micro-ponto {
+  position: absolute;
+  top: 0;
+  width: 44%;
+  font-family: var(--font-condensed);
+  font-size: clamp(14px, 4.2vw, 16.5px);
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+
+.micro-ponto-esq {
+  left: 4%;
+  text-align: right;
+}
+
+.micro-ponto-dir {
+  right: 2%;
+  top: 14px;
+  text-align: left;
+}
+
+.micro-legenda {
+  display: block;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s;
+}
+
+.micro-ponto::before,
+.micro-ponto::after {
+  content: "";
+  position: absolute;
+  background: #1a1a1a;
+}
+
+/* linha */
+.micro-ponto::before {
+  top: calc(100% + 6px);
+  width: 1.5px;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1) 0.8s;
+}
+
+/* ponto */
+.micro-ponto::after {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) 1.6s;
+}
+
+.micro-ponto-esq::before {
+  right: 22%;
+  height: 128px;
+}
+
+.micro-ponto-esq::after {
+  right: calc(22% + 5px);
+  top: calc(100% + 132px);
+}
+
+.micro-ponto-dir::before {
+  left: 18%;
+  height: 58px;
+}
+
+.micro-ponto-dir::after {
+  left: calc(18% - 3px);
+  top: calc(100% + 62px);
+}
+
+.micro-figura.is-visivel .micro-legenda {
+  opacity: 1;
+  transform: none;
+}
+
+.micro-figura.is-visivel .micro-ponto::before {
+  transform: scaleY(1);
+}
+
+.micro-figura.is-visivel .micro-ponto::after {
+  transform: scale(1);
+}
+
+.micro-texto {
+  position: relative;
+  max-width: 300px;
+  margin: 18px auto 0;
+  padding: 10px 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  font-size: clamp(16px, 4.75vw, 18.5px);
+  line-height: 1.17;
+}
+
+.micro-texto::before {
+  content: "";
+  position: absolute;
+  inset: -30px -40px;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(177, 198, 221, 0.4), rgba(177, 198, 221, 0));
+}
+
+.micro-texto strong {
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -2017,7 +2314,6 @@
   .srrp-num,
   .srrp-cartao,
   .srrp-foto > img,
-  .oferta-inimigo > *,
   .reset-foto {
     transition: none;
   }
@@ -2025,6 +2321,17 @@
   .fp-comprar::before,
   .fp-comprar::after {
     animation: none;
+  }
+
+  .rv-palavra,
+  [data-revelar="bloco"],
+  [data-linha]::after,
+  .aliado-foto,
+  .micro-figura,
+  .micro-legenda,
+  .micro-ponto::before,
+  .micro-ponto::after {
+    transition: none;
   }
 
   .fp-mini {

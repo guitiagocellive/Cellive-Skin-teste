@@ -72,6 +72,53 @@
   window.addEventListener("scroll", rolou, { passive: true });
   rolou();
 
+  /* ---------- Entrada dos textos ----------
+     Separa os títulos marcados com data-revelar="palavras" em palavras (sem
+     mexer em negrito e nas outras marcações) para elas aparecerem uma a uma. */
+  function separarPalavras(raiz) {
+    var n = 0;
+    (function andar(no) {
+      Array.prototype.slice.call(no.childNodes).forEach(function (filho) {
+        if (filho.nodeType === 3) {
+          var pedacos = filho.textContent.split(/(\s+)/);
+          var frag = document.createDocumentFragment();
+          pedacos.forEach(function (p) {
+            if (!p) return;
+            if (/^\s+$/.test(p)) {
+              frag.appendChild(document.createTextNode(p));
+            } else {
+              var palavra = document.createElement("span");
+              palavra.className = "rv-palavra";
+              palavra.style.setProperty("--w", n++);
+              palavra.textContent = p;
+              frag.appendChild(palavra);
+            }
+          });
+          no.replaceChild(frag, filho);
+        } else if (filho.nodeType === 1 && filho.namespaceURI !== "http://www.w3.org/2000/svg") {
+          andar(filho);
+        }
+      });
+    })(raiz);
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-revelar="palavras"]'), separarPalavras);
+
+  var revelar = document.querySelectorAll("[data-revelar], [data-linha]");
+  if ("IntersectionObserver" in window) {
+    var obsRevelar = new IntersectionObserver(function (itens) {
+      itens.forEach(function (item) {
+        if (item.isIntersecting) {
+          item.target.classList.add("is-visivel");
+          obsRevelar.unobserve(item.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    Array.prototype.forEach.call(revelar, function (el) { obsRevelar.observe(el); });
+  } else {
+    Array.prototype.forEach.call(revelar, function (el) { el.classList.add("is-visivel"); });
+  }
+
   /* ---------- Traços azuis desenhados à mão em volta dos títulos ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-circulo]"), function (circulo) {
     if (!("IntersectionObserver" in window)) {
