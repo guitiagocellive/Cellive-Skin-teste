@@ -90,7 +90,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Oferta: foto das microespículas (ação SRRP) | `assets/img/oferta/srrp-microespiculas.webp` | ✅ já colocada |
 | Oferta: foto do rosto ("O reset") | `assets/img/oferta/reset-rosto.webp` | paisagem 1,6 : 1, 800 × 500 px |
 | Oferta: fotos "O que ele te proporciona" 1 a 3 | `assets/img/oferta/aliado-1.webp` … `aliado-3.webp` | retrato 4:5, 640 × 800 px |
-| Oferta: vídeo do microagulhamento | `assets/img/oferta/microagulhamento.mp4` | ✅ já colocado (loop, 220 KB) |
+| Oferta: imagem do microagulhamento | `assets/img/oferta/microagulhamento.webp` | ✅ já colocada |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
@@ -128,8 +128,8 @@ Em seguida, "O VERDADEIRO INIMIGO" (título e texto entram suavemente) e "O RESE
 azul desenhado em volta do título, a foto do rosto e o texto sobre a ação SRRP com uma luz azul atrás.
 
 Depois, "O SEU NOVO ALIADO – O QUE ELE **TE PROPORCIONA.**": três benefícios alternando texto e foto, cada texto com
-um traço azul desenhado em volta. E "TECNOLOGIA COREANA – O EFEITO DE **MICROAGULHAMENTO**": o vídeo das camadas da
-pele em loop (o fundo branco dele some na página), com duas legendas que descem uma linha até a pele, e o texto
+um traço azul desenhado em volta. E "TECNOLOGIA COREANA – O EFEITO DE **MICROAGULHAMENTO**": a imagem das camadas da
+pele (o fundo branco dela some na página), com duas legendas que descem uma linha até a pele, e o texto
 sobre as microespículas.
 
 ## Fonte (Acumin Pro)
