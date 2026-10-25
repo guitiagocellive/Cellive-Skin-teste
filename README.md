@@ -82,7 +82,7 @@ Para testar no computador com um Postgres comum: `npm install` e rode as funçõ
 mudança na oferta chega na v2 rodando `node scripts/gerar-v2.mjs` (as trocas de texto ficam nesse script; se algum
 texto não for encontrado, ele avisa em vez de gerar pela metade). Não edite o `v2.html` à mão.
 
-- Endereço: **op.celliveskin.com** abre a v2 na página inicial (regra `rewrites` no `vercel.json`; qualquer
+- Endereço: **op.celliveskin.com** abre a v2 na página inicial (arquivo `middleware.js`; qualquer
   domínio que comece com `v2.` também). Também abre em `/v2` no domínio principal.
 - Para ligar o domínio: Vercel → projeto → **Settings → Domains → Add** → `op.celliveskin.com`; depois, no
   lugar onde o domínio foi comprado, crie o registro DNS que a Vercel mostrar (normalmente um CNAME `op`

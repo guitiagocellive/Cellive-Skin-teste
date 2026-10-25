@@ -1,10 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "has": [{ "type": "host", "value": "op.celliveskin.com" }], "destination": "/v2" },
-    { "source": "/", "has": [{ "type": "host", "value": { "pre": "v2." } }], "destination": "/v2" }
-  ],
   "functions": {
     "api/analise.js": { "maxDuration": 120 },
     "api/agente.js": { "maxDuration": 300, "includeFiles": "assets/js/quiz-perguntas.js" }
