@@ -37,8 +37,21 @@
     comprar.href = plano.getAttribute("data-link") || "#";
   }
 
+  var rastrear = function (tipo, dados) {
+    if (window.CelliveRastreio) window.CelliveRastreio.evento(tipo, dados);
+  };
+
   Array.prototype.forEach.call(planos, function (plano) {
-    plano.querySelector("input").addEventListener("change", function () { escolher(plano); });
+    plano.querySelector("input").addEventListener("change", function () {
+      escolher(plano);
+      rastrear("plano", { val: plano.querySelector("input").value });
+    });
+  });
+
+  // Clique em "Comprar Agora": vai para o checkout com o plano escolhido
+  comprar.addEventListener("click", function () {
+    var marcado = document.querySelector(".plano input:checked");
+    rastrear("checkout", { val: marcado ? marcado.value : null, x: { link: comprar.getAttribute("href") } });
   });
   escolher(document.querySelector(".plano input:checked").closest(".plano"));
 
@@ -365,6 +378,7 @@
       var tocar = function () {
         if (!card.classList.contains("tem-video")) return;
         if (video.paused) {
+          if (window.CelliveRastreio) window.CelliveRastreio.evento("clique", { e: "video", val: cardsVid.indexOf(card) + 1 });
           cardsVid.forEach(function (outro) {
             var v = outro.querySelector("video");
             if (v !== video && !v.paused) v.pause();

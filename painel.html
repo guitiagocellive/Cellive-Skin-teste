@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR" data-pagina="painel">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Painel | Cellive Skin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
+  <link rel="stylesheet" href="assets/css/painel.css">
+</head>
+<body class="painel-body">
+
+  <!-- Entrada com senha -->
+  <section class="entrar" data-entrar hidden>
+    <img class="entrar-logo" src="assets/img/logo-cellive-skin-branco.svg" alt="Cellive Skin" width="157" height="18">
+    <h1 class="entrar-titulo">Painel do quiz</h1>
+    <form class="entrar-form" data-entrar-form>
+      <label for="senha">Senha</label>
+      <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+      <button type="submit">Entrar</button>
+      <p class="entrar-erro" data-entrar-erro hidden></p>
+    </form>
+    <button type="button" class="entrar-demo" data-ver-demo>Ver em modo demonstração</button>
+  </section>
+
+  <div class="painel" data-painel hidden>
+    <header class="topo">
+      <div class="topo-marca">
+        <img src="assets/img/logo-cellive-skin-branco.svg" alt="Cellive Skin" width="157" height="18">
+        <p>Quiz · Fórmula personalizada</p>
+      </div>
+      <div class="topo-acoes">
+        <span class="status" data-status><span class="status-ponto"></span><span data-status-texto>Carregando…</span></span>
+        <button type="button" class="botao" data-atualizar>Atualizar</button>
+        <button type="button" class="botao" data-exportar>Exportar CSV</button>
+        <button type="button" class="botao botao-leve" data-sair>Sair</button>
+      </div>
+    </header>
+
+    <!-- Filtros: valem para tudo abaixo -->
+    <div class="filtros" role="group" aria-label="Filtros">
+      <div class="periodo" role="radiogroup" aria-label="Período" data-periodos>
+        <button type="button" data-periodo="hoje">Hoje</button>
+        <button type="button" data-periodo="ontem">Ontem</button>
+        <button type="button" data-periodo="7" class="is-ativo">7 dias</button>
+        <button type="button" data-periodo="30">30 dias</button>
+        <button type="button" data-periodo="90">90 dias</button>
+        <button type="button" data-periodo="tudo">Tudo</button>
+      </div>
+      <div class="datas">
+        <label><span>De</span><input type="date" data-de></label>
+        <label><span>Até</span><input type="date" data-ate></label>
+      </div>
+      <div class="selecoes">
+        <label class="selecao"><span class="sr">Fonte</span><select data-filtro="fonte"><option value="">Todas as fontes</option></select></label>
+        <label class="selecao"><span class="sr">Campanha</span><select data-filtro="campanha"><option value="">Todas as campanhas</option></select></label>
+        <label class="selecao"><span class="sr">Aparelho</span><select data-filtro="aparelho"><option value="">Todos os aparelhos</option></select></label>
+      </div>
+    </div>
+
+    <nav class="abas" role="tablist" aria-label="Seções do painel" data-abas>
+      <button type="button" role="tab" aria-selected="true" data-aba="geral">Visão geral</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="funil">Funil</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="respostas">Respostas</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="oferta">Oferta e kits</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="origem">Origem</button>
+    </nav>
+
+    <main class="conteudo" data-conteudo>
+      <!-- ============ VISÃO GERAL ============ -->
+      <section class="aba" data-painel-aba="geral">
+        <div class="kpis" data-kpis></div>
+        <div class="alerta" data-alerta hidden></div>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Evolução diária</h2>
+            <p>Visitas, fórmulas vistas e cliques no checkout por dia</p>
+          </header>
+          <div class="legenda" data-legenda-diario></div>
+          <div class="grafico" data-grafico-diario></div>
+          <details class="tabela-ver"><summary>Ver como tabela</summary><div data-tabela-diario></div></details>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Funil resumido</h2>
+            <p>Principais marcos, do primeiro clique ao checkout</p>
+          </header>
+          <div data-funil-resumo></div>
+        </article>
+      </section>
+
+      <!-- ============ FUNIL ============ -->
+      <section class="aba" data-painel-aba="funil" hidden>
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Funil completo</h2>
+            <p>Quantas pessoas chegaram em cada tela do quiz</p>
+          </header>
+          <div class="alerta" data-alerta-funil hidden></div>
+          <div data-funil-completo></div>
+          <p class="nota">A % da esquerda é sobre quem abriu o quiz; a da direita, sobre a etapa anterior. Em laranja, a etapa que mais perde gente.</p>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Onde as pessoas pararam</h2>
+            <p>Última tela vista por quem saiu antes de ver a fórmula</p>
+          </header>
+          <div data-paradas></div>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Tempo por pergunta</h2>
+            <p>Tempo médio até responder (perguntas muito demoradas podem confundir)</p>
+          </header>
+          <div data-tempo-pergunta></div>
+        </article>
+      </section>
+
+      <!-- ============ RESPOSTAS ============ -->
+      <section class="aba" data-painel-aba="respostas" hidden>
+        <p class="nota nota-topo">Para cada resposta: quanto ela representa entre quem respondeu e, à direita, quantas dessas pessoas clicaram no checkout (em verde, a resposta que mais converte).</p>
+        <div data-respostas></div>
+      </section>
+
+      <!-- ============ OFERTA ============ -->
+      <section class="aba" data-painel-aba="oferta" hidden>
+        <div class="kpis" data-kpis-oferta></div>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Kits</h2>
+            <p>Quantas pessoas escolheram cada kit e com qual foram ao checkout</p>
+          </header>
+          <div data-kits></div>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Até onde leram a oferta</h2>
+            <p>% de quem abriu a oferta que chegou em cada parte da página</p>
+          </header>
+          <div data-secoes></div>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Cliques na oferta</h2>
+            <p>Botões, dúvidas abertas, vídeos e contatos</p>
+          </header>
+          <div data-cliques></div>
+        </article>
+      </section>
+
+      <!-- ============ ORIGEM ============ -->
+      <section class="aba" data-painel-aba="origem" hidden>
+        <article class="cartao"><header class="cartao-cab"><h2>Fontes</h2><p>De onde as pessoas vieram</p></header><div data-origem="fonte"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Campanhas</h2><p>Pelo utm_campaign dos anúncios</p></header><div data-origem="campanha"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Aparelhos</h2></header><div data-origem="aparelho"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Sistemas</h2></header><div data-origem="sistema"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Países</h2></header><div data-origem="pais"></div></article>
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Horários de acesso</h2>
+            <p>Visitas por dia da semana e hora (horário de Brasília)</p>
+          </header>
+          <div data-horarios></div>
+        </article>
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Saúde do site</h2>
+            <p>Erros de script registrados nos aparelhos das visitantes</p>
+          </header>
+          <div data-erros></div>
+        </article>
+      </section>
+    </main>
+
+    <div class="dica" role="tooltip" data-dica hidden></div>
+  </div>
+
+  <script src="assets/js/quiz-perguntas.js"></script>
+  <script src="assets/js/painel.js"></script>
+</body>
+</html>

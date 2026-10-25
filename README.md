@@ -8,6 +8,32 @@ O site é publicado pela Cloudflare (Workers) direto deste repositório. A confi
 `wrangler.jsonc`, e não precisa de comando de build. O `.assetsignore` lista os arquivos que não vão
 para o ar (README, configurações e a pasta `.git`).
 
+## Painel e rastreamento
+
+Todas as páginas (menos o painel) carregam `assets/js/rastreio.js`, um rastreamento próprio (sem ferramentas de
+terceiros) que registra: páginas abertas, cada tela do quiz vista, cada resposta (e quanto tempo levou), quem voltou,
+quanto tempo levou o quiz inteiro, até onde a pessoa rolou e quanto tempo ficou na página, quais partes da oferta viu,
+o kit escolhido, os cliques no checkout (com o kit), dúvidas abertas, vídeos, galeria, WhatsApp e erros de script.
+A origem vem das UTMs dos anúncios (`utm_source`, `utm_campaign`, `utm_medium`, `utm_content`) ou, sem elas, do site
+de onde a pessoa veio (Instagram, Facebook, TikTok, Google…).
+
+Os eventos vão para `/api/evento` e ficam num banco D1 da Cloudflare (`cellive-eventos`), criado sozinho no deploy. O
+servidor é o `worker.js`.
+
+O painel fica em **`/painel.html`** e pede senha. Ele mostra: visitas, início e conclusão do quiz, quem viu a fórmula,
+cliques no checkout e conversão (com comparação ao período anterior), evolução diária, funil completo com o maior
+gargalo, onde as pessoas pararam, tempo por pergunta, todas as respostas com a conversão de cada uma, kits escolhidos,
+até onde leram a oferta, cliques, fontes, campanhas, aparelhos, sistemas, países, horários de acesso e erros. Filtros
+de período, fonte, campanha e aparelho; botão para baixar todos os eventos em CSV; atualiza sozinho a cada minuto.
+Abrindo `/painel.html?demo=1` (ou "Ver em modo demonstração") aparecem números fictícios só para ver o layout.
+
+**Configurar a senha (uma vez):** Cloudflare → Workers e Pages → `cellive-skin-teste` → Configurações → Variáveis e
+segredos → Adicionar → tipo **Segredo**, nome `PAINEL_SENHA`, valor = a senha escolhida → Implantar.
+Se o deploy não conseguir criar o banco sozinho: Cloudflare → Armazenamento e bancos de dados → D1 → Criar banco
+`cellive-eventos`; depois, no Worker → Vinculações → Adicionar → Banco D1, nome da variável `DB`.
+
+Para testar no computador: crie um arquivo `.dev.vars` com `PAINEL_SENHA=uma-senha` e rode `npx wrangler dev`.
+
 ## Páginas
 
 | Arquivo | O que é |
@@ -17,6 +43,7 @@ para o ar (README, configurações e a pasta `.git`).
 | `quiz.html` | Quiz: uma pergunta por vez, com progresso 1 · 2 · 3 e botão de voltar |
 | `oferta.html` | Página de oferta (o quiz leva até ela no final) |
 | `404.html` | Página de "não encontrada" |
+| `painel.html` | Painel com os números do quiz e da oferta (pede senha) |
 
 ## Perguntas do quiz
 

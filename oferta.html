@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-pagina="oferta">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/oferta.css">
+  <!-- Rastreamento próprio (painel) -->
+  <script src="assets/js/rastreio.js"></script>
 </head>
 <body class="oferta-body">
 
@@ -30,7 +32,7 @@
   <main class="oferta">
 
     <!-- ===================== DOBRA 1: produto ===================== -->
-    <section class="oferta-produto">
+    <section data-secao="produto" class="oferta-produto">
       <p class="aprovado">
         <svg class="aprovado-check" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="11" fill="#22b14c"/>
@@ -52,12 +54,12 @@
           </div>
         </div>
         <div class="galeria-miniaturas" role="tablist" aria-label="Fotos do produto">
-          <button type="button" class="miniatura is-ativa" data-foto="assets/img/oferta/produto-1.webp" data-label="Produto 1" aria-label="Foto 1"><span class="slot" data-label="1"><img src="assets/img/oferta/produto-1.webp" alt="" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-foto="assets/img/oferta/produto-2.webp" data-label="Produto 2" aria-label="Foto 2"><span class="slot" data-label="2"><img src="assets/img/oferta/produto-2.webp" alt="" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-foto="assets/img/oferta/produto-3.webp" data-label="Produto 3" aria-label="Foto 3"><span class="slot" data-label="3"><img src="assets/img/oferta/produto-3.webp" alt="" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-foto="assets/img/oferta/produto-4.webp" data-label="Produto 4" aria-label="Foto 4"><span class="slot" data-label="4"><img src="assets/img/oferta/produto-4.webp" alt="" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-foto="assets/img/oferta/produto-5.webp" data-label="Produto 5" aria-label="Foto 5"><span class="slot" data-label="5"><img src="assets/img/oferta/produto-5.webp" alt="" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-foto="assets/img/oferta/produto-6.webp" data-label="Produto 6" aria-label="Foto 6"><span class="slot" data-label="6"><img src="assets/img/oferta/produto-6.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura is-ativa" data-rastreio="galeria" data-rastreio-valor="1" data-foto="assets/img/oferta/produto-1.webp" data-label="Produto 1" aria-label="Foto 1"><span class="slot" data-label="1"><img src="assets/img/oferta/produto-1.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="2" data-foto="assets/img/oferta/produto-2.webp" data-label="Produto 2" aria-label="Foto 2"><span class="slot" data-label="2"><img src="assets/img/oferta/produto-2.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="3" data-foto="assets/img/oferta/produto-3.webp" data-label="Produto 3" aria-label="Foto 3"><span class="slot" data-label="3"><img src="assets/img/oferta/produto-3.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="4" data-foto="assets/img/oferta/produto-4.webp" data-label="Produto 4" aria-label="Foto 4"><span class="slot" data-label="4"><img src="assets/img/oferta/produto-4.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="5" data-foto="assets/img/oferta/produto-5.webp" data-label="Produto 5" aria-label="Foto 5"><span class="slot" data-label="5"><img src="assets/img/oferta/produto-5.webp" alt="" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="6" data-foto="assets/img/oferta/produto-6.webp" data-label="Produto 6" aria-label="Foto 6"><span class="slot" data-label="6"><img src="assets/img/oferta/produto-6.webp" alt="" onerror="this.hidden=true"></span></button>
         </div>
       </div>
 
@@ -101,7 +103,7 @@
     </section>
 
     <!-- ===================== DOBRA 2: planos ===================== -->
-    <section class="oferta-planos" id="planos">
+    <section data-secao="planos" class="oferta-planos" id="planos">
       <div class="estoque">
         <h2 class="estoque-titulo">Esgotando rápido</h2>
         <p class="estoque-texto">Devido à alta demanda, as quantidades disponíveis no estoque estão limitadas.</p>
@@ -211,7 +213,7 @@
 
 
     <!-- ===================== DOBRA 3: depoimentos ===================== -->
-    <section class="oferta-depoimentos" aria-labelledby="depo-titulo">
+    <section data-secao="depoimentos" class="oferta-depoimentos" aria-labelledby="depo-titulo">
       <h2 class="secao-titulo" id="depo-titulo">
         <span class="titulo-leve">Amado por</span>
         <span class="circulado" data-circulo>
@@ -271,7 +273,7 @@
     </section>
 
     <!-- ===================== DOBRA 5: você envelhece ===================== -->
-    <section class="oferta-envelhece" data-aparecer>
+    <section data-secao="envelhece" class="oferta-envelhece" data-aparecer>
       <div class="sinais" aria-hidden="true">
         <span class="sinal" style="--x:26%;--y:12%;--r:-5deg;--d:0s;--i:0">Perda de firmeza</span>
         <span class="sinal" style="--x:78%;--y:7%;--r:-8deg;--d:-1.6s;--i:1">Rugas</span>
@@ -289,7 +291,7 @@
     <!-- ===================== DOBRA 6: conheça o sérum =====================
          Medidas copiadas da imagem de referência (739 px de largura), em
          proporção da tela. -->
-    <section class="oferta-conheca" data-conheca>
+    <section data-secao="conheca" class="oferta-conheca" data-conheca>
       <!-- Produto no meio, com as duas caixas atrás. Animação de chegada: a luz
            azul acende, o frasco sobe e as caixas se abrem de trás dele. -->
       <div class="conheca-palco" data-aparecer role="img" aria-label="Sérum Facial Revitalizador Noturno Cellive Skin com a caixa">
@@ -313,7 +315,7 @@
 
     <!-- ===================== DOBRA 7: sua fórmula personalizada =====================
          Montada pelo assets/js/oferta-formula.js com as respostas do quiz. -->
-    <section class="oferta-formula" aria-labelledby="fp-titulo">
+    <section data-secao="formula" class="oferta-formula" aria-labelledby="fp-titulo">
       <p class="fp-chamada">Feita só para você</p>
       <h2 class="secao-titulo fp-titulo" id="fp-titulo">
         <span class="titulo-leve">Sua fórmula</span> <strong>personalizada</strong>
@@ -330,17 +332,17 @@
         </div>
       </div>
 
-      <button type="button" class="fp-mais" data-formula-mais aria-expanded="false" aria-controls="fp-extra">
+      <button type="button" class="fp-mais" data-rastreio="ver-mais-ativos" data-formula-mais aria-expanded="false" aria-controls="fp-extra">
         <span>Ver os outros 7 ativos</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
       </button>
 
-      <a class="fp-comprar" href="#planos" data-ir-planos>Quero minha fórmula</a>
+      <a class="fp-comprar" href="#planos" data-ir-planos data-rastreio="quero-minha-formula">Quero minha fórmula</a>
     </section>
 
     <!-- ===================== DOBRA 8: ação SRRP =====================
          Medidas copiadas da imagem de referência (739 px de largura). -->
-    <section class="oferta-srrp" data-srrp aria-labelledby="srrp-titulo">
+    <section data-secao="srrp" class="oferta-srrp" data-srrp aria-labelledby="srrp-titulo">
       <!-- Marca d'água "CELLIVE SKIN" na vertical -->
       <img class="srrp-marca" src="assets/img/logo-cellive-skin.svg" alt="" width="157" height="18" aria-hidden="true">
       <!-- Frasco: entra pela esquerda conforme a página rola e para na diagonal -->
@@ -396,14 +398,14 @@
     </section>
 
     <!-- ===================== DOBRA 9: o verdadeiro inimigo ===================== -->
-    <section class="oferta-inimigo" aria-labelledby="inimigo-titulo">
+    <section data-secao="inimigo" class="oferta-inimigo" aria-labelledby="inimigo-titulo">
       <p class="chamada-italico" data-revelar="palavras">O verdadeiro inimigo</p>
       <h2 class="inimigo-titulo" id="inimigo-titulo" data-revelar="palavras" style="--atraso: 0.25s">O que era natural está ficando escasso</h2>
       <p class="inimigo-texto" data-revelar="bloco" style="--atraso: 0.55s">A partir dos 25 anos, o corpo passa a produzir menos colágeno. Por isso, a Cellive uniu 25 ativos em um único sérum para estimular o colágeno e a elastina e fortalecer a barreira cutânea, devolvendo à pele um aspecto jovem.</p>
     </section>
 
     <!-- ===================== DOBRA 10: o reset ===================== -->
-    <section class="oferta-reset" aria-labelledby="reset-titulo">
+    <section data-secao="reset" class="oferta-reset" aria-labelledby="reset-titulo">
       <h2 class="reset-titulo" id="reset-titulo" data-revelar="palavras">
         <span class="circulado reset-circulado" data-circulo>
           <span class="titulo-leve">O reset</span>
@@ -423,7 +425,7 @@
     </section>
 
     <!-- ===================== DOBRA 11: o seu novo aliado ===================== -->
-    <section class="oferta-aliado" aria-labelledby="aliado-titulo">
+    <section data-secao="aliado" class="oferta-aliado" aria-labelledby="aliado-titulo">
       <p class="chamada-italico" data-revelar="palavras">O seu novo aliado</p>
       <h2 class="aliado-titulo" id="aliado-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">O que ele</span> <strong>te proporciona.</strong>
@@ -470,7 +472,7 @@
     </section>
 
     <!-- ===================== DOBRA 12: efeito de microagulhamento ===================== -->
-    <section class="oferta-micro" aria-labelledby="micro-titulo">
+    <section data-secao="microagulhamento" class="oferta-micro" aria-labelledby="micro-titulo">
       <p class="chamada-italico" data-revelar="palavras">Tecnologia coreana</p>
       <h2 class="micro-titulo" id="micro-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">O efeito de</span> <strong>microagulhamento</strong>
@@ -497,7 +499,7 @@
          Os depoimentos andam sozinhos para a direita, em loop (o oferta.js
          duplica a fila para o loop não ter emenda). Fotos em
          assets/img/oferta/cliente-1.webp ... cliente-6.webp -->
-    <section class="oferta-clientes" aria-labelledby="clientes-titulo">
+    <section data-secao="clientes" class="oferta-clientes" aria-labelledby="clientes-titulo">
       <h2 class="reset-titulo clientes-titulo" id="clientes-titulo" data-revelar="palavras">
         <span class="circulado reset-circulado" data-circulo>
           <span class="titulo-leve">Um pouco</span>
@@ -556,7 +558,7 @@
     </section>
 
     <!-- ===================== DOBRA 14: garantia ===================== -->
-    <section class="oferta-garantia" aria-labelledby="garantia-titulo">
+    <section data-secao="garantia" class="oferta-garantia" aria-labelledby="garantia-titulo">
       <div class="garantia-cartao" data-aparecer>
         <div class="garantia-visual" aria-hidden="true">
           <img class="garantia-caixa" src="assets/img/oferta/caixa.webp" alt="" width="222" height="480" loading="lazy">
@@ -589,7 +591,7 @@
 
     <!-- ===================== DOBRA 15: resultados reais =====================
          Para mudar números e textos, edite os cartões abaixo. -->
-    <section class="oferta-resultados" aria-labelledby="resultados-titulo">
+    <section data-secao="resultados" class="oferta-resultados" aria-labelledby="resultados-titulo">
       <p class="chamada-italico resultados-chamada" data-revelar="palavras">Ciência e segurança</p>
       <h2 class="resultados-titulo" id="resultados-titulo" data-revelar="palavras" style="--atraso: 0.2s">Resultados reais!</h2>
 
@@ -612,7 +614,7 @@
     </section>
 
     <!-- ===================== DOBRA 16: faixa de benefícios em loop ===================== -->
-    <section class="oferta-faixa" aria-label="Benefícios do Sérum Revitalizador">
+    <section data-secao="faixa" class="oferta-faixa" aria-label="Benefícios do Sérum Revitalizador">
       <div class="faixa-trilho" data-faixa>
         <ul class="faixa-lista">
           <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 15c3.5-5.3 8-8 13-8s9.5 2.7 13 8c-3.5 5.3-8 8-13 8s-9.5-2.7-13-8z"/><circle cx="16" cy="15" r="4.6"/><circle cx="16" cy="15" r="1.4"/><path d="M10 28v-2.6m-1.4 1.2L10 25l1.4 1.6M16 28v-2.6m-1.4 1.2L16 25l1.4 1.6M22 28v-2.6m-1.4 1.2L22 25l1.4 1.6"/></svg><span>Rejuvenesce a área dos olhos</span></li>
@@ -628,7 +630,7 @@
     <!-- ===================== DOBRA 17: vídeos de depoimento =====================
          Vídeos em assets/video/depoimento-1.mp4 ... -4.mp4 (em pé, 9:16) e a
          capa de cada um em assets/img/oferta/video-1.webp ... -4.webp -->
-    <section class="oferta-videos" aria-labelledby="videos-titulo">
+    <section data-secao="videos" class="oferta-videos" aria-labelledby="videos-titulo">
       <p class="fp-chamada videos-chamada" data-revelar="palavras">Mais depoimentos</p>
       <h2 class="secao-titulo videos-titulo" id="videos-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">Vejam o que</span> <strong>elas falam</strong>
@@ -674,18 +676,18 @@
       </div>
 
       <div class="vid-controles">
-        <button type="button" class="vid-seta" data-vid-anterior aria-label="Vídeo anterior">
+        <button type="button" class="vid-seta" data-rastreio="videos-seta" data-rastreio-valor="anterior" data-vid-anterior aria-label="Vídeo anterior">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
         </button>
         <div class="vid-pontos" data-vid-pontos aria-hidden="true"></div>
-        <button type="button" class="vid-seta" data-vid-proximo aria-label="Próximo vídeo">
+        <button type="button" class="vid-seta" data-rastreio="videos-seta" data-rastreio-valor="proximo" data-vid-proximo aria-label="Próximo vídeo">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
         </button>
       </div>
     </section>
 
     <!-- ===================== DOBRA 18: confiança (tema escuro) ===================== -->
-    <section class="oferta-confianca" aria-labelledby="confianca-titulo">
+    <section data-secao="confianca" class="oferta-confianca" aria-labelledby="confianca-titulo">
       <p class="chamada-italico conf-chamada" data-revelar="palavras">Cuidado com responsabilidade</p>
       <h2 class="secao-titulo confianca-titulo" id="confianca-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">Resultado para</span> <strong>confiar</strong>
@@ -727,7 +729,7 @@
     <!-- ===================== DOBRA 19: os números falam por si =====================
          Medidas da imagem de referência (739 px de largura). Os frascos das
          laterais entram com a rolagem, como na ação SRRP. -->
-    <section class="oferta-numeros" data-numeros aria-labelledby="numeros-titulo">
+    <section data-secao="numeros" class="oferta-numeros" data-numeros aria-labelledby="numeros-titulo">
       <img class="num-frasco num-frasco-esq" src="assets/img/oferta/numeros-frasco.webp" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
       <img class="num-frasco num-frasco-dir" src="assets/img/oferta/numeros-frasco.webp" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
 
@@ -781,7 +783,7 @@
     <!-- ===================== DOBRA 20: entenda como ele age na pele =====================
          Jornada em etapas: avança sozinha (como stories) enquanto está na tela;
          a pessoa pode tocar numa etapa ou arrastar o cartão para o lado. -->
-    <section class="oferta-age" aria-labelledby="age-titulo">
+    <section data-secao="jornada" class="oferta-age" aria-labelledby="age-titulo">
       <p class="chamada-italico" data-revelar="palavras">Por trás dos resultados</p>
       <h2 class="aliado-titulo age-titulo" id="age-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">Entenda como</span> <strong>ele age na pele.</strong>
@@ -826,19 +828,19 @@
           <p class="graf-nota">Ilustração da evolução esperada com o uso contínuo.</p>
         </figure>
         <div class="jor-abas" role="tablist" aria-label="Etapas da jornada">
-          <button type="button" class="jor-aba is-ativa" role="tab" id="jor-aba-0" aria-controls="jor-painel-0" aria-selected="true" data-jor-aba="0">
+          <button type="button" class="jor-aba is-ativa" role="tab" id="jor-aba-0" data-rastreio="jornada" data-rastreio-valor="0" aria-controls="jor-painel-0" aria-selected="true" data-jor-aba="0">
             <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
             <span class="jor-aba-texto"><small>Semana</small>1–2</span>
           </button>
-          <button type="button" class="jor-aba" role="tab" id="jor-aba-1" aria-controls="jor-painel-1" aria-selected="false" data-jor-aba="1">
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-1" data-rastreio="jornada" data-rastreio-valor="1" aria-controls="jor-painel-1" aria-selected="false" data-jor-aba="1">
             <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
             <span class="jor-aba-texto"><small>Semana</small>3–4</span>
           </button>
-          <button type="button" class="jor-aba" role="tab" id="jor-aba-2" aria-controls="jor-painel-2" aria-selected="false" data-jor-aba="2">
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-2" data-rastreio="jornada" data-rastreio-valor="2" aria-controls="jor-painel-2" aria-selected="false" data-jor-aba="2">
             <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
             <span class="jor-aba-texto"><small>Semana</small>5–12</span>
           </button>
-          <button type="button" class="jor-aba" role="tab" id="jor-aba-3" aria-controls="jor-painel-3" aria-selected="false" data-jor-aba="3">
+          <button type="button" class="jor-aba" role="tab" id="jor-aba-3" data-rastreio="jornada" data-rastreio-valor="3" aria-controls="jor-painel-3" aria-selected="false" data-jor-aba="3">
             <span class="jor-barra"><span class="jor-barra-cheia"></span></span>
             <span class="jor-aba-texto"><small>Semana</small>+12</span>
           </button>
@@ -890,7 +892,7 @@
     </section>
 
     <!-- ===================== DOBRA 21: principais dúvidas ===================== -->
-    <section class="oferta-duvidas" id="duvidas" aria-labelledby="duvidas-titulo">
+    <section data-secao="duvidas" class="oferta-duvidas" id="duvidas" aria-labelledby="duvidas-titulo">
       <!-- Foto: assets/img/oferta/sacola.webp (sacola com os produtos, fundo transparente, 600 × 520 px) -->
       <div class="duvidas-visual" data-aparecer>
         <span class="duvidas-circulo" aria-hidden="true"></span>
@@ -902,7 +904,7 @@
       <div class="faq" data-faq>
         <div class="faq-item is-aberto">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="true" aria-controls="faq-1" id="faq-p1">
+            <button type="button" class="faq-pergunta" aria-expanded="true" aria-controls="faq-1" id="faq-p1" data-rastreio="faq" data-rastreio-valor="1">
               O que é o Sérum Revitalizador?
               <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
             </button>
@@ -915,7 +917,7 @@
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-2" id="faq-p2">
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-2" id="faq-p2" data-rastreio="faq" data-rastreio-valor="2">
               Como usar o Sérum Revitalizador?
               <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
             </button>
@@ -928,7 +930,7 @@
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-3" id="faq-p3">
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-3" id="faq-p3" data-rastreio="faq" data-rastreio-valor="3">
               O que é a ação SRRP?
               <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
             </button>
@@ -941,7 +943,7 @@
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-4" id="faq-p4">
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-4" id="faq-p4" data-rastreio="faq" data-rastreio-valor="4">
               Posso usar todos os dias?
               <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
             </button>
@@ -954,7 +956,7 @@
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-5" id="faq-p5">
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-5" id="faq-p5" data-rastreio="faq" data-rastreio-valor="5">
               Em que horário devo usar o sérum?
               <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
             </button>
@@ -969,7 +971,7 @@
     </section>
 
     <!-- ===================== DOBRA 22: avaliação dos clientes ===================== -->
-    <section class="oferta-avaliacoes" aria-labelledby="aval-titulo">
+    <section data-secao="avaliacoes" class="oferta-avaliacoes" aria-labelledby="aval-titulo">
       <h2 class="secao-titulo aval-titulo" id="aval-titulo" data-revelar="palavras">
         <span class="titulo-leve">Avaliação dos</span> <strong>clientes</strong>
       </h2>
@@ -1012,30 +1014,30 @@
       <!-- Avaliações: ficam na lista do assets/js/oferta-avaliacoes.js.
            Aparecem 5; o botão "Ver mais" mostra mais 5 por vez. -->
       <div class="aval-lista" data-aval-lista></div>
-      <button type="button" class="aval-mais" data-aval-mais hidden>Ver mais avaliações</button>
+      <button type="button" class="aval-mais" data-rastreio="ver-mais-avaliacoes" data-aval-mais hidden>Ver mais avaliações</button>
     </section>
 
   </main>
 
   <!-- ===================== RODAPÉ ===================== -->
-  <footer class="rodape">
+  <footer class="rodape" data-secao="rodape">
     <div class="rodape-dentro">
       <img class="rodape-logo" src="assets/img/logo-cellive-skin-branco.svg" alt="Cellive Skin" width="157" height="18" loading="lazy">
       <p class="rodape-missao">A beleza da mulher tem que vir de dentro para fora, sem depender de maquiagem. Por isso desenvolvemos soluções para trazer de volta a autoestima que não deveria ter acabado.</p>
 
       <!-- LINK PROVISÓRIO: trocar pelo endereço do Instagram da Cellive Skin -->
-      <a class="rodape-insta" href="#" aria-label="Instagram da Cellive Skin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="ig-ponto"/></svg></a>
+      <a class="rodape-insta" href="#" data-rastreio="instagram" aria-label="Instagram da Cellive Skin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="ig-ponto"/></svg></a>
 
       <nav class="rodape-links" aria-label="Links do rodapé">
-        <a href="#planos" data-ir-planos>Quero adquirir o meu</a>
-        <a href="#duvidas">Perguntas frequentes</a>
-        <a href="https://wa.me/5561982509843" target="_blank" rel="noopener">Quero falar com um atendente</a>
+        <a href="#planos" data-ir-planos data-rastreio="rodape" data-rastreio-valor="quero-adquirir">Quero adquirir o meu</a>
+        <a href="#duvidas" data-rastreio="rodape" data-rastreio-valor="duvidas">Perguntas frequentes</a>
+        <a href="https://wa.me/5561982509843" target="_blank" rel="noopener" data-rastreio="whatsapp" data-rastreio-valor="rodape-atendente">Quero falar com um atendente</a>
       </nav>
 
       <div class="rodape-suporte">
         <strong>Suporte:</strong>
-        <a href="https://wa.me/5561982509843" target="_blank" rel="noopener">WhatsApp: (61) 98250-9843</a>
-        <a href="mailto:celliveskin@gmail.com">E-mail: celliveskin@gmail.com</a>
+        <a href="https://wa.me/5561982509843" target="_blank" rel="noopener" data-rastreio="whatsapp" data-rastreio-valor="rodape-suporte">WhatsApp: (61) 98250-9843</a>
+        <a href="mailto:celliveskin@gmail.com" data-rastreio="email">E-mail: celliveskin@gmail.com</a>
       </div>
 
       <p class="rodape-legal">Informações Corporativas: Cellive Skin • Todos os direitos reservados.<br>Razão Social: WW3 COMERCIO LTDA. CNPJ: 54.984.353/0001-00 — CELLIVE SKIN</p>
@@ -1047,7 +1049,7 @@
   <div class="barra-compra" data-barra-compra aria-hidden="true">
     <span class="slot barra-compra-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1.webp" alt="" loading="lazy" onerror="this.hidden=true"></span>
     <p class="barra-compra-nome">Sérum Revitalizador Noturno</p>
-    <a class="barra-compra-botao" href="#planos" tabindex="-1">Comprar</a>
+    <a class="barra-compra-botao" href="#planos" tabindex="-1" data-rastreio="barra-compra">Comprar</a>
   </div>
 
   <script src="assets/js/oferta.js"></script>

@@ -44,6 +44,17 @@
 
   var atual = 0;
   var bloqueado = false;
+
+  /* ---------- Rastreamento (painel) ---------- */
+  var rastrear = function (tipo, dados) {
+    if (window.CelliveRastreio) window.CelliveRastreio.evento(tipo, dados);
+  };
+  var telaMostradaEm = Date.now();
+  function idDaTela(tela) {
+    if (tela.tipo === "pergunta") return tela.pergunta.id;
+    if (tela.tipo === "carregamento") return tela.bloco.id || "carregamento";
+    return tela.tipo; // analise, montagem
+  }
   var stepperBloco = null;
   var carregamentoAtivo = null; // permite cancelar se a pessoa voltar no meio
   var respostas = carregarRespostas();
@@ -1063,9 +1074,19 @@
 
     // Fim do quiz: vai para a página de oferta
     if (tela.tipo === "fim") {
+      var inicioQuiz = 0;
+      try { inicioQuiz = Number(sessionStorage.getItem("cl-quiz-inicio")) || 0; } catch (e) { /* sem armazenamento */ }
+      rastrear("quiz_fim", { val: inicioQuiz ? Date.now() - inicioQuiz : null });
       window.location.href = "oferta.html";
       return;
     }
+
+    // registra cada tela vista (e a hora em que o quiz começou)
+    telaMostradaEm = Date.now();
+    rastrear("etapa", { e: idDaTela(tela), x: { n: indice + 1, dir: direcao === "back" ? "voltou" : undefined } });
+    try {
+      if (!sessionStorage.getItem("cl-quiz-inicio")) sessionStorage.setItem("cl-quiz-inicio", String(Date.now()));
+    } catch (e) { /* sem armazenamento */ }
 
     var conteudo =
       tela.tipo === "pergunta" ? telaPergunta(tela) :
@@ -1121,6 +1142,11 @@
     var p = tela.pergunta;
     respostas[p.id] = resposta;
     salvarRespostas();
+    rastrear("resposta", {
+      e: p.id,
+      val: Array.isArray(resposta) ? resposta.join("|") : resposta,
+      x: { ms: Date.now() - telaMostradaEm },
+    });
 
     var origem = atual;
     var avancar = function () {
@@ -1160,7 +1186,10 @@
     mostrar(destino, destino < atual ? "back" : "forward");
   });
 
-  backEl.addEventListener("click", voltar);
+  backEl.addEventListener("click", function () {
+    rastrear("voltar", { e: idDaTela(telas[atual]) });
+    voltar();
+  });
 
   // A imagem da tela de carregamento já vai sendo baixada desde o início
   telas.forEach(function (t) {
