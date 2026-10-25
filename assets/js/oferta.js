@@ -428,6 +428,49 @@
     var abasJor = Array.prototype.slice.call(jornada.querySelectorAll("[data-jor-aba]"));
     var paineisJor = Array.prototype.slice.call(jornada.querySelectorAll("[data-jor-painel]"));
     var atualJor = 0;
+    var manual = function () { jornada.classList.add("is-manual"); };
+
+    // Gráfico: a parte azul (linha + área) e o ponto ativo vão até a etapa atual
+    var graf = jornada.querySelector("[data-graf]");
+    var grafPontos = graf ? JSON.parse(graf.getAttribute("data-graf-pontos")) : [];
+    var grafCorte = graf && graf.querySelector("[data-graf-corte]");
+    var grafAtivo = graf && graf.querySelector("[data-graf-ativo]");
+    var grafGuia = graf && graf.querySelector("[data-graf-guia]");
+    var grafPos = grafPontos.length ? grafPontos[0].slice() : null;
+    var grafTween = 0;
+    var moverGraf = function (i) {
+      if (!graf) return;
+      var de = grafPos.slice(), para = grafPontos[i];
+      var inicio = null;
+      cancelAnimationFrame(grafTween);
+      var passo = function (t) {
+        if (!inicio) inicio = t;
+        var k = semMovimento ? 1 : Math.min(1, (t - inicio) / 700);
+        var e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        var x = de[0] + (para[0] - de[0]) * e, y = de[1] + (para[1] - de[1]) * e;
+        grafPos = [x, y];
+        grafCorte.setAttribute("width", (x + 0.5).toFixed(1));
+        grafAtivo.setAttribute("transform", "translate(" + x.toFixed(1) + " " + y.toFixed(1) + ")");
+        grafGuia.setAttribute("x1", x.toFixed(1));
+        grafGuia.setAttribute("x2", x.toFixed(1));
+        grafGuia.setAttribute("y1", y.toFixed(1));
+        if (k < 1) grafTween = requestAnimationFrame(passo);
+      };
+      grafTween = requestAnimationFrame(passo);
+    };
+    if (graf) {
+      moverGraf(0);
+      Array.prototype.forEach.call(graf.querySelectorAll("[data-graf-alvo]"), function (alvo) {
+        alvo.addEventListener("click", function () { manual(); irJor(Number(alvo.getAttribute("data-graf-alvo"))); });
+      });
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (itens, obs) {
+          if (itens[0].isIntersecting) { graf.classList.add("is-visivel"); obs.disconnect(); }
+        }, { threshold: 0.5 }).observe(graf);
+      } else {
+        graf.classList.add("is-visivel");
+      }
+    }
 
     var irJor = function (i) {
       atualJor = (i + abasJor.length) % abasJor.length;
@@ -446,9 +489,8 @@
         painel.classList.toggle("is-ativo", ativo);
         painel.hidden = !ativo;
       });
+      moverGraf(atualJor);
     };
-    var manual = function () { jornada.classList.add("is-manual"); };
-
     if (semMovimento) manual();
 
     abasJor.forEach(function (aba, k) {

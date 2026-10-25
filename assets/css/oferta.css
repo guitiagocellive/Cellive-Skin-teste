@@ -3579,6 +3579,129 @@
   font-size: 11.5px;
 }
 
+/* Gráfico ilustrativo da jornada (uma série só: sem legenda, o título diz
+   o que é). Linha 2px, área a ~10%, grade em linha fina, marcadores com anel. */
+.graf {
+  margin: 12px 0 0;
+}
+
+.graf-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #3d3d3d;
+  font-family: var(--font-condensed);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.graf-seta {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #eef3f9;
+  color: #4d74a8;
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.graf svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 8px;
+  overflow: visible;
+}
+
+.graf-grade line {
+  stroke: #eef1f4;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.graf-grade .graf-base {
+  stroke: #dfe4ea;
+}
+
+.graf-linha-fundo {
+  fill: none;
+  stroke: #dbe3ec;
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.graf-area {
+  fill: #4d74a8;
+  fill-opacity: 0.1;
+}
+
+.graf-linha {
+  fill: none;
+  stroke: #4d74a8;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.2s;
+}
+
+.graf.is-visivel .graf-linha {
+  stroke-dashoffset: 0;
+}
+
+.graf-ponto {
+  fill: #c6d3e2;
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.graf-guia {
+  stroke: #4d74a8;
+  stroke-opacity: 0.35;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.graf-marca {
+  fill: #4d74a8;
+  stroke: #fff;
+  stroke-width: 2.5;
+}
+
+.graf-halo {
+  fill: #4d74a8;
+  opacity: 0.18;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: graf-pulso 1.8s ease-out infinite;
+}
+
+@keyframes graf-pulso {
+  from { transform: scale(0.6); opacity: 0.35; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+/* área de toque de cada etapa: maior que o ponto */
+.graf-alvo {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.graf-nota {
+  margin: 4px 0 0;
+  color: #a7abb1;
+  font-size: 11px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -3637,8 +3760,13 @@
 
   .conf-luz,
   .conf-anel,
+  .graf-halo,
   .jornada .jor-aba.is-ativa .jor-barra-cheia {
     animation: none;
+  }
+
+  .graf-linha {
+    transition: none;
   }
 
   .age-foto,
