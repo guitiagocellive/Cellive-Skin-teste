@@ -209,7 +209,7 @@ window.QUIZ_FLUXO = [
           "Uso séruns anti-idade.",
           "Nunca utilizei.",
         ],
-        ativo: { id: "fator-crescimento", nome: "Fator de Crescimento", imagem: "assets/img/ativos/fator-crescimento.jpg" },
+        ativo: { id: "exossomos", nome: "Exossomos", imagem: "assets/img/ativos/exossomos.jpg" },
       },
       {
         id: "linhas-olhos",

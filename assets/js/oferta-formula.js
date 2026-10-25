@@ -96,8 +96,8 @@
         "Nunca utilizei.": "Um começo suave para clarear manchas.",
       },
     },
-    "fator-crescimento": {
-      beneficio: "Imita o sinal que a própria pele usa para se renovar",
+    "exossomos": {
+      beneficio: "Mensageiros que levam sinais de renovação às células da pele",
       resposta: {
         "Sim, uso retinol ou algum retinoide.": "Apoia a renovação e a recuperação da pele.",
         "Uso séruns anti-idade.": "Um passo além no seu cuidado anti-idade.",
@@ -141,9 +141,9 @@
         { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
         { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
         { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
-        { nome: "Fator de Crescimento EGF", img: A + "fator-crescimento.jpg", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
-        { nome: "Fator de Crescimento IGF-1", beneficio: "Imita um sinal de crescimento que ajuda a pele a se regenerar" },
-        { nome: "Fator de Crescimento VEGF", beneficio: "Imita um sinal de crescimento que ajuda a nutrir e oxigenar a pele" },
+        { nome: "EGF", img: A + "exossomos.jpg", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
+        { nome: "IGF-1", beneficio: "Imita um sinal da pele que ajuda na sua regeneração" },
+        { nome: "VEGF", beneficio: "Imita um sinal da pele que ajuda a nutrir e oxigenar as células" },
         { nome: "Oligopeptídeo-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
         { nome: "Oligopeptídeo-118", beneficio: "Peptídeo biomimético que estimula a renovação das células" },
         { nome: "Oligopeptídeo-34", beneficio: "Peptídeo clareador que reduz a produção de melanina nas manchas" },

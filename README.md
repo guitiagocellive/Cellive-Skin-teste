@@ -142,7 +142,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | ✅ já colocada |
 | Ativo: Tetrapeptide-7 (bolinha) | `assets/img/ativos/tetrapeptide-7.jpg` | ✅ já colocada |
 | Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | ✅ já colocada |
-| Ativo: Fator de Crescimento (bolinha) | `assets/img/ativos/fator-crescimento.jpg` | ✅ já colocada |
+| Ativo: Exossomos (bolinha) | `assets/img/ativos/exossomos.jpg` | ✅ já colocada |
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 | Oferta: caixa e frasco (dobra "Conheça o Sérum") | `assets/img/oferta/caixa.webp`, `frasco.webp` | ✅ já colocadas (fundo transparente) |
