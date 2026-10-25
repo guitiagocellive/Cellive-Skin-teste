@@ -2455,7 +2455,7 @@
   position: relative;
   align-self: stretch;
   --sx: 62px; /* centro do selo, a partir da borda esquerda do cartão */
-  --sy: 86px; /* centro do selo, a partir do topo do cartão */
+  --sy: 76px; /* centro do selo, a partir do topo do cartão */
 }
 
 .garantia-caixa,
@@ -2469,9 +2469,9 @@
 
 .garantia-frasco {
   z-index: 1;
-  width: 36px;
+  width: 41px;
   height: auto;
-  margin: -92px 0 0 -6px;
+  margin: -113px 0 0 -21px;
   transform-origin: 50% 100%;
   opacity: 0;
   transform: translateY(20px) rotate(4deg);
@@ -2480,9 +2480,9 @@
 
 .garantia-caixa {
   z-index: 2;
-  width: 68px;
+  width: 70px;
   height: auto;
-  margin: -86px 0 0 -33px;
+  margin: -105px 0 0 -36px;
   transform-origin: 50% 100%;
   opacity: 0;
   transform: translateY(16px) rotate(0deg);
@@ -2491,12 +2491,31 @@
 
 .garantia-cartao.is-visivel .garantia-caixa {
   opacity: 1;
-  transform: rotate(-9deg);
+  transform: rotate(-11deg);
+  animation: garantia-flutua 4.5s ease-in-out 1.3s infinite alternate;
 }
 
 .garantia-cartao.is-visivel .garantia-frasco {
   opacity: 1;
-  transform: rotate(13deg);
+  transform: rotate(15deg);
+  animation: garantia-flutua 4.5s ease-in-out 2.2s infinite alternate;
+}
+
+/* depois da entrada, caixa e frasco flutuam bem de leve */
+@keyframes garantia-flutua {
+  from { translate: 0 0; }
+  to { translate: 0 -4px; }
+}
+
+/* as setas do selo giram devagar */
+.selo-setas {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: selo-gira 16s linear infinite;
+}
+
+@keyframes selo-gira {
+  to { transform: rotate(-360deg); }
 }
 
 .garantia-selo {
@@ -2530,11 +2549,11 @@
 }
 
 .selo-30 {
-  font-size: 60px;
+  font-size: 66px;
 }
 
 .selo-dias {
-  font-size: 32px;
+  font-size: 34px;
 }
 
 .garantia-texto {
@@ -2587,9 +2606,8 @@
 }
 
 /* Cartões dos percentuais: começam juntos (um quase em cima do outro) e se
-   abrem conforme a página rola. --abre vai de 0 a 1 (oferta.js). */
+   abrem conforme a página rola (oferta.js). */
 .res-pilha {
-  --abre: 1;
   position: relative;
   width: 196px;
   height: 500px;
@@ -2610,11 +2628,10 @@
   border-radius: 22px;
   background: #fff;
   box-shadow: 0 8px 22px rgba(80, 110, 150, 0.16);
-  /* juntos: 28px entre um e outro; abertos: 162px */
-  transform:
-    translateY(calc(var(--n) * (28px + 134px * var(--abre))))
-    rotate(var(--giro));
+  /* posição final (abertos); o oferta.js anima a abertura com a rolagem */
+  transform: translate3d(0, calc(var(--n) * 162px), 0) rotate(var(--giro));
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .res-cartao:nth-child(1) { --giro: 5deg; z-index: 3; }
@@ -2627,6 +2644,7 @@
   font-size: 78px;
   font-style: italic;
   font-weight: 400;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
@@ -2700,7 +2718,10 @@
     transition: none;
   }
 
-  .cli-trilho {
+  .cli-trilho,
+  .selo-setas,
+  .garantia-cartao.is-visivel .garantia-caixa,
+  .garantia-cartao.is-visivel .garantia-frasco {
     animation: none;
   }
 

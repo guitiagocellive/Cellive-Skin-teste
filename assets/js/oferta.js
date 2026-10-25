@@ -239,23 +239,43 @@
   }
 
   /* ---------- Resultados: cartões que se abrem com a rolagem ----------
-     --abre vai de 0 (cartões juntos, entrando na tela) a 1 (abertos). Cada
-     número conta de 0 até o valor na primeira vez que aparece. */
+     A abertura segue a rolagem, mas com suavização: a cada quadro os cartões
+     andam um pedaço do caminho até a posição certa, sem "pulos" quando o
+     celular entrega a rolagem aos trancos. Só mexe em transform (fluido). */
   var pilha = document.querySelector("[data-res-pilha]");
   if (pilha) {
-    var pedidoPilha = 0;
-    var abrirPilha = function () {
-      pedidoPilha = 0;
+    var cartoesRes = Array.prototype.slice.call(pilha.querySelectorAll(".res-cartao"));
+    var girosRes = [5, -5, 4];
+    var alvoRes = 1, atualRes = 1, rodandoRes = false;
+
+    var medirRes = function () {
       var alto = window.innerHeight;
-      var p = (alto * 0.8 - pilha.getBoundingClientRect().top) / (alto * 0.55);
+      var p = (alto * 0.85 - pilha.getBoundingClientRect().top) / (alto * 0.6);
       p = Math.min(1, Math.max(0, p));
-      p = 1 - Math.pow(1 - p, 2);
-      pilha.style.setProperty("--abre", semMovimento ? "1" : p.toFixed(3));
+      return 1 - Math.pow(1 - p, 2);
     };
-    var pedirPilha = function () { if (!pedidoPilha) pedidoPilha = requestAnimationFrame(abrirPilha); };
-    window.addEventListener("scroll", pedirPilha, { passive: true });
-    window.addEventListener("resize", pedirPilha);
-    abrirPilha();
+    var desenharRes = function (v) {
+      cartoesRes.forEach(function (c, n) {
+        c.style.transform = "translate3d(0," + (n * (28 + 134 * v)).toFixed(2) + "px,0) rotate(" + girosRes[n % 3] + "deg)";
+      });
+    };
+    var quadroRes = function () {
+      atualRes += (alvoRes - atualRes) * 0.14;
+      if (Math.abs(alvoRes - atualRes) < 0.0008) atualRes = alvoRes;
+      desenharRes(atualRes);
+      if (atualRes !== alvoRes) requestAnimationFrame(quadroRes);
+      else rodandoRes = false;
+    };
+    var aoRolarRes = function () {
+      alvoRes = medirRes();
+      if (!rodandoRes && alvoRes !== atualRes) { rodandoRes = true; requestAnimationFrame(quadroRes); }
+    };
+    if (!semMovimento) {
+      atualRes = alvoRes = medirRes();
+      desenharRes(atualRes);
+      window.addEventListener("scroll", aoRolarRes, { passive: true });
+      window.addEventListener("resize", aoRolarRes);
+    }
 
     var contar = function (alvo) {
       var valor = Number(alvo.getAttribute("data-contar"));
