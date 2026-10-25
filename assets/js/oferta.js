@@ -221,6 +221,71 @@
     atualizarSrrp();
   }
 
+  /* ---------- Depoimentos em loop ----------
+     Duplica os cartões: a fila anda da posição -50% até 0 e recomeça sem
+     emenda. A velocidade é a mesma em qualquer tela (cerca de 30 px/s). */
+  var trilho = document.querySelector("[data-cli-trilho]");
+  if (trilho) {
+    Array.prototype.slice.call(trilho.children).forEach(function (card) {
+      var copia = card.cloneNode(true);
+      copia.setAttribute("aria-hidden", "true");
+      trilho.appendChild(copia);
+    });
+    var ajustarTempo = function () {
+      trilho.style.setProperty("--cli-tempo", Math.round(trilho.scrollWidth / 2 / 30) + "s");
+    };
+    ajustarTempo();
+    window.addEventListener("load", ajustarTempo);
+  }
+
+  /* ---------- Resultados: pilha de cartões ---------- */
+  var pilha = document.querySelector("[data-res-pilha]");
+  if (pilha) {
+    var cartoes = Array.prototype.slice.call(pilha.querySelectorAll(".res-cartao"));
+    cartoes.forEach(function (c, i) { c.setAttribute("data-pos", i); });
+
+    // número sobe de 0 até o valor quando o cartão está na frente
+    var contar = function (cartao) {
+      var alvo = cartao.querySelector("[data-contar]");
+      var valor = Number(alvo && alvo.getAttribute("data-contar"));
+      if (!valor || semMovimento) return;
+      var inicio = null;
+      var passo = function (t) {
+        if (!inicio) inicio = t;
+        var k = Math.min(1, (t - inicio) / 1100);
+        alvo.textContent = Math.round(valor * (1 - Math.pow(1 - k, 3))) + "%";
+        if (k < 1) requestAnimationFrame(passo);
+      };
+      requestAnimationFrame(passo);
+    };
+
+    var girar = function () {
+      var frente = cartoes[0];
+      frente.classList.add("is-saindo");
+      setTimeout(function () {
+        cartoes.push(cartoes.shift());
+        cartoes.forEach(function (c, i) { c.setAttribute("data-pos", i); });
+        frente.classList.remove("is-saindo");
+        contar(cartoes[0]);
+      }, 450);
+    };
+
+    var comecouPilha = false;
+    var iniciarPilha = function () {
+      if (comecouPilha) return;
+      comecouPilha = true;
+      contar(cartoes[0]);
+      if (!semMovimento && cartoes.length > 1) setInterval(girar, 3600);
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens, obs) {
+        if (itens[0].isIntersecting) { iniciarPilha(); obs.disconnect(); }
+      }, { threshold: 0.4 }).observe(pilha);
+    } else {
+      iniciarPilha();
+    }
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {

@@ -91,6 +91,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Oferta: foto do rosto ("O reset") | `assets/img/oferta/reset-rosto.webp` | paisagem 1,6 : 1, 800 × 500 px |
 | Oferta: fotos "O que ele te proporciona" 1 a 3 | `assets/img/oferta/aliado-1.webp` … `aliado-3.webp` | retrato 4:5, 640 × 800 px |
 | Oferta: imagem do microagulhamento | `assets/img/oferta/microagulhamento.webp` | ✅ já colocada |
+| Oferta: fotos das clientes 1 a 6 ("Um pouco dos nossos clientes") | `assets/img/oferta/cliente-1.webp` … `cliente-6.webp` | quadrada, 160 × 160 px |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
 A logo já está em `assets/img/logo-cellive-skin.svg`, convertida do arquivo original do Illustrator.
@@ -131,6 +132,12 @@ Depois, "O SEU NOVO ALIADO – O QUE ELE **TE PROPORCIONA.**": três benefícios
 um traço azul desenhado em volta. E "TECNOLOGIA COREANA – O EFEITO DE **MICROAGULHAMENTO**": a imagem das camadas da
 pele (o fundo branco dela some na página), com duas legendas que descem uma linha até a pele, e o texto
 sobre as microespículas.
+
+Por fim, "UM POUCO **DOS NOSSOS CLIENTES**": 6 fotos de clientes, a nota 4,9/5.0 e 5 depoimentos que andam sozinhos
+para a direita, em loop e devagar (não dá para arrastar). Depois o cartão "GARANTIA REEMBOLSO" com o selo de 30 dias
+(as setas giram devagar) e "CIÊNCIA E SEGURANÇA – **RESULTADOS REAIS!**": uma pilha de cartões com os percentuais em
+que o da frente vai para trás a cada 3,6 s e o número conta de 0 até o valor. Nomes, textos e números ficam no
+`oferta.html`.
 
 ## Fonte (Acumin Pro)
 
