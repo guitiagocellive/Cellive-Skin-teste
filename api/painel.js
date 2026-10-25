@@ -131,6 +131,7 @@ export async function dadosPainel(q, url) {
   return {
     gerado: Date.now(),
     versao: ehV2(url) ? "v2" : "v1",
+    ambiente: process.env.VERCEL_ENV || "local", // production, preview ou local
     ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },

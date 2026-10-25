@@ -14,6 +14,25 @@
   "use strict";
 
   var ENDERECO = "/api/evento";
+
+  /* Prévia da Vercel (link temporário de teste): mostra um selo "PRÉVIA" e não
+     manda eventos, para os testes não entrarem nos números do painel.
+     Links de prévia: projeto-git-ramo-time.vercel.app ou projeto-abc123xyz-time.vercel.app */
+  var host = location.hostname;
+  var ehPrevia = /\.vercel\.app$/.test(host) && /-(git-|[a-z0-9]{9}-)/.test(host.replace(/\.vercel\.app$/, ""));
+  if (ehPrevia) {
+    var selo = function () {
+      if (document.querySelector("[data-selo-previa]")) return;
+      var s = document.createElement("div");
+      s.setAttribute("data-selo-previa", "");
+      s.textContent = "PRÉVIA · só você vê";
+      s.style.cssText = "position:fixed;top:8px;right:8px;z-index:2147483647;padding:5px 10px;border-radius:999px;" +
+        "background:#1a1a1a;color:#fff;font:600 11px/1 system-ui,sans-serif;letter-spacing:.06em;opacity:.85;pointer-events:none;" +
+        "box-shadow:0 2px 10px rgba(0,0,0,.25)";
+      document.body.appendChild(s);
+    };
+    if (document.body) selo(); else document.addEventListener("DOMContentLoaded", selo);
+  }
   var pagina = document.documentElement.getAttribute("data-pagina") || "outra";
   // versão do funil: "v2" = oferta direta para anúncios (sem quiz); sem marca = funil com quiz
   var versao = document.documentElement.getAttribute("data-versao") || null;
@@ -82,6 +101,7 @@
   function enviar() {
     clearTimeout(timer);
     timer = 0;
+    if (ehPrevia) { fila.length = 0; return; }
     if (!fila.length) return;
     var corpo = JSON.stringify(fila.splice(0, 60));
     try {

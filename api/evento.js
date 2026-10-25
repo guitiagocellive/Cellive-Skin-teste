@@ -5,6 +5,8 @@ const TIPOS = new Set(["pagina", "etapa", "resposta", "voltar", "quiz_fim", "sec
 const corta = (v, n) => (v == null ? null : String(v).slice(0, n));
 
 export async function POST(request) {
+  // prévias (VERCEL_ENV=preview) não gravam: testes não sujam os números reais
+  if (process.env.VERCEL_ENV === "preview") return json({ ok: true, n: 0, previa: true });
   let lista;
   try {
     const texto = await request.text();

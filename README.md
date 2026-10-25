@@ -7,6 +7,19 @@ Site estático (HTML + CSS), sem instalação. Para ver, abra o `index.html` no 
 O site é publicado pela Vercel direto deste repositório, sem comando de build (as páginas são estáticas). As funções
 do painel ficam na pasta `api/` e a Vercel publica sozinha. O `.vercelignore` lista os arquivos que não vão para o ar.
 
+## Ambientes: prévia e no ar
+
+- **`main`** é o ramo **no ar** (Production): o que entra nele vai para quiz.celliveskin.com.
+- **`claude/keen-hopper-vfqmpi`** é o ramo de **trabalho** (Preview): cada mudança enviada gera um link de prévia
+  na Vercel (`celliveskinteste-git-claude-keen-hopper-vfqmpi-….vercel.app`, sempre com a última versão do ramo),
+  protegido pelo login da Vercel. As prévias mostram o selo "PRÉVIA · só você vê" e **não gravam** eventos no banco
+  (`api/evento.js` ignora `VERCEL_ENV=preview`), então testes não entram nos números do painel.
+- **Publicar:** quando a prévia estiver aprovada, junte o ramo de trabalho no `main` (pull request → Merge). A
+  Vercel publica sozinha em 1–2 min.
+- **Voltar atrás:** Vercel → Deployments → a versão anterior de produção → "…" → **Instant Rollback**.
+- Na Vercel: Settings → Environments → Production → **Branch Tracking** = `main`. As variáveis (`PAINEL_SENHA`,
+  `ANTHROPIC_API_KEY`, `META_TOKEN`…) precisam estar marcadas também em **Preview** para o painel funcionar nas prévias.
+
 ## Painel e rastreamento
 
 Todas as páginas (menos o painel) carregam `assets/js/rastreio.js`, um rastreamento próprio (sem ferramentas de

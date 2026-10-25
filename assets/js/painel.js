@@ -250,7 +250,9 @@
         $("[data-entrar]").hidden = true;
         $("[data-painel]").hidden = false;
         montar();
-        status(x.corpo.aoVivo ? x.corpo.aoVivo + " pessoa" + (x.corpo.aoVivo > 1 ? "s" : "") + " agora" : "Ao vivo", "ao-vivo");
+        // na prévia (link de teste da Vercel) o selo avisa que não é a versão no ar
+        if (x.corpo.ambiente === "preview") status("Prévia · versão de teste", "demo");
+        else status(x.corpo.aoVivo ? x.corpo.aoVivo + " pessoa" + (x.corpo.aoVivo > 1 ? "s" : "") + " agora" : "Ao vivo", "ao-vivo");
       })
       .catch(function () {
         conteudo.classList.remove("is-carregando");
