@@ -48,11 +48,126 @@
     });
   });
 
-  // Clique em "Comprar Agora": vai para o checkout com o plano escolhido
-  comprar.addEventListener("click", function () {
+  // Clique em "Comprar Agora": vai para o checkout com o plano escolhido.
+  // No pré-lançamento, abre o cadastro do grupo VIP (o clique conta igual no painel).
+  var preLancamento = document.body.hasAttribute("data-pre-lancamento");
+  comprar.addEventListener("click", function (ev) {
     var marcado = document.querySelector(".plano input:checked");
-    rastrear("checkout", { val: marcado ? marcado.value : null, x: { link: comprar.getAttribute("href") } });
+    rastrear("checkout", { val: marcado ? marcado.value : null, x: { link: preLancamento ? "lista" : comprar.getAttribute("href") } });
+    if (preLancamento) {
+      ev.preventDefault();
+      abrirLista(marcado ? marcado.value : null);
+    }
   });
+
+  /* ---------- Lista de lançamento (grupo VIP no WhatsApp) ---------- */
+  var lista = document.querySelector("[data-lista]");
+  var listaForm = lista && lista.querySelector("[data-lista-form]");
+  var listaKit = null;
+  var NOMES_KIT = { 1: "1 unidade · 30 dias", 2: "2 unidades · 60 dias", 3: "3 unidades · 90 dias" };
+
+  function abrirLista(kit) {
+    if (!lista) return;
+    listaKit = kit;
+    var kitEl = lista.querySelector("[data-lista-kit]");
+    kitEl.hidden = !NOMES_KIT[kit];
+    kitEl.textContent = NOMES_KIT[kit] ? "Kit escolhido: " + NOMES_KIT[kit] : "";
+    if (typeof lista.showModal === "function") lista.showModal();
+    else lista.setAttribute("open", "");
+    document.documentElement.classList.add("lista-aberta");
+    rastrear("clique", { e: "lista-aberta", val: kit });
+  }
+  function fecharLista() {
+    if (!lista) return;
+    if (typeof lista.close === "function" && lista.open) lista.close();
+    else lista.removeAttribute("open");
+  }
+
+  // (61) 99999-9999 enquanto digita
+  function mascaraWhats(v) {
+    var d = v.replace(/\D/g, "");
+    if (d.length > 11 && d.indexOf("55") === 0) d = d.slice(2);
+    d = d.slice(0, 11);
+    if (d.length <= 2) return d.length ? "(" + d : "";
+    var meio = d.length > 10 ? 7 : 6;
+    return "(" + d.slice(0, 2) + ") " + d.slice(2, meio) + (d.length > meio ? "-" + d.slice(meio) : "");
+  }
+
+  if (lista && listaForm) {
+    var erroEl = lista.querySelector("[data-lista-erro]");
+    var enviarEl = lista.querySelector("[data-lista-enviar]");
+    var campoWhats = listaForm.elements.whatsapp;
+
+    lista.querySelector("[data-lista-fechar]").addEventListener("click", fecharLista);
+    lista.addEventListener("close", function () { document.documentElement.classList.remove("lista-aberta"); });
+    // toque fora da caixa fecha
+    lista.addEventListener("click", function (ev) { if (ev.target === lista) fecharLista(); });
+    campoWhats.addEventListener("input", function () { campoWhats.value = mascaraWhats(campoWhats.value); });
+
+    var mostrarErro = function (texto, campo) {
+      erroEl.textContent = texto;
+      erroEl.hidden = !texto;
+      if (campo) campo.focus();
+    };
+
+    listaForm.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var f = listaForm.elements;
+      var nome = f.nome.value.trim();
+      var whats = f.whatsapp.value.replace(/\D/g, "");
+      var email = f.email.value.trim();
+      if (nome.length < 2) return mostrarErro("Digite o seu nome.", f.nome);
+      if (whats.length < 10 || whats.length > 11) return mostrarErro("Digite o WhatsApp com DDD, por exemplo (61) 99999-9999.", f.whatsapp);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return mostrarErro("Confira o seu e-mail.", f.email);
+      if (!f.aceite.checked) return mostrarErro("Para entrar no grupo, marque que aceita receber as mensagens do lançamento.", f.aceite);
+      mostrarErro("");
+      enviarEl.disabled = true;
+      enviarEl.textContent = "Enviando…";
+
+      var R = window.CelliveRastreio || {};
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          nome: nome, whatsapp: whats, email: email, aceite: true, site: f.site.value,
+          kit: listaKit, ver: R.versao || null, u: R.origem || null, v: R.visitante || null, s: R.sessao || null,
+        }),
+      })
+        .then(function (resp) { return resp.json().catch(function () { return {}; }).then(function (c) { return { ok: resp.ok, c: c }; }); })
+        .then(function (x) {
+          if (!x.ok || !x.c.ok) {
+            var msg = { nome: "Digite o seu nome.", whatsapp: "Confira o WhatsApp com DDD.", email: "Confira o seu e-mail." }[x.c.erro];
+            throw new Error(msg || "");
+          }
+          rastrear("lead", { val: listaKit });
+          if (R.enviar) R.enviar();
+          concluir(nome, x.c.grupo);
+        })
+        .catch(function (e) {
+          enviarEl.disabled = false;
+          enviarEl.textContent = "Quero entrar no grupo VIP";
+          mostrarErro((e && e.message) || "Não foi possível enviar agora. Confira a internet e tente de novo.");
+        });
+    });
+
+    var concluir = function (nome, grupo) {
+      listaForm.hidden = true;
+      var ok = lista.querySelector("[data-lista-ok]");
+      ok.hidden = false;
+      lista.querySelector("[data-lista-nome]").textContent = "Pronto, " + nome.split(/\s+/)[0];
+      var botao = lista.querySelector("[data-lista-grupo]");
+      if (grupo) {
+        botao.href = grupo;
+        botao.hidden = false;
+        botao.addEventListener("click", function () { rastrear("clique", { e: "grupo-whatsapp" }); });
+        // abre o grupo sozinho; o botão fica para quem voltar para a página
+        setTimeout(function () { location.href = grupo; }, 2200);
+      } else {
+        lista.querySelector("[data-lista-ok-texto]").textContent =
+          "Em breve você recebe no seu WhatsApp o link do grupo VIP com o aviso do lançamento e o seu cupom.";
+      }
+    };
+  }
   escolher(document.querySelector(".plano input:checked").closest(".plano"));
 
   /* ---------- Contagem regressiva ----------

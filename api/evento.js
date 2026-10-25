@@ -1,7 +1,7 @@
 /* POST /api/evento — recebe os eventos do rastreio.js e grava no banco. */
 import { banco, json } from "./_db.js";
 
-const TIPOS = new Set(["pagina", "etapa", "resposta", "voltar", "quiz_fim", "secao", "plano", "checkout", "clique", "saida", "erro"]);
+const TIPOS = new Set(["pagina", "etapa", "resposta", "voltar", "quiz_fim", "secao", "plano", "checkout", "lead", "clique", "saida", "erro"]);
 const corta = (v, n) => (v == null ? null : String(v).slice(0, n));
 
 export async function POST(request) {

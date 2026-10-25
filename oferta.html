@@ -15,11 +15,16 @@
   <!-- Rastreamento próprio (painel) -->
   <script src="assets/js/rastreio.js"></script>
 </head>
-<body class="oferta-body">
+<!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
+     cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
+     node scripts/gerar-v2.mjs): os preços, o "Comprar Agora" e o checkout voltam como estavam.
+     Itens com data-pre só aparecem no pré-lançamento; itens com data-pos só depois do lançamento. -->
+<body class="oferta-body" data-pre-lancamento>
 
   <!-- Faixa de promoção -->
   <div class="promo-faixa">
-    <strong>Promoção relâmpago:</strong> <span>ATÉ 33% OFF NA 3ª UNIDADE</span>
+    <span data-pos><strong>Promoção relâmpago:</strong> <span>ATÉ 33% OFF NA 3ª UNIDADE</span></span>
+    <span data-pre><strong>Lançamento em breve:</strong> <span>ENTRE NO GRUPO VIP E GANHE CUPOM</span></span>
   </div>
 
   <!-- Logo (fica fixo no topo ao rolar) -->
@@ -49,7 +54,7 @@
             <img src="assets/img/oferta/produto-1.webp" alt="Sérum Facial Revitalizador Noturno Cellive Skin" onerror="this.hidden=true">
           </span>
           <div class="galeria-selos">
-            <span class="selo selo-escuro">Mais vendido</span>
+            <span class="selo selo-escuro" data-pos>Mais vendido</span>
             <span class="selo selo-contorno">Anti-aging</span>
           </div>
         </div>
@@ -104,7 +109,7 @@
 
     <!-- ===================== DOBRA 2: planos ===================== -->
     <section data-secao="planos" class="oferta-planos" id="planos">
-      <div class="estoque">
+      <div class="estoque" data-pos>
         <h2 class="estoque-titulo">Esgotando rápido</h2>
         <p class="estoque-texto">Devido à alta demanda, as quantidades disponíveis no estoque estão limitadas.</p>
         <!-- Porcentagem vendida: mude em --v, aria-valuenow e data-vendido -->
@@ -117,7 +122,12 @@
         </div>
       </div>
 
-      <h2 class="secao-titulo"><span class="titulo-leve">Selecione seu</span> <strong>plano ideal</strong></h2>
+      <h2 class="secao-titulo" data-pos><span class="titulo-leve">Selecione seu</span> <strong>plano ideal</strong></h2>
+      <div class="pre-chamada" data-pre>
+        <p class="pre-selo">Lançamento em breve</p>
+        <h2 class="secao-titulo"><span class="titulo-leve">Escolha o seu</span> <strong>kit de lançamento</strong></h2>
+        <p class="pre-texto">O Sérum ainda não foi lançado. Garanta seu lugar no grupo VIP do WhatsApp: quem está no grupo compra primeiro e recebe cupom de desconto.</p>
+      </div>
 
       <!-- Planos: textos, preços e links de checkout ficam nos atributos data- -->
       <div class="planos" role="radiogroup" aria-label="Planos">
@@ -178,13 +188,15 @@
       </div>
 
       <!-- Resumo do plano escolhido -->
-      <div class="resumo" aria-live="polite">
+      <div class="resumo" aria-live="polite" data-pos>
         <p class="resumo-plano" data-resumo-plano>2 UNIDADES – 60 DIAS</p>
         <p class="resumo-parcela">12x de <strong data-resumo-parcela>R$ 35,90</strong></p>
         <p class="resumo-avista">ou <strong data-resumo-avista>R$ 297,90</strong> à vista</p>
       </div>
 
-      <a class="comprar" href="#" data-comprar>Comprar Agora</a>
+      <p class="pre-resumo" data-pre>Preço especial de lançamento só para quem estiver no grupo.</p>
+
+      <a class="comprar" href="#" data-comprar><span data-pos>Comprar Agora</span><span data-pre>Quero garantir minha fórmula</span></a>
 
       <ul class="confianca">
         <li>
@@ -1061,8 +1073,53 @@
   <div class="barra-compra" data-barra-compra aria-hidden="true">
     <span class="slot barra-compra-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1.webp" alt="" loading="lazy" onerror="this.hidden=true"></span>
     <p class="barra-compra-nome">Sérum Revitalizador Noturno</p>
-    <a class="barra-compra-botao" href="#planos" tabindex="-1" data-rastreio="barra-compra">Comprar</a>
+    <a class="barra-compra-botao" href="#planos" tabindex="-1" data-rastreio="barra-compra"><span data-pos>Comprar</span><span data-pre>Garantir</span></a>
   </div>
+
+  <!-- Cadastro do grupo VIP (pré-lançamento): abre no lugar do checkout. Grava em /api/lead. -->
+  <dialog class="lista" data-lista aria-labelledby="lista-titulo">
+    <button type="button" class="lista-fechar" data-lista-fechar aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <form class="lista-form" data-lista-form novalidate>
+      <p class="lista-selo">Lançamento em breve</p>
+      <h2 class="lista-titulo" id="lista-titulo">Garanta seu lugar no lançamento</h2>
+      <p class="lista-texto">O Sérum Revitalizador ainda não foi lançado. Estamos montando um <strong>grupo VIP no WhatsApp</strong> para quem vai comprar no lançamento. Lá você recebe o aviso antes de todo mundo e <strong>cupons de desconto</strong>.</p>
+      <p class="lista-kit" data-lista-kit hidden></p>
+      <label class="lista-campo">
+        <span>Seu nome</span>
+        <input type="text" name="nome" autocomplete="name" maxlength="80" required placeholder="Como podemos te chamar?">
+      </label>
+      <label class="lista-campo">
+        <span>WhatsApp com DDD</span>
+        <input type="tel" name="whatsapp" autocomplete="tel-national" inputmode="numeric" maxlength="16" required placeholder="(61) 99999-9999">
+      </label>
+      <label class="lista-campo">
+        <span>E-mail</span>
+        <input type="email" name="email" autocomplete="email" maxlength="200" required placeholder="seuemail@exemplo.com">
+      </label>
+      <label class="lista-robo" aria-hidden="true">Site <input type="text" name="site" tabindex="-1" autocomplete="off"></label>
+      <label class="lista-aceite">
+        <input type="checkbox" name="aceite" required>
+        <span>Aceito receber mensagens da Cellive Skin sobre o lançamento por WhatsApp e e-mail. Posso sair quando quiser. <a href="politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a></span>
+      </label>
+      <p class="lista-erro" data-lista-erro role="alert" hidden></p>
+      <button type="submit" class="lista-enviar" data-lista-enviar>Quero entrar no grupo VIP</button>
+      <p class="lista-seguro">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10.5" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+        Seus dados ficam protegidos. Não vendemos seus dados.
+      </p>
+    </form>
+    <div class="lista-ok" data-lista-ok hidden>
+      <span class="lista-ok-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+      <h2 class="lista-titulo"><span data-lista-nome>Pronto</span>, seu lugar está garantido!</h2>
+      <p class="lista-texto" data-lista-ok-texto>Agora entre no grupo do WhatsApp para receber o aviso do lançamento e o seu cupom.</p>
+      <a class="lista-enviar lista-whats" data-lista-grupo href="#" target="_blank" rel="noopener" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/><path d="M8.8 8.6c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .5.4l.7 1.7c.1.2 0 .4-.1.5l-.5.6c-.1.1-.2.3 0 .5.6 1 1.4 1.8 2.5 2.4.2.1.4.1.5 0l.6-.7c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.4.4 0 .4-.1 1.1-.6 1.5-.5.4-1.3.6-2.2.3a8.6 8.6 0 0 1-4.9-4.3c-.5-1-.5-2 .2-3.5z"/></svg>
+        Entrar no grupo VIP
+      </a>
+    </div>
+  </dialog>
 
   <script src="assets/js/oferta.js"></script>
   <script src="assets/js/quiz-perguntas.js"></script>

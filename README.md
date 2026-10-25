@@ -75,6 +75,24 @@ mesmos campos podem ser digitados à mão.
 Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
 `DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).
 
+## Pré-lançamento: lista do grupo VIP
+
+Enquanto o produto não está à venda, a oferta (quiz e v2) fica em **pré-lançamento** (`data-pre-lancamento` no
+`<body>` do `oferta.html`):
+
+- preços, descontos, "Promoção relâmpago", "Esgotando rápido" e "Mais vendido" ficam **escondidos** (continuam no
+  HTML, sem nenhuma mudança: itens com `data-pos` só aparecem depois do lançamento; com `data-pre`, só antes);
+- o botão vira **"Quero garantir minha fórmula"** (na v2, "Quero garantir o meu Sérum") e abre um cadastro com
+  nome, WhatsApp e e-mail (com aceite de mensagens, pela LGPD);
+- o cadastro vai para `/api/lead` (`api/lead.js`), fica na tabela `leads` do banco (um por e-mail) e a pessoa é
+  levada ao **grupo do WhatsApp**. O link do grupo fica na variável **`WHATSAPP_GRUPO`** na Vercel (ou em
+  `GRUPO_PADRAO` no `api/lead.js`). Sem link, ela vê "em breve você recebe o link no seu WhatsApp";
+- no painel, o cartão **Lista de lançamento** mostra quantos se cadastraram e baixa a planilha completa
+  (`/api/lead?formato=csv`, com a senha). Na prévia nada é gravado.
+
+**No lançamento:** apague `data-pre-lancamento` do `<body>` do `oferta.html`, rode `node scripts/gerar-v2.mjs`,
+coloque os links de checkout em `data-link` de cada plano e publique. Tudo volta como era antes.
+
 ## Oferta direta para anúncios (v2)
 
 `v2.html` é a mesma página de oferta, sem o quiz: em vez de "Sua fórmula personalizada", fala da fórmula em geral

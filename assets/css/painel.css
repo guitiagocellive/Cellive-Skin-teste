@@ -1438,3 +1438,69 @@ body.agente-aberto .agente-botao { transform: translateX(-50%) scale(0.6); }
   animation-delay: calc(var(--i, 0) * 90ms + 150ms);
 }
 .graf-funil-num { color: var(--texto-2); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+
+/* ---------- Lista de lançamento ---------- */
+.leads-topo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.leads-num {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--linha);
+  border-radius: 16px;
+  background: var(--cartao-2);
+}
+.leads-num strong {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.leads-num:first-child strong { color: var(--bom); }
+.leads-num span { color: var(--texto-3); font-size: 11.5px; line-height: 1.3; }
+.leads-kits { display: grid; gap: 8px; margin-top: 16px; }
+.leads-kit {
+  display: grid;
+  grid-template-columns: 84px 1fr 36px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.leads-kit-nome { color: var(--texto-2); }
+.leads-kit-barra { height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+.leads-kit-barra i { display: block; height: 100%; border-radius: inherit; background: var(--s3); transition: width 0.8s var(--curva); }
+.leads-kit-n { text-align: right; font-variant-numeric: tabular-nums; }
+.leads-ultimos { margin: 16px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--linha); }
+.leads-ultimos li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--linha);
+  font-size: 14px;
+}
+.leads-nome { font-weight: 600; }
+.leads-quando { color: var(--texto-3); font-size: 12.5px; white-space: nowrap; }
+.leads-vazio { color: var(--texto-3); font-size: 13px; }
+.leads-baixar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 16px;
+  border: 1px solid var(--linha-forte);
+  border-radius: 999px;
+  background: var(--cartao-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.leads-baixar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }

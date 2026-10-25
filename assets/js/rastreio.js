@@ -123,7 +123,10 @@
     else if (!timer) timer = setTimeout(enviar, 1500);
   }
 
-  window.CelliveRastreio = { evento: evento, sessao: sessao };
+  window.CelliveRastreio = {
+    evento: evento, enviar: enviar, sessao: sessao, visitante: visitante,
+    origem: origem, versao: versao, previa: ehPrevia,
+  };
 
   // Página aberta
   evento("pagina", { x: { caminho: location.pathname, ref: document.referrer ? document.referrer.slice(0, 120) : null } });

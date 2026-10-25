@@ -50,6 +50,15 @@ export async function banco() {
     await q(`CREATE TABLE IF NOT EXISTS analises (
       chave TEXT PRIMARY KEY, criado BIGINT NOT NULL, dados JSONB NOT NULL
     )`);
+    // lista de lançamento: quem deixou nome, WhatsApp e e-mail (um cadastro por e-mail)
+    await q(`CREATE TABLE IF NOT EXISTS leads (
+      id BIGSERIAL PRIMARY KEY,
+      criado BIGINT NOT NULL, atualizado BIGINT NOT NULL,
+      nome TEXT NOT NULL, whatsapp TEXT NOT NULL, email TEXT NOT NULL UNIQUE,
+      kit TEXT, versao TEXT, fonte TEXT, campanha TEXT, midia TEXT, conteudo TEXT,
+      visitante TEXT, sessao TEXT
+    )`);
+    await q("CREATE INDEX IF NOT EXISTS leads_criado ON leads(criado)");
     tabelaPronta = true;
   }
   return q;

@@ -45,6 +45,36 @@ function filtros(url, deslocamento = 0) {
   return { where: cond.join(" AND "), args };
 }
 
+/* Lista de lançamento (api/lead.js): quantos cadastros no período e os últimos nomes.
+   Segue o período, a versão e os filtros de fonte/campanha (aparelho não é guardado no cadastro). */
+async function listaLancamento(q, url) {
+  const de = Number(url.searchParams.get("de")) || 0;
+  const ate = Number(url.searchParams.get("ate")) || Date.now();
+  const cond = ["criado >= ?", "criado < ?"];
+  const args = [de, ate];
+  for (const campo of ["fonte", "campanha"]) {
+    const v = url.searchParams.get(campo);
+    if (v) { cond.push(`${campo} = ?`); args.push(v); }
+  }
+  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS DISTINCT FROM 'v2'");
+  const W = cond.join(" AND ");
+  try {
+    const [periodo, total, ultimos, porKit] = await Promise.all([
+      q(sql(`SELECT COUNT(*)::int AS n FROM leads WHERE ${W}`), args),
+      q("SELECT COUNT(*)::int AS n FROM leads"),
+      q(sql(`SELECT nome, kit, criado FROM leads WHERE ${W} ORDER BY criado DESC LIMIT 6`), args),
+      q(sql(`SELECT COALESCE(kit, '') AS kit, COUNT(*)::int AS n FROM leads WHERE ${W} GROUP BY 1`), args),
+    ]);
+    return {
+      periodo: periodo[0].n, total: total[0].n,
+      ultimos: ultimos.map((l) => ({ nome: String(l.nome).split(/\s+/)[0], kit: l.kit, criado: Number(l.criado) })),
+      porKit: porKit.map((l) => ({ kit: l.kit, n: Number(l.n) })),
+    };
+  } catch (e) {
+    return { periodo: 0, total: 0, ultimos: [], porKit: [] };
+  }
+}
+
 /* Números do painel para um período/filtro (objeto simples).
    Usado pelo GET abaixo e pelo agente estrategista (api/agente.js). */
 export async function dadosPainel(q, url) {
@@ -81,6 +111,7 @@ export async function dadosPainel(q, url) {
   const [
     kpi, kpiAnt, diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     porFonte, porCampanha, porAparelho, porSistema, porPais, porHora, compraPorHora, duracoes, tempoOferta, rolagem, opcoes, aoVivo, erros, novos,
+    leads,
   ] = await Promise.all([
     todos(kpiSql(W), A),
     todos(kpiSql(ANT.where), ANT.args),
@@ -126,6 +157,7 @@ export async function dadosPainel(q, url) {
     todos(`SELECT COUNT(DISTINCT sessao) AS n FROM eventos WHERE ts >= ?`, [Date.now() - 5 * 60e3]),
     todos(`SELECT valor, COUNT(*) AS n FROM eventos WHERE tipo='erro' AND ${W} GROUP BY valor ORDER BY n DESC LIMIT 10`, A),
     todos(`SELECT CASE WHEN novo THEN 1 ELSE 0 END AS novo, COUNT(DISTINCT sessao) AS n FROM eventos WHERE tipo='pagina' AND ${W} GROUP BY 1`, A),
+    listaLancamento(q, url),
   ]);
 
   return {
@@ -136,6 +168,7 @@ export async function dadosPainel(q, url) {
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },
     porHora, compraPorHora, duracoes: duracoes.map((d) => d.ms), tempoOferta: tempoOferta.map((d) => d.ms), rolagem, opcoes, aoVivo: aoVivo[0].n, erros, novos,
+    leads, // lista de lançamento (cadastros para o grupo VIP)
   };
 }
 

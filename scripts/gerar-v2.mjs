@@ -21,6 +21,8 @@ const TROCAS = [
   ['<span class="titulo-leve">Sua fórmula</span> <strong>personalizada</strong>', '<span class="titulo-leve">Uma fórmula</span> <strong>completa</strong>'],
   ['data-rastreio="quero-minha-formula">Quero minha fórmula</a>', 'data-rastreio="quero-minha-formula">Quero o meu Sérum</a>'],
   // a v2 mostra os 24 ativos da fórmula (lista em assets/js/oferta-formula.js)
+  // pré-lançamento: o botão fala do Sérum (na v2 não existe "sua fórmula")
+  ['<span data-pre>Quero garantir minha fórmula</span>', '<span data-pre>Quero garantir o meu Sérum</span>'],
   ['<p class="fp-resumo" data-formula-resumo>12 ativos que trabalham juntos na sua pele</p>', '<p class="fp-resumo" data-formula-resumo>24 ativos em uma única fórmula</p>'],
 ];
 

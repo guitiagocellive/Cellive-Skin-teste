@@ -268,6 +268,7 @@
     conteudo.classList.toggle("estatico", estado.silencioso);
     preencherFiltros(d.opcoes || []);
     montarGeral(d);
+    montarLeads(d);
     montarIA(d);
     montarFunil(d);
     montarRespostas(d);
@@ -415,6 +416,49 @@
 
     montarFunilVisual(d);
     montarDiario(d);
+  }
+
+  /* ================= lista de lançamento ================= */
+  function montarLeads(d) {
+    var L = d.leads || { periodo: 0, total: 0, ultimos: [], porKit: [] };
+    contar($("[data-leads-periodo]"), L.periodo, n);
+    $("[data-leads-total]").textContent = n(L.total);
+    $("[data-leads-taxa]").textContent = pct(L.periodo, d.kpi.checkout, 0);
+
+    var kits = limpar($("[data-leads-kits]"));
+    var totalKit = (L.porKit || []).reduce(function (s, x) { return s + x.n; }, 0);
+    ["1", "2", "3"].forEach(function (kit) {
+      var item = (L.porKit || []).filter(function (x) { return String(x.kit) === kit; })[0];
+      var v = item ? item.n : 0;
+      var linha = el("div", "leads-kit");
+      linha.appendChild(el("span", "leads-kit-nome", kit + (kit === "1" ? " unidade" : " unidades")));
+      var barra = el("span", "leads-kit-barra");
+      var cheio = el("i");
+      cheio.style.width = (totalKit ? 100 * v / totalKit : 0) + "%";
+      barra.appendChild(cheio);
+      linha.appendChild(barra);
+      linha.appendChild(el("span", "leads-kit-n", n(v)));
+      kits.appendChild(linha);
+    });
+
+    var ul = limpar($("[data-leads-ultimos]"));
+    if (!L.ultimos || !L.ultimos.length) {
+      ul.appendChild(el("li", "leads-vazio", estado.demo ? "Na demonstração os nomes não aparecem." : "Ninguém se cadastrou neste período ainda."));
+    } else {
+      L.ultimos.forEach(function (x) {
+        var li = el("li");
+        li.appendChild(el("span", "leads-nome", x.nome));
+        li.appendChild(el("span", "leads-quando", (x.kit ? "Kit " + x.kit + " · " : "") + new Date(x.criado).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })));
+        ul.appendChild(li);
+      });
+    }
+  }
+  function baixarLeads() {
+    if (estado.demo) { status("Entre com a senha para baixar a lista", "demo"); return; }
+    fetch("/api/lead?formato=csv", { headers: { authorization: "Bearer " + estado.senha } })
+      .then(function (resp) { if (!resp.ok) throw new Error(); return resp.blob(); })
+      .then(function (blob) { baixar(blob, "cellive-lista-de-lancamento-" + isoDia(new Date()) + ".csv"); })
+      .catch(function () { status("Erro ao baixar a lista", "demo"); });
   }
 
   // números da v2 (oferta direta): sem as etapas do quiz
@@ -1484,6 +1528,8 @@
       porHora: porHora, compraPorHora: compraPorHora, duracoes: amostra(F, 169000, 0.6), tempoOferta: amostra(F, 96000, 1.2),
       rolagem: amostra(F, 58, 1).map(function (r2) { return { pagina: "oferta", r: Math.min(100, r2) }; }),
       opcoes: [{ campo: "fonte", v: "facebook" }, { campo: "fonte", v: "instagram" }, { campo: "fonte", v: "tiktok" }, { campo: "aparelho", v: "celular" }, { campo: "aparelho", v: "computador" }, { campo: "campanha", v: "anti-idade-30" }],
+      leads: { periodo: Math.round(C * 0.62), total: Math.round(C * 0.62) + 37, ultimos: [],
+        porKit: [{ kit: "1", n: Math.round(C * 0.15) }, { kit: "2", n: Math.round(C * 0.33) }, { kit: "3", n: Math.round(C * 0.14) }] },
       aoVivo: 4, erros: [], novos: [{ novo: 1, n: Math.round(V * 0.82) }, { novo: 0, n: Math.round(V * 0.18) }],
     };
   }
@@ -1560,6 +1606,7 @@
     b.textContent = q;
   }
   $("[data-exportar]").addEventListener("click", exportar);
+  $("[data-leads-baixar]").addEventListener("click", baixarLeads);
   $("[data-sair]").addEventListener("click", function () {
     try { sessionStorage.removeItem("cl-painel-senha"); } catch (e) { /* ok */ }
     estado.senha = null;
