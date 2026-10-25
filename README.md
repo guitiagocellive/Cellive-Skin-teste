@@ -108,8 +108,8 @@ redesenhado a partir da imagem de referência.
 
 `oferta.html` mostra o produto (galeria com 6 fotos, selos, avaliação e benefícios) e os planos. Os preços, o resumo e o
 link de checkout de cada plano ficam nos atributos `data-` de cada plano no próprio `oferta.html`
-(`data-resumo`, `data-parcela`, `data-avista` e `data-link`). A contagem regressiva começa em 3h37m45s e continua
-de onde parou se a pessoa recarregar a página.
+(`data-resumo`, `data-parcela`, `data-avista` e `data-link`). A contagem regressiva começa em 4min30s e continua
+de onde parou se a pessoa recarregar a página. A barra "91% vendido" cresce e conta até o valor ao aparecer.
 
 Depois dos planos vêm os **depoimentos** ("AMADO POR **+5.000 MULHERES**", com o traço azul que se desenha em volta),
 num carrossel que a pessoa arrasta para o lado. Para mudar nomes,
@@ -171,6 +171,13 @@ com foto, idade, "Compra Verificada" e as fotos enviadas. As avaliações ficam 
 
 No fim, o **rodapé** preto com o logo, a frase da marca, o Instagram, os links (planos, dúvidas e WhatsApp), o suporte
 (WhatsApp e e-mail) e os dados da empresa.
+
+## Cores (paleta da marca)
+
+Todas as cores ficam no começo do `assets/css/style.css`. A paleta é: preto `#1a1a1a`, cinza `#7c7d81`,
+cinza claro `#dfe1e5`, azul `#b1c7de` e branco. Os tons "derivados" (cinza escuro para textos, fundos bem claros e o azul
+escurecido para textos e linhas) são misturas dessas cores. Ficam fora da paleta, de propósito: o verde do botão de
+compra e da etiqueta "Mais econômico", o amarelo das estrelas, o azul do selo de verificado e as cores da bandeira.
 
 ## Fonte (Acumin Pro)
 

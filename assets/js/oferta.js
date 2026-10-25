@@ -43,10 +43,10 @@
   escolher(document.querySelector(".plano input:checked").closest(".plano"));
 
   /* ---------- Contagem regressiva ----------
-     Começa em 3h37m45s na primeira visita e continua de onde parou se a pessoa
+     Começa em 4min30s na primeira visita e continua de onde parou se a pessoa
      recarregar a página. Quando chega a zero, recomeça. */
-  var CHAVE = "cellive-oferta-fim";
-  var DURACAO = (3 * 3600 + 37 * 60 + 45) * 1000;
+  var CHAVE = "cellive-oferta-fim-v2";
+  var DURACAO = (4 * 60 + 30) * 1000;
   var contagem = document.querySelector("[data-contagem]");
   var fim = 0;
   try { fim = Number(localStorage.getItem(CHAVE)) || 0; } catch (e) { /* sem armazenamento */ }
@@ -59,12 +59,46 @@
 
   function atualizar() {
     var resta = Math.max(0, fim - Date.now());
-    if (resta === 0) fim = Date.now() + DURACAO;
-    var s = Math.floor(resta / 1000);
-    contagem.textContent = dois(Math.floor(s / 3600)) + ":" + dois(Math.floor((s % 3600) / 60)) + ":" + dois(s % 60);
+    if (resta === 0) {
+      fim = Date.now() + DURACAO;
+      try { localStorage.setItem(CHAVE, String(fim)); } catch (e) { /* sem armazenamento */ }
+      resta = DURACAO;
+    }
+    var s = Math.ceil(resta / 1000);
+    var h = Math.floor(s / 3600);
+    contagem.textContent = (h ? dois(h) + ":" : "") + dois(Math.floor((s % 3600) / 60)) + ":" + dois(s % 60);
+    contagem.parentNode.classList.toggle("is-urgente", s <= 60);
   }
   atualizar();
   setInterval(atualizar, 1000);
+
+  /* ---------- Barra "vendido": cresce e conta até o valor ao aparecer ---------- */
+  var estoque = document.querySelector("[data-estoque]");
+  var vendido = document.querySelector("[data-vendido]");
+  if (estoque) {
+    var animarEstoque = function () {
+      estoque.classList.add("is-visivel");
+      if (!vendido) return;
+      var alvo = Number(vendido.getAttribute("data-vendido"));
+      var semMov = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (semMov) return;
+      var inicio = null;
+      var passo = function (t) {
+        if (!inicio) inicio = t + 200;
+        var k = Math.max(0, Math.min(1, (t - inicio) / 1800));
+        vendido.textContent = Math.round(alvo * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(passo);
+      };
+      requestAnimationFrame(passo);
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens, obs) {
+        if (itens[0].isIntersecting) { animarEstoque(); obs.disconnect(); }
+      }, { threshold: 0.6 }).observe(estoque);
+    } else {
+      animarEstoque();
+    }
+  }
 
   /* ---------- Topo com sombra ao rolar ---------- */
   var topo = document.querySelector("[data-topo]");

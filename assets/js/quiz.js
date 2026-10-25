@@ -889,11 +889,11 @@
      desenho do pote (50 × 163), seguindo a arte do frasco. */
   var ROTULO_SVG =
     '<defs><linearGradient id="montagem-brilho-grad" x1="0" x2="1">' +
-      '<stop offset="0" stop-color="#fff" stop-opacity="0"/>' +
-      '<stop offset=".5" stop-color="#fff" stop-opacity=".55"/>' +
-      '<stop offset="1" stop-color="#fff" stop-opacity="0"/>' +
+      '<stop offset="0" stop-color="#ffffff" stop-opacity="0"/>' +
+      '<stop offset=".5" stop-color="#ffffff" stop-opacity=".55"/>' +
+      '<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>' +
     "</linearGradient></defs>" +
-    '<g class="rotulo" fill="#fff">' +
+    '<g class="rotulo" fill="#ffffff">' +
       '<g class="rotulo-parte" style="--d:0">' +
         '<text class="rotulo-mini" x="6" y="58.6">ÁCIDO HIALURÔNICO</text>' +
         '<text class="rotulo-mini" x="6" y="61.3">NANO ARBUTIN</text>' +
