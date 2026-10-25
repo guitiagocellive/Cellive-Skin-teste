@@ -92,6 +92,7 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Oferta: fotos "O que ele te proporciona" 1 a 3 | `assets/img/oferta/aliado-1.webp` … `aliado-3.webp` | retrato 4:5, 640 × 800 px |
 | Oferta: imagem do microagulhamento | `assets/img/oferta/microagulhamento.webp` | ✅ já colocada |
 | Oferta: frasco com tampa (cartão da garantia) | `assets/img/oferta/frasco-tampa.webp` | ✅ já colocada |
+| Oferta: frasco das laterais ("Os números falam por si") | `assets/img/oferta/numeros-frasco.webp` | ✅ já colocada |
 | Oferta: fotos das clientes 1 a 6 ("Um pouco dos nossos clientes") | `assets/img/oferta/cliente-1.webp` … `cliente-6.webp` | quadrada, 160 × 160 px |
 | Oferta: fotos dos depoimentos 1 a 3 | `assets/img/oferta/depoimento-1.webp` … `depoimento-3.webp` | 6:5, 600 × 500 px |
 
@@ -149,6 +150,10 @@ Depois, "CUIDADO COM RESPONSABILIDADE – RESULTADO PARA **CONFIAR**", em tema e
 azul e anéis girando, dois cartões em destaque ("Testado
 dermatologicamente" e "Aprovado pela Anvisa") e mais quatro em grade (Tecnologia coreana, Garantia de 30 dias, Compra
 segura e Frete grátis), com ícones que se desenham ao aparecer.
+
+Em seguida, "SERÁ QUE VALE A PENA MESMO? – OS NÚMEROS **FALAM POR SI**": seis barras com os percentuais que crescem e
+contam até o valor ao aparecer, e o frasco nas duas laterais, entrando com a rolagem como na ação SRRP. Os textos e
+números das barras ficam no `oferta.html` (o número aparece em `--v` e no texto).
 
 ## Fonte (Acumin Pro)
 

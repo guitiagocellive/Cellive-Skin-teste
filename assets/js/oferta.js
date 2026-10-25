@@ -375,6 +375,50 @@
     marcarVid();
   }
 
+  /* ---------- Os números falam por si ----------
+     Frascos das laterais: mesma entrada da ação SRRP (--p de 0 a 1 com a
+     rolagem). Barras: crescem e contam até o valor ao aparecer. */
+  var numeros = document.querySelector("[data-numeros]");
+  if (numeros) {
+    var pedidoNum = 0;
+    var atualizarNum = function () {
+      pedidoNum = 0;
+      var alto = window.innerHeight;
+      var p = (alto * 0.95 - numeros.getBoundingClientRect().top) / (alto * 0.65);
+      p = Math.min(1, Math.max(0, p));
+      p = 1 - Math.pow(1 - p, 2);
+      numeros.style.setProperty("--p", semMovimento ? "1" : p.toFixed(3));
+    };
+    var pedirNum = function () { if (!pedidoNum) pedidoNum = requestAnimationFrame(atualizarNum); };
+    window.addEventListener("scroll", pedirNum, { passive: true });
+    window.addEventListener("resize", pedirNum);
+    atualizarNum();
+
+    var listaNum = numeros.querySelector("[data-num-lista]");
+    var contarBarras = function () {
+      listaNum.classList.add("is-visivel");
+      if (semMovimento) return;
+      Array.prototype.forEach.call(listaNum.querySelectorAll("[data-contar-num]"), function (el, i) {
+        var valor = Number(el.getAttribute("data-contar-num"));
+        var inicio = null;
+        var passo = function (t) {
+          if (!inicio) inicio = t + i * 120;
+          var k = Math.max(0, Math.min(1, (t - inicio) / 1400));
+          el.textContent = Math.round(valor * (1 - Math.pow(1 - k, 3))) + "%";
+          if (k < 1) requestAnimationFrame(passo);
+        };
+        requestAnimationFrame(passo);
+      });
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens, obs) {
+        if (itens[0].isIntersecting) { contarBarras(); obs.disconnect(); }
+      }, { threshold: 0.3 }).observe(listaNum);
+    } else {
+      contarBarras();
+    }
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {

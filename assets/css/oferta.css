@@ -3192,6 +3192,140 @@
   line-height: 1.32;
 }
 
+/* ---------- Dobra 19: os números falam por si ----------
+   Medidas da imagem de referência (739 px de largura): --u vale 1 px dela. */
+.oferta-numeros {
+  --u: min(calc(100vw / 739), calc(var(--page-max) / 739));
+  --p: 1; /* entrada dos frascos (0 → 1), controlada pelo oferta.js */
+  position: relative;
+  margin: 30px calc(-1 * var(--gutter)) 0;
+  padding: calc(66 * var(--u)) calc(30 * var(--u)) calc(170 * var(--u));
+  overflow-x: clip;
+  text-align: center;
+  background:
+    radial-gradient(ellipse 34% 30% at 100% 52%, rgba(177, 198, 221, 0.35), transparent 70%),
+    radial-gradient(ellipse 30% 26% at 0% 40%, rgba(177, 198, 221, 0.25), transparent 70%);
+}
+
+/* Frascos das laterais: entram pela borda e terminam inclinados */
+.num-frasco {
+  position: absolute;
+  z-index: 0;
+  width: calc(190 * var(--u));
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  will-change: transform;
+  filter: drop-shadow(0 calc(12 * var(--u)) calc(18 * var(--u)) rgba(90, 110, 140, 0.18));
+  opacity: calc(0.3 + var(--p) * 0.7);
+}
+
+.num-frasco-esq {
+  left: calc(4 * var(--u));
+  top: calc(260 * var(--u));
+  transform:
+    translate(-50%, -50%)
+    translateX(calc((1 - var(--p)) * -260 * var(--u)))
+    rotate(calc(var(--p) * 24deg));
+}
+
+.num-frasco-dir {
+  left: calc(760 * var(--u));
+  top: calc(1215 * var(--u));
+  transform:
+    translate(-50%, -50%)
+    translateX(calc((1 - var(--p)) * 260 * var(--u)))
+    rotate(calc(var(--p) * -26deg));
+}
+
+.num-chamada,
+.num-titulo,
+.num-sub,
+.num-lista {
+  position: relative;
+  z-index: 1;
+}
+
+.num-chamada {
+  font-size: calc(26 * var(--u));
+}
+
+.num-titulo {
+  margin: calc(8 * var(--u)) 0 0;
+  color: #1a1a1a;
+  font-family: var(--font-condensed);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.num-titulo .titulo-leve {
+  font-size: calc(52 * var(--u));
+}
+
+.num-titulo strong {
+  font-size: calc(62 * var(--u));
+  font-weight: 700;
+}
+
+.num-sub {
+  max-width: calc(600 * var(--u));
+  margin: calc(70 * var(--u)) auto 0;
+  color: #6b6f75;
+  font-size: calc(31 * var(--u));
+  line-height: 1.35;
+}
+
+/* Barras de percentual */
+.num-lista {
+  display: grid;
+  gap: calc(34 * var(--u));
+  margin: calc(66 * var(--u)) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.num-barra {
+  height: calc(56 * var(--u));
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e1e2e4;
+  text-align: left;
+}
+
+/* a parte azul cresce até --v; o texto vai sendo revelado junto */
+.num-preenche {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--blue);
+  white-space: nowrap;
+  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.12s);
+}
+
+.num-lista.is-visivel .num-preenche {
+  width: var(--v);
+}
+
+.num-rotulo {
+  padding-left: calc(22 * var(--u));
+  color: #fff;
+  font-size: calc(26 * var(--u));
+}
+
+.num-valor {
+  padding: 0 calc(14 * var(--u)) 0 calc(10 * var(--u));
+  color: #fff;
+  font-size: calc(26 * var(--u));
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -3243,7 +3377,8 @@
   .conf-item,
   .conf-mini,
   .conf-frasco,
-  .conf-icone :is(path, circle, rect) {
+  .conf-icone :is(path, circle, rect),
+  .num-preenche {
     transition: none;
   }
 
