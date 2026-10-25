@@ -420,7 +420,7 @@
   }
 
   /* ---------- Jornada "como ele age na pele" ----------
-     Avança sozinha a cada 6 s (barrinha enchendo, como stories) enquanto a
+     Avança sozinha a cada 9,5 s (barrinha enchendo, como stories) enquanto a
      seção está na tela. Ao tocar numa etapa ou arrastar o cartão, para de
      avançar sozinha e fica na escolha da pessoa. */
   var jornada = document.querySelector("[data-jornada]");

@@ -158,7 +158,7 @@ números das barras ficam no `oferta.html` (o número aparece em `--v` e no text
 
 Depois, "POR TRÁS DOS RESULTADOS – ENTENDA COMO **ELE AGE NA PELE.**": a foto e, por cima dela, a jornada em 4 etapas,
 com um gráfico ilustrativo (sem números) do colágeno e da renovação celular subindo a cada etapa
-(Adaptação, Ativação, Renovação e Evolução). As etapas avançam sozinhas como stories, com uma barrinha enchendo,
+(Adaptação, Ativação, Renovação e Evolução). As etapas avançam sozinhas como stories (9,5 s cada), com uma barrinha enchendo,
 enquanto a seção está na tela; a pessoa pode tocar numa etapa ou arrastar o cartão para o lado. Textos no `oferta.html`.
 
 ## Fonte (Acumin Pro)
