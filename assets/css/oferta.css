@@ -4167,6 +4167,20 @@
   opacity: 0.08;
 }
 
+/* ---------- "Os outros ativos da fórmula" (quiz: 2º toque do botão) ---------- */
+.fp-outros-cab { padding: 30px 4px 2px; text-align: center; }
+.fp-outros-titulo {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-family: var(--font-condensed);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.fp-outros-texto { margin: 8px 0 0; color: var(--gray); font-size: 14.5px; line-height: 1.35; }
+.fp-mais[hidden] { display: none; }
+
 /* ---------- Fórmula na v2 (sem quiz): ativos por grupo ---------- */
 .fp-chips {
   display: flex;

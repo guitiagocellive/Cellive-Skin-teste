@@ -150,7 +150,7 @@
       case "politica": return "Capa · Política de Privacidade";
       case "barra-compra": return "Barra fixa “Comprar”";
       case "quero-minha-formula": return "Botão “Quero minha fórmula”";
-      case "ver-mais-ativos": return "Ver os outros ativos";
+      case "ver-mais-ativos": return v === "outros" ? "Conheça os outros ativos da fórmula" : "Ver os outros ativos escolhidos";
       case "ver-mais-avaliacoes": return "Ver mais avaliações";
       case "faq": return "Dúvida · " + (FAQ[v] || v);
       case "video": return "Vídeo " + v + " (play)";

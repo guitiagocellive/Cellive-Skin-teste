@@ -179,6 +179,11 @@
       ],
     },
   ];
+  // Os 12 do quiz dentro da lista dos 24 (o Exos Skin traz o EGF). Os outros
+  // ativos da lista aparecem no 2º toque do botão, como "os outros da fórmula".
+  var NO_QUIZ = ["Retinal", "PDRN", "GHK-Cu (peptídeo de cobre)", "Hexapeptídeo-8", "Pentapeptídeo-4", "Tetrapeptídeo-7",
+    "EGF", "Niacinamida", "Alfa-Arbutina", "Glutationa", "Ácido Hialurônico", "Vitamina E"];
+
   var ICONES = {
     renova: '<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4.5h-4.5"/>',
     peptideo: '<circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="7" r="2.2"/><circle cx="19" cy="12" r="2.2"/><circle cx="12" cy="17" r="2.2"/><path d="M6.8 10.8 10.2 8.2M13.8 8.2l3.4 2.6M17.2 13.2l-3.4 2.6M10.2 15.8l-3.4-2.6"/>',
@@ -376,19 +381,41 @@
   }
   observar(lista.children);
 
-  // "Ver mais": abre os outros ativos
-  var aberto = false;
+  /* Botão "ver mais" em etapas (sem "ver menos"):
+     quiz: 1º toque abre o resto dos 12 escolhidos; 2º toque abre os outros
+     ativos da fórmula; depois o botão some.  v2: um toque abre o resto. */
+  var outros = document.querySelector("[data-formula-outros]");
+  var etapas = [{ abre: extra, texto: "Ver os outros " + restantes + " ativos", valor: "escolhidos" }];
+  if (semQuiz) {
+    if (outros) outros.remove();
+  } else if (outros) {
+    var listaOutros = outros.querySelector("ol");
+    var n = total;
+    GRUPOS_V2.forEach(function (g) {
+      g.ativos.forEach(function (a) {
+        if (NO_QUIZ.indexOf(a.nome) === -1) listaOutros.appendChild(cartaoV2(a, ++n, g.icone, 0));
+      });
+    });
+    var qtd = n - total;
+    var tit = outros.querySelector("[data-formula-outros-titulo]");
+    if (tit) tit.textContent = "Os outros " + qtd + " ativos";
+    if (qtd) etapas.push({ abre: outros, texto: "Conheça os outros " + qtd + " ativos da fórmula", valor: "outros" });
+  }
+  var etapa = 0;
   var textoBotao = botaoMais.querySelector("span");
-  textoBotao.textContent = "Ver os outros " + restantes + " ativos";
+  function mostrarEtapa() {
+    var e = etapas[etapa];
+    textoBotao.textContent = e.texto;
+    botaoMais.setAttribute("aria-controls", e.abre.id || "");
+    botaoMais.setAttribute("data-rastreio-valor", e.valor);
+  }
+  mostrarEtapa();
   botaoMais.addEventListener("click", function () {
-    aberto = !aberto;
-    extra.classList.toggle("is-aberto", aberto);
-    botaoMais.setAttribute("aria-expanded", aberto ? "true" : "false");
-    textoBotao.textContent = aberto ? "Ver menos" : "Ver os outros " + restantes + " ativos";
-    if (aberto) {
-      Array.prototype.forEach.call(extra.querySelectorAll(".fp-item"), function (it) { it.classList.add("is-visivel"); });
-    } else {
-      lista.lastElementChild.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    var e = etapas[etapa];
+    e.abre.classList.add("is-aberto");
+    Array.prototype.forEach.call(e.abre.querySelectorAll(".fp-item"), function (it) { it.classList.add("is-visivel"); });
+    etapa++;
+    if (etapa < etapas.length) mostrarEtapa();
+    else botaoMais.hidden = true;
   });
 })();
