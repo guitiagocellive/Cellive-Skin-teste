@@ -242,10 +242,61 @@
     </main>
 
     <div class="dica" role="tooltip" data-dica hidden></div>
+
+    <!-- ============ Estrategista: chat de IA (texto, voz, imagem, PDF) ============ -->
+    <button type="button" class="agente-botao" data-agente-abrir aria-label="Conversar com o Estrategista">
+      <span class="agente-orb" aria-hidden="true"></span>
+      <span>Estrategista</span>
+    </button>
+
+    <section class="agente" data-agente hidden role="dialog" aria-modal="true" aria-labelledby="agente-titulo">
+      <header class="agente-topo">
+        <div class="agente-id">
+          <span class="agente-orb" aria-hidden="true"></span>
+          <div>
+            <h2 id="agente-titulo">Estrategista</h2>
+            <p>IA de dados e conversão · lê os números do painel</p>
+          </div>
+        </div>
+        <div class="agente-topo-acoes">
+          <button type="button" class="icone-botao" data-agente-limpar aria-label="Começar nova conversa" title="Nova conversa">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button type="button" class="icone-botao" data-agente-fechar aria-label="Fechar" title="Fechar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="agente-mensagens" data-agente-mensagens aria-live="polite"></div>
+
+      <form class="agente-campo" data-agente-form>
+        <div class="agente-anexos" data-agente-anexos hidden></div>
+        <div class="agente-ouvindo" data-agente-ouvindo hidden>
+          <span class="agente-onda" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="agente-ouvindo-texto" data-agente-ouvindo-texto>Ouvindo… pode falar</span>
+          <button type="button" class="agente-parar" data-agente-parar>Enviar</button>
+        </div>
+        <div class="agente-linha">
+          <button type="button" class="agente-icone" data-agente-anexar aria-label="Anexar imagem, PDF ou planilha" title="Anexar imagem, PDF ou planilha">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5 12.3 19a5 5 0 0 1-7.1-7.1l8-8a3.4 3.4 0 0 1 4.8 4.8l-8 8a1.7 1.7 0 0 1-2.4-2.4l7.4-7.4"/></svg>
+          </button>
+          <input type="file" data-agente-arquivo accept="image/*,application/pdf,.csv,.txt" multiple hidden>
+          <textarea data-agente-texto rows="1" placeholder="Pergunte sobre suas vendas…" aria-label="Sua pergunta"></textarea>
+          <button type="button" class="agente-icone agente-mic" data-agente-mic aria-label="Falar a pergunta" title="Falar a pergunta">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+          </button>
+          <button type="submit" class="agente-enviar" data-agente-enviar aria-label="Enviar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>
+          </button>
+        </div>
+      </form>
+    </section>
   </div>
 
   <script src="assets/js/quiz-perguntas.js"></script>
   <script src="assets/js/painel-analise.js"></script>
   <script src="assets/js/painel.js"></script>
+  <script src="assets/js/painel-agente.js"></script>
 </body>
 </html>

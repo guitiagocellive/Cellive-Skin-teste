@@ -42,6 +42,8 @@ export async function banco() {
     await q("CREATE INDEX IF NOT EXISTS ev_tipo ON eventos(tipo, ts)");
     // versão do funil (v2 = oferta direta para anúncios); vazio = funil com quiz
     await q("ALTER TABLE eventos ADD COLUMN IF NOT EXISTS versao TEXT");
+    // uso do chat do Estrategista (para o limite diário)
+    await q("CREATE TABLE IF NOT EXISTS agente_uso (ts BIGINT NOT NULL)");
     // relatórios da IA já gerados (para não pagar duas vezes pela mesma análise)
     await q(`CREATE TABLE IF NOT EXISTS analises (
       chave TEXT PRIMARY KEY, criado BIGINT NOT NULL, dados JSONB NOT NULL

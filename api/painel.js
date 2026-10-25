@@ -45,7 +45,9 @@ function filtros(url, deslocamento = 0) {
   return { where: cond.join(" AND "), args };
 }
 
-async function painel(q, url) {
+/* Números do painel para um período/filtro (objeto simples).
+   Usado pelo GET abaixo e pelo agente estrategista (api/agente.js). */
+export async function dadosPainel(q, url) {
   const todos = async (texto, args) => numeros(await q(sql(texto), args));
   const F = filtros(url), ANT = filtros(url, 1);
   const W = F.where, A = F.args;
@@ -123,14 +125,14 @@ async function painel(q, url) {
     todos(`SELECT CASE WHEN novo THEN 1 ELSE 0 END AS novo, COUNT(DISTINCT sessao) AS n FROM eventos WHERE tipo='pagina' AND ${W} GROUP BY 1`, A),
   ]);
 
-  return json({
+  return {
     gerado: Date.now(),
     versao: ehV2(url) ? "v2" : "v1",
     ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },
     porHora, duracoes: duracoes.map((d) => d.ms), tempoOferta: tempoOferta.map((d) => d.ms), rolagem, opcoes, aoVivo: aoVivo[0].n, erros, novos,
-  });
+  };
 }
 
 async function csv(q, url) {
@@ -160,7 +162,7 @@ export async function GET(request) {
   if (!q) return json({ erro: "sem-banco" }, 503);
   const url = new URL(request.url);
   try {
-    return url.searchParams.get("formato") === "csv" ? await csv(q, url) : await painel(q, url);
+    return url.searchParams.get("formato") === "csv" ? await csv(q, url) : json(await dadosPainel(q, url));
   } catch (e) {
     return json({ erro: "falha", detalhe: String(e && e.message) }, 500);
   }

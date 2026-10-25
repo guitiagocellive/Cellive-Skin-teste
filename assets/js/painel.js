@@ -175,6 +175,11 @@
   };
   try { estado.senha = sessionStorage.getItem("cl-painel-senha"); } catch (e) { /* sem armazenamento */ }
   var ehV2 = function () { return estado.versao === "v2"; };
+  // o chat do Estrategista (painel-agente.js) lê daqui a senha, o período e os números da tela
+  window.PainelApp = {
+    estado: estado,
+    periodo: function () { var r = intervalo(); return { de: isoDia(r.de), ate: isoDia(new Date(r.ate.getTime() - 1)) }; },
+  };
 
   function intervalo() {
     var hoje = new Date(); hoje.setHours(0, 0, 0, 0);
@@ -1313,6 +1318,17 @@
     else if (d.ia) txt = meta.erro ? "Não deu para falar com o Claude agora (" + meta.erro + "). Esta é a análise automática do painel." : "Esta é a análise automática do painel. O relatório do Claude aparece aqui em instantes.";
     else txt = "Análise automática, feita pelo próprio painel com regras de conversão, sem custo. Para o relatório escrito pelo Claude, adicione a chave ANTHROPIC_API_KEY na Vercel.";
     rod.appendChild(el("p", null, txt));
+    // atalho para conversar sobre o relatório com o Estrategista (chat)
+    {
+      var conversar = el("button", "botao-conversar");
+      conversar.type = "button";
+      conversar.innerHTML = '<span class="agente-orb" aria-hidden="true"></span>';
+      conversar.appendChild(document.createTextNode("Conversar sobre isso"));
+      conversar.addEventListener("click", function () {
+        if (window.abrirEstrategista) window.abrirEstrategista("Explique o relatório deste período: qual é o maior gargalo e o que eu faço primeiro?");
+      });
+      rod.appendChild(conversar);
+    }
     if (d.ia && !estado.demo) {
       var b = el("button", "botao-claro", claude ? "Atualizar análise" : "Gerar com o Claude");
       b.type = "button";

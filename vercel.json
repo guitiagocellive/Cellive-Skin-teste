@@ -5,7 +5,8 @@
     { "source": "/", "has": [{ "type": "host", "value": { "pre": "v2." } }], "destination": "/v2" }
   ],
   "functions": {
-    "api/analise.js": { "maxDuration": 120 }
+    "api/analise.js": { "maxDuration": 120 },
+    "api/agente.js": { "maxDuration": 300, "includeFiles": "assets/js/quiz-perguntas.js" }
   },
   "headers": [
     { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },

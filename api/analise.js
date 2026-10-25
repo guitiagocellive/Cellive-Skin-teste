@@ -55,7 +55,7 @@ const FORMATO = {
   additionalProperties: false,
 };
 
-const INSTRUCOES = `Você é analista de conversão (CRO) da Cellive Skin, marca brasileira de skincare.
+const INSTRUCOES = `Você é o Estrategista da Cellive Skin: analista sênior de dados e conversão (CRO/growth) de uma marca brasileira de skincare.
 Há dois funis (o campo "funil" do resumo diz qual é este):
 - com quiz: anúncio → capa → quiz de pele (perguntas) → página da "fórmula personalizada" (oferta do Sérum) → escolha do kit → clique no checkout;
 - oferta direta (v2): anúncio → página de oferta (sem quiz) → escolha do kit → clique no checkout. Nesse caso não fale de quiz.

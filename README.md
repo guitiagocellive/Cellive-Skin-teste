@@ -44,6 +44,13 @@ melhoria (com prioridade, o que fazer e o ganho estimado em cliques no checkout)
   `IA_LIMITE_DIA` relatórios por dia (padrão 20). O modelo padrão é o Claude Opus 5.5; para um mais barato, crie a
   variável `IA_MODELO` (por exemplo `claude-haiku-5-5`).
 
+**Estrategista (chat de IA do painel):** botão "Estrategista" no canto da tela. Conversa por texto ou voz (o
+navegador transcreve a fala; no iPhone e no Android funciona no Safari/Chrome), e aceita prints, imagens, PDFs e
+planilhas CSV. O agente (`api/agente.js`) consulta sozinho os números da plataforma de qualquer período, versão
+(quiz ou v2), fonte, campanha ou aparelho e responde com números em destaque, barras e ações priorizadas.
+Usa a mesma chave `ANTHROPIC_API_KEY`; limite de `AGENTE_LIMITE_DIA` mensagens por dia (padrão 150). O painel mede
+até o clique em comprar: vendas pagas só aparecem quando o checkout for ligado ao painel.
+
 Para testar no computador com um Postgres comum: `npm install` e rode as funções com `BANCO_LOCAL=1`,
 `DATABASE_URL=postgres://…` e `PAINEL_SENHA=…` (ou use `vercel dev`).
 
