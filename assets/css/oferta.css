@@ -2440,66 +2440,71 @@
 .garantia-cartao {
   position: relative;
   display: grid;
-  grid-template-columns: 34% 1fr;
+  grid-template-columns: 124px 1fr;
   align-items: center;
-  min-height: 162px;
-  padding: 14px 14px 16px 4px;
+  min-height: 166px;
+  padding: 16px 14px 18px 0;
   border-radius: 26px;
   background: #fff;
   box-shadow: 0 8px 24px rgba(120, 152, 190, 0.22);
 }
 
+/* Camadas como na foto: frasco atrás, caixa na frente dele e o selo na
+   frente de tudo. Posições medidas a partir do centro do selo. */
 .garantia-visual {
   position: relative;
   align-self: stretch;
+  --sx: 62px; /* centro do selo, a partir da borda esquerda do cartão */
+  --sy: 86px; /* centro do selo, a partir do topo do cartão */
 }
 
-/* caixa e frasco saindo por cima do cartão */
 .garantia-caixa,
-.garantia-frasco {
+.garantia-frasco,
+.garantia-selo {
   position: absolute;
-  height: auto;
   max-width: none;
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.7s ease 0.15s;
+  left: var(--sx);
+  top: calc(var(--sy) - 16px);
+}
+
+.garantia-frasco {
+  z-index: 1;
+  width: 36px;
+  height: auto;
+  margin: -92px 0 0 -6px;
+  transform-origin: 50% 100%;
   opacity: 0;
+  transform: translateY(20px) rotate(4deg);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s, opacity 0.7s ease 0.3s;
 }
 
 .garantia-caixa {
-  left: 12%;
-  top: -44px;
-  width: 72px;
-  transform: translateY(16px) rotate(-6deg);
-}
-
-.garantia-frasco {
-  left: calc(12% + 58px);
-  top: -46px;
-  width: 41px;
-  transform: translateY(24px) rotate(10deg);
-  transition-delay: 0.3s;
+  z-index: 2;
+  width: 68px;
+  height: auto;
+  margin: -86px 0 0 -33px;
+  transform-origin: 50% 100%;
+  opacity: 0;
+  transform: translateY(16px) rotate(0deg);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s, opacity 0.7s ease 0.15s;
 }
 
 .garantia-cartao.is-visivel .garantia-caixa {
   opacity: 1;
-  transform: rotate(-6deg);
+  transform: rotate(-9deg);
 }
 
 .garantia-cartao.is-visivel .garantia-frasco {
   opacity: 1;
-  transform: rotate(10deg);
+  transform: rotate(13deg);
 }
 
-/* selo "30 dias" com as setas girando devagar */
 .garantia-selo {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  top: 50%;
-  margin: -18px 0 0 -48px;
-  display: grid;
-  place-items: center;
-  width: 94px;
-  height: 94px;
+  z-index: 3;
+  top: var(--sy);
+  width: 106px;
+  height: 106px;
+  margin: -53px 0 0 -53px;
   transform: scale(0.6) rotate(-20deg);
   opacity: 0;
   transition: transform 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) 0.5s, opacity 0.4s ease 0.5s;
@@ -2511,49 +2516,25 @@
 }
 
 .garantia-selo svg {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
+  overflow: visible;
 }
 
-.selo-borda {
-  fill: var(--blue);
-}
-
-.selo-seta,
-.selo-ponta {
-  fill: none;
-  stroke: #c9cdd2;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transform-origin: 60px 60px;
-  animation: selo-gira 9s linear infinite;
-}
-
-@keyframes selo-gira {
-  to { transform: rotate(360deg); }
-}
-
-.selo-numero,
+.selo-30,
 .selo-dias {
-  position: relative;
-  color: var(--blue);
+  fill: #b1c6dd;
   font-family: var(--font-condensed);
   font-weight: 700;
-  line-height: 1;
 }
 
-.selo-numero {
-  margin-top: -12px;
-  font-size: 30px;
+.selo-30 {
+  font-size: 60px;
 }
 
 .selo-dias {
-  position: absolute;
-  top: 56%;
-  font-size: 14px;
+  font-size: 32px;
 }
 
 .garantia-texto {
@@ -2605,12 +2586,14 @@
   text-transform: uppercase;
 }
 
-/* Pilha de cartões: o da frente vai para trás de tempos em tempos */
+/* Cartões dos percentuais: começam juntos (um quase em cima do outro) e se
+   abrem conforme a página rola. --abre vai de 0 a 1 (oferta.js). */
 .res-pilha {
+  --abre: 1;
   position: relative;
-  width: 200px;
-  height: 262px;
-  margin: 40px auto 0;
+  width: 196px;
+  height: 500px;
+  margin: 34px auto 0;
 }
 
 .res-cartao {
@@ -2623,53 +2606,25 @@
   justify-content: center;
   width: 100%;
   height: 168px;
-  padding: 14px 10px;
-  border-radius: 20px;
+  padding: 14px 12px;
+  border-radius: 22px;
   background: #fff;
-  box-shadow: 0 8px 20px rgba(80, 110, 150, 0.16);
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+  box-shadow: 0 8px 22px rgba(80, 110, 150, 0.16);
+  /* juntos: 28px entre um e outro; abertos: 162px */
+  transform:
+    translateY(calc(var(--n) * (28px + 134px * var(--abre))))
+    rotate(var(--giro));
+  will-change: transform;
 }
 
-/* "argolas" azuis na base de cada cartão */
-.res-cartao::before,
-.res-cartao::after {
-  content: "";
-  position: absolute;
-  bottom: -7px;
-  width: 16px;
-  height: 14px;
-  border-radius: 0 0 9px 9px;
-  background: #6f92c0;
-}
-
-.res-cartao::before { left: 26%; }
-.res-cartao::after { right: 26%; }
-
-.res-cartao[data-pos="0"] {
-  z-index: 3;
-  transform: rotate(4deg);
-}
-
-.res-cartao[data-pos="1"] {
-  z-index: 2;
-  transform: translate(2px, 74px) rotate(-5deg);
-}
-
-.res-cartao[data-pos="2"] {
-  z-index: 1;
-  transform: translate(-4px, 96px) rotate(3deg);
-}
-
-.res-cartao.is-saindo {
-  z-index: 4;
-  opacity: 0;
-  transform: translate(-40px, -50px) rotate(-14deg) scale(0.95);
-}
+.res-cartao:nth-child(1) { --giro: 5deg; z-index: 3; }
+.res-cartao:nth-child(2) { --giro: -5deg; z-index: 2; }
+.res-cartao:nth-child(3) { --giro: 4deg; z-index: 1; }
 
 .res-numero {
   color: #4d74a8;
   font-family: var(--font-condensed);
-  font-size: 76px;
+  font-size: 78px;
   font-style: italic;
   font-weight: 400;
   line-height: 1;
@@ -2682,7 +2637,16 @@
   font-size: 17px;
   font-weight: 700;
   line-height: 1.15;
-  transform: rotate(3deg);
+}
+
+.res-nota {
+  max-width: 290px;
+  margin: 20px auto 0;
+  color: #4d74a8;
+  font-family: var(--font-condensed);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2732,14 +2696,11 @@
   .cli-avatar,
   .garantia-caixa,
   .garantia-frasco,
-  .garantia-selo,
-  .res-cartao {
+  .garantia-selo {
     transition: none;
   }
 
-  .cli-trilho,
-  .selo-seta,
-  .selo-ponta {
+  .cli-trilho {
     animation: none;
   }
 

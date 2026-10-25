@@ -238,16 +238,27 @@
     window.addEventListener("load", ajustarTempo);
   }
 
-  /* ---------- Resultados: pilha de cartões ---------- */
+  /* ---------- Resultados: cartões que se abrem com a rolagem ----------
+     --abre vai de 0 (cartões juntos, entrando na tela) a 1 (abertos). Cada
+     número conta de 0 até o valor na primeira vez que aparece. */
   var pilha = document.querySelector("[data-res-pilha]");
   if (pilha) {
-    var cartoes = Array.prototype.slice.call(pilha.querySelectorAll(".res-cartao"));
-    cartoes.forEach(function (c, i) { c.setAttribute("data-pos", i); });
+    var pedidoPilha = 0;
+    var abrirPilha = function () {
+      pedidoPilha = 0;
+      var alto = window.innerHeight;
+      var p = (alto * 0.8 - pilha.getBoundingClientRect().top) / (alto * 0.55);
+      p = Math.min(1, Math.max(0, p));
+      p = 1 - Math.pow(1 - p, 2);
+      pilha.style.setProperty("--abre", semMovimento ? "1" : p.toFixed(3));
+    };
+    var pedirPilha = function () { if (!pedidoPilha) pedidoPilha = requestAnimationFrame(abrirPilha); };
+    window.addEventListener("scroll", pedirPilha, { passive: true });
+    window.addEventListener("resize", pedirPilha);
+    abrirPilha();
 
-    // número sobe de 0 até o valor quando o cartão está na frente
-    var contar = function (cartao) {
-      var alvo = cartao.querySelector("[data-contar]");
-      var valor = Number(alvo && alvo.getAttribute("data-contar"));
+    var contar = function (alvo) {
+      var valor = Number(alvo.getAttribute("data-contar"));
       if (!valor || semMovimento) return;
       var inicio = null;
       var passo = function (t) {
@@ -258,31 +269,13 @@
       };
       requestAnimationFrame(passo);
     };
-
-    var girar = function () {
-      var frente = cartoes[0];
-      frente.classList.add("is-saindo");
-      setTimeout(function () {
-        cartoes.push(cartoes.shift());
-        cartoes.forEach(function (c, i) { c.setAttribute("data-pos", i); });
-        frente.classList.remove("is-saindo");
-        contar(cartoes[0]);
-      }, 450);
-    };
-
-    var comecouPilha = false;
-    var iniciarPilha = function () {
-      if (comecouPilha) return;
-      comecouPilha = true;
-      contar(cartoes[0]);
-      if (!semMovimento && cartoes.length > 1) setInterval(girar, 3600);
-    };
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (itens, obs) {
-        if (itens[0].isIntersecting) { iniciarPilha(); obs.disconnect(); }
-      }, { threshold: 0.4 }).observe(pilha);
-    } else {
-      iniciarPilha();
+      var obsNumero = new IntersectionObserver(function (itens) {
+        itens.forEach(function (item) {
+          if (item.isIntersecting) { contar(item.target); obsNumero.unobserve(item.target); }
+        });
+      }, { threshold: 0.8 });
+      Array.prototype.forEach.call(pilha.querySelectorAll("[data-contar]"), function (n) { obsNumero.observe(n); });
     }
   }
 

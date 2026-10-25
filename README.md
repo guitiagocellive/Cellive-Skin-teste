@@ -135,9 +135,9 @@ pele (o fundo branco dela some na página), com duas legendas que descem uma lin
 sobre as microespículas.
 
 Por fim, "UM POUCO **DOS NOSSOS CLIENTES**": 6 fotos de clientes, a nota 4,9/5.0 e 5 depoimentos que andam sozinhos
-para a direita, em loop e devagar (não dá para arrastar). Depois o cartão "GARANTIA REEMBOLSO" com o selo de 30 dias
-(as setas giram devagar) e "CIÊNCIA E SEGURANÇA – **RESULTADOS REAIS!**": uma pilha de cartões com os percentuais em
-que o da frente vai para trás a cada 3,6 s e o número conta de 0 até o valor. Nomes, textos e números ficam no
+para a direita, em loop e devagar (não dá para arrastar). Depois o cartão "GARANTIA REEMBOLSO" com a caixa, o frasco e o selo de 30 dias na frente
+e "CIÊNCIA E SEGURANÇA – **RESULTADOS REAIS!**": três cartões com os percentuais que começam juntos e se abrem
+conforme a página rola; cada número conta de 0 até o valor. Nomes, textos e números ficam no
 `oferta.html`.
 
 ## Fonte (Acumin Pro)
