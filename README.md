@@ -150,6 +150,10 @@ azul e anéis girando, dois cartões em destaque ("Testado
 dermatologicamente" e "Aprovado pela Anvisa") e mais quatro em grade (Tecnologia coreana, Garantia de 30 dias, Compra
 segura e Frete grátis), com ícones que se desenham ao aparecer.
 
+Em seguida, "K-BEAUTY – O SEGREDO DO **SKINCARE COREANO**", no mesmo estilo de "O que ele te proporciona": três linhas
+alternando texto (com traço azul) e ilustração feita na própria página — a bandeira da Coreia balançando, as bolinhas
+dos ativos em alta flutuando com hashtags e o frasco com o símbolo coreano girando atrás.
+
 ## Fonte (Acumin Pro)
 
 O site usa **Acumin Pro** e **Acumin Pro Condensed**, carregadas pelo projeto web da Adobe Fonts

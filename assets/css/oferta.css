@@ -3192,6 +3192,163 @@
   line-height: 1.32;
 }
 
+/* ---------- Dobra 19: skincare coreano ----------
+   Usa o mesmo layout de "O que ele te proporciona" (.aliado-*). */
+.oferta-kbeauty {
+  margin-top: 60px;
+}
+
+.kb-texto {
+  min-width: 0;
+}
+
+.aliado-dir .kb-texto {
+  text-align: right;
+}
+
+.kb-linha {
+  margin: 14px 0 0;
+  color: #6b6f75;
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: inherit;
+}
+
+.aliado-esq .kb-linha {
+  text-align: left;
+}
+
+/* inclinação de cada traço azul */
+.kb-1 .aliado-circulado svg {
+  top: -6%;
+  left: -16%;
+  width: 124%;
+  height: 112%;
+  transform: rotate(-12deg);
+}
+
+.kb-2 .aliado-circulado svg {
+  top: -2%;
+  left: -12%;
+  width: 124%;
+  height: 104%;
+  transform: rotate(14deg);
+}
+
+.kb-3 .aliado-circulado svg {
+  top: 4%;
+  left: -14%;
+  width: 120%;
+  height: 96%;
+  transform: rotate(-16deg);
+}
+
+/* Ilustrações (no lugar das fotos) */
+.kb-visual {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #ffffff 0%, #eef3f9 100%);
+  box-shadow: 0 10px 26px rgba(120, 152, 190, 0.22);
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.25, 0.8, 0.3, 1);
+}
+
+.kb-visual.is-visivel {
+  opacity: 1;
+  transform: none;
+}
+
+/* 1: bandeira da Coreia balançando de leve */
+.kb-visual-1 {
+  display: grid;
+  place-items: center;
+}
+
+.kb-bandeira {
+  width: 82%;
+  height: auto;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.08));
+  transform-origin: 0 50%;
+  animation: kb-balanca 4s ease-in-out infinite alternate;
+}
+
+@keyframes kb-balanca {
+  from { transform: perspective(300px) rotateY(-8deg) skewY(-2deg); }
+  to { transform: perspective(300px) rotateY(6deg) skewY(1.5deg); }
+}
+
+/* 2: bolinhas dos ativos flutuando */
+.kb-visual-2 {
+  background: linear-gradient(160deg, #f4f7fb 0%, #e3ebf5 100%);
+}
+
+.kb-bolha {
+  position: absolute;
+  width: var(--t);
+  height: var(--t);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 14px rgba(80, 110, 150, 0.25);
+  object-fit: cover;
+  animation: kb-flutua var(--d, 4s) ease-in-out infinite alternate;
+}
+
+.kb-bolha-1 { --t: 30%; left: 8%; top: 9%; --d: 4.2s; }
+.kb-bolha-2 { --t: 40%; left: 50%; top: 18%; --d: 5s; animation-delay: -1s; }
+.kb-bolha-3 { --t: 32%; left: 14%; top: 42%; --d: 4.6s; animation-delay: -2s; }
+.kb-bolha-4 { --t: 27%; left: 58%; top: 56%; --d: 3.8s; animation-delay: -0.5s; }
+.kb-bolha-5 { --t: 22%; left: 28%; top: 74%; --d: 4.4s; animation-delay: -1.6s; }
+
+@keyframes kb-flutua {
+  from { translate: 0 0; }
+  to { translate: 0 -8px; }
+}
+
+.kb-tag {
+  position: absolute;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(80, 110, 150, 0.18);
+  color: #4d74a8;
+  font-family: var(--font-condensed);
+  font-size: 12.5px;
+  font-weight: 700;
+  animation: kb-flutua 3.6s ease-in-out infinite alternate;
+}
+
+.kb-tag-1 { left: 44%; top: 6%; }
+.kb-tag-2 { left: 6%; top: 34%; animation-delay: -1.2s; }
+.kb-tag-3 { right: 6%; bottom: 8%; animation-delay: -2.4s; }
+
+/* 3: frasco com o símbolo coreano girando atrás */
+.kb-visual-3 {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #e6edf6 80%);
+}
+
+.kb-taegeuk {
+  position: absolute;
+  width: 78%;
+  height: auto;
+  opacity: 0.16;
+  animation: conf-gira 30s linear infinite;
+}
+
+.kb-frasco {
+  position: absolute;
+  left: 35%;
+  top: 9%;
+  width: 30%;
+  height: auto;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.18));
+  animation: kb-flutua 4.5s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .comprar {
     animation: none;
@@ -3248,8 +3405,17 @@
   }
 
   .conf-luz,
-  .conf-anel {
+  .conf-anel,
+  .kb-bandeira,
+  .kb-bolha,
+  .kb-tag,
+  .kb-taegeuk,
+  .kb-frasco {
     animation: none;
+  }
+
+  .kb-visual {
+    transition: none;
   }
 
   .cli-trilho,
