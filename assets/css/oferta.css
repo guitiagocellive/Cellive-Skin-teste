@@ -3207,11 +3207,11 @@
     radial-gradient(ellipse 30% 26% at 0% 40%, rgba(177, 198, 221, 0.25), transparent 70%);
 }
 
-/* Frascos das laterais: entram pela borda e terminam inclinados */
+/* Frascos das laterais: entram pela borda e terminam inclinados.
+   Centro, tamanho e ângulo medidos na referência (alinhamento automático). */
 .num-frasco {
   position: absolute;
   z-index: 0;
-  width: calc(190 * var(--u));
   height: auto;
   max-width: none;
   pointer-events: none;
@@ -3221,21 +3221,25 @@
 }
 
 .num-frasco-esq {
-  left: calc(4 * var(--u));
-  top: calc(260 * var(--u));
+  left: calc(-16 * var(--u));
+  top: calc(256 * var(--u));
+  width: calc(141.5 * var(--u));
+  /* espelhado: o bico do pump aponta para a direita */
   transform:
     translate(-50%, -50%)
     translateX(calc((1 - var(--p)) * -260 * var(--u)))
-    rotate(calc(var(--p) * 24deg));
+    rotate(calc(var(--p) * 18deg))
+    scaleX(-1);
 }
 
 .num-frasco-dir {
-  left: calc(760 * var(--u));
-  top: calc(1215 * var(--u));
+  left: calc(794 * var(--u));
+  top: calc(1154 * var(--u));
+  width: calc(159.4 * var(--u));
   transform:
     translate(-50%, -50%)
     translateX(calc((1 - var(--p)) * 260 * var(--u)))
-    rotate(calc(var(--p) * -26deg));
+    rotate(calc(var(--p) * -22deg));
 }
 
 .num-chamada,
