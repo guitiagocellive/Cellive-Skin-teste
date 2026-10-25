@@ -138,11 +138,11 @@ As imagens são convertidas para WebP, no tamanho em que aparecem, para a págin
 | Ativo: Acetyl Hexapeptide-8 (bolinha) | `assets/img/ativos/acetyl-hexapeptide-8.jpg` | ✅ já colocada |
 | Ativo: Pentapeptide-4 (bolinha) | `assets/img/ativos/pentapeptide-4.jpg` | ✅ já colocada |
 | Ativo: Retinal (bolinha) | `assets/img/ativos/retinal.jpg` | ✅ já colocada |
-| Ativo: Propilenoglicol (bolinha) | `assets/img/ativos/propilenoglicol.jpg` | ✅ já colocada |
+| Ativo: Vitamina E (bolinha) | `assets/img/ativos/vitamina-e.jpg` | ✅ já colocada |
 | Ativo: Glutationa (bolinha) | `assets/img/ativos/glutationa.jpg` | ✅ já colocada |
 | Ativo: Tetrapeptide-7 (bolinha) | `assets/img/ativos/tetrapeptide-7.jpg` | ✅ já colocada |
 | Ativo: Alfa-arbutina (bolinha) | `assets/img/ativos/alfa-arbutina.jpg` | ✅ já colocada |
-| Ativo: Exo Skin (bolinha) | `assets/img/ativos/exo-skin.jpg` | ✅ já colocada |
+| Ativo: Fator de Crescimento (bolinha) | `assets/img/ativos/fator-crescimento.jpg` | ✅ já colocada |
 | Ativo: Niacinamida (bolinha) | `assets/img/ativos/niacinamida.jpg` | ✅ já colocada |
 | Oferta: fotos do produto 1 a 6 (galeria) | `assets/img/oferta/produto-1.webp` … `produto-6.webp` | quadrada, 900 × 900 px |
 | Oferta: caixa e frasco (dobra "Conheça o Sérum") | `assets/img/oferta/caixa.webp`, `frasco.webp` | ✅ já colocadas (fundo transparente) |

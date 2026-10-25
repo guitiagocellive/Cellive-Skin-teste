@@ -120,7 +120,7 @@ window.QUIZ_FLUXO = [
           "Algumas linhas já ficam visíveis.",
           "Nunca reparei.",
         ],
-        ativo: { id: "acetyl-hexapeptide-8", nome: "Acetyl Hexapeptide-8", imagem: "assets/img/ativos/acetyl-hexapeptide-8.jpg" },
+        ativo: { id: "acetyl-hexapeptide-8", nome: "Hexapeptídeo-8", imagem: "assets/img/ativos/acetyl-hexapeptide-8.jpg" },
       },
       {
         id: "rotina-skincare",
@@ -132,7 +132,7 @@ window.QUIZ_FLUXO = [
           "Só usei alguns produtos.",
           "Nunca tentei.",
         ],
-        ativo: { id: "pentapeptide-4", nome: "Pentapeptide-4", imagem: "assets/img/ativos/pentapeptide-4.jpg" },
+        ativo: { id: "pentapeptide-4", nome: "Pentapeptídeo-4", imagem: "assets/img/ativos/pentapeptide-4.jpg" },
       },
       {
         id: "sinais",
@@ -160,7 +160,7 @@ window.QUIZ_FLUXO = [
           "Apenas quando fico muito tempo no sol.",
           "Quase nunca.",
         ],
-        ativo: { id: "propilenoglicol", nome: "Propilenoglicol", imagem: "assets/img/ativos/propilenoglicol.jpg" },
+        ativo: { id: "vitamina-e", nome: "Vitamina E", imagem: "assets/img/ativos/vitamina-e.jpg" },
       },
       {
         id: "firmeza",
@@ -184,7 +184,7 @@ window.QUIZ_FLUXO = [
           "Sinto que minha pele está envelhecida.",
           "Percebo uma pele sem viço ou opaca.",
         ],
-        ativo: { id: "tetrapeptide-7", nome: "Tetrapeptide-7", imagem: "assets/img/ativos/tetrapeptide-7.jpg" },
+        ativo: { id: "tetrapeptide-7", nome: "Tetrapeptídeo-7", imagem: "assets/img/ativos/tetrapeptide-7.jpg" },
       },
       {
         id: "ativo-rejuvenescimento",
@@ -196,7 +196,7 @@ window.QUIZ_FLUXO = [
           "Já usei, mas parei.",
           "Nunca utilizei.",
         ],
-        ativo: { id: "alfa-arbutina", nome: "Alfa-arbutina", imagem: "assets/img/ativos/alfa-arbutina.jpg" },
+        ativo: { id: "alfa-arbutina", nome: "Alfa-Arbutina", imagem: "assets/img/ativos/alfa-arbutina.jpg" },
       },
       {
         // ATENÇÃO: texto repetido da pergunta anterior, aguardando o texto final.
@@ -209,7 +209,7 @@ window.QUIZ_FLUXO = [
           "Uso séruns anti-idade.",
           "Nunca utilizei.",
         ],
-        ativo: { id: "exo-skin", nome: "Exo Skin", imagem: "assets/img/ativos/exo-skin.jpg" },
+        ativo: { id: "fator-crescimento", nome: "Fator de Crescimento", imagem: "assets/img/ativos/fator-crescimento.jpg" },
       },
       {
         id: "linhas-olhos",

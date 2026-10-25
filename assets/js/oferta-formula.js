@@ -62,13 +62,13 @@
         return "Renova a pele e suaviza " + juntar(sinais) + ".";
       },
     },
-    "propilenoglicol": {
-      beneficio: "Leva os ativos mais fundo e prolonga a hidratação",
+    "vitamina-e": {
+      beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento",
       resposta: {
-        "Todos os dias.": "Com seu protetor diário, potencializa cada ativo.",
-        "Na maioria dos dias.": "Mantém a hidratação. E use o protetor todos os dias.",
-        "Apenas quando fico muito tempo no sol.": "Hidrata no dia a dia. O protetor diário protege o resultado.",
-        "Quase nunca.": "Recupera a hidratação. Inclua o protetor solar de manhã.",
+        "Todos os dias.": "Soma proteção antioxidante ao seu protetor diário.",
+        "Na maioria dos dias.": "Reforça a defesa da pele. E use o protetor todos os dias.",
+        "Apenas quando fico muito tempo no sol.": "Ajuda a pele a se defender no dia a dia. O protetor diário protege o resultado.",
+        "Quase nunca.": "Ajuda a pele a se defender dos radicais livres. Inclua o protetor solar de manhã.",
       },
     },
     "glutationa": {
@@ -96,12 +96,12 @@
         "Nunca utilizei.": "Um começo suave para clarear manchas.",
       },
     },
-    "exo-skin": {
-      beneficio: "Exossomos que aceleram a renovação da pele",
+    "fator-crescimento": {
+      beneficio: "Imita o sinal que a própria pele usa para se renovar",
       resposta: {
-        "Sim, uso retinol ou algum retinoide.": "Recuperação mais rápida e confortável da pele.",
+        "Sim, uso retinol ou algum retinoide.": "Apoia a renovação e a recuperação da pele.",
         "Uso séruns anti-idade.": "Um passo além no seu cuidado anti-idade.",
-        "Nunca utilizei.": "Você já começa com a tecnologia mais atual.",
+        "Nunca utilizei.": "Você já começa com uma tecnologia atual de renovação.",
       },
     },
     "niacinamida": {
@@ -128,27 +128,27 @@
       nome: "Renovação e regeneração", chip: "de renovação", icone: "renova",
       texto: "Aceleram a troca das células e ajudam a pele a se reconstruir.",
       ativos: [
-        { nome: "Retinal (Retinaldeído)", img: A + "retinal.jpg", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
-        { nome: "Sodium DNA (PDRN)", img: A + "pdrn.jpg", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
-        { nome: "Hydrolyzed Sponge (Microespículas)", beneficio: "Microespículas naturais que abrem caminho para os ativos irem mais fundo" },
+        { nome: "Retinal", img: A + "retinal.jpg", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
+        { nome: "PDRN", img: A + "pdrn.jpg", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
+        { nome: "Microespículas", beneficio: "Microespículas naturais que abrem caminho para os ativos irem mais fundo" },
       ],
     },
     {
       nome: "Peptídeos", chip: "peptídeos", icone: "peptideo",
       texto: "Pequenas cadeias de proteína que dão sinais à pele. Os biomiméticos imitam os sinais que a própria pele produz.",
       ativos: [
-        { nome: "Copper Tripeptide-1 (GHK-Cu)", img: A + "ghk-cu.jpg", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
-        { nome: "Acetyl Hexapeptide-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
-        { nome: "Palmitoyl Pentapeptide-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
-        { nome: "Palmitoyl Tetrapeptide-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
-        { nome: "SH-Oligopeptide-1", beneficio: "Imita o fator de crescimento da pele (EGF) e acelera a renovação" },
-        { nome: "SH-Oligopeptide-2", beneficio: "Imita o fator de crescimento IGF-1 e ajuda a pele a se regenerar" },
-        { nome: "SH-Polypeptide-9", beneficio: "Imita o fator de crescimento VEGF e ajuda a nutrir e oxigenar a pele" },
-        { nome: "SH-Oligopeptide-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
-        { nome: "Acetyl Glycyl SH-Oligopeptide-118 SP Amide", beneficio: "Peptídeo biomimético que estimula a renovação das células" },
-        { nome: "Oligopeptide-34", beneficio: "Peptídeo clareador que reduz a produção de melanina nas manchas" },
-        { nome: "Oligopeptide-7", beneficio: "Peptídeo biomimético que reforça a comunicação entre as células" },
-        { nome: "Palmitoyl SH-Heptapeptide-14 Aspartyl Hydroxytryptophan", beneficio: "Peptídeo antienvelhecimento que estimula o colágeno" },
+        { nome: "GHK-Cu (peptídeo de cobre)", img: A + "ghk-cu.jpg", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
+        { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
+        { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
+        { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
+        { nome: "Fator de Crescimento EGF", img: A + "fator-crescimento.jpg", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
+        { nome: "Fator de Crescimento IGF-1", beneficio: "Imita um sinal de crescimento que ajuda a pele a se regenerar" },
+        { nome: "Fator de Crescimento VEGF", beneficio: "Imita um sinal de crescimento que ajuda a nutrir e oxigenar a pele" },
+        { nome: "Oligopeptídeo-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
+        { nome: "Oligopeptídeo-118", beneficio: "Peptídeo biomimético que estimula a renovação das células" },
+        { nome: "Oligopeptídeo-34", beneficio: "Peptídeo clareador que reduz a produção de melanina nas manchas" },
+        { nome: "Oligopeptídeo-7", beneficio: "Peptídeo biomimético que reforça a comunicação entre as células" },
+        { nome: "Heptapeptídeo-14", beneficio: "Peptídeo antienvelhecimento que estimula o colágeno" },
       ],
     },
     {
@@ -175,7 +175,7 @@
       ativos: [
         { nome: "Bisabolol", beneficio: "Ativo da camomila que acalma a pele e reduz a vermelhidão" },
         { nome: "Extrato de Calêndula", beneficio: "Calmante natural que suaviza irritações e conforta a pele" },
-        { nome: "Tocoferol (Vitamina E)", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
+        { nome: "Vitamina E", img: A + "vitamina-e.jpg", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
       ],
     },
   ];

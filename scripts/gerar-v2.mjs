@@ -21,8 +21,6 @@ const TROCAS = [
   ['<span class="titulo-leve">Sua fórmula</span> <strong>personalizada</strong>', '<span class="titulo-leve">Uma fórmula</span> <strong>completa</strong>'],
   ['data-rastreio="quero-minha-formula">Quero minha fórmula</a>', 'data-rastreio="quero-minha-formula">Quero o meu Sérum</a>'],
   // a v2 mostra os 24 ativos da fórmula (lista em assets/js/oferta-formula.js)
-  ["<strong>mais de 25 ativos</strong> que agem na sua pele", "<strong>24 ativos</strong> que agem na sua pele"],
-  ["a Cellive uniu 25 ativos em um único sérum", "a Cellive uniu 24 ativos em um único sérum"],
   ['<p class="fp-resumo" data-formula-resumo>12 ativos que trabalham juntos na sua pele</p>', '<p class="fp-resumo" data-formula-resumo>24 ativos em uma única fórmula</p>'],
 ];
 
