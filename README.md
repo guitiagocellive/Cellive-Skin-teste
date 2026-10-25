@@ -165,7 +165,9 @@ enquanto a seção está na tela; a pessoa pode tocar numa etapa ou arrastar o c
 
 No fim da página, a sacola com os produtos e as **principais dúvidas** (abrem uma por vez; a primeira já vem aberta) e a
 "AVALIAÇÃO DOS **CLIENTES**": nota 4,9, as barras com a quantidade de cada nota (crescem ao aparecer) e as avaliações
-com foto, idade, "Compra Verificada" e as fotos enviadas.
+com foto, idade, "Compra Verificada" e as fotos enviadas. As avaliações ficam numa lista no
+`assets/js/oferta-avaliacoes.js` (instruções no topo do arquivo): aparecem 5 e o botão "Ver mais avaliações" mostra mais
+5 por vez.
 
 ## Fonte (Acumin Pro)
 

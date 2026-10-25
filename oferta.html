@@ -89,7 +89,7 @@
       <h2 class="produto-nome">Sérum Facial Revitalizador Noturno</h2>
       <div class="avaliacao">
         <span class="estrelas" role="img" aria-label="Nota 4,9 de 5"></span>
-        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(938 Avaliações)</span>
+        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(1.430 Avaliações)</span>
       </div>
 
       <h3 class="produto-chamada">Pareça mais jovem em apenas 2 meses.</h3>
@@ -204,7 +204,7 @@
 
       <div class="avaliacao avaliacao-centro">
         <span class="estrelas" role="img" aria-label="Nota 4,9 de 5"></span>
-        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(938 Avaliações)</span>
+        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(1.430 Avaliações)</span>
       </div>
     </section>
 
@@ -921,7 +921,7 @@
           </h3>
           <div class="faq-resposta" id="faq-2" role="region" aria-labelledby="faq-p2">
             <div class="faq-conteudo">
-              <!-- TEXTO PROVISÓRIO: aguardando a resposta final --><p>Resposta em breve.</p>
+              <p>Use todos os dias, no período noturno, com a pele limpa: aplique alguns pumps do produto no rosto, espalhe e espere a pele absorver. Só isso. No dia seguinte, use protetor solar.</p>
             </div>
           </div>
         </div>
@@ -947,7 +947,7 @@
           </h3>
           <div class="faq-resposta" id="faq-4" role="region" aria-labelledby="faq-p4">
             <div class="faq-conteudo">
-              <!-- TEXTO PROVISÓRIO: aguardando a resposta final --><p>Resposta em breve.</p>
+              <p>Sim. O uso diário é o indicado para ter os melhores resultados.</p>
             </div>
           </div>
         </div>
@@ -1008,28 +1008,13 @@
         </ul>
       </div>
 
-      <div class="aval-lista">
-        <article class="aval-item">
-          <span class="aval-avatar" aria-hidden="true">LS</span>
-          <div class="aval-corpo">
-            <h3 class="aval-nome"><strong>Lorrainy Santos</strong>, 33 anos</h3>
-            <p class="aval-verificada"><svg class="aval-verif" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg> Compra Verificada</p>
-            <div class="aval-meta"><span class="estrelas" role="img" aria-label="Nota 5 de 5"></span><span>3 meses atrás</span></div>
-            <p class="aval-texto">Comprei e estou usando há um mês, e realmente ajudou muito. Estou me sentindo bonita sem maquiagem. O que mais me incomodava eram os pés de galinha quando sorria.</p>
-            <div class="aval-fotos"><span class="slot aval-foto" data-label="Foto 1"><img src="assets/img/oferta/avaliacao-1-1.webp" alt="Foto enviada por Lorrainy Santos" loading="lazy" onerror="this.hidden=true"></span><span class="slot aval-foto" data-label="Foto 2"><img src="assets/img/oferta/avaliacao-1-2.webp" alt="Foto enviada por Lorrainy Santos" loading="lazy" onerror="this.hidden=true"></span></div>
-          </div>
-        </article>
-        <article class="aval-item">
-          <span class="aval-avatar" aria-hidden="true">LS</span>
-          <div class="aval-corpo">
-            <h3 class="aval-nome"><strong>Leticia Souza</strong>, 31 anos</h3>
-            <p class="aval-verificada"><svg class="aval-verif" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg> Compra Verificada</p>
-            <div class="aval-meta"><span class="estrelas" role="img" aria-label="Nota 5 de 5"></span><span>3 meses atrás</span></div>
-            <p class="aval-texto"><!-- TEXTO PROVISÓRIO: repetido do depoimento anterior -->Comprei e estou usando há um mês, e realmente ajudou muito. Estou me sentindo bonita sem maquiagem. O que mais me incomodava eram os pés de galinha quando sorria.</p>
-            
-          </div>
-        </article>
-      </div>
+      <!-- Avaliações: ficam na lista do assets/js/oferta-avaliacoes.js.
+           Aparecem 5; o botão "Ver mais" mostra mais 5 por vez. -->
+      <div class="aval-lista" data-aval-lista></div>
+      <button type="button" class="fp-mais aval-mais" data-aval-mais hidden>
+        <span>Ver mais avaliações</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
     </section>
 
   </main>
@@ -1044,5 +1029,6 @@
   <script src="assets/js/oferta.js"></script>
   <script src="assets/js/quiz-perguntas.js"></script>
   <script src="assets/js/oferta-formula.js"></script>
+  <script src="assets/js/oferta-avaliacoes.js"></script>
 </body>
 </html>
