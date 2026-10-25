@@ -140,6 +140,11 @@ e "CIÊNCIA E SEGURANÇA – **RESULTADOS REAIS!**": três cartões com os perce
 conforme a página rola; cada número conta de 0 até o valor. Nomes, textos e números ficam no
 `oferta.html`.
 
+Logo abaixo, uma faixa azul com os benefícios (ícone + texto) andando em loop, e "MAIS DEPOIMENTOS – VEJAM O QUE
+**ELAS FALAM**": um carrossel de vídeos que a pessoa arrasta para o lado (ou usa as setas). O vídeo do meio fica em
+destaque, tocar nele dá play/pausa e só um toca por vez. Coloque os vídeos em `assets/video/depoimento-1.mp4` …
+`depoimento-4.mp4` (em pé, 9:16) e as capas em `assets/img/oferta/video-1.webp` … `video-4.webp`.
+
 ## Fonte (Acumin Pro)
 
 O site usa **Acumin Pro** e **Acumin Pro Condensed**, carregadas pelo projeto web da Adobe Fonts

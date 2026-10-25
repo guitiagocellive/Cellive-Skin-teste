@@ -692,6 +692,79 @@
       <p class="res-nota" data-revelar="bloco">Esses resultados foram retirados de testes de eficácia aprovados pela ANVISA.</p>
     </section>
 
+    <!-- ===================== DOBRA 16: faixa de benefícios em loop ===================== -->
+    <section class="oferta-faixa" aria-label="Benefícios do Sérum Revitalizador">
+      <div class="faixa-trilho" data-faixa>
+        <ul class="faixa-lista">
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 15c3.5-5.3 8-8 13-8s9.5 2.7 13 8c-3.5 5.3-8 8-13 8s-9.5-2.7-13-8z"/><circle cx="16" cy="15" r="4.6"/><circle cx="16" cy="15" r="1.4"/><path d="M10 28v-2.6m-1.4 1.2L10 25l1.4 1.6M16 28v-2.6m-1.4 1.2L16 25l1.4 1.6M22 28v-2.6m-1.4 1.2L22 25l1.4 1.6"/></svg><span>Rejuvenesce a área dos olhos</span></li>
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 9 5 2.9v5.8L16 20.6l-5-2.9v-5.8z"/><path d="M16 9V4m5 7.9 4.3-2.5M21 17.7l4.3 2.5M16 20.6V26m-5-8.3-4.3 2.5M11 11.9 6.7 9.4"/><circle cx="16" cy="3.3" r="1.3"/><circle cx="26.2" cy="21" r="1.3"/><circle cx="5.8" cy="21" r="1.3"/></svg><span>Estimula o colágeno</span></li>
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 11c4-3 7 3 11 0s7 3 11 0M5 17c4-3 7 3 11 0s7 3 11 0"/><path d="M5 24h22" stroke-dasharray="2 3"/></svg><span>Suaviza rugas e linhas finas</span></li>
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4c4.5 6 8 10.4 8 14.6A8 8 0 0 1 8 18.6C8 14.4 11.5 10 16 4z"/><path d="M12.2 19.5a4 4 0 0 0 3.8 3.4"/></svg><span>Hidratação profunda</span></li>
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4c.8 5.6 2.4 7.2 8 8-5.6.8-7.2 2.4-8 8-.8-5.6-2.4-7.2-8-8 5.6-.8 7.2-2.4 8-8z"/><path d="M25 19c.4 2.6 1.2 3.4 3.8 3.8-2.6.4-3.4 1.2-3.8 3.8-.4-2.6-1.2-3.4-3.8-3.8 2.6-.4 3.4-1.2 3.8-3.8z"/></svg><span>Uniformiza o tom e ilumina</span></li>
+          <li class="faixa-item"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l9 3.6v7c0 6-3.8 10.2-9 12.8-5.2-2.6-9-6.8-9-12.8v-7z"/><path d="m11.8 15.8 3 3 5.6-5.8"/></svg><span>Fortalece a barreira da pele</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== DOBRA 17: vídeos de depoimento =====================
+         Vídeos em assets/video/depoimento-1.mp4 ... -4.mp4 (em pé, 9:16) e a
+         capa de cada um em assets/img/oferta/video-1.webp ... -4.webp -->
+    <section class="oferta-videos" aria-labelledby="videos-titulo">
+      <p class="fp-chamada videos-chamada" data-revelar="palavras">Mais depoimentos</p>
+      <h2 class="secao-titulo videos-titulo" id="videos-titulo" data-revelar="palavras" style="--atraso: 0.2s">
+        <span class="titulo-leve">Vejam o que</span> <strong>elas falam</strong>
+      </h2>
+
+      <div class="vid-carrossel" data-vid-carrossel tabindex="0" aria-label="Vídeos de clientes">
+          <article class="vid-card" data-vid-card>
+            <span class="slot vid-slot" data-label="Vídeo 1"></span>
+            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-1.webp">
+              <source src="assets/video/depoimento-1.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="vid-play" aria-label="Assistir ao depoimento 1">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="vid-icone-play" d="M8 5.5v13l10.5-6.5z"/><g class="vid-icone-pausa"><rect x="7" y="5.5" width="3.6" height="13" rx="1"/><rect x="13.4" y="5.5" width="3.6" height="13" rx="1"/></g></svg>
+            </button>
+          </article>
+          <article class="vid-card" data-vid-card>
+            <span class="slot vid-slot" data-label="Vídeo 2"></span>
+            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-2.webp">
+              <source src="assets/video/depoimento-2.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="vid-play" aria-label="Assistir ao depoimento 2">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="vid-icone-play" d="M8 5.5v13l10.5-6.5z"/><g class="vid-icone-pausa"><rect x="7" y="5.5" width="3.6" height="13" rx="1"/><rect x="13.4" y="5.5" width="3.6" height="13" rx="1"/></g></svg>
+            </button>
+          </article>
+          <article class="vid-card" data-vid-card>
+            <span class="slot vid-slot" data-label="Vídeo 3"></span>
+            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-3.webp">
+              <source src="assets/video/depoimento-3.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="vid-play" aria-label="Assistir ao depoimento 3">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="vid-icone-play" d="M8 5.5v13l10.5-6.5z"/><g class="vid-icone-pausa"><rect x="7" y="5.5" width="3.6" height="13" rx="1"/><rect x="13.4" y="5.5" width="3.6" height="13" rx="1"/></g></svg>
+            </button>
+          </article>
+          <article class="vid-card" data-vid-card>
+            <span class="slot vid-slot" data-label="Vídeo 4"></span>
+            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-4.webp">
+              <source src="assets/video/depoimento-4.mp4" type="video/mp4">
+            </video>
+            <button type="button" class="vid-play" aria-label="Assistir ao depoimento 4">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path class="vid-icone-play" d="M8 5.5v13l10.5-6.5z"/><g class="vid-icone-pausa"><rect x="7" y="5.5" width="3.6" height="13" rx="1"/><rect x="13.4" y="5.5" width="3.6" height="13" rx="1"/></g></svg>
+            </button>
+          </article>
+      </div>
+
+      <div class="vid-controles">
+        <button type="button" class="vid-seta" data-vid-anterior aria-label="Vídeo anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        </button>
+        <div class="vid-pontos" data-vid-pontos aria-hidden="true"></div>
+        <button type="button" class="vid-seta" data-vid-proximo aria-label="Próximo vídeo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+
   </main>
 
   <!-- Barra de compra fixa: aparece depois que a pessoa passa do botão "Comprar Agora" -->

@@ -299,6 +299,82 @@
     }
   }
 
+  /* ---------- Faixa de benefícios em loop ----------
+     Duplica a lista: a faixa anda de 0 até -50% e recomeça sem emenda,
+     sempre na mesma velocidade (cerca de 40 px/s). */
+  var faixa = document.querySelector("[data-faixa]");
+  if (faixa) {
+    var copiaFaixa = faixa.firstElementChild.cloneNode(true);
+    copiaFaixa.setAttribute("aria-hidden", "true");
+    faixa.appendChild(copiaFaixa);
+    var tempoFaixa = function () {
+      faixa.style.setProperty("--faixa-tempo", Math.round(faixa.scrollWidth / 2 / 40) + "s");
+    };
+    tempoFaixa();
+    window.addEventListener("load", tempoFaixa);
+  }
+
+  /* ---------- Carrossel de vídeos ----------
+     A pessoa arrasta para o lado (ou usa as setas). O vídeo do meio fica em
+     destaque; tocar no vídeo dá play/pausa e só um toca por vez. */
+  var carrossel = document.querySelector("[data-vid-carrossel]");
+  if (carrossel) {
+    var cardsVid = Array.prototype.slice.call(carrossel.querySelectorAll("[data-vid-card]"));
+    var pontosVid = document.querySelector("[data-vid-pontos]");
+    var anterior = document.querySelector("[data-vid-anterior]");
+    var proximo = document.querySelector("[data-vid-proximo]");
+    var atualVid = 0;
+
+    cardsVid.forEach(function (card) {
+      pontosVid.appendChild(document.createElement("span"));
+      var video = card.querySelector("video");
+      var tocar = function () {
+        if (!card.classList.contains("tem-video")) return;
+        if (video.paused) {
+          cardsVid.forEach(function (outro) {
+            var v = outro.querySelector("video");
+            if (v !== video && !v.paused) v.pause();
+          });
+          video.play();
+        } else {
+          video.pause();
+        }
+      };
+      video.addEventListener("loadedmetadata", function () { card.classList.add("tem-video"); });
+      video.addEventListener("play", function () { card.classList.add("is-tocando"); });
+      video.addEventListener("pause", function () { card.classList.remove("is-tocando"); });
+      video.addEventListener("ended", function () { card.classList.remove("is-tocando"); });
+      card.querySelector(".vid-play").addEventListener("click", tocar);
+      video.addEventListener("click", tocar);
+    });
+
+    var marcarVid = function () {
+      var meio = carrossel.scrollLeft + carrossel.clientWidth / 2;
+      var melhor = 0, menor = Infinity;
+      cardsVid.forEach(function (card, i) {
+        var d = Math.abs(card.offsetLeft + card.offsetWidth / 2 - meio);
+        if (d < menor) { menor = d; melhor = i; }
+      });
+      if (melhor !== atualVid) {
+        var v = cardsVid[atualVid].querySelector("video");
+        if (!v.paused) v.pause(); // saiu do meio: pausa
+      }
+      atualVid = melhor;
+      cardsVid.forEach(function (card, i) { card.classList.toggle("is-atual", i === atualVid); });
+      Array.prototype.forEach.call(pontosVid.children, function (p, i) { p.classList.toggle("is-ativo", i === atualVid); });
+      anterior.disabled = atualVid === 0;
+      proximo.disabled = atualVid === cardsVid.length - 1;
+    };
+    var irPara = function (i) {
+      var card = cardsVid[Math.max(0, Math.min(cardsVid.length - 1, i))];
+      carrossel.scrollTo({ left: card.offsetLeft + card.offsetWidth / 2 - carrossel.clientWidth / 2, behavior: "smooth" });
+    };
+    anterior.addEventListener("click", function () { irPara(atualVid - 1); });
+    proximo.addEventListener("click", function () { irPara(atualVid + 1); });
+    carrossel.addEventListener("scroll", function () { requestAnimationFrame(marcarVid); }, { passive: true });
+    marcarVid();
+  }
+
   /* ---------- Links que levam até os planos (rolagem suave) ---------- */
   Array.prototype.forEach.call(document.querySelectorAll("[data-ir-planos]"), function (link) {
     link.addEventListener("click", function (ev) {
