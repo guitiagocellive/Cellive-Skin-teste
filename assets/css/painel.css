@@ -608,3 +608,52 @@ table.tabela {
   .barra-cheia, .resp-texto::before, .conteudo { transition: none; }
   .status.is-ao-vivo .status-ponto { animation: none; }
 }
+
+/* ---------- Gráficos novos: funil visual, painéis diários, retenção, barra 100% ---------- */
+.grafico .graf-nome { fill: var(--texto-2); font-size: 12px; font-family: var(--font); }
+.grafico .graf-total { fill: var(--texto); font-size: 12px; font-weight: 600; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.grafico .graf-guia { stroke: var(--texto-2); stroke-width: 1; pointer-events: none; }
+
+.funil-v { position: relative; width: 100%; margin-top: 4px; }
+.funil-v svg { display: block; overflow: visible; }
+.funil-v .alvo { cursor: pointer; }
+.funil-v .alvo:hover, .funil-v .alvo:focus { fill: rgba(255, 255, 255, 0.035); outline: none; }
+.funil-faixa { stroke: var(--cartao); stroke-width: 2; }
+.funil-pct { fill: var(--ink); font-size: 13px; font-weight: 700; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.funil-pct.claro { fill: #ffffff; }
+.funil-nome { fill: var(--texto-2); font-size: 12.5px; font-family: var(--font); }
+.funil-num { fill: var(--texto); font-size: 20px; font-weight: 700; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.funil-sub { fill: var(--texto-3); font-size: 11.5px; font-family: var(--font); font-variant-numeric: tabular-nums; }
+.funil-sub.gargalo { fill: var(--alerta); font-weight: 600; }
+
+.partes { display: grid; gap: 10px; margin-bottom: 4px; }
+.partes-barra {
+  display: flex;
+  gap: 2px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+.partes-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.partes-seg .barra-rot { padding: 0 6px; }
+.partes-vazio { display: flex; align-items: center; padding: 0 10px; color: var(--texto-3); font-size: 13px; }
+.partes .legenda { margin: 0; }
+.espaco { height: 12px; }
+
+/* listas de barras: todas as linhas dividem as mesmas colunas, para as
+   barras começarem no mesmo ponto mesmo com textos de larguras diferentes */
+@supports (grid-template-columns: subgrid) {
+  .linhas { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) auto; column-gap: 10px; }
+  .linha { grid-column: 1 / -1; grid-template-columns: subgrid; }
+}

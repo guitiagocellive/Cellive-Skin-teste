@@ -77,10 +77,17 @@
 
         <article class="cartao">
           <header class="cartao-cab">
-            <h2>Evolução diária</h2>
-            <p>Visitas, fórmulas vistas e cliques no checkout por dia</p>
+            <h2>Funil de vendas</h2>
+            <p>Da visita ao clique no checkout · toque numa etapa para ver os detalhes</p>
           </header>
-          <div class="legenda" data-legenda-diario></div>
+          <div class="funil-v" data-funil-visual></div>
+        </article>
+
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Evolução diária</h2>
+            <p>Cada gráfico com a sua escala · toque para ver o dia</p>
+          </header>
           <div class="grafico" data-grafico-diario></div>
           <details class="tabela-ver"><summary>Ver como tabela</summary><div data-tabela-diario></div></details>
         </article>
@@ -88,7 +95,7 @@
         <article class="cartao">
           <header class="cartao-cab">
             <h2>Funil resumido</h2>
-            <p>Principais marcos, do primeiro clique ao checkout</p>
+            <p>Principais marcos, em números</p>
           </header>
           <div data-funil-resumo></div>
         </article>
@@ -96,6 +103,15 @@
 
       <!-- ============ FUNIL ============ -->
       <section class="aba" data-painel-aba="funil" hidden>
+        <article class="cartao">
+          <header class="cartao-cab">
+            <h2>Retenção no quiz</h2>
+            <p>% de quem começou que ainda estava em cada tela</p>
+          </header>
+          <div class="grafico" data-retencao></div>
+          <p class="nota">Quedas fortes na curva mostram onde o quiz perde gente. O ponto laranja é o maior gargalo.</p>
+        </article>
+
         <article class="cartao">
           <header class="cartao-cab">
             <h2>Funil completo</h2>
@@ -160,9 +176,9 @@
 
       <!-- ============ ORIGEM ============ -->
       <section class="aba" data-painel-aba="origem" hidden>
-        <article class="cartao"><header class="cartao-cab"><h2>Fontes</h2><p>De onde as pessoas vieram</p></header><div data-origem="fonte"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Fontes</h2><p>De onde as pessoas vieram</p></header><div data-origem-graf="fonte"></div><div data-origem="fonte"></div></article>
         <article class="cartao"><header class="cartao-cab"><h2>Campanhas</h2><p>Pelo utm_campaign dos anúncios</p></header><div data-origem="campanha"></div></article>
-        <article class="cartao"><header class="cartao-cab"><h2>Aparelhos</h2></header><div data-origem="aparelho"></div></article>
+        <article class="cartao"><header class="cartao-cab"><h2>Aparelhos</h2></header><div data-origem-graf="aparelho"></div><div data-origem="aparelho"></div></article>
         <article class="cartao"><header class="cartao-cab"><h2>Sistemas</h2></header><div data-origem="sistema"></div></article>
         <article class="cartao"><header class="cartao-cab"><h2>Países</h2></header><div data-origem="pais"></div></article>
         <article class="cartao">

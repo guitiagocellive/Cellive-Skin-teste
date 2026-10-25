@@ -58,6 +58,7 @@ async function painel(q, url) {
   const kpiSql = (w) => `SELECT
       COUNT(DISTINCT sessao) AS sessoes,
       COUNT(DISTINCT visitante) AS visitantes,
+      COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina IN ('capa','quiz') THEN sessao END) AS entrada,
       COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='capa' THEN sessao END) AS capa,
       COUNT(DISTINCT CASE WHEN tipo='clique' AND etapa='cta-capa' THEN sessao END) AS cta_capa,
       COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='quiz' THEN sessao END) AS quiz,
@@ -85,7 +86,7 @@ async function painel(q, url) {
     todos(kpiSql(W), A),
     todos(kpiSql(ANT.where), ANT.args),
     todos(`SELECT ${DIA} AS dia,
-        COUNT(DISTINCT sessao) AS visitas,
+        COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina IN ('capa','quiz') THEN sessao END) AS visitas,
         COUNT(DISTINCT CASE WHEN tipo='resposta' THEN sessao END) AS iniciaram,
         COUNT(DISTINCT CASE WHEN tipo='pagina' AND pagina='oferta' THEN sessao END) AS formulas,
         COUNT(DISTINCT CASE WHEN tipo='checkout' THEN sessao END) AS checkouts

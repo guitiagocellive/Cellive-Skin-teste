@@ -272,11 +272,17 @@
     no.appendChild(p);
   }
 
+  /* "Visitas" = sessões que abriram a capa ou o quiz (mesma conta nos
+     cartões, no funil e no gráfico diário) */
+  function visitasDe(k) {
+    return Number(k.entrada) || Math.max(k.capa || 0, k.quiz || 0) || k.sessoes || 0;
+  }
+
   /* ---------- Visão geral ---------- */
   function montarGeral(d) {
     var k = d.kpi, a = d.kpiAnt || {};
-    var base = Math.max(k.capa, k.quiz) || k.sessoes;
-    var baseAnt = Math.max(a.capa || 0, a.quiz || 0) || a.sessoes;
+    var base = visitasDe(k);
+    var baseAnt = visitasDe(a);
     var kpis = limpar($("[data-kpis]"));
     var novos = 0, total = 0;
     (d.novos || []).forEach(function (x) { total += x.n; if (x.novo) novos += x.n; });
@@ -295,6 +301,7 @@
 
     var lista = etapasFunil(d);
     mostrarAlerta($("[data-alerta]"), lista, gargalo(lista));
+    montarFunilVisual(d);
     montarDiario(d);
 
     // funil resumido: marcos principais
@@ -303,11 +310,13 @@
     desenharFunil($("[data-funil-resumo]"), resumo, base, null);
   }
 
-  /* gráfico diário: barras agrupadas, um eixo, legenda + dica ao tocar */
+  /* ---------- Evolução diária: um painel por medida (cada um com a sua
+     escala), mesma linha do tempo e uma linha-guia que acompanha o dedo ---------- */
   var SERIES = [
     { k: "visitas", nome: "Visitas", cor: "var(--s1)" },
     { k: "formulas", nome: "Viram a fórmula", cor: "var(--s2)" },
     { k: "checkouts", nome: "Cliques no checkout", cor: "var(--s3)" },
+    { k: "conv", nome: "Conversão (visita → checkout)", cor: "var(--blue)", pct: true },
   ];
 
   function diasDoPeriodo(d) {
@@ -319,75 +328,124 @@
     if (estado.periodo === "tudo" && d.diario && d.diario.length) inicio = new Date(d.diario[0].dia + "T00:00:00");
     for (var t = new Date(inicio); t < r.ate && dias.length < 400; t.setDate(t.getDate() + 1)) {
       var iso = isoDia(t);
-      dias.push(mapa[iso] || { dia: iso, visitas: 0, formulas: 0, checkouts: 0 });
+      var x = mapa[iso] || { dia: iso, visitas: 0, formulas: 0, checkouts: 0 };
+      x.conv = x.visitas ? 100 * x.checkouts / x.visitas : 0;
+      dias.push(x);
     }
     return dias;
   }
 
+  function topoBonito(max, ehPct) {
+    if (max <= 0) return ehPct ? 1 : 1;
+    var passo = Math.pow(10, Math.floor(Math.log10(max)));
+    var t = Math.ceil(max / passo) * passo;
+    if (t / 2 >= max) t = t / 2;
+    return t;
+  }
+
   function montarDiario(d) {
     var dias = diasDoPeriodo(d);
-    var leg = limpar($("[data-legenda-diario]"));
-    SERIES.forEach(function (s) {
-      var item = el("span");
-      var cor = el("i");
-      cor.style.background = s.cor;
-      item.appendChild(cor);
-      item.appendChild(document.createTextNode(s.nome));
-      leg.appendChild(item);
+    var caixa = limpar($("[data-grafico-diario]"));
+    var largura = caixa.clientWidth || 340;
+    var mE = 4, mD = 6, painelH = 92, cabH = 26, entre = 14, eixoH = 20;
+    var altura = SERIES.length * (painelH + cabH + entre) + eixoH;
+    var svg = svgEl("svg", { width: largura, height: altura, viewBox: "0 0 " + largura + " " + altura, role: "img", "aria-label": "Evolução diária de visitas, fórmulas vistas, cliques no checkout e conversão" });
+    var larg = largura - mE - mD;
+    var xDe = function (i) { return dias.length === 1 ? mE + larg / 2 : mE + larg * i / (dias.length - 1); };
+    var paineis = [];
+
+    SERIES.forEach(function (s, k) {
+      var y0 = k * (painelH + cabH + entre);
+      var vals = dias.map(function (x) { return x[s.k] || 0; });
+      var total = s.pct ? (function () {
+        var v = dias.reduce(function (a, x) { return a + x.visitas; }, 0), c = dias.reduce(function (a, x) { return a + x.checkouts; }, 0);
+        return pct(c, v, 2);
+      })() : n(vals.reduce(function (a, v) { return a + v; }, 0));
+      var topo = topoBonito(Math.max.apply(null, vals), s.pct);
+      var yDe = function (v) { return y0 + cabH + painelH * (1 - v / topo); };
+
+      // cabeçalho do painel: nome com a marca da cor + total do período
+      var marca = svgEl("rect", { x: mE, y: y0 + 6, width: 10, height: 3, rx: 1.5, fill: s.cor });
+      svg.appendChild(marca);
+      var nome = svgEl("text", { class: "graf-nome", x: mE + 16, y: y0 + 11 });
+      nome.textContent = s.nome;
+      svg.appendChild(nome);
+      var tot = svgEl("text", { class: "graf-total", x: largura - mD, y: y0 + 11, "text-anchor": "end" });
+      tot.textContent = total + (s.pct ? " no período" : "");
+      svg.appendChild(tot);
+
+      // grade (topo e base) e o valor do topo
+      [0, topo].forEach(function (v) {
+        svg.appendChild(svgEl("line", { class: "grade", x1: mE, x2: largura - mD, y1: yDe(v), y2: yDe(v) }));
+      });
+      var tTopo = svgEl("text", { class: "eixo-texto", x: largura - mD, y: yDe(topo) - 4, "text-anchor": "end" });
+      tTopo.textContent = s.pct ? topo.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%" : n(topo);
+      svg.appendChild(tTopo);
+
+      // área (10%) + linha (2px)
+      var pts = vals.map(function (v, i) { return [xDe(i), yDe(v)]; });
+      if (pts.length > 1) {
+        var linha = "M" + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
+        svg.appendChild(svgEl("path", { d: linha + "L" + pts[pts.length - 1][0].toFixed(1) + " " + yDe(0) + "L" + pts[0][0].toFixed(1) + " " + yDe(0) + "Z", fill: s.cor, "fill-opacity": 0.12 }));
+        svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: s.cor, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      }
+      // ponto final com anel da cor do fundo
+      var ult = pts[pts.length - 1];
+      svg.appendChild(svgEl("circle", { cx: ult[0], cy: ult[1], r: 4, fill: s.cor, stroke: "var(--cartao)", "stroke-width": 2 }));
+      // ponto que acompanha a guia
+      var guiaPonto = svgEl("circle", { cx: 0, cy: 0, r: 4.5, fill: s.cor, stroke: "var(--cartao)", "stroke-width": 2, visibility: "hidden" });
+      svg.appendChild(guiaPonto);
+      paineis.push({ s: s, pts: pts, ponto: guiaPonto });
     });
 
-    var caixa = limpar($("[data-grafico-diario]"));
-    var largura = Math.max(caixa.clientWidth || 320, dias.length * 26);
-    var altura = 210, mE = 30, mB = 22, mT = 8;
-    var max = Math.max(1, Math.max.apply(null, dias.map(function (x) { return x.visitas; })));
-    var passo = Math.pow(10, Math.floor(Math.log10(max)));
-    var topo = Math.ceil(max / passo) * passo;
-    var svg = svgEl("svg", { width: largura, height: altura, viewBox: "0 0 " + largura + " " + altura, role: "img", "aria-label": "Evolução diária de visitas, fórmulas vistas e cliques no checkout" });
-    var y = function (v) { return mT + (altura - mT - mB) * (1 - v / topo); };
-    [0, topo / 2, topo].forEach(function (v) {
-      svg.appendChild(svgEl("line", { class: "grade", x1: mE, x2: largura, y1: y(v), y2: y(v) }));
-      var t = svgEl("text", { class: "eixo-texto", x: 0, y: y(v) + 3 });
-      t.textContent = n(v);
+    // datas embaixo
+    var cada = Math.max(1, Math.ceil(dias.length / Math.max(1, Math.floor(larg / 52))));
+    dias.forEach(function (dia, i) {
+      if (i % cada !== 0 && i !== dias.length - 1) return;
+      if (i !== dias.length - 1 && dias.length - 1 - i < cada * 0.6) return;
+      var t = svgEl("text", { class: "eixo-texto", x: xDe(i), y: altura - 4, "text-anchor": i === 0 ? "start" : i === dias.length - 1 ? "end" : "middle" });
+      t.textContent = dataBR(dia.dia);
       svg.appendChild(t);
     });
-    var faixa = (largura - mE) / dias.length;
-    var bw = Math.max(2, Math.min(10, (faixa - 6) / 3 - 2));
-    var cada = Math.ceil(dias.length / Math.max(1, Math.floor((largura - mE) / 44)));
-    dias.forEach(function (dia, i) {
-      var x0 = mE + i * faixa + (faixa - (bw * 3 + 4)) / 2;
-      SERIES.forEach(function (s, j) {
-        var v = dia[s.k] || 0;
-        var h = Math.max(0, y(0) - y(v));
-        if (v > 0) {
-          var r = Math.min(3, bw / 2, h);
-          var x = x0 + j * (bw + 2), yy = y(v);
-          // topo arredondado, base reta
-          svg.appendChild(svgEl("path", {
-            d: "M" + x + " " + y(0) + "V" + (yy + r) + "Q" + x + " " + yy + " " + (x + r) + " " + yy + "H" + (x + bw - r) + "Q" + (x + bw) + " " + yy + " " + (x + bw) + " " + (yy + r) + "V" + y(0) + "Z",
-            fill: s.cor,
-          }));
-        }
+
+    // linha-guia + área de toque do gráfico inteiro
+    var guia = svgEl("line", { class: "graf-guia", x1: 0, x2: 0, y1: 0, y2: altura - eixoH, visibility: "hidden" });
+    svg.appendChild(guia);
+    var alvo = svgEl("rect", { class: "alvo", x: 0, y: 0, width: largura, height: altura, tabindex: 0, fill: "transparent" });
+    var mostrar = function (ev, iForcado) {
+      var r = svg.getBoundingClientRect();
+      var i = iForcado != null ? iForcado : Math.round((ev.clientX - r.left - mE) / (larg / Math.max(1, dias.length - 1)));
+      i = Math.max(0, Math.min(dias.length - 1, i));
+      var x = xDe(i);
+      guia.setAttribute("x1", x); guia.setAttribute("x2", x); guia.setAttribute("visibility", "visible");
+      paineis.forEach(function (p) {
+        p.ponto.setAttribute("cx", p.pts[i][0]); p.ponto.setAttribute("cy", p.pts[i][1]); p.ponto.setAttribute("visibility", "visible");
       });
-      if (i % cada === 0) {
-        var t = svgEl("text", { class: "eixo-texto", x: mE + i * faixa + faixa / 2, y: altura - 6, "text-anchor": "middle" });
-        t.textContent = dataBR(dia.dia);
-        svg.appendChild(t);
-      }
-      var alvo = svgEl("rect", { class: "alvo", x: mE + i * faixa, y: 0, width: faixa, height: altura - mB, tabindex: 0 });
-      var mostrarDica = function (ev) {
-        var linhas = SERIES.map(function (s) { return { cor: s.cor, valor: n(dia[s.k]), nome: s.nome }; });
-        linhas.push({ cor: "transparent", valor: pct(dia.checkouts, dia.visitas), nome: "conversão do dia" });
-        dica(ev, dataBR(dia.dia), linhas);
-      };
-      alvo.addEventListener("pointerenter", mostrarDica);
-      alvo.addEventListener("pointermove", mostrarDica);
-      alvo.addEventListener("focus", mostrarDica);
-      alvo.addEventListener("pointerleave", esconderDica);
-      alvo.addEventListener("blur", esconderDica);
-      svg.appendChild(alvo);
+      var dia = dias[i];
+      dica({ clientX: r.left + x, clientY: r.top + 10, target: alvo }, dataBR(dia.dia), SERIES.map(function (s) {
+        return { cor: s.cor, valor: s.pct ? pct(dia.checkouts, dia.visitas) : n(dia[s.k]), nome: s.nome };
+      }));
+    };
+    var esconder = function () {
+      guia.setAttribute("visibility", "hidden");
+      paineis.forEach(function (p) { p.ponto.setAttribute("visibility", "hidden"); });
+      esconderDica();
+    };
+    var focoI = dias.length - 1;
+    alvo.addEventListener("pointermove", mostrar);
+    alvo.addEventListener("pointerdown", mostrar);
+    alvo.addEventListener("pointerleave", esconder);
+    alvo.addEventListener("focus", function (ev) { mostrar(ev, focoI); });
+    alvo.addEventListener("keydown", function (ev) {
+      if (ev.key === "ArrowLeft") focoI = Math.max(0, focoI - 1);
+      else if (ev.key === "ArrowRight") focoI = Math.min(dias.length - 1, focoI + 1);
+      else return;
+      ev.preventDefault();
+      mostrar(ev, focoI);
     });
+    alvo.addEventListener("blur", esconder);
+    svg.appendChild(alvo);
     caixa.appendChild(svg);
-    if (largura > caixa.clientWidth) caixa.scrollLeft = largura;
 
     // tabela
     var tab = el("table", "tabela");
@@ -403,6 +461,206 @@
     var rolar = el("div", "tabela-rolar");
     rolar.appendChild(tab);
     wrap.appendChild(rolar);
+  }
+
+  /* ---------- Funil de vendas (formato de funil) ----------
+     Cada etapa é uma faixa cuja largura é proporcional ao número de pessoas.
+     Cor: um só tom de azul, do mais claro (topo) ao mais escuro (fundo). */
+  function corEtapa(t) {
+    var a = [199, 214, 234], b = [47, 104, 184];
+    var c = a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); });
+    return { cor: "rgb(" + c.join(",") + ")", escuro: t > 0.45 };
+  }
+
+  function funilVisual(no, etapas, g) {
+    limpar(no);
+    var W = no.clientWidth || 340;
+    var F = Math.max(140, Math.min(W * 0.48, 300)); // largura da área do funil
+    var linhaH = 66, faixaH = 62;
+    var H = etapas.length * linhaH;
+    var base = Math.max(1, etapas[0].n);
+    var svg = svgEl("svg", { width: W, height: H, viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Funil de vendas: " + etapas.map(function (e) { return e.nome + " " + n(e.n); }).join(", ") });
+    var largDe = function (v) { return Math.max(F * 0.12, F * v / base); };
+    var cx = F / 2;
+
+    etapas.forEach(function (e, i) {
+      var y = i * linhaH;
+      var wTopo = largDe(e.n);
+      var wBase = i < etapas.length - 1 ? largDe(etapas[i + 1].n) : wTopo * 0.86;
+      var t = etapas.length > 1 ? i / (etapas.length - 1) : 0;
+      var c = corEtapa(t);
+      var ehGargalo = g && g.i === i;
+      var forma = svgEl("path", {
+        d: "M" + (cx - wTopo / 2) + " " + y + "H" + (cx + wTopo / 2) + "L" + (cx + wBase / 2) + " " + (y + faixaH) + "H" + (cx - wBase / 2) + "Z",
+        fill: c.cor, class: "funil-faixa",
+      });
+      svg.appendChild(forma);
+
+      // % do total dentro da faixa, se couber
+      var pTxt = pct(e.n, base, i === 0 ? 0 : 1);
+      if (Math.min(wTopo, wBase) > 54) {
+        var tp = svgEl("text", { x: cx, y: y + faixaH / 2 + 5, "text-anchor": "middle", class: "funil-pct" + (c.escuro ? " claro" : "") });
+        tp.textContent = pTxt;
+        svg.appendChild(tp);
+      }
+
+      // textos à direita
+      var xT = F + 14;
+      var nome = svgEl("text", { x: xT, y: y + 16, class: "funil-nome" });
+      nome.textContent = e.nome;
+      svg.appendChild(nome);
+      var num = svgEl("text", { x: xT, y: y + 40, class: "funil-num" });
+      num.textContent = n(e.n);
+      svg.appendChild(num);
+      if (i > 0) {
+        var ant = etapas[i - 1].n;
+        var perda = ant ? (ant - e.n) / ant : 0;
+        var sub = svgEl("text", { x: xT, y: y + 57, class: "funil-sub" + (ehGargalo ? " gargalo" : "") });
+        sub.textContent = (perda > 0 ? "▼ " + Math.round(perda * 100) + "% saíram" : "sem perda") + " · " + pct(e.n, ant, 0) + " seguiram";
+        svg.appendChild(sub);
+      } else {
+        var sub0 = svgEl("text", { x: xT, y: y + 57, class: "funil-sub" });
+        sub0.textContent = "100% · ponto de partida";
+        svg.appendChild(sub0);
+      }
+
+      // área de toque da linha inteira
+      var alvo = svgEl("rect", { x: 0, y: y, width: W, height: linhaH, fill: "transparent", class: "alvo", tabindex: 0 });
+      var mostrar = function (ev) {
+        var linhas = [
+          { cor: c.cor, valor: n(e.n), nome: "pessoas" },
+          { cor: "transparent", valor: pct(e.n, base), nome: "do total" },
+        ];
+        if (i > 0) {
+          linhas.push({ cor: "transparent", valor: pct(e.n, etapas[i - 1].n), nome: "da etapa anterior" });
+          linhas.push({ cor: "transparent", valor: n(etapas[i - 1].n - e.n), nome: "saíram antes desta etapa" });
+        }
+        dica(ev, e.nome, linhas);
+      };
+      alvo.addEventListener("pointermove", mostrar);
+      alvo.addEventListener("pointerdown", mostrar);
+      alvo.addEventListener("focus", mostrar);
+      alvo.addEventListener("pointerleave", esconderDica);
+      alvo.addEventListener("blur", esconderDica);
+      svg.appendChild(alvo);
+    });
+    no.appendChild(svg);
+  }
+
+  function etapasPrincipais(d) {
+    var k = d.kpi;
+    var base = visitasDe(k);
+    return [
+      { id: "visitas", nome: "Visitas", n: base },
+      { id: "iniciaram", nome: "Começaram o quiz", n: k.iniciaram },
+      { id: "concluiram", nome: "Concluíram o quiz", n: k.concluiram },
+      { id: "oferta", nome: "Viram a fórmula", n: k.oferta },
+      { id: "planos", nome: "Viram os planos", n: k.viram_planos },
+      { id: "checkout", nome: "Clicaram em comprar", n: k.checkout },
+    ];
+  }
+
+  function montarFunilVisual(d) {
+    var etapas = etapasPrincipais(d);
+    // maior queda até a fórmula (planos → checkout é decisão de compra)
+    var g = null;
+    for (var i = 1; i <= 3; i++) {
+      var ant = etapas[i - 1].n;
+      if (ant < 10) continue;
+      var perda = (ant - etapas[i].n) / ant;
+      if (!g || perda > g.perda) g = { i: i, perda: perda };
+    }
+    funilVisual($("[data-funil-visual]"), etapas, g);
+  }
+
+  /* ---------- Retenção ao longo do quiz ---------- */
+  function retencao(no, lista, g) {
+    limpar(no);
+    // só as telas do quiz + a fórmula
+    var ini = lista.findIndex(function (e) { return TELAS[0] && e.id === TELAS[0].id; });
+    var fim = lista.findIndex(function (e) { return e.id === "oferta"; });
+    if (ini < 0 || fim < 0) return;
+    var pts = lista.slice(ini, fim + 1);
+    var base = Math.max(1, pts[0].n);
+    var W = no.clientWidth || 340, H = 200, mE = 34, mD = 10, mT = 12, mB = 24;
+    var svg = svgEl("svg", { width: W, height: H, viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": "Retenção no quiz: de " + n(base) + " que começaram, " + pct(pts[pts.length - 1].n, base, 0) + " viram a fórmula" });
+    var xDe = function (i) { return mE + (W - mE - mD) * i / Math.max(1, pts.length - 1); };
+    var yDe = function (v) { return mT + (H - mT - mB) * (1 - v / 100); };
+    [0, 50, 100].forEach(function (v) {
+      svg.appendChild(svgEl("line", { class: "grade", x1: mE, x2: W - mD, y1: yDe(v), y2: yDe(v) }));
+      var t = svgEl("text", { class: "eixo-texto", x: mE - 6, y: yDe(v) + 3, "text-anchor": "end" });
+      t.textContent = v + "%";
+      svg.appendChild(t);
+    });
+    var vals = pts.map(function (e) { return 100 * e.n / base; });
+    var c = vals.map(function (v, i) { return [xDe(i), yDe(v)]; });
+    var linha = "M" + c.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join("L");
+    svg.appendChild(svgEl("path", { d: linha + "L" + c[c.length - 1][0] + " " + yDe(0) + "L" + c[0][0] + " " + yDe(0) + "Z", fill: "var(--s1)", "fill-opacity": 0.12 }));
+    svg.appendChild(svgEl("path", { d: linha, fill: "none", stroke: "var(--s1)", "stroke-width": 2, "stroke-linejoin": "round" }));
+    var gId = g ? lista[g.i].id : null;
+    pts.forEach(function (e, i) {
+      var ehG = e.id === gId;
+      svg.appendChild(svgEl("circle", { cx: c[i][0], cy: c[i][1], r: ehG ? 6 : 4, fill: ehG ? "var(--alerta)" : "var(--s1)", stroke: "var(--cartao)", "stroke-width": 2 }));
+      // rótulos do eixo: P1, P3… e as telas especiais
+      var cod = e.id === "oferta" ? "Fórm." : (numeroPergunta[e.id] || "");
+      var mostra = e.id === "oferta" || (cod && (Number(cod.slice(1)) % 2 === 1 || pts.length < 12));
+      if (mostra) {
+        var t = svgEl("text", { class: "eixo-texto", x: c[i][0], y: H - 6, "text-anchor": i === pts.length - 1 ? "end" : "middle" });
+        t.textContent = cod;
+        svg.appendChild(t);
+      }
+      var alvo = svgEl("rect", { x: c[i][0] - (W - mE - mD) / pts.length / 2, y: 0, width: (W - mE - mD) / pts.length, height: H, fill: "transparent", class: "alvo", tabindex: 0 });
+      var mostrar = function (ev) {
+        var linhas = [{ cor: "var(--s1)", valor: pct(e.n, base, 0), nome: "ainda no quiz" }, { cor: "transparent", valor: n(e.n), nome: "pessoas" }];
+        if (i > 0) linhas.push({ cor: "transparent", valor: n(pts[i - 1].n - e.n), nome: "saíram na tela anterior" });
+        dica(ev, e.nome, linhas);
+      };
+      alvo.addEventListener("pointermove", mostrar);
+      alvo.addEventListener("pointerdown", mostrar);
+      alvo.addEventListener("focus", mostrar);
+      alvo.addEventListener("pointerleave", esconderDica);
+      alvo.addEventListener("blur", esconderDica);
+      svg.appendChild(alvo);
+    });
+    // rótulo direto só no fim
+    // abaixo do último ponto (a curva desce, então o espaço livre fica embaixo)
+    var yFim = c[c.length - 1][1];
+    var yTxt = yFim + 24 < yDe(0) - 4 ? yFim + 24 : yFim - 12;
+    var tf = svgEl("text", { class: "graf-total", x: c[c.length - 1][0], y: yTxt, "text-anchor": "end" });
+    tf.textContent = pct(pts[pts.length - 1].n, base, 0) + " chegaram à fórmula";
+    svg.appendChild(tf);
+    no.appendChild(svg);
+  }
+
+  /* ---------- Barra 100% (ex.: divisão entre os kits) ---------- */
+  var CORES_CAT = ["var(--s1)", "var(--s2)", "var(--s3)"];
+  function barraPartes(no, partes) {
+    var total = partes.reduce(function (a, p) { return a + p.n; }, 0);
+    var wrap = el("div", "partes");
+    var barra = el("div", "partes-barra");
+    partes.forEach(function (p, i) {
+      if (!p.n) return;
+      var seg = el("div", "partes-seg");
+      seg.style.flexGrow = p.n;
+      seg.style.background = CORES_CAT[i % CORES_CAT.length];
+      seg.title = p.nome + ": " + n(p.n) + " (" + pct(p.n, total, 0) + ")";
+      var r = el("span", "barra-rot", pct(p.n, total, 0));
+      seg.appendChild(r);
+      barra.appendChild(seg);
+    });
+    if (!total) barra.appendChild(el("div", "partes-vazio", "Sem cliques no período"));
+    wrap.appendChild(barra);
+    var leg = el("div", "legenda");
+    partes.forEach(function (p, i) {
+      var item = el("span");
+      var cor = el("i");
+      cor.style.background = CORES_CAT[i % CORES_CAT.length];
+      item.appendChild(cor);
+      item.appendChild(document.createTextNode(p.nome + " · " + n(p.n) + " (" + pct(p.n, total, 0) + ")"));
+      leg.appendChild(item);
+    });
+    wrap.appendChild(leg);
+    no.appendChild(wrap);
   }
 
   /* barras do funil */
@@ -437,6 +695,7 @@
     var lista = etapasFunil(d);
     var g = gargalo(lista);
     mostrarAlerta($("[data-alerta-funil]"), lista, g);
+    retencao($("[data-retencao]"), lista, g);
     desenharFunil($("[data-funil-completo]"), lista, Math.max(d.kpi.capa, d.kpi.quiz), g);
 
     // onde pararam
@@ -576,6 +835,10 @@
 
     // kits
     var no = limpar($("[data-kits]"));
+    barraPartes(no, ["1", "2", "3"].map(function (v) {
+      var x = (d.checkoutPlano || []).filter(function (c) { return c.valor === v; })[0];
+      return { nome: "Kit " + v, n: x ? x.n : 0 };
+    }));
     var grade = el("div", "kits");
     var ck = {}, pl = {};
     (d.checkoutPlano || []).forEach(function (x) { ck[x.valor] = x; });
@@ -598,7 +861,8 @@
       cheia.style.width = (totalCk ? 100 * c / totalCk : 0) + "%";
       barra.appendChild(cheia);
       cartao.appendChild(barra);
-      cartao.appendChild(el("p", "kpi-sub", n(pl[v] ? pl[v].n : 0) + " pessoas tocaram neste kit"));
+      var toques = pl[v] ? pl[v].n : 0;
+      cartao.appendChild(el("p", "kpi-sub", n(toques) + (toques === 1 ? " pessoa tocou" : " pessoas tocaram") + " neste kit"));
       grade.appendChild(cartao);
     });
     no.appendChild(grade);
@@ -623,6 +887,21 @@
 
   /* ---------- Origem ---------- */
   function montarOrigem(d) {
+    // gráficos de fonte e aparelho: visitas e conversão de cada um
+    ["fonte", "aparelho"].forEach(function (campo) {
+      var noG = limpar($('[data-origem-graf="' + campo + '"]'));
+      var ls = ((d.origem && d.origem[campo]) || []).slice(0, 8);
+      if (!ls.length) return;
+      if (campo === "aparelho") {
+        barraPartes(noG, ls.slice(0, 3).map(function (l) { return { nome: l.nome, n: l.visitas }; }));
+      } else {
+        desenharLista(noG, ls.map(function (l) {
+          return { nome: l.nome, n: l.visitas, extra: pct(l.checkouts, l.visitas) + " converte" };
+        }));
+      }
+      noG.appendChild(el("div", "espaco"));
+    });
+
     ["fonte", "campanha", "aparelho", "sistema", "pais"].forEach(function (campo) {
       var no = limpar($('[data-origem="' + campo + '"]'));
       var linhas = (d.origem && d.origem[campo]) || [];
@@ -671,6 +950,13 @@
     else desenharLista(noE, d.erros.map(function (e) { return { nome: e.valor, n: e.n, extra: n(e.n) + "×" }; }));
   }
 
+  function redesenhar() {
+    var d = estado.dados;
+    if (!d) return;
+    if (estado.aba === "geral") { montarFunilVisual(d); montarDiario(d); }
+    if (estado.aba === "funil") { var l = etapasFunil(d); retencao($("[data-retencao]"), l, gargalo(l)); }
+  }
+
   /* ================= dica (tooltip) ================= */
   var dicaEl = $("[data-dica]");
   function dica(ev, titulo, linhas) {
@@ -709,7 +995,7 @@
     });
     var soma = function (k) { return diario.reduce(function (s, x) { return s + x[k]; }, 0); };
     var V = soma("visitas"), I = soma("iniciaram"), F = soma("formulas"), C = soma("checkouts");
-    var cta = Math.round(I * 1.07), capa = Math.round(cta / 0.74);
+    var cta = Math.round(I * 1.07), capa = V;
     var etapas = [], restante = I, paradas = [];
     TELAS.forEach(function (tela, i) {
       if (i > 0) {
@@ -753,7 +1039,7 @@
     }
     var amostra = function (q, centro, var_) { var l = []; for (var i = 0; i < Math.min(q, 400); i++) l.push(Math.round(centro * (1 + (rnd() - 0.5) * var_))); return l; };
     var kpi = {
-      sessoes: V, visitantes: Math.round(V * 0.86), capa: capa, cta_capa: cta, quiz: Math.round(cta * 0.99), iniciaram: I,
+      entrada: V, sessoes: Math.round(V * 1.04), visitantes: Math.round(V * 0.86), capa: capa, cta_capa: cta, quiz: Math.round(cta * 0.99), iniciaram: I,
       concluiram: Math.round(F * 1.04), oferta: F, viram_planos: Math.round(F * 0.81), escolheram_plano: Math.round(F * 0.18),
       checkout: C, checkout_cliques: Math.round(C * 1.3),
     };
@@ -868,14 +1154,14 @@
       estado.aba = b.getAttribute("data-aba");
       $$("[data-aba]").forEach(function (x) { x.setAttribute("aria-selected", x === b ? "true" : "false"); });
       $$("[data-painel-aba]").forEach(function (p) { p.hidden = p.getAttribute("data-painel-aba") !== estado.aba; });
-      if (estado.aba === "geral" && estado.dados) montarDiario(estado.dados);
+      redesenhar();
       requestAnimationFrame(ajustarRotulos);
     });
   });
   var redimensionar = 0;
   window.addEventListener("resize", function () {
     clearTimeout(redimensionar);
-    redimensionar = setTimeout(function () { if (estado.dados && estado.aba === "geral") montarDiario(estado.dados); }, 200);
+    redimensionar = setTimeout(redesenhar, 200);
   });
 
   // atualiza sozinho a cada 60 s (só com dados reais)
