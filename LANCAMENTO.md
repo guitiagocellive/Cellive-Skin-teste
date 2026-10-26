@@ -29,7 +29,10 @@ Não mudam com o lançamento: galeria de 7 fotos, selo "Mais vendido", provas so
 
 Para voltar ao pré-lançamento: `node scripts/lancar.mjs --voltar`.
 
-## Cópias guardadas (tags no GitHub)
+## Cópias guardadas (no histórico do GitHub)
 
-- `oferta-antes-do-pre-lancamento`: o site exatamente como era antes do pré-lançamento (preços à mostra, botão verde).
-- `oferta-pre-lancamento`: o site como está agora (pré-lançamento com as 7 fotos e "Mais vendido").
+- Commit `8ddfea7`: o site exatamente como era **antes** do pré-lançamento (preços à mostra, "Comprar Agora", botão verde).
+- Commit `8597f69`: o site em **pré-lançamento** como foi aprovado (lista do grupo VIP, 7 fotos, "Mais vendido").
+
+Para ver um deles: no GitHub, abra o repositório e troque `main` pelo código do commit na URL
+(ex.: `/tree/8ddfea7`), ou rode `git show 8ddfea7:oferta.html`.
