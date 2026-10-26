@@ -321,11 +321,15 @@
     }
   }
 
-  /* ---------- Topo com sombra ao rolar ---------- */
+  /* ---------- Topo: vira balão quando gruda no alto da tela ---------- */
   var topo = document.querySelector("[data-topo]");
-  function rolou() { topo.classList.toggle("is-rolando", window.scrollY > 40); }
+  var faixaTopo = document.querySelector(".promo-faixa");
+  var topoGruda = 0; // rolagem em que o topo encosta no alto (a altura da faixa azul)
+  function medirTopo() { topoGruda = faixaTopo ? faixaTopo.offsetHeight : 0; rolou(); }
+  function rolou() { topo.classList.toggle("is-rolando", window.scrollY > topoGruda + 8); }
   window.addEventListener("scroll", rolou, { passive: true });
-  rolou();
+  window.addEventListener("resize", medirTopo);
+  medirTopo();
 
   /* ---------- Entrada dos textos ----------
      Separa os títulos marcados com data-revelar="palavras" em palavras (sem

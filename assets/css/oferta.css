@@ -34,6 +34,11 @@
 }
 
 /* Logo fixo no topo, com sombra quando a página rola */
+/* Topo: na primeira dobra é a faixa branca com a logo. Quando gruda no alto da
+   tela (is-rolando), vira um balão: a logo fica numa cápsula de vidro fosco
+   (cantos totalmente arredondados) e, atrás, um desfoque em degradê que some
+   para baixo. A altura do topo não muda (nada na página pula); só opacidade e
+   escala são animadas. */
 .oferta-topo {
   position: sticky;
   top: 0;
@@ -42,11 +47,72 @@
   justify-content: center;
   padding: 18px 16px 14px;
   background: var(--white);
-  transition: box-shadow 0.3s ease;
+  transition: background-color 0.35s ease;
+}
+
+/* desfoque em degradê atrás do balão */
+.oferta-topo::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 -26px;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.oferta-topo .brand {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* o balão (cápsula) em volta da logo */
+.oferta-topo .brand::before {
+  content: "";
+  position: absolute;
+  inset: -12px -30px;
+  z-index: -1;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 8px 26px rgba(26, 26, 26, 0.09), 0 1px 2px rgba(26, 26, 26, 0.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .oferta-topo.is-rolando {
-  box-shadow: 0 4px 14px rgba(26, 26, 26, 0.07);
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.oferta-topo.is-rolando::before {
+  opacity: 1;
+}
+
+.oferta-topo.is-rolando .brand {
+  transform: scale(0.86);
+}
+
+/* o balão encolhe junto com a logo (fica com cerca de 190 × 36 px) */
+.oferta-topo.is-rolando .brand::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oferta-topo,
+  .oferta-topo::before,
+  .oferta-topo .brand,
+  .oferta-topo .brand::before {
+    transition: none;
+  }
 }
 
 .oferta {
