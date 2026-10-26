@@ -3,21 +3,68 @@
 (function () {
   "use strict";
 
-  /* ---------- Galeria ---------- */
+  /* ---------- Galeria ----------
+     Toque numa miniatura ou deslize o dedo na foto grande. O selo "Anti-aging"
+     só aparece na 1ª foto (as outras têm textos no canto). As fotos grandes
+     baixam em segundo plano depois que a página abre, para trocar na hora. */
   var principal = document.querySelector("[data-foto-principal]");
   var fotoPrincipal = principal.querySelector("img");
-  var miniaturas = document.querySelectorAll(".miniatura");
+  var selos = document.querySelector(".galeria-selos");
+  var miniaturas = Array.prototype.slice.call(document.querySelectorAll(".miniatura"));
+  var atual = 0;
 
-  Array.prototype.forEach.call(miniaturas, function (mini) {
-    mini.addEventListener("click", function () {
-      Array.prototype.forEach.call(miniaturas, function (m) { m.classList.remove("is-ativa"); });
-      mini.classList.add("is-ativa");
-      principal.setAttribute("data-label", mini.getAttribute("data-label"));
-      fotoPrincipal.hidden = false;
-      fotoPrincipal.style.opacity = "0";
-      fotoPrincipal.onload = function () { fotoPrincipal.style.opacity = "1"; };
-      fotoPrincipal.src = mini.getAttribute("data-foto");
-    });
+  function mostrarFoto(i) {
+    i = (i + miniaturas.length) % miniaturas.length;
+    if (i === atual) return;
+    atual = i;
+    var mini = miniaturas[i];
+    miniaturas.forEach(function (m) { m.classList.toggle("is-ativa", m === mini); });
+    principal.setAttribute("data-label", mini.getAttribute("data-label"));
+    if (selos) selos.classList.toggle("is-escondido", i !== 0);
+    fotoPrincipal.hidden = false;
+    var src = mini.getAttribute("data-foto");
+    var pronta = new Image();
+    pronta.onload = pronta.onerror = function () {
+      if (atual !== i) return;
+      fotoPrincipal.src = src;
+      fotoPrincipal.alt = mini.getAttribute("data-alt") || "";
+      fotoPrincipal.style.opacity = "1";
+    };
+    fotoPrincipal.style.opacity = "0.35";
+    pronta.src = src;
+    // mantém a miniatura escolhida à vista na fileira
+    var fileira = mini.parentNode;
+    var alvo = mini.offsetLeft - (fileira.clientWidth - mini.offsetWidth) / 2;
+    if (fileira.scrollTo) fileira.scrollTo({ left: Math.max(0, alvo), behavior: "smooth" });
+  }
+
+  miniaturas.forEach(function (mini, i) {
+    mini.addEventListener("click", function () { mostrarFoto(i); });
+  });
+
+  // deslizar o dedo para o lado na foto grande
+  var toqueX = null, toqueY = null;
+  principal.addEventListener("touchstart", function (ev) {
+    toqueX = ev.touches[0].clientX; toqueY = ev.touches[0].clientY;
+  }, { passive: true });
+  principal.addEventListener("touchend", function (ev) {
+    if (toqueX == null) return;
+    var dx = ev.changedTouches[0].clientX - toqueX, dy = ev.changedTouches[0].clientY - toqueY;
+    toqueX = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      var i = atual + (dx < 0 ? 1 : -1);
+      mostrarFoto(i);
+      rastrear("clique", { e: "galeria", val: String(((i % miniaturas.length) + miniaturas.length) % miniaturas.length + 1) });
+    }
+  }, { passive: true });
+
+  // baixa as outras fotos grandes quando a página termina de abrir
+  window.addEventListener("load", function () {
+    var baixar = function () {
+      miniaturas.slice(1).forEach(function (m) { var im = new Image(); im.decoding = "async"; im.src = m.getAttribute("data-foto"); });
+    };
+    if (window.requestIdleCallback) requestIdleCallback(baixar, { timeout: 2500 });
+    else setTimeout(baixar, 1200);
   });
 
   /* ---------- Planos ---------- */

@@ -4755,3 +4755,17 @@ html.lista-aberta {
     animation: none;
   }
 }
+
+/* Galeria: selo some nas fotos 2 a 7 (elas têm texto no canto) */
+.galeria-selos {
+  transition: opacity 0.25s ease;
+}
+
+.galeria-selos.is-escondido {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.galeria-foto {
+  touch-action: pan-y;
+}
