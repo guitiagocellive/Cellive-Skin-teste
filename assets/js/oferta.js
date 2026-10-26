@@ -3,79 +3,104 @@
 (function () {
   "use strict";
 
-  /* ---------- Galeria ----------
-     Toque numa miniatura ou deslize o dedo na foto grande. O selo "Anti-aging"
-     só aparece na 1ª foto (as outras têm textos no canto). As fotos grandes
-     baixam em segundo plano depois que a página abre, para trocar na hora. */
-  var principal = document.querySelector("[data-foto-principal]");
-  var fotoPrincipal = principal.querySelector("img");
+  /* ---------- Galeria (carrossel) ----------
+     As fotos ficam lado a lado num trilhoGal com rolagem que encaixa (o arrasto
+     segue o dedo). Tocar numa miniatura desliza até a foto. O selo "Anti-aging"
+     só aparece na 1ª foto (as outras têm texto no canto).
+     Carregamento: a foto 1 vem com a página; as outras baixam uma por vez
+     depois que a primeira dobra termina de carregar (ou na hora, se a pessoa
+     for até ela antes). Cada foto aparece com um esmaecer suave. */
+  var trilhoGal = document.querySelector("[data-galeria-trilho]");
+  var slides = trilhoGal ? Array.prototype.slice.call(trilhoGal.children) : [];
   var selos = document.querySelector(".galeria-selos");
   var miniaturas = Array.prototype.slice.call(document.querySelectorAll(".miniatura"));
+  var fileiraMini = document.querySelector(".galeria-miniaturas");
   var atual = 0;
 
-  function mostrarFoto(i) {
-    i = (i + miniaturas.length) % miniaturas.length;
-    if (i === atual) return;
-    atual = i;
-    var mini = miniaturas[i];
-    miniaturas.forEach(function (m) { m.classList.toggle("is-ativa", m === mini); });
-    principal.setAttribute("data-label", mini.getAttribute("data-label"));
-    if (selos) selos.classList.toggle("is-escondido", i !== 0);
-    fotoPrincipal.hidden = false;
-    var src = mini.getAttribute("data-foto");
-    var pronta = new Image();
-    pronta.onload = pronta.onerror = function () {
-      if (atual !== i) return;
-      fotoPrincipal.src = src;
-      fotoPrincipal.alt = mini.getAttribute("data-alt") || "";
-      fotoPrincipal.style.opacity = "1";
-    };
-    fotoPrincipal.style.opacity = "0.35";
-    pronta.src = src;
-    // mantém a miniatura escolhida à vista na fileira
-    var fileira = mini.parentNode;
-    var alvo = mini.offsetLeft - (fileira.clientWidth - mini.offsetWidth) / 2;
-    if (fileira.scrollTo) fileira.scrollTo({ left: Math.max(0, alvo), behavior: "smooth" });
+  function carregarFoto(i) {
+    var slide = slides[i];
+    var img = slide && slide.querySelector("img[data-src]");
+    if (!img) return null;
+    var url = img.getAttribute("data-src");
+    img.removeAttribute("data-src");
+    slide.classList.add("is-esperando");
+    img.classList.add("is-chegando");
+    return new Promise(function (pronto) {
+      var mostrar = function () {
+        img.hidden = false;
+        slide.classList.remove("is-esperando");
+        requestAnimationFrame(function () { img.classList.remove("is-chegando"); });
+        pronto();
+      };
+      img.onload = function () { (img.decode ? img.decode() : Promise.resolve()).then(mostrar, mostrar); };
+      img.onerror = function () { slide.classList.remove("is-esperando"); pronto(); };
+      img.src = url;
+    });
   }
 
-  miniaturas.forEach(function (mini, i) {
-    mini.addEventListener("click", function () { mostrarFoto(i); });
-  });
+  // fila: uma foto de cada vez, para não disputar internet com o resto da página
+  var filaIniciada = false;
+  function baixarEmFila() {
+    if (filaIniciada) return;
+    filaIniciada = true;
+    var i = 1;
+    var proxima = function () {
+      while (i < slides.length && !slides[i].querySelector("img[data-src]")) i++;
+      if (i >= slides.length) return;
+      var p = carregarFoto(i++);
+      (p || Promise.resolve()).then(proxima);
+    };
+    proxima();
+  }
 
-  // deslizar o dedo para o lado na foto grande
-  var toqueX = null, toqueY = null;
-  principal.addEventListener("touchstart", function (ev) {
-    toqueX = ev.touches[0].clientX; toqueY = ev.touches[0].clientY;
-  }, { passive: true });
-  principal.addEventListener("touchend", function (ev) {
-    if (toqueX == null) return;
-    var dx = ev.changedTouches[0].clientX - toqueX, dy = ev.changedTouches[0].clientY - toqueY;
-    toqueX = null;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) {
-      var i = atual + (dx < 0 ? 1 : -1);
-      mostrarFoto(i);
-      rastrear("clique", { e: "galeria", val: String(((i % miniaturas.length) + miniaturas.length) % miniaturas.length + 1) });
+  function marcar(i) {
+    if (i === atual) return;
+    atual = i;
+    miniaturas.forEach(function (m, k) {
+      m.classList.toggle("is-ativa", k === i);
+      m.setAttribute("aria-selected", k === i ? "true" : "false");
+    });
+    if (selos) selos.classList.toggle("is-escondido", i !== 0);
+    // vizinhas na frente da fila
+    carregarFoto(i); carregarFoto(i + 1);
+    // miniatura escolhida no meio da fileira
+    var mini = miniaturas[i];
+    if (mini && fileiraMini && fileiraMini.scrollTo) {
+      var alvo = mini.offsetLeft - (fileiraMini.clientWidth - mini.offsetWidth) / 2;
+      fileiraMini.scrollTo({ left: Math.max(0, alvo), behavior: "smooth" });
     }
-  }, { passive: true });
+  }
 
-  // Fotos grandes 2 a 7: a 2ª baixa logo depois que a página abre; as outras,
-  // assim que a pessoa toca na galeria (quem não olha as fotos não gasta internet).
-  var baixadas = {};
-  var baixarFoto = function (i) {
-    var m = miniaturas[i];
-    if (!m || baixadas[i]) return;
-    baixadas[i] = true;
-    var im = new Image(); im.decoding = "async"; im.src = m.getAttribute("data-foto");
-  };
-  var baixarTodas = function () { miniaturas.forEach(function (m, i) { baixarFoto(i); }); };
-  window.addEventListener("load", function () {
-    var segunda = function () { baixarFoto(1); };
-    if (window.requestIdleCallback) requestIdleCallback(segunda, { timeout: 2500 });
-    else setTimeout(segunda, 1200);
-  });
-  ["touchstart", "pointerdown", "focusin"].forEach(function (ev) {
-    principal.parentNode.parentNode.addEventListener(ev, baixarTodas, { once: true, passive: true });
-  });
+  if (trilhoGal) {
+    var pedidoGal = 0, paradaGal = 0;
+    trilhoGal.addEventListener("scroll", function () {
+      if (!pedidoGal) pedidoGal = requestAnimationFrame(function () {
+        pedidoGal = 0;
+        marcar(Math.round(trilhoGal.scrollLeft / trilhoGal.clientWidth));
+      });
+      // registra no painel quando a rolagem para
+      clearTimeout(paradaGal);
+      paradaGal = setTimeout(function () { rastrear("clique", { e: "galeria", val: String(atual + 1) }); }, 400);
+    }, { passive: true });
+
+    miniaturas.forEach(function (mini, i) {
+      mini.addEventListener("click", function () {
+        carregarFoto(i);
+        trilhoGal.scrollTo({ left: i * trilhoGal.clientWidth, behavior: "smooth" });
+      });
+    });
+
+    // começou a mexer na galeria: as fotos vizinhas vêm na hora
+    trilhoGal.addEventListener("touchstart", function () { carregarFoto(1); baixarEmFila(); }, { once: true, passive: true });
+
+    // primeira dobra carregada: as outras fotos começam a baixar
+    var depoisDaDobra = function () {
+      if (window.requestIdleCallback) requestIdleCallback(baixarEmFila, { timeout: 1200 });
+      else setTimeout(baixarEmFila, 300);
+    };
+    if (document.readyState === "complete") depoisDaDobra();
+    else window.addEventListener("load", depoisDaDobra);
+  }
 
   /* ---------- Animações só onde a pessoa está olhando ----------
      As animações que rodam sem parar (faixa que corre, pulsos, selos girando)
@@ -584,6 +609,8 @@
     var prepararVideos = function () {
       cardsVid.forEach(function (card) {
         var v = card.querySelector("video");
+        // a capa do vídeo também só baixa aqui (não disputa com a primeira dobra)
+        if (v.getAttribute("data-poster")) { v.poster = v.getAttribute("data-poster"); v.removeAttribute("data-poster"); }
         if (v.preload === "none") { v.preload = "metadata"; v.load(); }
       });
     };
