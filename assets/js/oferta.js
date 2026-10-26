@@ -58,14 +58,35 @@
     }
   }, { passive: true });
 
-  // baixa as outras fotos grandes quando a página termina de abrir
+  // Fotos grandes 2 a 7: a 2ª baixa logo depois que a página abre; as outras,
+  // assim que a pessoa toca na galeria (quem não olha as fotos não gasta internet).
+  var baixadas = {};
+  var baixarFoto = function (i) {
+    var m = miniaturas[i];
+    if (!m || baixadas[i]) return;
+    baixadas[i] = true;
+    var im = new Image(); im.decoding = "async"; im.src = m.getAttribute("data-foto");
+  };
+  var baixarTodas = function () { miniaturas.forEach(function (m, i) { baixarFoto(i); }); };
   window.addEventListener("load", function () {
-    var baixar = function () {
-      miniaturas.slice(1).forEach(function (m) { var im = new Image(); im.decoding = "async"; im.src = m.getAttribute("data-foto"); });
-    };
-    if (window.requestIdleCallback) requestIdleCallback(baixar, { timeout: 2500 });
-    else setTimeout(baixar, 1200);
+    var segunda = function () { baixarFoto(1); };
+    if (window.requestIdleCallback) requestIdleCallback(segunda, { timeout: 2500 });
+    else setTimeout(segunda, 1200);
   });
+  ["touchstart", "pointerdown", "focusin"].forEach(function (ev) {
+    principal.parentNode.parentNode.addEventListener(ev, baixarTodas, { once: true, passive: true });
+  });
+
+  /* ---------- Animações só onde a pessoa está olhando ----------
+     As animações que rodam sem parar (faixa que corre, pulsos, selos girando)
+     ficam pausadas enquanto a seção está longe da tela: o celular não gasta
+     bateria e processamento desenhando o que ninguém vê. */
+  if ("IntersectionObserver" in window) {
+    var olhoSecoes = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) { e.target.classList.toggle("fora-da-tela", !e.isIntersecting); });
+    }, { rootMargin: "250px 0px" });
+    Array.prototype.forEach.call(document.querySelectorAll("main.oferta > section"), function (sec) { olhoSecoes.observe(sec); });
+  }
 
   /* ---------- Planos ---------- */
   var planos = document.querySelectorAll(".plano");
@@ -557,6 +578,23 @@
       card.querySelector(".vid-play").addEventListener("click", tocar);
       video.addEventListener("click", tocar);
     });
+
+    // Os vídeos não baixam na abertura da página (preload="none"); o começo de
+    // cada um só é lido quando a pessoa chega perto da seção.
+    var prepararVideos = function () {
+      cardsVid.forEach(function (card) {
+        var v = card.querySelector("video");
+        if (v.preload === "none") { v.preload = "metadata"; v.load(); }
+      });
+    };
+    if ("IntersectionObserver" in window) {
+      var olhoVid = new IntersectionObserver(function (entradas) {
+        if (entradas.some(function (e) { return e.isIntersecting; })) { olhoVid.disconnect(); prepararVideos(); }
+      }, { rootMargin: "700px 0px" });
+      olhoVid.observe(carrossel);
+    } else {
+      prepararVideos();
+    }
 
     var marcarVid = function () {
       var meio = carrossel.scrollLeft + carrossel.clientWidth / 2;

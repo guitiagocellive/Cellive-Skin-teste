@@ -4773,3 +4773,30 @@ html.lista-aberta {
 .galeria-foto {
   touch-action: pan-y;
 }
+
+/* ==========================================================================
+   Velocidade: estas seções (abaixo da primeira tela) só são desenhadas quando
+   chegam perto da tela; o celular não gasta tempo com o que ninguém está vendo.
+   contain-intrinsic-size guarda a altura real depois da 1ª vez (a rolagem não pula).
+   Só entram seções sem sombra ou enfeite passando da borda: content-visibility
+   corta o que passa dela (por isso garantia, números, SRRP, faixa etc. ficam de fora).
+   ========================================================================== */
+.oferta-envelhece,
+.oferta-inimigo,
+.oferta-reset,
+.oferta-micro,
+.oferta-clientes,
+.oferta-resultados,
+.oferta-videos,
+.oferta-confianca,
+.oferta-duvidas {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
+/* Seção longe da tela: animações contínuas pausadas (oferta.js marca a classe) */
+.fora-da-tela *,
+.fora-da-tela *::before,
+.fora-da-tela *::after {
+  animation-play-state: paused !important;
+}

@@ -94,6 +94,21 @@ Enquanto o produto não está à venda, a oferta (quiz e v2) fica em **pré-lan�
 **No lançamento:** coloque os links de checkout em `data-link` de cada plano, rode `node scripts/lancar.mjs` e
 publique. Tudo volta como era antes; a tabela do antes/depois está em [LANCAMENTO.md](LANCAMENTO.md).
 
+## Velocidade
+
+- **Primeira dobra primeiro:** a foto principal da oferta é pré-carregada (`preload` com `fetchpriority="high"`) e
+  todos os scripts usam `defer`, para não atrasar o desenho da tela.
+- **O resto depois:** as fotos grandes da galeria (2 a 7) só baixam quando a pessoa mexe na galeria (a 2ª baixa
+  sozinha depois que a página abre); os vídeos (`preload="none"`) só quando ela chega perto da seção.
+- **Seções lá embaixo** (`content-visibility: auto` em `oferta.css`) só são desenhadas quando chegam perto da tela.
+  Só entram seções sem sombra ou enfeite passando da borda, porque esse recurso corta o que passa dela.
+- **Animações contínuas** ficam pausadas enquanto a seção está longe da tela (`.fora-da-tela`, marcada pelo `oferta.js`).
+- **Próxima etapa em segundo plano** (`assets/js/proxima.js`): a capa baixa o quiz e o quiz baixa a oferta, para a
+  troca de página ser instantânea (não roda com economia de dados ou 2G).
+- **Cache:** imagens por 1 hora (e reaproveitadas por até 7 dias enquanto se atualizam), CSS e JS por 5 minutos (`vercel.json`).
+- **Fontes:** no Adobe Fonts, o projeto web deve estar com **Font display: swap**, para o texto aparecer na hora
+  (com `auto`, o iPhone deixa o texto invisível até a fonte chegar).
+
 ## Oferta direta para anúncios (v2)
 
 `v2.html` é a mesma página de oferta, sem o quiz: em vez de "Sua fórmula personalizada", fala da fórmula em geral

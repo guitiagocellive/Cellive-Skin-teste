@@ -11,10 +11,12 @@
   <link rel="preconnect" href="https://use.typekit.net" crossorigin>
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
+  <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
+  <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/oferta.css">
-  <!-- Rastreamento próprio (painel) -->
-  <script src="assets/js/rastreio.js"></script>
+  <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
+  <script src="assets/js/rastreio.js" defer></script>
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -666,7 +668,7 @@
       <div class="vid-carrossel" data-vid-carrossel tabindex="0" aria-label="Vídeos de clientes">
           <article class="vid-card" data-vid-card>
             <span class="slot vid-slot" data-label="Vídeo 1"></span>
-            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-1.webp">
+            <video class="vid-video" playsinline preload="none" poster="assets/img/oferta/video-1.webp">
               <source src="assets/video/depoimento-1.mp4" type="video/mp4">
             </video>
             <button type="button" class="vid-play" aria-label="Assistir ao depoimento 1">
@@ -675,7 +677,7 @@
           </article>
           <article class="vid-card" data-vid-card>
             <span class="slot vid-slot" data-label="Vídeo 2"></span>
-            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-2.webp">
+            <video class="vid-video" playsinline preload="none" poster="assets/img/oferta/video-2.webp">
               <source src="assets/video/depoimento-2.mp4" type="video/mp4">
             </video>
             <button type="button" class="vid-play" aria-label="Assistir ao depoimento 2">
@@ -684,7 +686,7 @@
           </article>
           <article class="vid-card" data-vid-card>
             <span class="slot vid-slot" data-label="Vídeo 3"></span>
-            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-3.webp">
+            <video class="vid-video" playsinline preload="none" poster="assets/img/oferta/video-3.webp">
               <source src="assets/video/depoimento-3.mp4" type="video/mp4">
             </video>
             <button type="button" class="vid-play" aria-label="Assistir ao depoimento 3">
@@ -693,7 +695,7 @@
           </article>
           <article class="vid-card" data-vid-card>
             <span class="slot vid-slot" data-label="Vídeo 4"></span>
-            <video class="vid-video" playsinline preload="metadata" poster="assets/img/oferta/video-4.webp">
+            <video class="vid-video" playsinline preload="none" poster="assets/img/oferta/video-4.webp">
               <source src="assets/video/depoimento-4.mp4" type="video/mp4">
             </video>
             <button type="button" class="vid-play" aria-label="Assistir ao depoimento 4">
@@ -1124,9 +1126,9 @@
     </div>
   </dialog>
 
-  <script src="assets/js/oferta.js"></script>
-  <script src="assets/js/quiz-perguntas.js"></script>
-  <script src="assets/js/oferta-formula.js"></script>
-  <script src="assets/js/oferta-avaliacoes.js"></script>
+  <script src="assets/js/oferta.js" defer></script>
+  <script src="assets/js/quiz-perguntas.js" defer></script>
+  <script src="assets/js/oferta-formula.js" defer></script>
+  <script src="assets/js/oferta-avaliacoes.js" defer></script>
 </body>
 </html>

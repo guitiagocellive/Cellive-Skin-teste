@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <!-- Rastreamento próprio (painel) -->
-  <script src="assets/js/rastreio.js"></script>
+  <script src="assets/js/rastreio.js" defer></script>
 </head>
 <body>
   <main class="quiz">
@@ -68,7 +68,9 @@
     </div>
   </aside>
 
-  <script src="assets/js/quiz-perguntas.js"></script>
-  <script src="assets/js/quiz.js"></script>
+  <script src="assets/js/quiz-perguntas.js" defer></script>
+  <script src="assets/js/quiz.js" defer></script>
+  <!-- Baixa a oferta em segundo plano durante o quiz, para ela abrir na hora -->
+  <script src="assets/js/proxima.js" defer></script>
 </body>
 </html>
