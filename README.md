@@ -12,7 +12,8 @@ do painel ficam na pasta `api/` e a Vercel publica sozinha. O `.vercelignore` li
 - **`main`** é o ramo **no ar** (Production): o que entra nele vai para quiz.celliveskin.com.
 - **`claude/keen-hopper-vfqmpi`** é o ramo de **trabalho** (Preview): cada mudança enviada gera um link de prévia
   na Vercel (`celliveskinteste-git-claude-keen-hopper-vfqmpi-….vercel.app`, sempre com a última versão do ramo),
-  protegido pelo login da Vercel. As prévias mostram o selo "PRÉVIA · só você vê" e **não gravam** eventos no banco
+  aberto sem login (Deployment Protection desligada; a Vercel marca as prévias como "noindex", então não aparecem no
+  Google). As prévias mostram o selo "PRÉVIA · versão de teste" e **não gravam** eventos nem cadastros no banco
   (`api/evento.js` ignora `VERCEL_ENV=preview`), então testes não entram nos números do painel.
 - **Publicar:** quando a prévia estiver aprovada, junte o ramo de trabalho no `main` (pull request → Merge). A
   Vercel publica sozinha em 1–2 min.

@@ -25,7 +25,7 @@
       if (document.querySelector("[data-selo-previa]")) return;
       var s = document.createElement("div");
       s.setAttribute("data-selo-previa", "");
-      s.textContent = "PRÉVIA · só você vê";
+      s.textContent = "PRÉVIA · versão de teste";
       s.style.cssText = "position:fixed;top:8px;right:8px;z-index:2147483647;padding:5px 10px;border-radius:999px;" +
         "background:#1a1a1a;color:#fff;font:600 11px/1 system-ui,sans-serif;letter-spacing:.06em;opacity:.85;pointer-events:none;" +
         "box-shadow:0 2px 10px rgba(0,0,0,.25)";
