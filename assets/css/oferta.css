@@ -54,13 +54,15 @@
 .oferta-topo::before {
   content: "";
   position: absolute;
-  inset: 0 0 -26px;
+  inset: 0 0 -18px;
   z-index: -1;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
-  mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  /* véu bem leve e desfoque com brilho e cor reforçados: o fundo fica claro e
+     vivo, sem o cinza que o desfoque comum deixa */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+  -webkit-backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
+  backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
+  mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
@@ -77,12 +79,12 @@
   position: absolute;
   inset: -12px -30px;
   z-index: -1;
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: 0 8px 26px rgba(26, 26, 26, 0.09), 0 1px 2px rgba(26, 26, 26, 0.05);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.6));
+  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+  backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
   opacity: 0;
   transform: scale(0.9);
   transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
