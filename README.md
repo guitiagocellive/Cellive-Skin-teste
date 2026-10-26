@@ -81,7 +81,7 @@ Para testar no computador com um Postgres comum: `npm install` e rode as funçõ
 Enquanto o produto não está à venda, a oferta (quiz e v2) fica em **pré-lançamento** (`data-pre-lancamento` no
 `<body>` do `oferta.html`):
 
-- preços, descontos, "Promoção relâmpago", "Esgotando rápido" e "Mais vendido" ficam **escondidos** (continuam no
+- preços, descontos, "Promoção relâmpago" e "Esgotando rápido" ficam **escondidos** (continuam no
   HTML, sem nenhuma mudança: itens com `data-pos` só aparecem depois do lançamento; com `data-pre`, só antes);
 - o botão vira **"Quero garantir minha fórmula"** (na v2, "Quero garantir o meu Sérum") e abre um cadastro com
   nome, WhatsApp e e-mail (com aceite de mensagens, pela LGPD);
@@ -91,8 +91,8 @@ Enquanto o produto não está à venda, a oferta (quiz e v2) fica em **pré-lan�
 - no painel, o cartão **Lista de lançamento** mostra quantos se cadastraram e baixa a planilha completa
   (`/api/lead?formato=csv`, com a senha). Na prévia nada é gravado.
 
-**No lançamento:** apague `data-pre-lancamento` do `<body>` do `oferta.html`, rode `node scripts/gerar-v2.mjs`,
-coloque os links de checkout em `data-link` de cada plano e publique. Tudo volta como era antes.
+**No lançamento:** coloque os links de checkout em `data-link` de cada plano, rode `node scripts/lancar.mjs` e
+publique. Tudo volta como era antes; a tabela do antes/depois está em [LANCAMENTO.md](LANCAMENTO.md).
 
 ## Oferta direta para anúncios (v2)
 
