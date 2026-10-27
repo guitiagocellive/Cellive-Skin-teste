@@ -1423,6 +1423,13 @@
   font-weight: 700;
 }
 
+/* base dos números (avaliação clínica / opinião dos voluntários) */
+.faq-conteudo .faq-nota {
+  color: var(--gray);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .faq-mais,
   .faq-mais::before,
