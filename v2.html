@@ -29,7 +29,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=6f8300b772">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=1d4efdc408">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
@@ -953,73 +953,133 @@
       <h2 class="secao-titulo duvidas-titulo" id="duvidas-titulo" data-revelar="palavras">
         <span class="titulo-leve">Principais</span> <strong>dúvidas</strong>
       </h2>
+      <!-- Perguntas: todas numa lista vertical que cabe numa tela; uma aberta por vez.
+           data-rastreio-valor = nome fixo de cada pergunta (o painel mostra pelo nome) -->
       <div class="faq" data-faq>
         <div class="faq-item is-aberto">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="true" aria-controls="faq-1" id="faq-p1" data-rastreio="faq" data-rastreio-valor="1">
-              O que é o Sérum Revitalizador?
-              <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+            <button type="button" class="faq-pergunta" aria-expanded="true" aria-controls="faq-1" id="faq-p1" data-rastreio="faq" data-rastreio-valor="anvisa">
+              O produto é aprovado pela Anvisa?
+              <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-1" role="region" aria-labelledby="faq-p1">
             <div class="faq-conteudo">
-              <p>O <strong>Sérum Facial Revitalizador Noturno</strong> é uma combinação de ativos de alta performance que unem eficácia com resultados que de fato fazem diferença na sua pele. Ele tem como proposta principal ser um sérum anti-idade, desenvolvido para devolver o aspecto de pele jovem, com um cheiro adocicado e efeito cooling.</p>
+              <p><strong>Sim, aprovado pela Anvisa.</strong> Todos os nossos produtos passam por processos rigorosos de qualidade e segurança antes de chegar até você.</p>
             </div>
           </div>
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-2" id="faq-p2" data-rastreio="faq" data-rastreio-valor="2">
-              Como usar o Sérum Revitalizador?
-              <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-2" id="faq-p2" data-rastreio="faq" data-rastreio-valor="resultado">
+              O Sérum realmente dá resultado?
+              <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-2" role="region" aria-labelledby="faq-p2">
             <div class="faq-conteudo">
-              <p>Use todos os dias, no período noturno, com a pele limpa: aplique alguns pumps do produto no rosto, espalhe e espere a pele absorver. Só isso. No dia seguinte, use protetor solar.</p>
+              <p><strong>Sim, comprovado em testes.</strong> Nos testes de eficácia, o Sérum mostrou:</p>
+              <ul>
+                <li><strong>63%</strong> de melhora das rugas da testa e dos pés de galinha</li>
+                <li><strong>66%</strong> de melhora na uniformidade, elasticidade e firmeza</li>
+                <li><strong>72%</strong> de melhora na hidratação da pele</li>
+              </ul>
+              <p>Os resultados podem variar de pessoa para pessoa e dependem do uso diário e contínuo.</p>
             </div>
           </div>
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-3" id="faq-p3" data-rastreio="faq" data-rastreio-valor="3">
-              O que é a ação SRRP?
-              <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-3" id="faq-p3" data-rastreio="faq" data-rastreio-valor="tempo">
+              Em quanto tempo vejo resultados?
+              <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-3" role="region" aria-labelledby="faq-p3">
             <div class="faq-conteudo">
-              <p>É a forma como os ativos da fórmula foram combinados para agir em 4 frentes: <strong>Sinalização</strong> (GHK-Cu estimula colágeno e elastina), <strong>Renovação</strong> (Retinal acelera a renovação celular), <strong>Regeneração</strong> (PDRN auxilia a reparar a barreira da pele) e <strong>Potencialização</strong> (microespículas aumentam a absorção dos ativos).</p>
+              <p><strong>Em até 30 dias.</strong> Nas primeiras semanas, a pele se adapta e os ativos começam a agir. Em até 30 dias, os resultados já aparecem no espelho e, com o uso contínuo, continuam aumentando.</p>
             </div>
           </div>
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-4" id="faq-p4" data-rastreio="faq" data-rastreio-valor="4">
-              Posso usar todos os dias?
-              <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-4" id="faq-p4" data-rastreio="faq" data-rastreio-valor="confiavel">
+              É confiável comprar aqui?
+              <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-4" role="region" aria-labelledby="faq-p4">
             <div class="faq-conteudo">
-              <p>Sim. O uso diário é o indicado para ter os melhores resultados.</p>
+              <p><strong>Sim, compra 100% protegida.</strong> A compra é feita em ambiente protegido, com seus dados em segurança. E você ainda conta com a garantia de 30 dias.</p>
             </div>
           </div>
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-5" id="faq-p5" data-rastreio="faq" data-rastreio-valor="5">
-              Em que horário devo usar o sérum?
-              <svg class="faq-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-5" id="faq-p5" data-rastreio="faq" data-rastreio-valor="garantia">
+              E se eu não gostar?
+              <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-5" role="region" aria-labelledby="faq-p5">
             <div class="faq-conteudo">
-              <p>À noite. O Sérum Revitalizador é <strong>noturno</strong>: aplique antes de dormir e, pela manhã, use protetor solar para proteger os resultados.</p>
+              <p><strong>Você tem 30 dias de garantia.</strong> Se não gostar dos seus resultados nesse período, nós lhe reembolsamos <strong>100% do valor</strong>.</p>
             </div>
           </div>
         </div>
-      </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-6" id="faq-p6" data-rastreio="faq" data-rastreio-valor="frete">
+              O frete é grátis?
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-6" role="region" aria-labelledby="faq-p6">
+            <div class="faq-conteudo">
+              <p><strong>Sim, para todo o Brasil.</strong> O frete é grátis em todos os kits.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-7" id="faq-p7" data-rastreio="faq" data-rastreio-valor="o-que-e">
+              O que é o Sérum Revitalizador?
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-7" role="region" aria-labelledby="faq-p7">
+            <div class="faq-conteudo">
+              <p><strong>Um sérum anti-idade noturno.</strong> O <strong>Sérum Facial Revitalizador Noturno</strong> é uma combinação de ativos de alta performance que unem eficácia com resultados que de fato fazem diferença na sua pele, desenvolvido para devolver o aspecto de pele jovem, com um cheiro adocicado e efeito cooling.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-8" id="faq-p8" data-rastreio="faq" data-rastreio-valor="como-usar">
+              Como e quando usar?
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-8" role="region" aria-labelledby="faq-p8">
+            <div class="faq-conteudo">
+              <p><strong>Todos os dias, à noite.</strong> Com a pele limpa, aplique alguns pumps do produto no rosto, espalhe e espere a pele absorver. Só isso. Pela manhã, use protetor solar para proteger os resultados.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-9" id="faq-p9" data-rastreio="faq" data-rastreio-valor="srrp">
+              O que é a ação SRRP?
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-9" role="region" aria-labelledby="faq-p9">
+            <div class="faq-conteudo">
+              <p><strong>4 frentes de ação na pele.</strong> É a forma como os ativos da fórmula foram combinados: <strong>Sinalização</strong> (GHK-Cu estimula colágeno e elastina), <strong>Renovação</strong> (Retinal acelera a renovação celular), <strong>Regeneração</strong> (PDRN auxilia a reparar a barreira da pele) e <strong>Potencialização</strong> (microespículas aumentam a absorção dos ativos).</p>
+            </div>
+          </div>
+        </div>
+        </div>
     </section>
 
     <!-- ===================== DOBRA 22: avaliação dos clientes ===================== -->

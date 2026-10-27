@@ -141,7 +141,14 @@
     ["numeros", "Os números falam por si"], ["jornada", "Como ele age na pele"], ["duvidas", "Principais dúvidas"],
     ["avaliacoes", "Avaliação dos clientes"], ["rodape", "Rodapé (fim da página)"],
   ];
-  var FAQ = { "1": "O que é o Sérum?", "2": "Como usar?", "3": "O que é a ação SRRP?", "4": "Posso usar todos os dias?", "5": "Em que horário usar?" };
+  var FAQ = {
+    // perguntas atuais (nome fixo)
+    "anvisa": "É aprovado pela Anvisa?", "resultado": "Realmente dá resultado?", "tempo": "Em quanto tempo vejo resultados?",
+    "confiavel": "É confiável comprar?", "garantia": "E se eu não gostar?", "frete": "O frete é grátis?",
+    "o-que-e": "O que é o Sérum?", "como-usar": "Como e quando usar?", "srrp": "O que é a ação SRRP?",
+    // perguntas antigas (números), para os dados de antes da troca
+    "1": "O que é o Sérum?", "2": "Como usar?", "3": "O que é a ação SRRP?", "4": "Posso usar todos os dias?", "5": "Em que horário usar?"
+  };
   var JORNADA = { "0": "Semana 1–2", "1": "Semana 3–4", "2": "Semana 5–12", "3": "+12 semanas" };
   function nomeClique(c) {
     var v = c.valor;

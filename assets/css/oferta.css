@@ -1274,12 +1274,17 @@
   background: var(--blue);
 }
 
+/* Dúvidas: um cartão cinza-claro com as perguntas empilhadas (cabem numa tela);
+   cada uma abre a resposta logo abaixo, com botão + / − */
 .faq {
-  margin-top: 24px;
+  margin-top: 20px;
+  padding: 4px 16px;
+  border-radius: 22px;
+  background: var(--gray-mist);
 }
 
-.faq-item {
-  border-bottom: 1.5px solid var(--gray-light);
+.faq-item + .faq-item {
+  border-top: 1px solid var(--gray-light);
 }
 
 .faq-item h3 {
@@ -1290,36 +1295,68 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 22px 4px 22px 2px;
+  min-height: 50px;
+  padding: 8px 0;
   border: 0;
   background: none;
-  color: var(--black);
+  color: var(--ink);
   font-family: var(--font);
-  font-size: clamp(13px, 3.65vw, 15.5px);
+  font-size: 14.5px;
   font-weight: 700;
   line-height: 1.25;
   text-align: left;
-  text-transform: uppercase;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.faq-seta {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: var(--blue);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 0.35s ease;
+.faq-pergunta:focus-visible {
+  outline: 3px solid var(--blue-ink);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
-.faq-pergunta[aria-expanded="true"] .faq-seta {
-  transform: rotate(180deg);
+/* botão redondo: + fechado, − aberto */
+.faq-mais {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: background-color 0.25s ease;
+}
+
+.faq-mais::before,
+.faq-mais::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, background-color 0.25s ease;
+}
+
+.faq-mais::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais {
+  background: var(--ink);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais::before {
+  background: var(--white);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais::after {
+  background: var(--white);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 /* Abre e fecha suave (a altura vai de 0 até o tamanho do texto) */
@@ -1336,9 +1373,9 @@
 .faq-conteudo {
   overflow: hidden;
   min-height: 0;
-  color: var(--gray);
-  font-size: 15px;
-  line-height: 1.38;
+  color: var(--gray-dark);
+  font-size: 13.5px;
+  line-height: 1.45;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -1350,7 +1387,11 @@
 .faq-conteudo ul,
 .faq-conteudo p {
   margin: 0;
-  padding: 0 2px 20px;
+  padding: 0 0 8px;
+}
+
+.faq-conteudo > :last-child {
+  padding-bottom: 14px;
 }
 
 .faq-conteudo ul {
@@ -1363,7 +1404,7 @@
 }
 
 .faq-conteudo li + li {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .faq-conteudo li::before {
@@ -1378,8 +1419,16 @@
 }
 
 .faq-conteudo strong {
-  color: var(--gray-dark);
+  color: var(--ink);
   font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-mais,
+  .faq-mais::before,
+  .faq-mais::after {
+    transition: none;
+  }
 }
 
 /* ---------- Barra de compra fixa ---------- */
