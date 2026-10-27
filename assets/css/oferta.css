@@ -833,7 +833,21 @@
   white-space: nowrap;
 }
 
-/* faixa no azul da marca que abre por trás da linha enquanto ela é redigitada e some */
+/* Linha redigitada: as letras surgem em cinza claro sobre um degradê do azul
+   da marca e, no fim, escurecem devagar até as cores normais. */
+.resumo-lista li > span,
+.resumo-lista li b,
+.resumo-pilula {
+  transition: color 0.7s ease;
+}
+
+.resumo-lista li.is-novo > span,
+.resumo-lista li.is-novo b,
+.resumo-lista li.is-novo .resumo-pilula {
+  color: var(--gray-soft);
+  transition: none;
+}
+
 .resumo-lista li::after {
   content: "";
   position: absolute;
@@ -843,19 +857,19 @@
   right: -6px;
   z-index: -1;
   border-radius: 8px;
-  background: var(--blue);
+  background: linear-gradient(90deg, rgba(177, 199, 222, 0.55) 0%, rgba(224, 233, 242, 0.7) 55%, rgba(243, 247, 250, 0) 100%);
   transform: scaleX(0);
   transform-origin: left center;
   opacity: 0;
 }
 
-.resumo-lista li.is-novo::after {
-  animation: resumo-realce 1.3s ease-out;
+.resumo-lista li.is-realce::after {
+  animation: resumo-realce 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes resumo-realce {
-  0% { transform: scaleX(0); opacity: 0.7; }
-  30% { transform: scaleX(1); opacity: 0.7; }
+  0% { transform: scaleX(0); opacity: 1; }
+  35% { transform: scaleX(1); opacity: 1; }
   100% { transform: scaleX(1); opacity: 0; }
 }
 
