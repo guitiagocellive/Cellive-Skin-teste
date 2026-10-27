@@ -156,7 +156,6 @@
 
   /* ---------- Planos ---------- */
   var planos = document.querySelectorAll(".plano");
-  var listaPlanos = document.querySelector(".planos");
   var resumo = document.querySelector(".resumo");
   var resumoGanho = document.querySelector("[data-resumo-ganho]");
   var resumoParcela = document.querySelector("[data-resumo-parcela]");
@@ -191,10 +190,10 @@
     void el.offsetWidth; // reinicia a animação
     el.classList.add(classe);
   };
-  Array.prototype.forEach.call([resumo, resumoGanho].concat(Array.prototype.slice.call(planos)), function (el) {
+  Array.prototype.forEach.call([resumo].concat(Array.prototype.slice.call(planos)), function (el) {
     if (el) el.addEventListener("animationend", function (ev) {
       if (ev.target !== el) return;
-      el.classList.remove("is-trocando", "is-realce", "is-escolhendo");
+      el.classList.remove("is-trocando", "is-escolhendo");
     });
   });
 
@@ -221,28 +220,9 @@
       mostrarParcela(plano.getAttribute("data-parcela"));
       refazer(plano, "is-escolhendo");
       refazer(resumo, "is-trocando");
-      if (off) refazer(resumoGanho, "is-realce");
     } else {
       resumoParcela.textContent = plano.getAttribute("data-parcela");
     }
-  }
-
-  // cartões e checks entram com animação quando a seção chega na tela
-  if (!semMovimento && "IntersectionObserver" in window && listaPlanos) {
-    var entrar = [listaPlanos, resumo];
-    entrar.forEach(function (el) { if (el) el.classList.add("vai-entrar"); });
-    var olhoPlanos = new IntersectionObserver(function (itens) {
-      itens.forEach(function (item) {
-        if (!item.isIntersecting) return;
-        item.target.classList.remove("vai-entrar");
-        item.target.classList.add("entrou");
-        olhoPlanos.unobserve(item.target);
-        // terminada a entrada, tira a classe para ela não se repetir num toque
-        var alvo = item.target;
-        setTimeout(function () { alvo.classList.remove("entrou"); }, 1400);
-      });
-    }, { threshold: 0.15 });
-    entrar.forEach(function (el) { if (el) olhoPlanos.observe(el); });
   }
 
   var rastrear = function (tipo, dados) {
