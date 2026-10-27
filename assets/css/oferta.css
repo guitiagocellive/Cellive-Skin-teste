@@ -36,7 +36,7 @@
 /* Logo fixo no topo, com sombra quando a página rola */
 /* Topo: na primeira dobra é a faixa branca com a logo no meio e o menu (três
    tracinhos) ao lado. Quando gruda no alto da tela (is-rolando), vira um balão:
-   uma cápsula de vidro claro em volta da logo e do menu e, atrás, um desfoque
+   uma cápsula branca em volta da logo e do menu e, atrás, um desfoque
    em degradê estilo iPhone (mais forte e um pouco mais escuro no alto, clareando
    até sumir). A altura do topo não muda (nada pula); só opacidade e escala animam. */
 .oferta-topo {
@@ -85,18 +85,16 @@
   width: 32px;
 }
 
-/* o balão (cápsula de vidro claro) */
+/* o balão: cápsula branca (o degradê escuro fica só em volta, não dentro dele) */
 .topo-balao::before {
   content: "";
   position: absolute;
   inset: -6px -10px;
   z-index: -1;
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(26, 26, 26, 0.05);
   border-radius: 999px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.64));
-  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
-  backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+  background: var(--white);
+  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.1), 0 1px 2px rgba(26, 26, 26, 0.05);
   opacity: 0;
   transform: scale(0.94);
   transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
