@@ -33,6 +33,8 @@ const TROCAS = [
         <span class="titulo-leve">Seu protocolo foi</span> <strong>Aprovado!</strong>
       </p>
 `, ""],
+  // a v2 também não mostra o título acima da foto (fica só para o Google e leitores de tela)
+  ['<h1 class="oferta-titulo">Fórmula Revitalizadora</h1>', '<h1 class="so-leitor">Sérum Revitalizador Noturno Cellive Skin</h1>'],
 ];
 
 let html = await readFile(new URL("oferta.html", RAIZ), "utf8");

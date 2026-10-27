@@ -154,9 +154,17 @@
   flex-shrink: 0;
 }
 
-/* na v2 (sem o "protocolo aprovado") o título é o primeiro da página */
-.oferta-produto > .oferta-titulo:first-child {
-  margin-top: 16px;
+/* texto que só o Google e os leitores de tela "veem" (ex.: o título da v2) */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .oferta-titulo {
