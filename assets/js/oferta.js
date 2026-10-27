@@ -934,6 +934,7 @@
     var grafCorte = graf && graf.querySelector("[data-graf-corte]");
     var grafAtivo = graf && graf.querySelector("[data-graf-ativo]");
     var grafGuia = graf && graf.querySelector("[data-graf-guia]");
+    var grafRotulos = graf ? Array.prototype.slice.call(graf.querySelectorAll("[data-graf-rotulo]")) : [];
     var grafPos = grafPontos.length ? grafPontos[0].slice() : null;
     var grafTween = 0;
     var moverGraf = function (i) {
@@ -988,6 +989,7 @@
         painel.hidden = !ativo;
       });
       moverGraf(atualJor);
+      grafRotulos.forEach(function (rot, k) { rot.classList.toggle("is-ativo", k === atualJor); });
     };
     if (semMovimento) manual();
 
