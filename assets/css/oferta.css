@@ -34,59 +34,71 @@
 }
 
 /* Logo fixo no topo, com sombra quando a página rola */
-/* Topo: na primeira dobra é a faixa branca com a logo. Quando gruda no alto da
-   tela (is-rolando), vira um balão: a logo fica numa cápsula de vidro fosco
-   (cantos totalmente arredondados) e, atrás, um desfoque em degradê que some
-   para baixo. A altura do topo não muda (nada na página pula); só opacidade e
-   escala são animadas. */
+/* Topo: na primeira dobra é a faixa branca com a logo no meio e o menu (três
+   tracinhos) ao lado. Quando gruda no alto da tela (is-rolando), vira um balão:
+   uma cápsula de vidro claro em volta da logo e do menu e, atrás, um desfoque
+   em degradê estilo iPhone (mais forte e um pouco mais escuro no alto, clareando
+   até sumir). A altura do topo não muda (nada pula); só opacidade e escala animam. */
 .oferta-topo {
   position: sticky;
   top: 0;
   z-index: 30;
   display: flex;
   justify-content: center;
-  padding: 18px 16px 14px;
+  padding: 9px 16px;
   background: var(--white);
   transition: background-color 0.35s ease;
 }
 
-/* desfoque em degradê atrás do balão */
+/* desfoque em degradê estilo iPhone atrás do balão */
 .oferta-topo::before {
   content: "";
   position: absolute;
-  inset: 0 0 -18px;
+  inset: 0 0 -40px;
   z-index: -1;
-  /* véu bem leve e desfoque com brilho e cor reforçados: o fundo fica claro e
-     vivo, sem o cinza que o desfoque comum deixa */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
-  -webkit-backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
-  backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
-  -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
-  mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.08), rgba(26, 26, 26, 0.03) 55%, rgba(26, 26, 26, 0));
+  -webkit-backdrop-filter: blur(16px) brightness(0.88) saturate(1.7);
+  backdrop-filter: blur(16px) brightness(0.88) saturate(1.7);
+  -webkit-mask-image: linear-gradient(to bottom, #000 20%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0.35) 70%, transparent);
+  mask-image: linear-gradient(to bottom, #000 20%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0.35) 70%, transparent);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
 }
 
-.oferta-topo .brand {
+/* logo no meio, menu à esquerda e um espaço igual à direita (logo centralizada) */
+.topo-balao {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* o balão (cápsula) em volta da logo */
-.oferta-topo .brand::before {
+.topo-balao .brand {
+  position: relative;
+}
+
+.topo-lado {
+  flex: none;
+  width: 32px;
+}
+
+/* o balão (cápsula de vidro claro) */
+.topo-balao::before {
   content: "";
   position: absolute;
-  inset: -12px -30px;
+  inset: -6px -10px;
   z-index: -1;
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 999px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.6));
-  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.64));
+  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
   backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
   opacity: 0;
-  transform: scale(0.9);
+  transform: scale(0.94);
   transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -98,21 +110,131 @@
   opacity: 1;
 }
 
-.oferta-topo.is-rolando .brand {
-  transform: scale(0.86);
+.oferta-topo.is-rolando .topo-balao {
+  transform: scale(0.92);
 }
 
-/* o balão encolhe junto com a logo (fica com cerca de 190 × 36 px) */
-.oferta-topo.is-rolando .brand::before {
+.oferta-topo.is-rolando .topo-balao::before {
   opacity: 1;
   transform: scale(1);
+}
+
+/* três tracinhos; viram um X quando o menu abre */
+.topo-menu {
+  flex: none;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.topo-menu span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.topo-menu[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.topo-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0.3); }
+.topo-menu[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+.topo-menu:active {
+  transform: scale(0.92);
+}
+
+/* painel do menu: vidro claro que desce do balão */
+.menu-secoes {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: min(300px, calc(100% - 32px));
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 18px 44px rgba(26, 26, 26, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  backdrop-filter: blur(24px) saturate(1.8);
+  opacity: 0;
+  transform: translate(-50%, -8px) scale(0.96);
+  transform-origin: 50% 0;
+  transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-secoes.is-aberto {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.menu-secoes a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 14px 16px;
+  border-radius: 16px;
+  color: var(--ink);
+  font-family: var(--font-condensed);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+}
+
+.menu-secoes a + a {
+  box-shadow: 0 -1px 0 rgba(26, 26, 26, 0.06);
+}
+
+.menu-secoes.is-aberto a {
+  opacity: 1;
+  transform: none;
+}
+
+.menu-secoes.is-aberto a:nth-child(2) { transition-delay: 0.03s; }
+.menu-secoes.is-aberto a:nth-child(3) { transition-delay: 0.06s; }
+.menu-secoes.is-aberto a:nth-child(4) { transition-delay: 0.09s; }
+.menu-secoes.is-aberto a:nth-child(5) { transition-delay: 0.12s; }
+
+/* setinha à direita de cada item */
+.menu-secoes a::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+  transform: rotate(45deg);
+}
+
+.menu-secoes a:active {
+  background: rgba(177, 199, 222, 0.22);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oferta-topo,
   .oferta-topo::before,
-  .oferta-topo .brand,
-  .oferta-topo .brand::before {
+  .topo-balao,
+  .topo-balao::before,
+  .topo-menu span,
+  .menu-secoes,
+  .menu-secoes a {
     transition: none;
   }
 }
