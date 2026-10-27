@@ -90,7 +90,7 @@
         var slot = el("span", "slot aval-foto");
         slot.setAttribute("data-label", "Foto " + f);
         var img = el("img");
-        img.src = "assets/img/oferta/avaliacao-" + n + "-" + f + ".webp";
+        img.src = "/assets/img/oferta/avaliacao-" + n + "-" + f + ".webp";
         img.alt = "Foto enviada por " + a.nome;
         img.loading = "lazy";
         img.onerror = function () { this.hidden = true; };

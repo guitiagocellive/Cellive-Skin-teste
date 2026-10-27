@@ -119,7 +119,7 @@
   /* ---------- V2 (oferta direta, sem quiz): os 24 ativos da fórmula, por grupo ----------
      "img": foto do ativo (quando existe); sem foto, aparece o ícone do grupo.
      "beneficio": o que o ativo faz, em uma frase simples. */
-  var A = "assets/img/ativos/";
+  var A = "/assets/img/ativos/";
   /* Textos escritos a partir de pesquisa sobre cada ativo (função cosmética
      conhecida; nos peptídeos do complexo EXOS, o material técnico da Glia
      Innovation). Frases curtas, sem promessa de resultado. */
