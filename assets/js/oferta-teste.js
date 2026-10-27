@@ -150,6 +150,13 @@
     if (preLancamento) {
       ev.preventDefault();
       abrirLista(marcado ? marcado.value : null);
+      return;
+    }
+    // lançado, mas o kit ainda não tem link de checkout (ex.: na prévia /oferta/lancamento)
+    var link = comprar.getAttribute("href");
+    if (!link || link === "#") {
+      ev.preventDefault();
+      alert("Prévia do lançamento: o link do checkout deste kit ainda não foi colocado.");
     }
   });
 
