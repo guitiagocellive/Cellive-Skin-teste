@@ -89,6 +89,8 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h0"/></svg>Quiz</button>
       <button type="button" role="tab" aria-selected="false" data-aba="oferta">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Oferta</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="lancamento">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2"/><path d="M9 15l-3-3c1-3.5 4.5-8 12-9-1 7.5-5.5 11-9 12z"/><circle cx="14.5" cy="9.5" r="1.6"/></svg>Lançamento</button>
       <button type="button" role="tab" aria-selected="false" data-aba="origem">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3.5"/><path d="M3 20c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5"/><circle cx="17" cy="8" r="2.5"/><path d="M16 13.5c2.6 0 4.5 1.8 5 4.5"/></svg>Público</button>
     </nav>
@@ -125,24 +127,6 @@
         <div class="heroi revelar" data-heroi></div>
         <div class="kpis" data-kpis></div>
 
-        <!-- Lista de lançamento: cadastros do grupo VIP (api/lead.js) -->
-        <article class="cartao revelar leads" data-leads>
-          <header class="cartao-cab">
-            <h2>Lista de lançamento</h2>
-            <p>Quem deixou nome, WhatsApp e e-mail para o grupo VIP</p>
-          </header>
-          <div class="leads-topo">
-            <div class="leads-num"><strong data-leads-periodo>–</strong><span>no período</span></div>
-            <div class="leads-num"><strong data-leads-total>–</strong><span>no total</span></div>
-            <div class="leads-num"><strong data-leads-taxa>–</strong><span>de quem clicou em garantir</span></div>
-          </div>
-          <div class="leads-kits" data-leads-kits></div>
-          <ul class="leads-ultimos" data-leads-ultimos></ul>
-          <button type="button" class="leads-baixar" data-leads-baixar>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
-            Baixar a lista completa (planilha)
-          </button>
-        </article>
 
         <article class="cartao revelar">
           <header class="cartao-cab">
@@ -236,6 +220,74 @@
         </article>
       </section>
 
+      <!-- ============ LANÇAMENTO (lista do grupo VIP) ============
+           Quem preencheu o cadastro (nome, WhatsApp, e-mail e kit de interesse).
+           Montada pelo assets/js/painel-lancamento.js com /api/lead?formato=json. -->
+      <section class="aba" data-painel-aba="lancamento" hidden>
+        <!-- Lista de lançamento: cadastros do grupo VIP (api/lead.js) -->
+        <article class="cartao revelar leads" data-leads>
+          <header class="cartao-cab">
+            <h2>Cadastros no período</h2>
+            <p>Segue o período e o funil escolhidos no topo</p>
+          </header>
+          <div class="leads-topo">
+            <div class="leads-num"><strong data-leads-periodo>–</strong><span>no período</span></div>
+            <div class="leads-num"><strong data-leads-total>–</strong><span>no total</span></div>
+            <div class="leads-num"><strong data-leads-taxa>–</strong><span>de quem clicou em garantir</span></div>
+          </div>
+          <div class="leads-kits" data-leads-kits></div>
+          <ul class="leads-ultimos" data-leads-ultimos></ul>
+          <button type="button" class="leads-baixar" data-leads-baixar>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            Baixar a lista completa (planilha)
+          </button>
+        </article>
+
+        <div class="lanc-kpis" data-lanc-kpis></div>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Kits de interesse</h2>
+            <p>Todos os cadastros · quantas pessoas querem cada kit e quantos frascos isso dá</p>
+          </header>
+          <div class="lanc-kits" data-lanc-kits></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Cadastros por dia</h2>
+            <p>Últimos 30 dias · toque numa barra para ver o dia</p>
+          </header>
+          <div class="lanc-dias" data-lanc-dias></div>
+          <p class="lanc-dia-info" data-lanc-dia-info></p>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Pessoas cadastradas</h2>
+            <p>Da mais recente para a mais antiga · toque para chamar no WhatsApp ou mandar e-mail</p>
+          </header>
+          <div class="lanc-filtros">
+            <label class="lanc-busca">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+              <span class="sr">Buscar</span>
+              <input type="search" data-lanc-busca placeholder="Buscar nome, WhatsApp ou e-mail" autocomplete="off">
+            </label>
+            <div class="lanc-chips" role="radiogroup" aria-label="Filtrar" data-lanc-chips>
+              <button type="button" data-lanc-filtro="todos" class="is-ativo">Todos</button>
+              <button type="button" data-lanc-filtro="1">Kit 1</button>
+              <button type="button" data-lanc-filtro="2">Kit 2</button>
+              <button type="button" data-lanc-filtro="3">Kit 3</button>
+              <button type="button" data-lanc-filtro="quiz">Quiz</button>
+              <button type="button" data-lanc-filtro="v2">Oferta direta</button>
+            </div>
+          </div>
+          <p class="lanc-contagem" data-lanc-contagem></p>
+          <ul class="lanc-lista" data-lanc-lista></ul>
+          <button type="button" class="leads-baixar lanc-mais" data-lanc-mais hidden>Ver mais pessoas</button>
+        </article>
+      </section>
+
       <!-- ============ PÚBLICO (ORIGEM) ============ -->
       <section class="aba" data-painel-aba="origem" hidden>
         <article class="cartao revelar"><header class="cartao-cab"><h2>Fontes</h2><p>De onde as pessoas vieram</p></header><div data-origem-graf="fonte"></div><div data-origem="fonte"></div></article>
@@ -324,5 +376,6 @@
   <script src="assets/js/painel-analise.js"></script>
   <script src="assets/js/painel.js"></script>
   <script src="assets/js/painel-agente.js"></script>
+  <script src="assets/js/painel-lancamento.js"></script>
 </body>
 </html>

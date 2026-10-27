@@ -277,6 +277,8 @@
     requestAnimationFrame(ajustarRotulos);
     estado.silencioso = false;
     if (window.PainelApp && typeof window.PainelApp.depoisDeMontar === "function") window.PainelApp.depoisDeMontar();
+    // outras partes do painel (aba Lançamento) se atualizam junto
+    try { document.dispatchEvent(new CustomEvent("painel:montado")); } catch (e) { /* navegador antigo */ }
   }
 
   function preencherFiltros(opcoes) {

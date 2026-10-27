@@ -3,6 +3,7 @@
    POST /api/lead                  — a página de oferta manda nome, WhatsApp e e-mail
                                      de quem quer entrar no grupo VIP. Devolve o link do grupo.
    GET  /api/lead?formato=csv      — baixa a lista completa em planilha (precisa da senha do painel).
+   GET  /api/lead?formato=json     — a lista para a aba "Lançamento" do painel (precisa da senha).
 
    O link do grupo vem da variável WHATSAPP_GRUPO na Vercel (ou de GRUPO_PADRAO abaixo).
    Na prévia (link de teste da Vercel) nada é gravado, como acontece com os eventos. */
@@ -77,6 +78,18 @@ export async function GET(request) {
   let q;
   try { q = await banco(); } catch (e) { q = null; }
   if (!q) return json({ erro: "sem-banco" }, 503);
+
+  if (new URL(request.url).searchParams.get("formato") === "json") {
+    const lista = await q(`SELECT criado, nome, whatsapp, email, kit, versao, fonte, campanha, conteudo
+      FROM leads ORDER BY criado DESC LIMIT 5000`);
+    return json({
+      gerado: Date.now(),
+      leads: lista.map((l) => ({
+        criado: Number(l.criado), nome: l.nome, whatsapp: l.whatsapp, email: l.email, kit: l.kit || null,
+        pagina: l.versao === "v2" ? "v2" : "quiz", fonte: l.fonte, campanha: l.campanha, anuncio: l.conteudo,
+      })),
+    });
+  }
 
   const linhas = await q("SELECT * FROM leads ORDER BY criado LIMIT 100000");
   const fuso = { timeZone: "America/Sao_Paulo", dateStyle: "short", timeStyle: "short" };
