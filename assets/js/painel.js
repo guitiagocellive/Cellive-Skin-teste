@@ -143,7 +143,7 @@
   ];
   var FAQ = {
     // perguntas atuais (nome fixo)
-    "anvisa": "É aprovado pela Anvisa?", "resultado": "Realmente dá resultado?", "tempo": "Em quanto tempo vejo resultados?",
+    "anvisa": "Tem registro na Anvisa?", "resultado": "Realmente dá resultado?", "tempo": "Em quanto tempo vejo resultados?",
     "confiavel": "É confiável comprar?", "garantia": "E se eu não gostar?", "frete": "O frete é grátis?",
     "o-que-e": "O que é o Sérum?", "como-usar": "Como e quando usar?", "srrp": "O que é a ação SRRP?",
     // perguntas antigas (números), para os dados de antes da troca
