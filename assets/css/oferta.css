@@ -154,6 +154,11 @@
   flex-shrink: 0;
 }
 
+/* na v2 (sem o "protocolo aprovado") o título é o primeiro da página */
+.oferta-produto > .oferta-titulo:first-child {
+  margin-top: 16px;
+}
+
 .oferta-titulo {
   margin: 8px 0 0;
   color: var(--black);
