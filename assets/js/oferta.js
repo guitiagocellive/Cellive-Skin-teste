@@ -183,19 +183,18 @@
     })(inicio);
   }
 
-  /* Benefícios de cada kit. Cada linha é uma lista de pedaços [texto, negrito?].
-     Kit sem desconto: 3 linhas. Kits com desconto: o desconto e a economia
-     aparecem em linhas próprias, para a pessoa ver que leva mais. */
+  /* Benefícios de cada kit (no máximo 4 linhas). Cada linha é uma lista de
+     pedaços [texto, tipo]: tipo 0 = normal, 1 = negrito, 2 e 3 = dentro do
+     fundo azul da economia (normal e negrito). Kit sem desconto: 3 linhas. */
   function beneficios(plano) {
     var off = plano.getAttribute("data-off");
     var economia = plano.getAttribute("data-economia");
     var qtd = (plano.getAttribute("data-qtd") || "").split(" · ");
-    var linhas = [["frete", [["Frete "], ["grátis", 1], [" para todo o Brasil"]]]];
-    if (off && economia) {
-      linhas.push(["off", [[off, 1], [" em cada frasco"]]]);
-      linhas.push(["eco", [["Você economiza "], [economia, 1]]]);
-    }
-    linhas.push(["qtd", [[qtd[0], 1], [qtd[1] ? " · " + qtd[1] + " de tratamento" : ""]]]);
+    var linhas = [
+      ["qtd", [[qtd[0], 1], [qtd[1] ? " · " + qtd[1] + " de tratamento" : ""]]],
+      ["frete", [["Frete "], ["grátis", 1], [" para todo o Brasil"]]],
+    ];
+    if (off && economia) linhas.push(["off", [[off, 1], [" · "], ["Você economiza ", 2], [economia, 3]]]);
     linhas.push(["gar", [["Garantia de "], ["30 dias", 1]]]);
     return linhas;
   }
@@ -204,12 +203,18 @@
   function escrever(span, pedacos, ate) {
     span.textContent = "";
     var resto = ate == null ? Infinity : ate;
+    var pilula = null;
     pedacos.forEach(function (p) {
       if (resto <= 0 || !p[0]) return;
-      var t = p[0].slice(0, resto);
+      var t = p[0].slice(0, resto), tipo = p[1] || 0;
       resto -= t.length;
-      if (p[1]) { var b = document.createElement("b"); b.textContent = t; span.appendChild(b); }
-      else span.appendChild(document.createTextNode(t));
+      var onde = span;
+      if (tipo >= 2) {
+        if (!pilula) { pilula = document.createElement("span"); pilula.className = "resumo-pilula"; span.appendChild(pilula); }
+        onde = pilula;
+      }
+      if (tipo === 1 || tipo === 3) { var b = document.createElement("b"); b.textContent = t; onde.appendChild(b); }
+      else onde.appendChild(document.createTextNode(t));
     });
   }
   var textoDe = function (pedacos) { return pedacos.map(function (p) { return p[0]; }).join(""); };
