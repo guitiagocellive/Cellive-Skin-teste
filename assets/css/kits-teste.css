@@ -1,4 +1,4 @@
-/* Escolha do kit — versões de TESTE (só as páginas teste-checkout-N). Gerado das versões aprovadas para teste; apagar junto com as páginas. */
+/* Escolha do kit — versões de TESTE (só as páginas teste-checkout-N). Apagar junto com as páginas. */
 /* ===== base comum das versões ===== */
 .kv { margin-top: 20px; font-family: var(--font); color: var(--ink); }
 .kv * { box-sizing: border-box; }
@@ -475,11 +475,166 @@
 .r4 .l.ganho b { padding: 2px 8px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 13px; }
 .r4 .linhas { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--gray-light); }
 .r4 .totlin { margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--gray-light); }
+/* ===== resumo base (o da 1ª imagem) + parcelas ===== */
+.rs { display: grid; gap: 8px; padding: 16px 18px; border: 1.5px solid var(--gray-light); border-radius: 22px; background: #fff; }
+.rs .lin { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--gray-dark); }
+.rs .lin::before { content: ""; width: 18px; height: 18px; flex: none; border-radius: 50%; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2 2 4-4.2' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100%; }
+.rs .lin b { color: var(--ink); }
+.rs .tot { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--gray-mist); }
+.rs .tot .rot { font-family: var(--font-condensed); font-size: 17px; font-weight: 700; text-transform: uppercase; }
+.rs .tot .val { text-align: right; }
+.rs .tot .val .de { display: block; }
+.rs .tot strong { font-size: 27px; letter-spacing: -.02em; line-height: 1.05; }
+.rs .parc { margin-top: 2px; text-align: right; font-size: 13.5px; color: var(--gray-dark); }
+.rs .parc b { color: var(--ink); font-size: 15px; }
+/* variações do resumo */
+.rs.escuro { border: 0; background: var(--ink); color: #fff; }
+.rs.escuro .lin { color: var(--gray-light); }
+.rs.escuro .lin b, .rs.escuro .parc b { color: #fff; }
+.rs.escuro .lin::before { background-color: #fff; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2 2 4-4.2' fill='none' stroke='%231a1a1a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.rs.escuro .tot { border-top-color: rgba(255,255,255,.14); }
+.rs.escuro .parc { color: var(--gray-light); }
+.rs.escuro .de { color: var(--gray-soft); }
+.rs.cinza { border: 0; background: var(--gray-mist); }
+.rs.cinza .tot { border-top-color: var(--gray-light); }
+.rs.parcgrande .tot { align-items: center; }
+.rs.parcgrande .tot .val small { display: block; color: var(--gray); font-size: 12px; }
+.rs.parcgrande .tot .val .p12 { font-size: 13px; color: var(--gray-dark); }
+.rs.parcgrande .tot .val .p12 b { font-size: 26px; color: var(--ink); letter-spacing: -.02em; }
+
+/* ===== 1: cartões com benefícios (2ª imagem) ===== — usa .g do kits3 */
+
+/* ===== 2: lista (1ª imagem) ===== — usa .l do kits3 */
+
+/* ===== 3: cartões compactos com benefícios em linha ===== */
+.c3 { display: grid; gap: 10px; }
+.c3 .k { position: relative; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; padding: 14px 16px; border: 1.5px solid var(--gray-light); border-radius: 18px; background: #fff; }
+.c3 .k.on { border: 2px solid var(--ink); background: linear-gradient(180deg, rgba(177,199,222,.16), #fff 70%); }
+.c3 .k > .tag { position: absolute; top: -10px; right: 14px; font-size: 9.5px; }
+.c3 .nome { font-size: 19px; }
+.c3 .preco { text-align: right; }
+.c3 .preco strong { font-size: 18px; }
+.c3 .preco .de { display: block; }
+.c3 .bl { grid-column: 2 / 4; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--gray-dark); }
+.c3 .bl span { display: inline-flex; align-items: center; gap: 4px; }
+.c3 .bl b { color: var(--ink); }
+.c3 .bl svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* ===== 4: três blocos lado a lado (preço por frasco) ===== */
+.c4 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 12px; }
+.c4 .k { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 16px 4px 12px; border: 1.5px solid var(--gray-light); border-radius: 18px; background: #fff; text-align: center; }
+.c4 .k.on { border: 2px solid var(--ink); box-shadow: 0 0 0 4px rgba(177,199,222,.35); }
+.c4 .k > .tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 9px; padding: 3px 8px; }
+.c4 .nome { font-size: 17px; }
+.c4 .dias { color: var(--gray); font-size: 11px; }
+.c4 .total { margin-top: 8px; font-size: 16px; font-weight: 700; }
+.c4 .pf { color: var(--gray); font-size: 10.5px; }
+.c4 .ec { margin-top: 8px; padding: 4px 8px; border-radius: 999px; background: var(--gray-mist); font-size: 10.5px; font-weight: 700; }
+.c4 .on .ec { background: var(--ink); color: #fff; }
+
+/* ===== 5: cartões separados com economia à direita ===== */
+.c5 { display: grid; gap: 10px; }
+.c5 .k { display: flex; align-items: center; gap: 12px; padding: 16px; border: 1.5px solid var(--gray-light); border-radius: 20px; background: #fff; }
+.c5 .k.on { border: 2px solid var(--ink); }
+.c5 .info { flex: 1; min-width: 0; }
+.c5 .nome { font-size: 19px; }
+.c5 .nome .tag { margin-left: 6px; vertical-align: 2px; font-size: 9px; padding: 3px 7px; }
+.c5 .sub { margin-top: 3px; color: var(--gray); font-size: 12px; }
+.c5 .dir { text-align: right; }
+.c5 .ec { display: inline-block; padding: 5px 9px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.c5 .ec.zero { background: var(--gray-mist); color: var(--gray-dark); }
+.c5 .dir small { display: block; margin-top: 5px; font-size: 13px; font-weight: 700; }
+
+/* ===== 6: sanfona (só o escolhido abre) ===== */
+.c6 { display: grid; gap: 10px; }
+.c6 .k { position: relative; padding: 14px 16px; border: 1.5px solid var(--gray-light); border-radius: 20px; background: #fff; }
+.c6 .k.on { border: 2px solid var(--ink); padding-bottom: 16px; }
+.c6 .k > .tag { position: absolute; top: -10px; left: 16px; font-size: 9.5px; }
+.c6 .topo { display: flex; align-items: center; gap: 12px; }
+.c6 .topo .info { flex: 1; }
+.c6 .nome { font-size: 19px; }
+.c6 .sub { color: var(--gray); font-size: 12px; margin-top: 2px; }
+.c6 .topo strong { font-size: 18px; }
+.c6 .abre { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 12px; }
+.c6 .abre div { padding: 10px 4px; border-radius: 14px; background: var(--gray-mist); text-align: center; }
+.c6 .abre div.forte { background: var(--ink); color: #fff; }
+.c6 .abre b { display: block; font-size: 14px; }
+.c6 .abre small { font-size: 10.5px; color: var(--gray); }
+.c6 .abre .forte small { color: var(--gray-light); }
+
+/* ===== 7: cartões com faixa no alto ===== */
+.c7 { display: grid; gap: 12px; }
+.c7 .k { border: 1.5px solid var(--gray-light); border-radius: 20px; background: #fff; overflow: hidden; }
+.c7 .k.on { border: 2px solid var(--ink); }
+.c7 .faixa { display: flex; justify-content: space-between; padding: 6px 14px; background: var(--gray-mist); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--gray-dark); }
+.c7 .on .faixa { background: var(--ink); color: #fff; }
+.c7 .corpo { display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; }
+.c7 .corpo .info { flex: 1; }
+.c7 .nome { font-size: 19px; }
+.c7 .sub { color: var(--gray); font-size: 12px; margin-top: 2px; }
+.c7 .preco { text-align: right; }
+.c7 .preco strong { display: block; font-size: 18px; }
+
+/* ===== 8: escolhido em preto (inverso) ===== */
+.c8 { display: grid; gap: 10px; }
+.c8 .k { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px; border: 1.5px solid var(--gray-light); border-radius: 20px; background: #fff; }
+.c8 .k.on { border-color: var(--ink); background: var(--ink); color: #fff; box-shadow: 0 12px 26px rgba(26,26,26,.18); }
+.c8 .k > .tag { position: absolute; top: -10px; right: 16px; font-size: 9.5px; }
+.c8 .on > .tag.t-ink { background: var(--blue); color: var(--ink); }
+.c8 .info { flex: 1; }
+.c8 .nome { font-size: 19px; }
+.c8 .sub { color: var(--gray); font-size: 12px; margin-top: 3px; }
+.c8 .on .sub { color: var(--gray-light); }
+.c8 .chips { display: flex; gap: 6px; margin-top: 8px; }
+.c8 .chips span { padding: 3px 8px; border-radius: 999px; background: var(--gray-mist); font-size: 10.5px; font-weight: 700; color: var(--ink); }
+.c8 .on .chips span { background: rgba(255,255,255,.12); color: #fff; }
+.c8 .on .chips span.forte { background: var(--blue); color: var(--ink); }
+.c8 .preco { text-align: right; }
+.c8 .preco strong { display: block; font-size: 18px; }
+.c8 .on .de { color: var(--gray-soft); }
+.c8 .on .radio { border-color: #fff; background: #fff; }
+.c8 .on .radio::after { background: var(--ink); }
+.c5 { gap: 14px; }
+.c5 .k { position: relative; }
+.c5 .k > .tag { position: absolute; top: -10px; left: 16px; font-size: 9.5px; }
+/* resumos sem a frase do kit, sempre com parcelas */
+.n1 .tot, .n2 .tot { margin-top: 4px; }
+/* D: nota */
+.nota2 { padding: 16px 18px; border-radius: 22px; background: var(--gray-mist); font-size: 14px; }
+.nota2 .l { display: flex; justify-content: space-between; padding: 5px 0; color: var(--gray-dark); }
+.nota2 .l b { color: var(--ink); }
+.nota2 .l.d b { padding: 1px 8px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 13px; }
+.nota2 .t { display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--gray-light); }
+.nota2 .t span { font-family: var(--font-condensed); font-size: 18px; font-weight: 700; text-transform: uppercase; }
+.nota2 .t strong { font-size: 27px; letter-spacing: -.02em; }
+.nota2 .p { text-align: right; color: var(--gray-dark); font-size: 13.5px; margin-top: 2px; }
+.nota2 .p b { color: var(--ink); }
+/* E: três quadros + total centralizado */
+.q3 .q { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.q3 .q div { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 12px 4px; border: 1.5px solid var(--gray-light); border-radius: 16px; text-align: center; }
+.q3 .q div.forte { background: var(--ink); border-color: var(--ink); color: #fff; }
+.q3 .q svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.q3 .q b { font-size: 14px; }
+.q3 .q small { font-size: 10.5px; color: var(--gray); }
+.q3 .q .forte small { color: var(--gray-light); }
+.q3 .c { margin-top: 14px; text-align: center; }
+.q3 .c .de { margin-right: 8px; }
+.q3 .c strong { font-size: 32px; letter-spacing: -.02em; }
+.q3 .c .p { color: var(--gray-dark); font-size: 13.5px; }
+.q3 .c .p b { color: var(--ink); }
+/* F: linha de selos + cartão de valores */
+.lf .selos { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; }
+.lf .card { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; border: 1.5px solid var(--gray-light); border-radius: 20px; overflow: hidden; }
+.lf .card > div { padding: 14px 16px; }
+.lf .card > div + div { border-left: 1px solid var(--gray-mist); background: var(--gray-mist); }
+.lf .card small { display: block; color: var(--gray); font-size: 11.5px; }
+.lf .card strong { display: block; margin-top: 2px; font-size: 24px; letter-spacing: -.02em; }
+.lf .card .de { font-size: 12px; }
 
 /* ---- comportamento nas páginas de teste ---- */
 .kt-oculto { display: none !important; }
-.kt-sel .k, .kt-sel .op { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .15s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease, color .25s ease; }
-.kt-sel .k:active { transform: scale(.98); }
+.kt-sel [data-kit] { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .15s ease, box-shadow .25s ease, background-color .25s ease, border-color .25s ease, color .25s ease; }
+.kt-sel [data-kit]:active { transform: scale(.98); }
 .kt-res { animation: kt-entra .35s cubic-bezier(.22,1,.36,1); }
 @keyframes kt-entra { from { opacity: 0; transform: translateY(6px); } }
 .kt-aviso { margin: 0 0 14px; padding: 8px 12px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; text-align: center; letter-spacing: .02em; }

@@ -1,14 +1,14 @@
-/* Páginas de TESTE da escolha do kit: teste-checkout-1.html a teste-checkout-4.html
+/* Páginas de TESTE da escolha do kit: teste-checkout-1.html a teste-checkout-6.html
    (op.celliveskin.com/teste-checkout-1 ...), feitas a partir da prévia do lançamento
    da v2 (lancamento.html) com assets/css/kits-teste.css e assets/js/kits-teste.js.
-   São temporárias: para tirar, apague os 4 arquivos, este script e os dois kits-teste.* */
+   São temporárias: para tirar, apague os 6 arquivos, este script e os dois kits-teste.* */
 import { readFile, writeFile } from "node:fs/promises";
 
 const RAIZ = new URL("../", import.meta.url);
 const base = await readFile(new URL("lancamento.html", RAIZ), "utf8");
-const NOMES = { 1: "três colunas + por que esse kit", 2: "três colunas + frase e vantagens", 3: "cartões com benefícios", 4: "colunas com frascos + você economiza" };
+const NOMES = { 1: "três colunas + lista de vantagens", 2: "três colunas + nota do pedido", 3: "cartões com benefícios", 4: "cartões compactos + resumo preto", 5: "economia + parcela em destaque", 6: "escolhido em preto" };
 
-for (const n of [1, 2, 3, 4]) {
+for (const n of [1, 2, 3, 4, 5, 6]) {
   let html = base
     .replace(/<!-- PRÉVIA DO LANÇAMENTO[^>]*-->/, `<!-- TESTE DA ESCOLHA DO KIT (versão ${n}: ${NOMES[n]}), GERADA por scripts/gerar-teste-checkout.mjs. Página temporária. -->`)
     .replace('data-pagina="lancamento-previa"', `data-pagina="teste-checkout" data-kit-teste="${n}"`)
@@ -20,4 +20,4 @@ for (const n of [1, 2, 3, 4]) {
   }
   await writeFile(new URL(`teste-checkout-${n}.html`, RAIZ), html);
 }
-console.log("teste-checkout-1 a 4 gerados.");
+console.log("teste-checkout-1 a 6 gerados.");
