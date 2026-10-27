@@ -823,18 +823,17 @@
   isolation: isolate;
 }
 
-.resumo-lista li > span,
-.resumo-lista li b {
-  transition: color 0.5s ease;
+/* fundo azul da marca na economia */
+.resumo-pilula {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: var(--ink);
+  white-space: nowrap;
 }
 
-.resumo-lista li.is-novo > span,
-.resumo-lista li.is-novo b {
-  color: var(--blue-ink);
-  transition: none;
-}
-
-/* faixa azul clarinha que abre por trás da linha e some */
+/* faixa no azul da marca que abre por trás da linha enquanto ela é redigitada e some */
 .resumo-lista li::after {
   content: "";
   position: absolute;
@@ -844,7 +843,7 @@
   right: -6px;
   z-index: -1;
   border-radius: 8px;
-  background: var(--blue-soft);
+  background: var(--blue);
   transform: scaleX(0);
   transform-origin: left center;
   opacity: 0;
@@ -855,8 +854,8 @@
 }
 
 @keyframes resumo-realce {
-  0% { transform: scaleX(0); opacity: 1; }
-  30% { transform: scaleX(1); opacity: 1; }
+  0% { transform: scaleX(0); opacity: 0.7; }
+  30% { transform: scaleX(1); opacity: 0.7; }
   100% { transform: scaleX(1); opacity: 0; }
 }
 
