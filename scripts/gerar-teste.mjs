@@ -21,7 +21,7 @@ for (const [de, para] of TROCAS) {
   html = html.split(de).join(para);
 }
 // sem rastreio do painel
-html = html.replace(/\s*<!-- Rastreamento próprio[^>]*-->\s*<script src="assets\/js\/rastreio\.js" defer><\/script>/, "");
+html = html.replace(/\s*<!-- Rastreamento próprio[^>]*-->\s*<script src="assets\/(?:js|min)\/rastreio\.js[^"]*" defer><\/script>/, "");
 if (html.includes("rastreio.js")) { console.error("Não consegui tirar o rastreio.js"); process.exit(1); }
 await writeFile(new URL("teste.html", RAIZ), html);
 await copyFile(new URL("assets/css/oferta.css", RAIZ), new URL("assets/css/oferta-teste.css", RAIZ));

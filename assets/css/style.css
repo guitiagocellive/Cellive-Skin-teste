@@ -5,9 +5,49 @@
 
 /* Fontes: Acumin Pro e Acumin Pro Condensed, carregadas pelo kit da
    Adobe Fonts no <head> de cada página. */
+/* Fontes de reserva: enquanto a Acumin (Adobe) chega, o texto aparece em Arial
+   ajustada para ocupar EXATAMENTE o mesmo espaço (largura e altura de linha
+   medidas da Acumin). Assim nada pula na página quando a fonte da marca chega. */
+@font-face {
+  font-family: "acumin-reserva";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica Neue"), local("Helvetica"), local("Roboto"), local("Roboto-Regular");
+  font-weight: 100 500;
+  size-adjust: 97.5%;
+  ascent-override: 104%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "acumin-reserva";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("HelveticaNeue-Bold"), local("Helvetica Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  font-weight: 600 900;
+  size-adjust: 97.3%;
+  ascent-override: 105%;
+  descent-override: 27%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "acumin-reserva-condensada";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Helvetica Neue"), local("Helvetica"), local("Roboto"), local("Roboto-Regular");
+  font-weight: 100 500;
+  size-adjust: 68%; /* medido em maiúsculas (os textos condensados do site são em caixa alta) */
+  ascent-override: 99%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "acumin-reserva-condensada";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("HelveticaNeue-Bold"), local("Helvetica Bold"), local("Roboto Bold"), local("Roboto-Bold");
+  font-weight: 600 900;
+  size-adjust: 70%;
+  ascent-override: 101%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}
+
 :root {
-  --font: "acumin-pro", "Acumin Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-condensed: "acumin-pro-condensed", "Acumin Pro Condensed", "Arial Narrow", sans-serif;
+  --font: "acumin-pro", "Acumin Pro", "acumin-reserva", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-condensed: "acumin-pro-condensed", "Acumin Pro Condensed", "acumin-reserva-condensada", "Arial Narrow", sans-serif;
 
   /* Paleta da marca */
   --white: #ffffff;

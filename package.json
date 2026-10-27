@@ -12,6 +12,7 @@
     "@vercel/functions": "3.9.11"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "pg": "8.16.3"
   }
 }
