@@ -13,53 +13,53 @@
 
   var COPY = {
     "acido-hialuronico": {
-      beneficio: "Hidratação intensa que suaviza a aparência das linhas finas",
+      beneficio: "Hidratação profunda que preenche as linhas finas",
       resposta: {
-        "Entre 18 - 25 anos": "Hidratar desde cedo ajuda a manter o aspecto jovem.",
-        "Entre 25 - 35 anos": "Mantém a pele hidratada quando ela começa a ressecar.",
-        "Entre 35 - 40 anos": "Hidratação extra para a pele que resseca com mais facilidade.",
-        "+40 anos": "Hidratação extra para a pele madura.",
+        "Entre 18 - 25 anos": "Hidratar agora adia os primeiros sinais.",
+        "Entre 25 - 35 anos": "Repõe a água que a pele começa a perder nessa fase.",
+        "Entre 35 - 40 anos": "Repõe o que a pele passa a produzir cada vez menos.",
+        "+40 anos": "Compensa a queda natural do ácido hialurônico após os 40.",
       },
     },
     "pdrn": {
-      beneficio: "Hidratação, maciez e viço para uma pele revitalizada",
+      beneficio: "Regenera e fortalece a barreira da pele",
       resposta: {
-        "Sim, minha pele é bastante sensível.": "Cuida da pele sensível sem agredir.",
-        "Às vezes irrita.": "Deixa a pele mais confortável no dia a dia.",
-        "Raramente.": "Foca em deixar sua pele com aspecto renovado.",
-        "Minha pele não é sensível.": "Sua pele tolera bem, então ele foca no aspecto revitalizado.",
+        "Sim, minha pele é bastante sensível.": "Acalma e recupera sem agredir a pele sensível.",
+        "Às vezes irrita.": "Deixa a pele mais forte contra as irritações.",
+        "Raramente.": "Foca em acelerar a renovação da sua pele.",
+        "Minha pele não é sensível.": "Sua pele tolera bem, então ele vai direto na regeneração.",
       },
     },
     "ghk-cu": {
-      beneficio: "Peptídeo de cobre que ajuda a manter a firmeza da pele",
+      beneficio: "Estimula o colágeno e devolve a firmeza",
       resposta: {
-        "Sim, inclusive já fiz.": "Um cuidado diário com a firmeza da sua pele.",
-        "Já pensei, mas acho muito invasivo.": "Cuidado com a firmeza em casa, sem agulhas.",
-        "Nunca pensei.": "Cuidado com a firmeza no dia a dia.",
+        "Sim, inclusive já fiz.": "Ajuda a manter o resultado dos procedimentos.",
+        "Já pensei, mas acho muito invasivo.": "Firmeza sem agulhas e sem tempo de recuperação.",
+        "Nunca pensei.": "Firmeza no dia a dia, sem procedimentos.",
       },
     },
     "acetyl-hexapeptide-8": {
-      beneficio: "Suaviza a aparência das linhas de expressão",
+      beneficio: "Relaxa as linhas de expressão (efeito botox-like)",
       resposta: {
-        "Sim, ficam bem marcadas.": "Suaviza a aparência das linhas marcadas da testa.",
-        "Algumas linhas já ficam visíveis.": "Cuida das linhas antes que fiquem mais marcadas.",
-        "Nunca reparei.": "Cuida da pele da testa desde já.",
+        "Sim, ficam bem marcadas.": "Suaviza as linhas que já ficam marcadas na testa.",
+        "Algumas linhas já ficam visíveis.": "Suaviza as linhas antes que fiquem profundas.",
+        "Nunca reparei.": "Previne as linhas de expressão da testa.",
       },
     },
     "pentapeptide-4": {
-      beneficio: "Ajuda a manter a pele firme e com aspecto mais jovem",
+      beneficio: "Estimula o colágeno com o uso contínuo",
       resposta: {
-        "Sim, mas sem resultados.": "Uma fórmula completa, para você ver diferença na pele.",
+        "Sim, mas sem resultados.": "Age no colágeno, para o resultado aparecer de verdade.",
         "Sim, mas esquecia de usar.": "Um passo só, à noite: fácil de manter.",
         "Só usei alguns produtos.": "Completa sua rotina com um anti-idade de verdade.",
         "Nunca tentei.": "Um começo simples: um passo só, à noite.",
       },
     },
     "retinal": {
-      beneficio: "Retinaldeído 0,05%: aspecto renovado e menos aparência de rugas",
+      beneficio: "Renovação celular mais rápida que o retinol",
       // Pergunta de várias escolhas: a frase usa os sinais marcados
       lista: function (sinais) {
-        return "Deixa a pele com aspecto renovado e suaviza a aparência de " + juntar(sinais) + ".";
+        return "Renova a pele e suaviza " + juntar(sinais) + ".";
       },
     },
     "vitamina-e": {
@@ -72,44 +72,44 @@
       },
     },
     "glutationa": {
-      beneficio: "Antioxidante que ilumina e ajuda a proteger a pele",
+      beneficio: "Antioxidante que protege o colágeno e ilumina",
       resposta: {
-        "Sim, percebo claramente.": "Ajuda a manter o aspecto firme da sua pele.",
-        "Comecei a perceber.": "Cuida da pele logo no começo da perda de firmeza.",
-        "Não percebo.": "Ajuda a pele a manter o aspecto firme por mais tempo.",
+        "Sim, percebo claramente.": "Protege o colágeno que sustenta a sua pele.",
+        "Comecei a perceber.": "Age logo no começo da perda de firmeza.",
+        "Não percebo.": "Mantém a sua firmeza por mais tempo.",
       },
     },
     "tetrapeptide-7": {
       beneficio: "Acalma a pele e devolve o viço",
       resposta: {
         "Sinto que perdi minha autoestima.": "Devolve a aparência saudável que você quer ver.",
-        "Sinto que minha pele está envelhecida.": "Deixa a pele com aspecto mais jovem e descansado.",
+        "Sinto que minha pele está envelhecida.": "Renova a pele para um aspecto mais jovem.",
         "Percebo uma pele sem viço ou opaca.": "Devolve o brilho e o aspecto descansado.",
       },
     },
     "alfa-arbutina": {
-      beneficio: "Uniformiza o tom e suaviza a aparência das manchas",
+      beneficio: "Uniformiza o tom e clareia manchas",
       resposta: {
         "Sim, uso retinol ou algum retinoide.": "Combina com retinoides e cuida das manchas.",
         "Uso séruns anti-idade.": "Soma a uniformização do tom ao seu anti-idade.",
         "Já usei, mas parei.": "Suave, ajuda você a retomar sem irritar.",
-        "Nunca utilizei.": "Um começo suave para uniformizar o tom.",
+        "Nunca utilizei.": "Um começo suave para clarear manchas.",
       },
     },
     "exos-skin": {
-      beneficio: "Tecnologia que deixa a pele com aspecto renovado e revitalizado",
+      beneficio: "Exossomos que levam sinais de renovação às células da pele",
       resposta: {
-        "Sim, uso retinol ou algum retinoide.": "Soma viço e aspecto renovado à sua rotina.",
+        "Sim, uso retinol ou algum retinoide.": "Apoia a renovação e a recuperação da pele.",
         "Uso séruns anti-idade.": "Um passo além no seu cuidado anti-idade.",
-        "Nunca utilizei.": "Você já começa com uma tecnologia atual de skincare.",
+        "Nunca utilizei.": "Você já começa com uma tecnologia atual de renovação.",
       },
     },
     "niacinamida": {
-      beneficio: "Deixa a pele mais uniforme e com aspecto mais firme",
+      beneficio: "Fortalece a pele e melhora a elasticidade",
       resposta: {
-        "Sim, inclusive isso me incomoda.": "Cuida da pele ao redor dos olhos.",
-        "Sim, aparecem até com o rosto relaxado.": "Suaviza a aparência das linhas dos olhos.",
-        "Não percebo.": "Cuida da região dos olhos desde já.",
+        "Sim, inclusive isso me incomoda.": "Melhora a elasticidade ao redor dos olhos.",
+        "Sim, aparecem até com o rosto relaxado.": "Deixa as linhas dos olhos menos marcadas.",
+        "Não percebo.": "Previne as linhas ao redor dos olhos.",
       },
     },
   };
@@ -125,47 +125,47 @@
      Innovation). Frases curtas, sem promessa de resultado. */
   var GRUPOS_V2 = [
     {
-      nome: "Renovação e viço", chip: "de renovação", icone: "renova",
-      texto: "Deixam a pele com aspecto renovado, revitalizado e com glow.",
+      nome: "Renovação e regeneração", chip: "de renovação", icone: "renova",
+      texto: "Aceleram a troca das células e ajudam a pele a se reconstruir.",
       ativos: [
-        { nome: "Retinal", img: A + "retinal-p.webp", beneficio: "Retinaldeído 0,05%: aspecto renovado e menos aparência de rugas e linhas finas" },
-        { nome: "PDRN", img: A + "pdrn-p.webp", beneficio: "Promove hidratação, maciez e viço para uma pele revitalizada" },
-        { nome: "Microespículas", beneficio: "Complementam a aplicação e proporcionam o efeito glow" },
+        { nome: "Retinal", img: A + "retinal-p.webp", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
+        { nome: "PDRN", img: A + "pdrn-p.webp", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
+        { nome: "Microespículas", beneficio: "Microespículas naturais que abrem caminho para os ativos irem mais fundo" },
       ],
     },
     {
       nome: "Peptídeos", chip: "peptídeos", icone: "peptideo",
-      texto: "Pequenas cadeias de proteína que cuidam da firmeza, das linhas e do viço da pele.",
+      texto: "Pequenas cadeias de proteína que dão sinais à pele. Os biomiméticos imitam os sinais que a própria pele produz.",
       ativos: [
-        { nome: "GHK-Cu (peptídeo de cobre)", img: A + "ghk-cu-p.webp", beneficio: "Peptídeo de cobre que ajuda a manter a pele firme e elástica" },
-        { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8-p.webp", beneficio: "Suaviza a aparência das linhas de expressão, como as da testa" },
-        { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4-p.webp", beneficio: "Ajuda a manter a firmeza e suaviza a aparência das rugas com o uso contínuo" },
-        { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7-p.webp", beneficio: "Acalma a pele e ajuda a manter o aspecto descansado" },
-        { nome: "EGF", img: A + "exos-skin-p.webp", beneficio: "Peptídeo que deixa a pele com aspecto renovado" },
-        { nome: "IGF-1", beneficio: "Peptídeo que contribui para uma pele com aspecto revitalizado" },
-        { nome: "VEGF", beneficio: "Peptídeo que deixa a pele com aspecto mais saudável e viçoso" },
-        { nome: "Oligopeptídeo-5", beneficio: "Peptídeo que ajuda a proteger e cuidar da pele" },
-        { nome: "Oligopeptídeo-118", beneficio: "Peptídeo que deixa a pele com aspecto renovado e uniforme" },
-        { nome: "Oligopeptídeo-34", beneficio: "Peptídeo que ajuda a uniformizar o tom e suavizar as manchas" },
-        { nome: "Oligopeptídeo-7", beneficio: "Peptídeo que ajuda a manter a pele equilibrada e saudável" },
-        { nome: "Heptapeptídeo-14", beneficio: "Peptídeo que ajuda a manter a firmeza e o aspecto jovem da pele" },
+        { nome: "GHK-Cu (peptídeo de cobre)", img: A + "ghk-cu-p.webp", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
+        { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8-p.webp", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
+        { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4-p.webp", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
+        { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7-p.webp", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
+        { nome: "EGF", img: A + "exos-skin-p.webp", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
+        { nome: "IGF-1", beneficio: "Imita um sinal da pele que ajuda na sua regeneração" },
+        { nome: "VEGF", beneficio: "Imita um sinal da pele que ajuda a nutrir e oxigenar as células" },
+        { nome: "Oligopeptídeo-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
+        { nome: "Oligopeptídeo-118", beneficio: "Peptídeo biomimético que estimula a renovação das células" },
+        { nome: "Oligopeptídeo-34", beneficio: "Peptídeo clareador que reduz a produção de melanina nas manchas" },
+        { nome: "Oligopeptídeo-7", beneficio: "Peptídeo biomimético que reforça a comunicação entre as células" },
+        { nome: "Heptapeptídeo-14", beneficio: "Peptídeo antienvelhecimento que estimula o colágeno" },
       ],
     },
     {
       nome: "Uniformização e luminosidade", chip: "de luminosidade", icone: "luz",
-      texto: "Suavizam a aparência das manchas e devolvem a luminosidade.",
+      texto: "Atuam nas manchas e devolvem o brilho natural da pele.",
       ativos: [
-        { nome: "Niacinamida", img: A + "niacinamida-p.webp", beneficio: "Vitamina B3 que uniformiza o tom e deixa a pele com aspecto mais saudável" },
-        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina-p.webp", beneficio: "Ajuda a uniformizar o tom e suavizar a aparência das manchas" },
-        { nome: "Ácido Tranexâmico", beneficio: "Suaviza a aparência das manchas e uniformiza o tom da pele" },
+        { nome: "Niacinamida", img: A + "niacinamida-p.webp", beneficio: "Vitamina B3 que uniformiza o tom, fortalece a barreira e refina os poros" },
+        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina-p.webp", beneficio: "Clareia manchas reduzindo a produção de melanina" },
+        { nome: "Ácido Tranexâmico", beneficio: "Clareia manchas teimosas e uniformiza o tom da pele" },
         { nome: "Glutationa", img: A + "glutationa-p.webp", beneficio: "Antioxidante que protege a pele e deixa o tom mais luminoso" },
       ],
     },
     {
       nome: "Hidratação", chip: "de hidratação", icone: "gota",
-      texto: "Hidratam intensamente e suavizam a aparência das linhas finas.",
+      texto: "Seguram a água na pele e preenchem as linhas finas.",
       ativos: [
-        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico-p.webp", beneficio: "Hidrata e suaviza a aparência das linhas finas" },
+        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico-p.webp", beneficio: "Segura a água na pele e preenche as linhas finas" },
         { nome: "Hialuronato de Sódio", beneficio: "Molécula menor do ácido hialurônico, que hidrata por mais tempo" },
       ],
     },
@@ -173,8 +173,8 @@
       nome: "Calmantes e antioxidantes", chip: "calmantes e antioxidantes", icone: "folha",
       texto: "Acalmam a pele e a protegem das agressões do dia a dia.",
       ativos: [
-        { nome: "Bisabolol", beneficio: "Ativo da camomila que acalma e conforta a pele" },
-        { nome: "Extrato de Calêndula", beneficio: "Calmante natural que conforta a pele" },
+        { nome: "Bisabolol", beneficio: "Ativo da camomila que acalma a pele e reduz a vermelhidão" },
+        { nome: "Extrato de Calêndula", beneficio: "Calmante natural que suaviza irritações e conforta a pele" },
         { nome: "Vitamina E", img: A + "vitamina-e-p.webp", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
       ],
     },
