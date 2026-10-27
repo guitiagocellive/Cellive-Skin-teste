@@ -24,6 +24,15 @@ const TROCAS = [
   // pré-lançamento: o botão fala do Sérum (na v2 não existe "sua fórmula")
   ['<span data-pre>Quero garantir minha fórmula</span>', '<span data-pre>Quero garantir o meu Sérum</span>'],
   ['<p class="fp-resumo" data-formula-resumo>12 ativos que trabalham juntos na sua pele</p>', '<p class="fp-resumo" data-formula-resumo>24 ativos em uma única fórmula</p>'],
+  // sem quiz não existe "protocolo aprovado": a v2 começa direto pelo nome do produto
+  [`      <p class="aprovado">
+        <svg class="aprovado-check" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="11" fill="#22b14c"/>
+          <path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="titulo-leve">Seu protocolo foi</span> <strong>Aprovado!</strong>
+      </p>
+`, ""],
 ];
 
 let html = await readFile(new URL("oferta.html", RAIZ), "utf8");
