@@ -3,26 +3,39 @@
 (function () {
   "use strict";
 
+  /* Medições da tela (tamanho e posição) só depois que a primeira tela foi
+     desenhada: medir antes obriga o celular a calcular a página inteira no meio
+     do carregamento ("reflow forçado"), o que atrasa a primeira dobra. */
+  var aposPintar = function (fn) {
+    requestAnimationFrame(function () { setTimeout(fn, 0); });
+  };
+
   /* ---------- Galeria (carrossel) ----------
-     As fotos ficam lado a lado num trilhoGal com rolagem que encaixa (o arrasto
-     segue o dedo). Tocar numa miniatura desliza até a foto. O selo "Anti-aging"
+     As fotos ficam lado a lado num trilho com rolagem que encaixa: dá para
+     arrastar com o dedo ou tocar nas miniaturas. Sozinha, a galeria passa para
+     a próxima foto a cada 4 segundos (pausa quando a pessoa mexe nela, quando
+     sai da tela ou quando a aba fica em segundo plano). O selo "Anti-aging"
      só aparece na 1ª foto (as outras têm texto no canto).
      Carregamento: a foto 1 vem com a página; as outras baixam uma por vez
      depois que a primeira dobra termina de carregar (ou na hora, se a pessoa
-     for até ela antes). Cada foto aparece com um esmaecer suave. */
+     for até ela antes), no tamanho certo para a tela (srcset). */
   var trilhoGal = document.querySelector("[data-galeria-trilho]");
   var slides = trilhoGal ? Array.prototype.slice.call(trilhoGal.children) : [];
   var selos = document.querySelector(".galeria-selos");
   var miniaturas = Array.prototype.slice.call(document.querySelectorAll(".miniatura"));
   var fileiraMini = document.querySelector(".galeria-miniaturas");
   var atual = 0;
+  var GAL_TEMPO = 4000;
+  var galSemMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function carregarFoto(i) {
     var slide = slides[i];
     var img = slide && slide.querySelector("img[data-src]");
     if (!img) return null;
     var url = img.getAttribute("data-src");
+    var srcset = img.getAttribute("data-srcset");
     img.removeAttribute("data-src");
+    img.removeAttribute("data-srcset");
     slide.classList.add("is-esperando");
     img.classList.add("is-chegando");
     return new Promise(function (pronto) {
@@ -34,6 +47,7 @@
       };
       img.onload = function () { (img.decode ? img.decode() : Promise.resolve()).then(mostrar, mostrar); };
       img.onerror = function () { slide.classList.remove("is-esperando"); pronto(); };
+      if (srcset) img.srcset = srcset;
       img.src = url;
     });
   }
@@ -58,7 +72,7 @@
     atual = i;
     miniaturas.forEach(function (m, k) {
       m.classList.toggle("is-ativa", k === i);
-      m.setAttribute("aria-selected", k === i ? "true" : "false");
+      if (k === i) m.setAttribute("aria-current", "true"); else m.removeAttribute("aria-current");
     });
     if (selos) selos.classList.toggle("is-escondido", i !== 0);
     // vizinhas na frente da fila
@@ -71,32 +85,59 @@
     }
   }
 
-  if (trilhoGal) {
+  if (trilhoGal && slides.length) {
     var pedidoGal = 0, paradaGal = 0;
+    var mexeuAte = 0;        // até quando a troca automática fica pausada
+    var mexeuAgora = false;  // a última rolagem foi da pessoa (só essas vão para o painel)
+    var galNaTela = true, autoGal = 0;
+
+    var irParaFoto = function (i) {
+      i = (i + slides.length) % slides.length;
+      carregarFoto(i);
+      trilhoGal.scrollTo({ left: i * trilhoGal.clientWidth, behavior: galSemMovimento ? "auto" : "smooth" });
+    };
+    var pausar = function () { mexeuAte = Date.now() + 8000; mexeuAgora = true; };
+
     trilhoGal.addEventListener("scroll", function () {
       if (!pedidoGal) pedidoGal = requestAnimationFrame(function () {
         pedidoGal = 0;
         marcar(Math.round(trilhoGal.scrollLeft / trilhoGal.clientWidth));
       });
-      // registra no painel quando a rolagem para
+      // registra no painel quando a rolagem feita pela pessoa para
       clearTimeout(paradaGal);
-      paradaGal = setTimeout(function () { rastrear("clique", { e: "galeria", val: String(atual + 1) }); }, 400);
+      paradaGal = setTimeout(function () {
+        if (mexeuAgora) rastrear("clique", { e: "galeria", val: String(atual + 1) });
+        mexeuAgora = false;
+      }, 400);
     }, { passive: true });
 
+    ["touchstart", "pointerdown", "wheel"].forEach(function (ev) {
+      trilhoGal.addEventListener(ev, pausar, { passive: true });
+    });
     miniaturas.forEach(function (mini, i) {
-      mini.addEventListener("click", function () {
-        carregarFoto(i);
-        trilhoGal.scrollTo({ left: i * trilhoGal.clientWidth, behavior: "smooth" });
-      });
+      mini.addEventListener("click", function () { pausar(); irParaFoto(i); });
     });
 
     // começou a mexer na galeria: as fotos vizinhas vêm na hora
     trilhoGal.addEventListener("touchstart", function () { carregarFoto(1); baixarEmFila(); }, { once: true, passive: true });
 
-    // primeira dobra carregada: as outras fotos começam a baixar
+    // troca automática a cada 4 s (só com a galeria na tela e a aba aberta)
+    var agendarGal = function () {
+      clearTimeout(autoGal);
+      autoGal = setTimeout(function () {
+        if (galNaTela && !document.hidden && Date.now() >= mexeuAte) irParaFoto(atual + 1);
+        agendarGal();
+      }, GAL_TEMPO);
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { galNaTela = es[0].isIntersecting; }, { threshold: 0.5 }).observe(trilhoGal);
+    }
+
+    // primeira dobra carregada: as outras fotos começam a baixar e a troca automática começa
     var depoisDaDobra = function () {
       if (window.requestIdleCallback) requestIdleCallback(baixarEmFila, { timeout: 1200 });
       else setTimeout(baixarEmFila, 300);
+      agendarGal();
     };
     if (document.readyState === "complete") depoisDaDobra();
     else window.addEventListener("load", depoisDaDobra);
@@ -336,7 +377,7 @@
   function rolou() { topo.classList.toggle("is-rolando", window.scrollY > topoGruda + 8); }
   window.addEventListener("scroll", rolou, { passive: true });
   window.addEventListener("resize", medirTopo);
-  medirTopo();
+  aposPintar(medirTopo);
 
   /* ---------- Menu do topo (três tracinhos) ----------
      Abre um painel com as seções; tocar numa delas fecha o menu e rola até lá.
@@ -490,7 +531,7 @@
       });
     };
     depos.addEventListener("scroll", marcarPonto, { passive: true });
-    marcarPonto();
+    aposPintar(marcarPonto);
   }
 
   /* ---------- Dúvidas: abre uma por vez ---------- */
@@ -558,7 +599,7 @@
     var pedirSrrp = function () { if (!pedidoSrrp) pedidoSrrp = requestAnimationFrame(atualizarSrrp); };
     window.addEventListener("scroll", pedirSrrp, { passive: true });
     window.addEventListener("resize", pedirSrrp);
-    atualizarSrrp();
+    aposPintar(atualizarSrrp);
   }
 
   /* ---------- Depoimentos em loop ----------
@@ -571,11 +612,19 @@
       copia.setAttribute("aria-hidden", "true");
       trilho.appendChild(copia);
     });
-    var ajustarTempo = function () {
-      trilho.style.setProperty("--cli-tempo", Math.round(trilho.scrollWidth / 2 / 30) + "s");
+    // velocidade pela largura da fila; a largura vem do observador (sem medir na abertura)
+    var ajustarTempo = function (largura) {
+      if (!(largura > 200)) return; // seção ainda não desenhada (fica com os 50 s padrão)
+      trilho.style.setProperty("--cli-tempo", Math.round(largura / 2 / 30) + "s");
     };
-    ajustarTempo();
-    window.addEventListener("load", ajustarTempo);
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(function (es) {
+        var box = es[0].borderBoxSize && es[0].borderBoxSize[0];
+        ajustarTempo(box ? box.inlineSize : es[0].contentRect.width);
+      }).observe(trilho);
+    } else {
+      window.addEventListener("load", function () { ajustarTempo(trilho.scrollWidth); });
+    }
   }
 
   /* ---------- Resultados: cartões que se abrem com a rolagem ----------
@@ -611,10 +660,12 @@
       if (!rodandoRes && alvoRes !== atualRes) { rodandoRes = true; requestAnimationFrame(quadroRes); }
     };
     if (!semMovimento) {
-      atualRes = alvoRes = medirRes();
-      desenharRes(atualRes);
-      window.addEventListener("scroll", aoRolarRes, { passive: true });
-      window.addEventListener("resize", aoRolarRes);
+      aposPintar(function () {
+        atualRes = alvoRes = medirRes();
+        desenharRes(atualRes);
+        window.addEventListener("scroll", aoRolarRes, { passive: true });
+        window.addEventListener("resize", aoRolarRes);
+      });
     }
 
     var contar = function (alvo) {
@@ -732,7 +783,7 @@
     anterior.addEventListener("click", function () { irPara(atualVid - 1); });
     proximo.addEventListener("click", function () { irPara(atualVid + 1); });
     carrossel.addEventListener("scroll", function () { requestAnimationFrame(marcarVid); }, { passive: true });
-    marcarVid();
+    aposPintar(marcarVid);
   }
 
   /* ---------- Os números falam por si ----------
@@ -752,7 +803,7 @@
     var pedirNum = function () { if (!pedidoNum) pedidoNum = requestAnimationFrame(atualizarNum); };
     window.addEventListener("scroll", pedirNum, { passive: true });
     window.addEventListener("resize", pedirNum);
-    atualizarNum();
+    aposPintar(atualizarNum);
 
     var listaNum = numeros.querySelector("[data-num-lista]");
     var contarBarras = function () {
@@ -924,7 +975,7 @@
     };
     window.addEventListener("scroll", conferirBarra, { passive: true });
     window.addEventListener("resize", conferirBarra);
-    conferirBarra();
+    aposPintar(conferirBarra);
     botaoBarra.addEventListener("click", function (ev) {
       var planosSecao = document.getElementById("planos");
       if (!planosSecao) return;

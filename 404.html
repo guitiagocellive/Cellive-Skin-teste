@@ -9,15 +9,31 @@
   <!-- Fonte oficial: Acumin Pro e Acumin Pro Condensed (Adobe Fonts) -->
   <link rel="preconnect" href="https://use.typekit.net" crossorigin>
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
-  <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <!-- A fonte da Adobe não trava mais a primeira tela: o CSS dela é lido em segundo plano e
+       ganha font-display: swap (o texto aparece na hora, na fonte de reserva do mesmo tamanho,
+       e troca para a Acumin quando ela chega). O contador da Adobe (p.typekit.net) continua. -->
+  <script>
+    (function () {
+      var u = "https://use.typekit.net/zvs4xwq.css";
+      var usarLink = function () { var l = document.createElement("link"); l.rel = "stylesheet"; l.href = u; document.head.appendChild(l); };
+      try {
+        fetch(u).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (css) {
+          var s = document.createElement("style");
+          s.textContent = css.replace(/font-display:\s*auto/g, "font-display:swap");
+          document.head.appendChild(s);
+        }).catch(usarLink);
+      } catch (e) { usarLink(); }
+    })();
+  </script>
+  <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
+  <link rel="stylesheet" href="/assets/min/style.css?v=44c18572fc">
   <!-- Rastreamento próprio (painel) -->
-  <script src="/assets/js/rastreio.js" defer></script>
+  <script src="/assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
 <body>
   <main class="landing">
     <a class="brand" href="/" aria-label="Cellive Skin">
-      <img src="/assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
+      <img src="/assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="Cellive Skin" width="157" height="18">
     </a>
     <div class="spacer-top" aria-hidden="true"></div>
     <h1 class="hero-title">Página <span class="highlight">NÃO ENCONTRADA</span></h1>

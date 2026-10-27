@@ -19,8 +19,8 @@ async function gerar(origem, destino, rotulo) {
     .replace(/<body class="oferta-body" data-pre-lancamento>/, '<body class="oferta-body">')
     .replace(/(<html lang="pt-BR") data-pagina="oferta"( data-versao="v2")?>/, '$1 data-pagina="lancamento-previa">')
     .replace(/<title>([^<]*)<\/title>/, `<title>PRÉVIA DO LANÇAMENTO · $1</title>\n  <meta name="robots" content="noindex, nofollow">`)
-    .replace(/\s*<!-- Rastreamento próprio[^>]*-->\s*<script src="assets\/js\/rastreio\.js" defer><\/script>/, "")
-    .replace(/(src|href|data-src|data-foto|data-poster|poster)="assets\//g, '$1="/assets/')
+    .replace(/\s*<!-- Rastreamento próprio[^>]*-->\s*<script src="assets\/(?:js|min)\/rastreio\.js[^"]*" defer><\/script>/, "")
+    .replace(/([\s,"'])assets\//g, "$1/assets/") // atributos e listas (srcset) a partir da raiz
     .replace(/href="politica-de-privacidade"/g, 'href="/politica-de-privacidade"')
     .replace(/href="\.\/"/g, 'href="/"');
   const erros = [];

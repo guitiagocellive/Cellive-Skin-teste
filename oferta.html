@@ -9,13 +9,28 @@
   <!-- Fonte oficial: Acumin Pro e Acumin Pro Condensed (Adobe Fonts) -->
   <link rel="preconnect" href="https://use.typekit.net" crossorigin>
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
-  <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
+  <!-- A fonte da Adobe não trava mais a primeira tela: o CSS dela é lido em segundo plano e
+       ganha font-display: swap (o texto aparece na hora, na fonte de reserva do mesmo tamanho,
+       e troca para a Acumin quando ela chega). O contador da Adobe (p.typekit.net) continua. -->
+  <script>
+    (function () {
+      var u = "https://use.typekit.net/zvs4xwq.css";
+      var usarLink = function () { var l = document.createElement("link"); l.rel = "stylesheet"; l.href = u; document.head.appendChild(l); };
+      try {
+        fetch(u).then(function (r) { if (!r.ok) throw 0; return r.text(); }).then(function (css) {
+          var s = document.createElement("style");
+          s.textContent = css.replace(/font-display:\s*auto/g, "font-display:swap");
+          document.head.appendChild(s);
+        }).catch(usarLink);
+      } catch (e) { usarLink(); }
+    })();
+  </script>
+  <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
-  <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/oferta.css">
+  <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=52f4c355b0">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
-  <script src="assets/js/rastreio.js" defer></script>
+  <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -38,7 +53,7 @@
         <span></span><span></span><span></span>
       </button>
       <a class="brand" href="./" aria-label="Cellive Skin">
-        <img src="assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
+        <img src="assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="Cellive Skin" width="157" height="18">
       </a>
       <span class="topo-lado" aria-hidden="true"></span>
     </div>
@@ -71,27 +86,27 @@
           <!-- Carrossel: arraste com o dedo ou toque nas miniaturas. A foto 1 vem com a página;
                as outras (data-src) baixam logo depois que a primeira dobra termina de carregar. -->
           <div class="galeria-trilho" data-galeria-trilho tabindex="-1">
-            <span class="slot galeria-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1.webp" alt="Sérum Facial Revitalizador Noturno Cellive Skin, frasco de 30 mL" width="900" height="900" fetchpriority="high" decoding="async" onerror="this.hidden=true"></span>
-            <span class="slot galeria-foto" data-label="Produto 2"><img data-src="assets/img/oferta/produto-2.webp" alt="Mulher aplicando o sérum no rosto" width="900" height="900" decoding="async" hidden></span>
-            <span class="slot galeria-foto" data-label="Produto 3"><img data-src="assets/img/oferta/produto-3.webp" alt="Antes e depois da área dos olhos, no dia 1 e no dia 30" width="900" height="900" decoding="async" hidden></span>
-            <span class="slot galeria-foto" data-label="Produto 4"><img data-src="assets/img/oferta/produto-4.webp" alt="Frasco do sérum e seus benefícios" width="900" height="900" decoding="async" hidden></span>
-            <span class="slot galeria-foto" data-label="Produto 5"><img data-src="assets/img/oferta/produto-5.webp" alt="Ilustração da Ação SRRP na pele" width="900" height="900" decoding="async" hidden></span>
-            <span class="slot galeria-foto" data-label="Produto 6"><img data-src="assets/img/oferta/produto-6.webp" alt="Antes e depois do rosto, no dia 1 e no dia 30" width="900" height="900" decoding="async" hidden></span>
-            <span class="slot galeria-foto" data-label="Produto 7"><img data-src="assets/img/oferta/produto-7.webp" alt="Frasco e caixa do Sérum Revitalizador Noturno" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1.webp?v=a05fd76d7f" srcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Sérum Facial Revitalizador Noturno Cellive Skin, frasco de 30 mL" width="900" height="900" fetchpriority="high" decoding="async" onerror="this.hidden=true"></span>
+            <span class="slot galeria-foto" data-label="Produto 2"><img data-src="assets/img/oferta/produto-2.webp?v=091539a683" data-srcset="assets/img/oferta/produto-2-720.webp?v=4032b43d36 720w, assets/img/oferta/produto-2.webp?v=091539a683 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Mulher aplicando o sérum no rosto" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 3"><img data-src="assets/img/oferta/produto-3.webp?v=7e3f287635" data-srcset="assets/img/oferta/produto-3-720.webp?v=1b7d9a7a59 720w, assets/img/oferta/produto-3.webp?v=7e3f287635 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Antes e depois da área dos olhos, no dia 1 e no dia 30" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 4"><img data-src="assets/img/oferta/produto-4.webp?v=7c73e517b6" data-srcset="assets/img/oferta/produto-4-720.webp?v=9228469ac8 720w, assets/img/oferta/produto-4.webp?v=7c73e517b6 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Frasco do sérum e seus benefícios" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 5"><img data-src="assets/img/oferta/produto-5.webp?v=016819ed99" data-srcset="assets/img/oferta/produto-5-720.webp?v=056d10c952 720w, assets/img/oferta/produto-5.webp?v=016819ed99 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Ilustração da Ação SRRP na pele" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 6"><img data-src="assets/img/oferta/produto-6.webp?v=785f6fd09f" data-srcset="assets/img/oferta/produto-6-720.webp?v=25c7604826 720w, assets/img/oferta/produto-6.webp?v=785f6fd09f 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Antes e depois do rosto, no dia 1 e no dia 30" width="900" height="900" decoding="async" hidden></span>
+            <span class="slot galeria-foto" data-label="Produto 7"><img data-src="assets/img/oferta/produto-7.webp?v=82357263df" data-srcset="assets/img/oferta/produto-7-720.webp?v=013c35d869 720w, assets/img/oferta/produto-7.webp?v=82357263df 900w" sizes="(max-width: 480px) calc(100vw - 44px), 436px" alt="Frasco e caixa do Sérum Revitalizador Noturno" width="900" height="900" decoding="async" hidden></span>
           </div>
           <div class="galeria-selos">
             <span class="selo selo-escuro">Mais vendido</span>
             <span class="selo selo-contorno">Anti-aging</span>
           </div>
         </div>
-        <div class="galeria-miniaturas" role="tablist" aria-label="Fotos do produto">
-          <button type="button" class="miniatura is-ativa" data-rastreio="galeria" data-rastreio-valor="1" data-label="Produto 1" aria-label="Foto 1"><span class="slot" data-label="1"><img src="assets/img/oferta/produto-1-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="2" data-label="Produto 2" aria-label="Foto 2"><span class="slot" data-label="2"><img src="assets/img/oferta/produto-2-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="3" data-label="Produto 3" aria-label="Foto 3"><span class="slot" data-label="3"><img src="assets/img/oferta/produto-3-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="4" data-label="Produto 4" aria-label="Foto 4"><span class="slot" data-label="4"><img src="assets/img/oferta/produto-4-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="5" data-label="Produto 5" aria-label="Foto 5"><span class="slot" data-label="5"><img src="assets/img/oferta/produto-5-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="6" data-label="Produto 6" aria-label="Foto 6"><span class="slot" data-label="6"><img src="assets/img/oferta/produto-6-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
-          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="7" data-label="Produto 7" aria-label="Foto 7"><span class="slot" data-label="7"><img src="assets/img/oferta/produto-7-mini.webp" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+        <div class="galeria-miniaturas" role="group" aria-label="Fotos do produto">
+          <button type="button" class="miniatura is-ativa" data-rastreio="galeria" data-rastreio-valor="1" data-label="Produto 1" aria-label="Foto 1" aria-current="true"><span class="slot" data-label="1"><img src="assets/img/oferta/produto-1-mini.webp?v=47b8c670d6" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="2" data-label="Produto 2" aria-label="Foto 2"><span class="slot" data-label="2"><img src="assets/img/oferta/produto-2-mini.webp?v=ea2251fe84" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="3" data-label="Produto 3" aria-label="Foto 3"><span class="slot" data-label="3"><img src="assets/img/oferta/produto-3-mini.webp?v=71223994c2" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="4" data-label="Produto 4" aria-label="Foto 4"><span class="slot" data-label="4"><img src="assets/img/oferta/produto-4-mini.webp?v=4f52fc5a4e" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="5" data-label="Produto 5" aria-label="Foto 5"><span class="slot" data-label="5"><img src="assets/img/oferta/produto-5-mini.webp?v=bed60f6a3f" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="6" data-label="Produto 6" aria-label="Foto 6"><span class="slot" data-label="6"><img src="assets/img/oferta/produto-6-mini.webp?v=5dff8871fb" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
+          <button type="button" class="miniatura" data-rastreio="galeria" data-rastreio-valor="7" data-label="Produto 7" aria-label="Foto 7"><span class="slot" data-label="7"><img src="assets/img/oferta/produto-7-mini.webp?v=2372bb113a" alt="" width="160" height="160" decoding="async" onerror="this.hidden=true"></span></button>
         </div>
       </div>
 
@@ -103,9 +118,9 @@
       <!-- Prova social (mesmas fotos da capa) -->
       <div class="proof proof-oferta">
         <div class="avatars">
-          <span class="slot" data-label="Foto&#10;1"><img src="assets/img/foto-1.webp" alt="" onerror="this.hidden=true"></span>
-          <span class="slot" data-label="Foto&#10;2"><img src="assets/img/foto-2.webp" alt="" onerror="this.hidden=true"></span>
-          <span class="slot" data-label="Foto&#10;3"><img src="assets/img/foto-3.webp" alt="" onerror="this.hidden=true"></span>
+          <span class="slot" data-label="Foto&#10;1"><img src="assets/img/foto-1.webp?v=50188406e5" alt="" onerror="this.hidden=true"></span>
+          <span class="slot" data-label="Foto&#10;2"><img src="assets/img/foto-2.webp?v=c2852d11b6" alt="" onerror="this.hidden=true"></span>
+          <span class="slot" data-label="Foto&#10;3"><img src="assets/img/foto-3.webp?v=063a997858" alt="" onerror="this.hidden=true"></span>
         </div>
         <p class="proof-text">
           <span class="proof-name">
@@ -336,9 +351,9 @@
       <div class="conheca-palco" data-aparecer role="img" aria-label="Sérum Facial Revitalizador Noturno Cellive Skin com a caixa">
         <span class="palco-luz" aria-hidden="true"></span>
         <span class="palco-chao" aria-hidden="true"></span>
-        <img class="palco-caixa palco-caixa-esq" src="assets/img/oferta/caixa.webp" alt="" width="222" height="480" loading="lazy">
-        <img class="palco-caixa palco-caixa-dir" src="assets/img/oferta/caixa.webp" alt="" width="222" height="480" loading="lazy">
-        <img class="palco-frasco" src="assets/img/oferta/frasco.webp" alt="" width="141" height="460" loading="lazy">
+        <img class="palco-caixa palco-caixa-esq" src="assets/img/oferta/caixa.webp?v=e2a58dd376" alt="" width="222" height="480" loading="lazy">
+        <img class="palco-caixa palco-caixa-dir" src="assets/img/oferta/caixa.webp?v=e2a58dd376" alt="" width="222" height="480" loading="lazy">
+        <img class="palco-frasco" src="assets/img/oferta/frasco.webp?v=2ff4bd4d3d" alt="" width="141" height="460" loading="lazy">
       </div>
 
       <h2 class="conheca-titulo">
@@ -395,9 +410,9 @@
          Medidas copiadas da imagem de referência (739 px de largura). -->
     <section data-secao="srrp" class="oferta-srrp" id="acao-srrp" data-srrp aria-labelledby="srrp-titulo">
       <!-- Marca d'água "CELLIVE SKIN" na vertical -->
-      <img class="srrp-marca" src="assets/img/logo-cellive-skin.svg" alt="" width="157" height="18" aria-hidden="true">
+      <img class="srrp-marca" src="assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="" width="157" height="18" aria-hidden="true">
       <!-- Frasco: entra pela esquerda conforme a página rola e para na diagonal -->
-      <img class="srrp-frasco" src="assets/img/oferta/srrp-frasco.webp" alt="" width="240" height="684" loading="lazy" aria-hidden="true">
+      <img class="srrp-frasco" src="assets/img/oferta/srrp-frasco.webp?v=09bc516ce1" alt="" width="240" height="684" loading="lazy" aria-hidden="true">
 
       <div class="srrp-cabeca">
         <h2 class="srrp-titulo" id="srrp-titulo">
@@ -413,7 +428,7 @@
           <span class="srrp-frente">Sinalização</span>
           <span class="srrp-num" aria-hidden="true">1</span>
           <div class="srrp-cartao">
-            <span class="slot srrp-foto" data-label="GHK-Cu"><img src="assets/img/oferta/srrp-ghk-cu.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <span class="slot srrp-foto" data-label="GHK-Cu"><img src="assets/img/oferta/srrp-ghk-cu.webp?v=d7c734a4f3" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
             <h3 class="srrp-nome">GHK-Cu</h3>
             <p class="srrp-texto">O GHK-Cu sinaliza para os fibroblastos produzirem colágeno e elastina.</p>
           </div>
@@ -422,7 +437,7 @@
           <span class="srrp-frente">Renovação</span>
           <span class="srrp-num" aria-hidden="true">2</span>
           <div class="srrp-cartao">
-            <span class="slot srrp-foto" data-label="Retinal"><img src="assets/img/oferta/srrp-retinal.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <span class="slot srrp-foto" data-label="Retinal"><img src="assets/img/oferta/srrp-retinal.webp?v=cc176f4e27" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
             <h3 class="srrp-nome">Retinal</h3>
             <p class="srrp-texto">Parte do Retinal se converte em ácido retinoico e acelera a renovação celular.</p>
           </div>
@@ -431,7 +446,7 @@
           <span class="srrp-frente">Regeneração</span>
           <span class="srrp-num" aria-hidden="true">3</span>
           <div class="srrp-cartao">
-            <span class="slot srrp-foto" data-label="PDRN"><img src="assets/img/oferta/srrp-pdrn.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <span class="slot srrp-foto" data-label="PDRN"><img src="assets/img/oferta/srrp-pdrn.webp?v=6a785e59f9" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
             <h3 class="srrp-nome">PDRN</h3>
             <p class="srrp-texto">O PDRN atua nos receptores de adenosina, auxiliando na reparação da barreira cutânea.</p>
           </div>
@@ -440,7 +455,7 @@
           <span class="srrp-frente">Potencialização</span>
           <span class="srrp-num" aria-hidden="true">4</span>
           <div class="srrp-cartao">
-            <span class="slot srrp-foto" data-label="Microespículas"><img src="assets/img/oferta/srrp-microespiculas.webp" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
+            <span class="slot srrp-foto" data-label="Microespículas"><img src="assets/img/oferta/srrp-microespiculas.webp?v=05969f923c" alt="" width="400" height="121" loading="lazy" onerror="this.hidden=true"></span>
             <h3 class="srrp-nome">Microespículas</h3>
             <p class="srrp-texto">As microespículas criam microcanais na pele, potencializando a absorção dos ativos.</p>
           </div>
@@ -533,7 +548,7 @@
            As legendas descem uma linha até o ponto da pele (posições em %). -->
       <figure class="micro-figura" data-aparecer>
         <div class="micro-quadro">
-          <img class="micro-imagem" src="assets/img/oferta/microagulhamento.webp" alt="Camadas da pele com as microespículas" width="640" height="516" loading="lazy">
+          <img class="micro-imagem" src="assets/img/oferta/microagulhamento.webp?v=68defb9569" alt="Camadas da pele com as microespículas" width="640" height="516" loading="lazy">
           <figcaption class="micro-ponto micro-ponto-esq">
             <span class="micro-legenda">Auxilia na produção<br>de colágeno</span>
           </figcaption>
@@ -612,8 +627,8 @@
     <section data-secao="garantia" class="oferta-garantia" aria-labelledby="garantia-titulo">
       <div class="garantia-cartao" data-aparecer>
         <div class="garantia-visual" aria-hidden="true">
-          <img class="garantia-caixa" src="assets/img/oferta/caixa.webp" alt="" width="222" height="480" loading="lazy">
-          <img class="garantia-frasco" src="assets/img/oferta/frasco-tampa.webp" alt="" width="126" height="422" loading="lazy">
+          <img class="garantia-caixa" src="assets/img/oferta/caixa.webp?v=e2a58dd376" alt="" width="222" height="480" loading="lazy">
+          <img class="garantia-frasco" src="assets/img/oferta/frasco-tampa.webp?v=f9ecc3334d" alt="" width="126" height="422" loading="lazy">
           <span class="garantia-selo" role="img" aria-label="Garantia de 30 dias">
             <svg viewBox="0 0 200 200" aria-hidden="true">
               <path d="M100.0 1.0 L101.7 1.1 L103.4 1.4 L105.1 1.9 L106.8 2.6 L108.4 3.5 L110.0 4.5 L111.6 5.7 L113.1 6.9 L114.5 8.1 L116.0 9.4 L117.4 10.7 L118.7 12.0 L120.1 13.1 L121.4 14.2 L122.7 15.2 L124.1 16.0 L125.5 16.7 L126.9 17.3 L128.4 17.7 L129.9 17.9 L131.5 18.0 L133.1 18.0 L134.8 17.9 L136.6 17.8 L138.4 17.6 L140.3 17.3 L142.2 17.1 L144.1 17.0 L146.1 16.9 L148.0 16.9 L149.9 17.0 L151.7 17.2 L153.5 17.6 L155.2 18.2 L156.7 19.0 L158.2 19.9 L159.5 21.0 L160.7 22.3 L161.8 23.7 L162.7 25.2 L163.5 26.9 L164.2 28.7 L164.8 30.5 L165.3 32.4 L165.8 34.2 L166.1 36.1 L166.5 38.0 L166.9 39.8 L167.3 41.5 L167.7 43.2 L168.2 44.7 L168.8 46.2 L169.6 47.6 L170.4 48.9 L171.3 50.0 L172.4 51.1 L173.6 52.2 L175.0 53.2 L176.4 54.1 L177.9 55.0 L179.5 55.9 L181.2 56.8 L182.9 57.8 L184.5 58.8 L186.1 59.8 L187.7 61.0 L189.2 62.2 L190.5 63.4 L191.7 64.8 L192.7 66.3 L193.5 67.8 L194.2 69.4 L194.6 71.1 L194.8 72.8 L194.9 74.6 L194.7 76.4 L194.4 78.2 L193.9 80.0 L193.3 81.9 L192.6 83.7 L191.9 85.5 L191.1 87.2 L190.3 88.9 L189.5 90.6 L188.8 92.2 L188.2 93.8 L187.7 95.4 L187.3 97.0 L187.1 98.5 L187.0 100.0 L187.1 101.5 L187.3 103.0 L187.7 104.6 L188.2 106.2 L188.8 107.8 L189.5 109.4 L190.3 111.1 L191.1 112.8 L191.9 114.5 L192.6 116.3 L193.3 118.1 L193.9 120.0 L194.4 121.8 L194.7 123.6 L194.9 125.4 L194.8 127.2 L194.6 128.9 L194.2 130.6 L193.5 132.2 L192.7 133.7 L191.7 135.2 L190.5 136.6 L189.2 137.8 L187.7 139.0 L186.1 140.2 L184.5 141.2 L182.9 142.2 L181.2 143.2 L179.5 144.1 L177.9 145.0 L176.4 145.9 L175.0 146.8 L173.6 147.8 L172.4 148.9 L171.3 150.0 L170.4 151.1 L169.6 152.4 L168.8 153.8 L168.2 155.3 L167.7 156.8 L167.3 158.5 L166.9 160.2 L166.5 162.0 L166.1 163.9 L165.8 165.8 L165.3 167.6 L164.8 169.5 L164.2 171.3 L163.5 173.1 L162.7 174.8 L161.8 176.3 L160.7 177.7 L159.5 179.0 L158.2 180.1 L156.7 181.0 L155.2 181.8 L153.5 182.4 L151.7 182.8 L149.9 183.0 L148.0 183.1 L146.1 183.1 L144.1 183.0 L142.2 182.9 L140.3 182.7 L138.4 182.4 L136.6 182.2 L134.8 182.1 L133.1 182.0 L131.5 182.0 L129.9 182.1 L128.4 182.3 L126.9 182.7 L125.5 183.3 L124.1 184.0 L122.7 184.8 L121.4 185.8 L120.1 186.9 L118.7 188.0 L117.4 189.3 L116.0 190.6 L114.5 191.9 L113.1 193.1 L111.6 194.3 L110.0 195.5 L108.4 196.5 L106.8 197.4 L105.1 198.1 L103.4 198.6 L101.7 198.9 L100.0 199.0 L98.3 198.9 L96.6 198.6 L94.9 198.1 L93.2 197.4 L91.6 196.5 L90.0 195.5 L88.4 194.3 L86.9 193.1 L85.5 191.9 L84.0 190.6 L82.6 189.3 L81.3 188.0 L79.9 186.9 L78.6 185.8 L77.3 184.8 L75.9 184.0 L74.5 183.3 L73.1 182.7 L71.6 182.3 L70.1 182.1 L68.5 182.0 L66.9 182.0 L65.2 182.1 L63.4 182.2 L61.6 182.4 L59.7 182.7 L57.8 182.9 L55.9 183.0 L53.9 183.1 L52.0 183.1 L50.1 183.0 L48.3 182.8 L46.5 182.4 L44.8 181.8 L43.3 181.0 L41.8 180.1 L40.5 179.0 L39.3 177.7 L38.2 176.3 L37.3 174.8 L36.5 173.1 L35.8 171.3 L35.2 169.5 L34.7 167.6 L34.2 165.8 L33.9 163.9 L33.5 162.0 L33.1 160.2 L32.7 158.5 L32.3 156.8 L31.8 155.3 L31.2 153.8 L30.4 152.4 L29.6 151.1 L28.7 150.0 L27.6 148.9 L26.4 147.8 L25.0 146.8 L23.6 145.9 L22.1 145.0 L20.5 144.1 L18.8 143.2 L17.1 142.2 L15.5 141.2 L13.9 140.2 L12.3 139.0 L10.8 137.8 L9.5 136.6 L8.3 135.2 L7.3 133.7 L6.5 132.2 L5.8 130.6 L5.4 128.9 L5.2 127.2 L5.1 125.4 L5.3 123.6 L5.6 121.8 L6.1 120.0 L6.7 118.1 L7.4 116.3 L8.1 114.5 L8.9 112.8 L9.7 111.1 L10.5 109.4 L11.2 107.8 L11.8 106.2 L12.3 104.6 L12.7 103.0 L12.9 101.5 L13.0 100.0 L12.9 98.5 L12.7 97.0 L12.3 95.4 L11.8 93.8 L11.2 92.2 L10.5 90.6 L9.7 88.9 L8.9 87.2 L8.1 85.5 L7.4 83.7 L6.7 81.9 L6.1 80.0 L5.6 78.2 L5.3 76.4 L5.1 74.6 L5.2 72.8 L5.4 71.1 L5.8 69.4 L6.5 67.8 L7.3 66.3 L8.3 64.8 L9.5 63.4 L10.8 62.2 L12.3 61.0 L13.9 59.8 L15.5 58.8 L17.1 57.8 L18.8 56.8 L20.5 55.9 L22.1 55.0 L23.6 54.1 L25.0 53.2 L26.4 52.2 L27.6 51.1 L28.7 50.0 L29.6 48.9 L30.4 47.6 L31.2 46.2 L31.8 44.7 L32.3 43.2 L32.7 41.5 L33.1 39.8 L33.5 38.0 L33.9 36.1 L34.2 34.2 L34.7 32.4 L35.2 30.5 L35.8 28.7 L36.5 26.9 L37.3 25.2 L38.2 23.7 L39.3 22.3 L40.5 21.0 L41.8 19.9 L43.3 19.0 L44.8 18.2 L46.5 17.6 L48.3 17.2 L50.1 17.0 L52.0 16.9 L53.9 16.9 L55.9 17.0 L57.8 17.1 L59.7 17.3 L61.6 17.6 L63.4 17.8 L65.2 17.9 L66.9 18.0 L68.5 18.0 L70.1 17.9 L71.6 17.7 L73.1 17.3 L74.5 16.7 L75.9 16.0 L77.3 15.2 L78.6 14.2 L79.9 13.1 L81.3 12.0 L82.6 10.7 L84.0 9.4 L85.5 8.1 L86.9 6.9 L88.4 5.7 L90.0 4.5 L91.6 3.5 L93.2 2.6 L94.9 1.9 L96.6 1.4 L98.3 1.1Z" fill="#b1c7de"/>
@@ -749,7 +764,7 @@
         <span class="conf-luz"></span>
         <span class="conf-anel"></span>
         <span class="conf-anel conf-anel-2"></span>
-        <img class="conf-frasco" src="assets/img/oferta/frasco-tampa.webp" alt="" width="126" height="422" loading="lazy">
+        <img class="conf-frasco" src="assets/img/oferta/frasco-tampa.webp?v=f9ecc3334d" alt="" width="126" height="422" loading="lazy">
       </div>
 
       <!-- Os dois pontos principais -->
@@ -781,8 +796,8 @@
          Medidas da imagem de referência (739 px de largura). Os frascos das
          laterais entram com a rolagem, como na ação SRRP. -->
     <section data-secao="numeros" class="oferta-numeros" data-numeros aria-labelledby="numeros-titulo">
-      <img class="num-frasco num-frasco-esq" src="assets/img/oferta/numeros-frasco.webp" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
-      <img class="num-frasco num-frasco-dir" src="assets/img/oferta/numeros-frasco.webp" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
+      <img class="num-frasco num-frasco-esq" src="assets/img/oferta/numeros-frasco.webp?v=c0063a4f73" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
+      <img class="num-frasco num-frasco-dir" src="assets/img/oferta/numeros-frasco.webp?v=c0063a4f73" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
 
       <p class="fp-chamada num-chamada" data-revelar="palavras">Será que vale a pena mesmo?</p>
       <h2 class="num-titulo" id="numeros-titulo" data-revelar="palavras" style="--atraso: 0.2s">
@@ -897,7 +912,7 @@
           </button>
         </div>
         <div class="jor-paineis" data-jor-paineis>
-          <article class="jor-painel is-ativo" role="tabpanel" id="jor-painel-0" aria-labelledby="jor-aba-0" data-jor-painel>
+          <div class="jor-painel is-ativo" role="tabpanel" id="jor-painel-0" aria-labelledby="jor-aba-0" data-jor-painel>
             <p class="jor-quando">Semana 1–2</p>
             <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Adaptação</strong></h3>
             <p class="jor-texto">Sua pele se adapta à nova rotina e os ativos começam a agir.</p>
@@ -906,8 +921,8 @@
               <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Início da ação SRRP.</span></li>
               <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Microespículas + efeito cooling.</span></li>
             </ul>
-          </article>
-          <article class="jor-painel" role="tabpanel" id="jor-painel-1" aria-labelledby="jor-aba-1" data-jor-painel hidden>
+          </div>
+          <div class="jor-painel" role="tabpanel" id="jor-painel-1" aria-labelledby="jor-aba-1" data-jor-painel hidden>
             <p class="jor-quando">Semana 3–4 <span class="jor-selo">Resultados visíveis em 30 dias</span></p>
             <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Transformação</strong></h3>
             <p class="jor-texto">Em até 30 dias, os resultados já aparecem no espelho.</p>
@@ -916,8 +931,8 @@
               <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Pele com aparência mais jovem.</span></li>
               <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Viço e maciez renovados.</span></li>
             </ul>
-          </article>
-          <article class="jor-painel" role="tabpanel" id="jor-painel-2" aria-labelledby="jor-aba-2" data-jor-painel hidden>
+          </div>
+          <div class="jor-painel" role="tabpanel" id="jor-painel-2" aria-labelledby="jor-aba-2" data-jor-painel hidden>
             <p class="jor-quando">Semana 5–12</p>
             <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Potencialização</strong></h3>
             <p class="jor-texto">Com o uso contínuo, os resultados se intensificam a cada semana.</p>
@@ -926,8 +941,8 @@
               <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Pele mais firme e elástica.</span></li>
               <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Tom mais uniforme e luminoso.</span></li>
             </ul>
-          </article>
-          <article class="jor-painel" role="tabpanel" id="jor-painel-3" aria-labelledby="jor-aba-3" data-jor-painel hidden>
+          </div>
+          <div class="jor-painel" role="tabpanel" id="jor-painel-3" aria-labelledby="jor-aba-3" data-jor-painel hidden>
             <p class="jor-quando">+12 semanas</p>
             <h3 class="jor-nome"><span class="titulo-leve">Período de</span> <strong>Evolução</strong></h3>
             <p class="jor-texto">Resultados consistentes, que continuam evoluindo.</p>
@@ -936,7 +951,7 @@
               <li style="--k:1"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Barreira da pele fortalecida.</span></li>
               <li style="--k:2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg><span>Uma rotina que virou hábito.</span></li>
             </ul>
-          </article>
+          </div>
         </div>
         <p class="jor-dica" aria-hidden="true">Toque nas etapas ou arraste para o lado</p>
       </div>
@@ -1073,7 +1088,7 @@
   <!-- ===================== RODAPÉ ===================== -->
   <footer class="rodape" data-secao="rodape">
     <div class="rodape-dentro">
-      <img class="rodape-logo" src="assets/img/logo-cellive-skin-branco.svg" alt="Cellive Skin" width="157" height="18" loading="lazy">
+      <img class="rodape-logo" src="assets/img/logo-cellive-skin-branco.svg?v=94725db3fb" alt="Cellive Skin" width="157" height="18" loading="lazy">
       <p class="rodape-missao">A beleza da mulher tem que vir de dentro para fora, sem depender de maquiagem. Por isso desenvolvemos soluções para trazer de volta a autoestima que não deveria ter acabado.</p>
 
       <!-- LINK PROVISÓRIO: trocar pelo endereço do Instagram da Cellive Skin -->
@@ -1093,12 +1108,12 @@
 
       <p class="rodape-legal">Informações Corporativas: Cellive Skin • Todos os direitos reservados.<br>Razão Social: WW3 COMERCIO LTDA. CNPJ: 54.984.353/0001-00 — CELLIVE SKIN</p>
     </div>
-    <img class="rodape-marca" src="assets/img/logo-cellive-skin-branco.svg" alt="" width="157" height="18" loading="lazy" aria-hidden="true">
+    <img class="rodape-marca" src="assets/img/logo-cellive-skin-branco.svg?v=94725db3fb" alt="" width="157" height="18" loading="lazy" aria-hidden="true">
   </footer>
 
   <!-- Barra de compra fixa: aparece depois que a pessoa passa do botão "Comprar Agora" -->
   <div class="barra-compra" data-barra-compra aria-hidden="true">
-    <span class="slot barra-compra-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1-mini.webp" alt="" width="160" height="160" loading="lazy" onerror="this.hidden=true"></span>
+    <span class="slot barra-compra-foto" data-label="Produto 1"><img src="assets/img/oferta/produto-1-mini.webp?v=47b8c670d6" alt="" width="160" height="160" loading="lazy" onerror="this.hidden=true"></span>
     <p class="barra-compra-nome">Sérum Revitalizador Noturno</p>
     <a class="barra-compra-botao" href="#planos" tabindex="-1" data-rastreio="barra-compra"><span data-pos>Comprar</span><span data-pre>Garantir</span></a>
   </div>
@@ -1148,9 +1163,9 @@
     </div>
   </dialog>
 
-  <script src="assets/js/oferta.js" defer></script>
-  <script src="assets/js/quiz-perguntas.js" defer></script>
-  <script src="assets/js/oferta-formula.js" defer></script>
-  <script src="assets/js/oferta-avaliacoes.js" defer></script>
+  <script src="assets/min/oferta.js?v=4e19f985d7" defer></script>
+  <script src="assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
+  <script src="assets/min/oferta-formula.js?v=c054566ee7" defer></script>
+  <script src="assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>
 </body>
 </html>

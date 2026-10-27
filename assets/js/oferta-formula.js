@@ -128,8 +128,8 @@
       nome: "Renovação e regeneração", chip: "de renovação", icone: "renova",
       texto: "Aceleram a troca das células e ajudam a pele a se reconstruir.",
       ativos: [
-        { nome: "Retinal", img: A + "retinal.jpg", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
-        { nome: "PDRN", img: A + "pdrn.jpg", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
+        { nome: "Retinal", img: A + "retinal-p.webp", beneficio: "Vitamina A de ação rápida que renova a pele e suaviza rugas" },
+        { nome: "PDRN", img: A + "pdrn-p.webp", beneficio: "Fragmentos de DNA que ajudam a pele a se reparar e regenerar" },
         { nome: "Microespículas", beneficio: "Microespículas naturais que abrem caminho para os ativos irem mais fundo" },
       ],
     },
@@ -137,11 +137,11 @@
       nome: "Peptídeos", chip: "peptídeos", icone: "peptideo",
       texto: "Pequenas cadeias de proteína que dão sinais à pele. Os biomiméticos imitam os sinais que a própria pele produz.",
       ativos: [
-        { nome: "GHK-Cu (peptídeo de cobre)", img: A + "ghk-cu.jpg", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
-        { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8.jpg", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
-        { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4.jpg", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
-        { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7.jpg", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
-        { nome: "EGF", img: A + "exos-skin.jpg", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
+        { nome: "GHK-Cu (peptídeo de cobre)", img: A + "ghk-cu-p.webp", beneficio: "Peptídeo de cobre que estimula o colágeno e devolve a firmeza" },
+        { nome: "Hexapeptídeo-8", img: A + "acetyl-hexapeptide-8-p.webp", beneficio: "Suaviza as linhas de expressão, como as da testa e dos olhos" },
+        { nome: "Pentapeptídeo-4", img: A + "pentapeptide-4-p.webp", beneficio: "Estimula a produção de colágeno e suaviza rugas com o uso contínuo" },
+        { nome: "Tetrapeptídeo-7", img: A + "tetrapeptide-7-p.webp", beneficio: "Acalma a inflamação silenciosa que acelera o envelhecimento" },
+        { nome: "EGF", img: A + "exos-skin-p.webp", beneficio: "Imita o sinal que a própria pele usa para se renovar" },
         { nome: "IGF-1", beneficio: "Imita um sinal da pele que ajuda na sua regeneração" },
         { nome: "VEGF", beneficio: "Imita um sinal da pele que ajuda a nutrir e oxigenar as células" },
         { nome: "Oligopeptídeo-5", beneficio: "Peptídeo biomimético que protege a pele e ajuda no seu reparo" },
@@ -155,17 +155,17 @@
       nome: "Uniformização e luminosidade", chip: "de luminosidade", icone: "luz",
       texto: "Atuam nas manchas e devolvem o brilho natural da pele.",
       ativos: [
-        { nome: "Niacinamida", img: A + "niacinamida.jpg", beneficio: "Vitamina B3 que uniformiza o tom, fortalece a barreira e refina os poros" },
-        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina.jpg", beneficio: "Clareia manchas reduzindo a produção de melanina" },
+        { nome: "Niacinamida", img: A + "niacinamida-p.webp", beneficio: "Vitamina B3 que uniformiza o tom, fortalece a barreira e refina os poros" },
+        { nome: "Alfa-Arbutina", img: A + "alfa-arbutina-p.webp", beneficio: "Clareia manchas reduzindo a produção de melanina" },
         { nome: "Ácido Tranexâmico", beneficio: "Clareia manchas teimosas e uniformiza o tom da pele" },
-        { nome: "Glutationa", img: A + "glutationa.jpg", beneficio: "Antioxidante que protege a pele e deixa o tom mais luminoso" },
+        { nome: "Glutationa", img: A + "glutationa-p.webp", beneficio: "Antioxidante que protege a pele e deixa o tom mais luminoso" },
       ],
     },
     {
       nome: "Hidratação", chip: "de hidratação", icone: "gota",
       texto: "Seguram a água na pele e preenchem as linhas finas.",
       ativos: [
-        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico.jpg", beneficio: "Segura a água na pele e preenche as linhas finas" },
+        { nome: "Ácido Hialurônico", img: A + "acido-hialuronico-p.webp", beneficio: "Segura a água na pele e preenche as linhas finas" },
         { nome: "Hialuronato de Sódio", beneficio: "Molécula menor do ácido hialurônico, que hidrata por mais tempo" },
       ],
     },
@@ -175,7 +175,7 @@
       ativos: [
         { nome: "Bisabolol", beneficio: "Ativo da camomila que acalma a pele e reduz a vermelhidão" },
         { nome: "Extrato de Calêndula", beneficio: "Calmante natural que suaviza irritações e conforta a pele" },
-        { nome: "Vitamina E", img: A + "vitamina-e.jpg", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
+        { nome: "Vitamina E", img: A + "vitamina-e-p.webp", beneficio: "Antioxidante que protege a pele dos radicais livres e do ressecamento" },
       ],
     },
   ];

@@ -44,3 +44,6 @@ console.log("v2.html gerado (" + TROCAS.length + " trocas).");
 
 // prévias do lançamento (oferta/lancamento.html e lancamento.html) ficam sempre em dia
 await import("./gerar-lancamento.mjs");
+
+// CSS/JS compactados e endereços versionados em todas as páginas
+await import("./otimizar.mjs");

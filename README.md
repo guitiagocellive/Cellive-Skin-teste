@@ -96,6 +96,16 @@ publique. Tudo volta como era antes; a tabela do antes/depois está em [LANCAMEN
 
 ## Velocidade
 
+- **CSS e JS compactados e versionados:** `node scripts/otimizar.mjs` gera `assets/min/` (o `oferta.css` de lá
+  já junta style + oferta num arquivo só) e acrescenta `?v=<código>` nos arquivos das páginas. Arquivos com `?v=`
+  ficam guardados no celular por 1 ano (`vercel.json`). **Edite sempre os arquivos de `assets/css` e `assets/js`** e
+  depois rode o script (o `gerar-v2.mjs` e o `gerar-teste-checkout.mjs` já rodam ele no fim).
+- **Fonte da Adobe sem travar a tela:** o CSS da Adobe é lido em segundo plano e ganha `font-display: swap`; enquanto
+  a Acumin não chega, o texto usa uma Arial ajustada para ocupar o mesmo espaço (`acumin-reserva` no `style.css`),
+  então nada pula quando a fonte troca. O contador da Adobe continua.
+- **Galeria:** fotos em 720 px e 900 px (o celular escolhe pela tela, `srcset`); arrasta com o dedo e passa sozinha a
+  cada 4 s (pausa quando a pessoa mexe, sai da tela ou troca de aba). Ícones dos ativos em `*-p.webp` (112 px).
+
 - **Primeira dobra primeiro:** a foto principal da oferta é pré-carregada (`preload` com `fetchpriority="high"`) e
   todos os scripts usam `defer`, para não atrasar o desenho da tela.
 - **O resto depois:** as fotos grandes da galeria (2 a 7) só baixam quando a pessoa mexe na galeria (a 2ª baixa
