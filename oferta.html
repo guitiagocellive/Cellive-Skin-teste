@@ -28,7 +28,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=52f4c355b0">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=d3c53906f7">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
@@ -171,69 +171,71 @@
         <p class="pre-texto">O Sérum ainda não foi lançado. Garanta seu lugar no grupo VIP do WhatsApp: quem está no grupo compra primeiro e recebe cupom de desconto.</p>
       </div>
 
-      <!-- Planos: textos, preços e links de checkout ficam nos atributos data- -->
+      <!-- Planos: textos, preços e links de checkout ficam nos atributos data-
+           (data-parcela = valor de cada parcela em 12x; data-de = preço sem desconto) -->
       <div class="planos" role="radiogroup" aria-label="Planos">
-        <label class="plano" data-resumo="1 UNIDADE – 30 DIAS" data-parcela="R$ 35,90" data-avista="R$ 197,90" data-link="#">
+        <label class="plano" data-resumo="1 UNIDADE – 30 DIAS" data-avista="R$ 197,90" data-parcela="R$ 16,49" data-de="" data-off="" data-economia="" data-qtd="1 frasco · 30 dias" data-link="#">
           <input type="radio" name="plano" value="1">
+          <span class="plano-brilho" aria-hidden="true"></span>
           <span class="plano-radio" aria-hidden="true"></span>
           <span class="plano-info">
             <span class="plano-nome">1 Unidade</span>
-            <span class="plano-frasco">R$ 197,90/frasco</span>
+            <span class="plano-sub">30 dias<span class="plano-frasco"> · <span>R$ 197,90/frasco</span></span></span>
           </span>
-          <span class="plano-preco">
-            <strong>R$ 197,90</strong>
-            <span>12X DE R$ 35,90</span>
-          </span>
-          <span class="plano-tags">
-            <span class="tag tag-dias">30 dias</span>
-            <span class="tag tag-frete">Frete grátis</span>
+          <span class="plano-dir">
+            <span class="plano-eco is-cheio">Preço cheio</span>
+            <strong class="plano-total">R$ 197,90</strong>
+            <span class="plano-chip">Frete grátis</span>
           </span>
         </label>
 
-        <label class="plano is-selecionado" data-resumo="2 UNIDADES – 60 DIAS" data-parcela="R$ 35,90" data-avista="R$ 297,90" data-link="#">
+        <label class="plano is-selecionado" data-resumo="2 UNIDADES – 60 DIAS" data-avista="R$ 297,90" data-parcela="R$ 24,83" data-de="R$ 395,80" data-off="24% OFF" data-economia="R$ 97,90" data-qtd="2 frascos · 60 dias" data-link="#">
           <input type="radio" name="plano" value="2" checked>
+          <span class="plano-selo">Mais vendido</span>
+          <span class="plano-brilho" aria-hidden="true"></span>
           <span class="plano-radio" aria-hidden="true"></span>
           <span class="plano-info">
             <span class="plano-nome">2 Unidades</span>
-            <span class="plano-frasco">R$ 148,95/frasco</span>
+            <span class="plano-sub">60 dias<span class="plano-frasco"> · <span>R$ 148,95/frasco</span></span></span>
           </span>
-          <span class="plano-preco">
-            <span class="tag tag-off">24% OFF</span>
-            <strong>R$ 297,90</strong>
-            <span>12X DE R$ 35,90</span>
-          </span>
-          <span class="plano-tags">
-            <span class="tag tag-dias">60 dias</span>
-            <span class="tag tag-frete">Frete grátis</span>
-            <span class="tag tag-vendido">Mais vendido</span>
+          <span class="plano-dir">
+            <span class="plano-eco">Economize R$ 97,90</span>
+            <strong class="plano-total">R$ 297,90</strong>
+            <span class="plano-chip">Frete grátis</span>
           </span>
         </label>
 
-        <label class="plano" data-resumo="3 UNIDADES – 90 DIAS" data-parcela="R$ 35,90" data-avista="R$ 397,90" data-link="#">
+        <label class="plano" data-resumo="3 UNIDADES – 90 DIAS" data-avista="R$ 397,90" data-parcela="R$ 33,16" data-de="R$ 593,70" data-off="33% OFF" data-economia="R$ 195,80" data-qtd="3 frascos · 90 dias" data-link="#">
           <input type="radio" name="plano" value="3">
+          <span class="plano-selo is-claro">Mais econômico</span>
+          <span class="plano-brilho" aria-hidden="true"></span>
           <span class="plano-radio" aria-hidden="true"></span>
           <span class="plano-info">
             <span class="plano-nome">3 Unidades</span>
-            <span class="plano-frasco">R$ 132,63/frasco</span>
+            <span class="plano-sub">90 dias<span class="plano-frasco"> · <span>R$ 132,63/frasco</span></span></span>
           </span>
-          <span class="plano-preco">
-            <span class="tag tag-off">33% OFF</span>
-            <strong>R$ 397,90</strong>
-            <span>12X DE R$ 35,90</span>
-          </span>
-          <span class="plano-tags">
-            <span class="tag tag-dias">90 dias</span>
-            <span class="tag tag-frete">Frete grátis</span>
-            <span class="tag tag-economico">Mais econômico</span>
+          <span class="plano-dir">
+            <span class="plano-eco">Economize R$ 195,80</span>
+            <strong class="plano-total">R$ 397,90</strong>
+            <span class="plano-chip">Frete grátis</span>
           </span>
         </label>
       </div>
 
-      <!-- Resumo do plano escolhido -->
+      <!-- Resumo do plano escolhido (o oferta.js preenche ao trocar de kit) -->
       <div class="resumo" aria-live="polite" data-pos>
-        <p class="resumo-plano" data-resumo-plano>2 UNIDADES – 60 DIAS</p>
-        <p class="resumo-parcela">12x de <strong data-resumo-parcela>R$ 35,90</strong></p>
-        <p class="resumo-avista">ou <strong data-resumo-avista>R$ 297,90</strong> à vista</p>
+        <ul class="resumo-lista">
+          <li><span>Frete <b>grátis</b> para todo o Brasil</span></li>
+          <li data-resumo-ganho><span><b>24% OFF</b> · você economiza <b>R$ 97,90</b></span></li>
+          <li><span>Garantia de <b>30 dias</b></span></li>
+        </ul>
+        <div class="resumo-total">
+          <span class="resumo-rot">Total</span>
+          <span class="resumo-valores">
+            <span class="resumo-parcela">12x de <strong data-resumo-parcela>R$ 24,83</strong></span>
+            <span class="resumo-avista">ou <span data-resumo-avista>R$ 297,90</span> à vista<span data-resumo-de> · de R$ 395,80</span></span>
+          </span>
+        </div>
       </div>
 
       <p class="pre-resumo" data-pre>Preço especial de lançamento só para quem estiver no grupo.</p>
@@ -1163,7 +1165,7 @@
     </div>
   </dialog>
 
-  <script src="assets/min/oferta.js?v=4e19f985d7" defer></script>
+  <script src="assets/min/oferta.js?v=8aab910be7" defer></script>
   <script src="assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
   <script src="assets/min/oferta-formula.js?v=c054566ee7" defer></script>
   <script src="assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>
