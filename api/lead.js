@@ -47,6 +47,8 @@ export async function POST(request) {
   if (c.aceite !== true) return json({ ok: false, erro: "aceite" }, 400);
 
   if (process.env.VERCEL_ENV === "preview") return json({ ok: true, previa: true, grupo: grupo() });
+  // página de teste (op.celliveskin.com/teste): valida, mas não grava na lista
+  if (new URL(request.url).searchParams.get("teste") === "1") return json({ ok: true, teste: true, grupo: grupo() });
 
   let q;
   try { q = await banco(); } catch (e) { q = null; }
