@@ -41,3 +41,6 @@ if (faltando.length) {
 html = html.replace("<!doctype html>", "<!doctype html>\n<!-- GERADO por scripts/gerar-v2.mjs a partir do oferta.html. Não edite aqui: edite o oferta.html e rode o script. -->");
 await writeFile(new URL("v2.html", RAIZ), html);
 console.log("v2.html gerado (" + TROCAS.length + " trocas).");
+
+// prévias do lançamento (oferta/lancamento.html e lancamento.html) ficam sempre em dia
+await import("./gerar-lancamento.mjs");

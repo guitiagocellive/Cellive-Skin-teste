@@ -924,7 +924,7 @@
       '<text class="rotulo-parte rotulo-forte" style="--d:3" x="6" y="99">RETINALDEÍDO 0,05%</text>' +
       // Logo na vertical (de baixo para cima)
       '<g class="rotulo-parte" style="--d:4"><g transform="translate(5.3 148.6) rotate(-90)">' +
-        '<image href="assets/img/logo-cellive-skin-branco.svg" x="0" y="0" width="44" height="4.96"/>' +
+        '<image href="/assets/img/logo-cellive-skin-branco.svg" x="0" y="0" width="44" height="4.96"/>' +
       "</g></g>" +
       '<g class="rotulo-parte" style="--d:4">' +
         '<text class="rotulo-mini" x="44.2" y="155" text-anchor="end">30ml</text>' +

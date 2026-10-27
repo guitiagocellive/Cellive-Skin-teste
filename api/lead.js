@@ -8,7 +8,7 @@
    Na prévia (link de teste da Vercel) nada é gravado, como acontece com os eventos. */
 import { autorizado, banco, json } from "./_db.js";
 
-const GRUPO_PADRAO = "";
+const GRUPO_PADRAO = "https://chat.whatsapp.com/Fqv8LHoWwSMLHKpRPWGr7b";
 
 const corta = (v, n) => (v == null ? null : String(v).trim().slice(0, n) || null);
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/;
