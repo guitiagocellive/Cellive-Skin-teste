@@ -4140,15 +4140,29 @@
 }
 
 /* rótulo "30 dias" no gráfico */
+/* rótulos de dias: claros; o da etapa escolhida fica preto */
 .graf-rotulo rect {
-  fill: var(--ink);
+  fill: var(--white);
+  stroke: var(--gray-light);
+  stroke-width: 1;
+  transition: fill 0.35s ease, stroke 0.35s ease;
 }
 
 .graf-rotulo text {
-  fill: var(--white);
+  fill: var(--gray);
   font-family: var(--font);
   font-size: 10px;
   font-weight: 700;
+  transition: fill 0.35s ease;
+}
+
+.graf-rotulo.is-ativo rect {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+
+.graf-rotulo.is-ativo text {
+  fill: var(--white);
 }
 
 /* ---------- Dobra 21: principais dúvidas (sacola em cima) ---------- */
