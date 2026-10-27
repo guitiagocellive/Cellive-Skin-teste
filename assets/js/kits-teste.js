@@ -1,9 +1,10 @@
-/* Escolha do kit — versões de TESTE (só nas páginas teste-checkout-1 a 4).
+/* Escolha do kit — versões de TESTE (só nas páginas teste-checkout-1 a 6).
 
    Troca a lista de planos e o resumo de preço pela versão indicada em
    <html data-kit-teste="N">. A escolha continua passando pelos planos
    originais (escondidos): tocar num kit marca o plano correspondente, então
    o "Comprar Agora" segue usando o link de checkout de cada kit.
+   Parcelas: total ÷ 12 (referência; confirmar com a plataforma de pagamento).
    Apagar junto com as páginas de teste. */
 (function () {
   "use strict";
@@ -15,99 +16,98 @@
   if (!versao || !listaOriginal || !comprar) return;
 
   var K = [
-    { n: 1, nome: "1 Unidade", curto: "1 frasco", dias: "30 dias", total: "R$ 197,90", pf: "R$ 197,90", de: null, off: null, ganho: null, tag: null,
-      frase: "Ideal para experimentar", sub: "30 dias para conhecer o sérum e sentir a textura na sua rotina." },
-    { n: 2, nome: "2 Unidades", curto: "2 frascos", dias: "60 dias", total: "R$ 297,90", pf: "R$ 148,95", de: "R$ 395,80", off: "24% OFF", ganho: "R$ 97,90", tag: ["Mais vendido", "ink"],
-      frase: "Para resultados mais visíveis", sub: "60 dias de uso contínuo: tempo para acompanhar a evolução da pele." },
-    { n: 3, nome: "3 Unidades", curto: "3 frascos", dias: "90 dias", total: "R$ 397,90", pf: "R$ 132,63", de: "R$ 593,70", off: "33% OFF", ganho: "R$ 195,80", tag: ["Mais econômico", "claro"],
-      frase: "Mais econômico e resultados mais consistentes", sub: "90 dias de uso contínuo com o menor preço por frasco." },
+    { n: 1, nome: "1 Unidade", curto: "1 frasco", dias: "30 dias", total: "R$ 197,90", pf: "R$ 197,90", de: null, off: null, ganho: null, tag: null, parc: "R$ 16,49" },
+    { n: 2, nome: "2 Unidades", curto: "2 frascos", dias: "60 dias", total: "R$ 297,90", pf: "R$ 148,95", de: "R$ 395,80", off: "24% OFF", ganho: "R$ 97,90", tag: ["Mais vendido", "ink"], parc: "R$ 24,83" },
+    { n: 3, nome: "3 Unidades", curto: "3 frascos", dias: "90 dias", total: "R$ 397,90", pf: "R$ 132,63", de: "R$ 593,70", off: "33% OFF", ganho: "R$ 195,80", tag: ["Mais econômico", "claro"], parc: "R$ 33,16" },
   ];
-  var PARC = "em até 12x no cartão";
   var IC = {
-    pct: '<svg viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="17" r="2.2"/></svg>',
-    frete: '<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
-    escudo: '<svg viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.6-3 7.8-7 9.8-4-2-7-5.2-7-9.8V5.8z"/><path d="m9 12 2 2 4-4"/></svg>',
+    pct: '<svg class="ic" viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="17" r="2.2"/></svg>',
+    frete: '<svg class="ic" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
   };
-  var icone = function (svg) { return svg.replace("<svg ", '<svg class="ic" '); };
 
-  // seleção começa no plano marcado na página (kit 2)
   var marcado = listaOriginal.querySelector("input:checked");
   var sel = marcado ? Number(marcado.value) : 2;
 
-  var tagA = function (k) { return k.tag ? '<span class="tag tag-' + (k.tag[1] === "ink" ? "ink" : "blue") + '">' + k.tag[0] + "</span>" : ""; };
-  var tagB = function (k) { return k.tag ? '<span class="tag t-' + k.tag[1] + '">' + k.tag[0] + "</span>" : ""; };
   var on = function (k) { return k.n === sel ? " on" : ""; };
-  var frascos = function (n) { var s = ""; for (var i = 0; i < n; i++) s += '<img src="/assets/img/oferta/frasco-tampa.webp" alt="">'; return '<div class="frascos n' + n + '">' + s + "</div>"; };
-  var total = function (k) {
-    return '<div class="totlin"><span class="rot">Total</span><span>' + (k.de ? '<span class="de">' + k.de + "</span> " : "") +
-      "<strong>" + k.total + '</strong></span></div><div class="parc">à vista ou ' + PARC + "</div>";
+  var attrs = function (k) { return ' role="radio" tabindex="0" aria-checked="' + (k.n === sel) + '" data-kit="' + k.n + '"'; };
+  var tagCol = function (k) { return k.tag ? '<span class="tag tag-' + (k.tag[1] === "ink" ? "ink" : "blue") + '">' + k.tag[0] + "</span>" : ""; };
+  var tag = function (k) { return k.tag ? '<span class="tag t-' + k.tag[1] + '">' + k.tag[0] + "</span>" : ""; };
+  var grupo = function (cls, itens) { return '<div class="kv ' + cls + ' kt-sel" role="radiogroup" aria-label="Kits">' + itens + "</div>"; };
+
+  /* ---------- resumos ---------- */
+  var checks = function (k) {
+    return '<div class="lin"><span>Frete <b>grátis</b> para todo o Brasil</span></div>' +
+      (k.ganho ? '<div class="lin"><span><b>' + k.off + "</b> · você economiza <b>" + k.ganho + "</b></span></div>"
+               : '<div class="lin"><span><b>' + k.curto + "</b> · " + k.dias + " de tratamento</span></div>") +
+      '<div class="lin"><span>Garantia de <b>30 dias</b></span></div>';
+  };
+  var resumo = function (k, cls) {
+    return '<div class="kv kv-res rs ' + (cls || "") + '">' + checks(k) +
+      '<div class="tot"><span class="rot">Total</span><span class="val">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") +
+      "<strong>" + k.total + '</strong></span></div><div class="parc">ou <b>12x de ' + k.parc + "</b> no cartão</div></div>";
+  };
+  var resumoParcela = function (k) {
+    return '<div class="kv kv-res rs parcgrande">' + checks(k) +
+      '<div class="tot"><span class="rot">Total</span><span class="val"><span class="p12">12x de <b>' + k.parc + "</b></span>" +
+      "<small>ou " + k.total + " à vista" + (k.de ? " · de " + k.de : "") + "</small></span></div></div>";
+  };
+  var resumoNota = function (k) {
+    return '<div class="kv kv-res nota2"><div class="l"><span>' + k.curto + " · " + k.dias + "</span><b>" + (k.de || k.total) + "</b></div>" +
+      (k.ganho ? '<div class="l d"><span>Desconto do kit (' + k.off.replace(" OFF", "") + ")</span><b>− " + k.ganho + "</b></div>" : "") +
+      '<div class="l"><span>Frete</span><b>Grátis</b></div><div class="l"><span>Garantia</span><b>30 dias</b></div>' +
+      '<div class="t"><span>Total</span><strong>' + k.total + '</strong></div><div class="p">ou <b>12x de ' + k.parc + "</b> no cartão</div></div>";
   };
 
+  /* ---------- seleções ---------- */
   var colunas = function () {
-    return '<div class="kv s2 kt-sel" role="radiogroup" aria-label="Kits">' + K.map(function (k) {
-      return '<div class="k' + on(k) + '" role="radio" tabindex="0" aria-checked="' + (k.n === sel) + '" data-kit="' + k.n + '">' + tagA(k) +
+    return grupo("s2", K.map(function (k) {
+      return '<div class="k' + on(k) + '"' + attrs(k) + ">" + tagCol(k) +
         '<div class="num">' + k.n + '</div><div class="un">' + (k.n > 1 ? "Frascos" : "Frasco") + '</div><div class="dias">' + k.dias + "</div>" +
         '<div class="pf">' + k.pf + '</div><div class="pfl">por frasco</div><div class="off">' + (k.off ? '<span class="tag tag-off">' + k.off + "</span>" : "") + "</div></div>";
-    }).join("") + "</div>";
+    }).join(""));
+  };
+  var cartoes = function () {
+    return grupo("g", K.map(function (k) {
+      return '<div class="k' + on(k) + '"' + attrs(k) + ">" + tag(k) +
+        '<div class="topo"><span class="radio"></span><div class="info"><div class="nome">' + k.nome + '</div><div class="sub">' + k.dias + " · " + k.pf + "/frasco</div></div>" +
+        '<div class="preco">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + "<strong>" + k.total + "</strong></div></div>" +
+        '<div class="benes"><span class="bene">' + IC.frete + "Frete grátis</span>" +
+        (k.off ? '<span class="bene forte">' + IC.pct + k.off + '</span><span class="bene">Economize ' + k.ganho + "</span>" : '<span class="bene">Preço cheio</span>') + "</div></div>";
+    }).join(""));
+  };
+  var compactos = function () {
+    return grupo("c3", K.map(function (k) {
+      return '<div class="k' + on(k) + '"' + attrs(k) + ">" + tag(k) + '<span class="radio"></span><div class="nome">' + k.nome + "</div>" +
+        '<div class="preco">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + "<strong>" + k.total + "</strong></div>" +
+        '<div class="bl"><span>' + IC.frete + "Frete grátis</span><span>" + k.dias + "</span>" +
+        (k.off ? "<span><b>" + k.off + " · −" + k.ganho + "</b></span>" : "<span>" + k.pf + "/frasco</span>") + "</div></div>";
+    }).join(""));
+  };
+  var economia = function () {
+    return grupo("c5", K.map(function (k) {
+      return '<div class="k' + on(k) + '"' + attrs(k) + ">" + tag(k) + '<span class="radio"></span><div class="info"><div class="nome">' + k.nome + "</div>" +
+        '<div class="sub">' + k.dias + " · " + k.pf + '/frasco</div></div><div class="dir"><span class="ec' + (k.ganho ? "" : " zero") + '">' +
+        (k.ganho ? "Economize " + k.ganho : "Preço cheio") + "</span><small>" + k.total + "</small></div></div>";
+    }).join(""));
+  };
+  var emPreto = function () {
+    return grupo("c8", K.map(function (k) {
+      return '<div class="k' + on(k) + '"' + attrs(k) + ">" + tag(k) + '<span class="radio"></span><div class="info"><div class="nome">' + k.nome + "</div>" +
+        '<div class="sub">' + k.dias + " · " + k.pf + '/frasco</div><div class="chips"><span>Frete grátis</span>' + (k.off ? '<span class="forte">' + k.off + "</span>" : "") + "</div></div>" +
+        '<div class="preco">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + "<strong>" + k.total + "</strong></div></div>";
+    }).join(""));
   };
 
   var V = {
-    // 1: três colunas + "por que esse kit"
-    1: {
-      sel: colunas,
-      res: function (k) {
-        return '<div class="kv kv-res r1"><div class="proposito">' + k.frase + '</div><div class="sub">' + k.sub + '</div><ul class="ck">' +
-          "<li><span><b>" + k.curto + "</b> · " + k.dias + " de tratamento</span></li>" +
-          (k.ganho ? "<li><span>Você economiza <b>" + k.ganho + "</b> (" + k.off + ")</span></li>" : "") +
-          "<li><span><b>Frete grátis</b> para todo o Brasil</span></li><li><span>Garantia de <b>30 dias</b></span></li></ul>" +
-          '<div class="totbox">' + total(k) + "</div></div>";
-      },
-    },
-    // 2: três colunas + frase e vantagens
-    2: {
-      sel: colunas,
-      res: function (k) {
-        return '<div class="kv kv-res r3"><div class="frase"><div class="proposito">' + k.frase + "</div><small>" + k.sub + "</small></div>" +
-          '<div class="ganhos"><div class="' + (k.ganho ? "forte" : "") + '">' + IC.pct + "<b>" + (k.ganho ? "−" + k.ganho : "Preço cheio") + "</b><small>" + (k.off || "sem desconto") + "</small></div>" +
-          "<div>" + IC.frete + "<b>Grátis</b><small>frete</small></div><div>" + IC.escudo + "<b>30 dias</b><small>de garantia</small></div></div>" +
-          '<div class="centro">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + "<strong>" + k.total + "</strong><div>à vista ou " + PARC + "</div></div></div>";
-      },
-    },
-    // 3: cartões com benefícios + bloco preto
-    3: {
-      sel: function () {
-        return '<div class="kv g kt-sel" role="radiogroup" aria-label="Kits">' + K.map(function (k) {
-          return '<div class="k' + on(k) + '" role="radio" tabindex="0" aria-checked="' + (k.n === sel) + '" data-kit="' + k.n + '">' + tagB(k) +
-            '<div class="topo"><span class="radio"></span><div class="info"><div class="nome">' + k.nome + '</div><div class="sub">' + k.dias + " · " + k.pf + "/frasco</div></div>" +
-            '<div class="preco">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + "<strong>" + k.total + "</strong></div></div>" +
-            '<div class="benes"><span class="bene">' + icone(IC.frete) + "Frete grátis</span>" +
-            (k.off ? '<span class="bene forte">' + icone(IC.pct) + k.off + '</span><span class="bene">Economize ' + k.ganho + "</span>" : '<span class="bene">Preço cheio</span>') + "</div></div>";
-        }).join("") + "</div>";
-      },
-      res: function (k) {
-        return '<div class="kv kv-res resG"><div class="esq"><small>Seu kit</small><b>' + k.nome + " · " + k.dias + "</b><small>Frete grátis · " + PARC + "</small></div>" +
-          '<div class="dir"><strong>' + k.total + "</strong><small>" + (k.ganho ? "você economiza " + k.ganho : "frete grátis") + "</small></div></div>";
-      },
-    },
-    // 4: colunas com os frascos + "você economiza"
-    4: {
-      sel: function () {
-        return '<div class="kv v2c kt-sel" role="radiogroup" aria-label="Kits">' + K.map(function (k) {
-          return '<div class="k' + on(k) + '" role="radio" tabindex="0" aria-checked="' + (k.n === sel) + '" data-kit="' + k.n + '">' + tagB(k) + frascos(k.n) +
-            '<div class="nome">' + k.nome + '</div><div class="total">' + k.total + '</div><div class="pf">' + k.pf + "/frasco</div>" +
-            '<div class="off">' + (k.off ? '<span class="tag ' + (k.n === sel ? "t-ink" : "t-cinza") + '">' + k.off + "</span>" : '<span class="tag t-cinza">Frete grátis</span>') + "</div></div>";
-        }).join("") + "</div>";
-      },
-      res: function (k) {
-        return '<div class="kv kv-res res2">' + (k.ganho ? '<span class="eco">' + icone(IC.pct) + "Você economiza " + k.ganho + "</span>" : '<span class="eco">' + icone(IC.frete) + "Frete grátis incluso</span>") +
-          '<div class="total">' + (k.de ? '<span class="de">' + k.de + "</span>" : "") + k.total + '</div><div class="parc">à vista ou ' + PARC + "</div>" +
-          '<div class="selos"><span>' + icone(IC.frete) + "Frete grátis</span><span>" + icone(IC.escudo) + "Garantia de 30 dias</span></div></div>";
-      },
-    },
+    1: { sel: colunas, res: function (k) { return resumo(k); } },          // três colunas + lista de vantagens
+    2: { sel: colunas, res: resumoNota },                                   // três colunas + nota do pedido
+    3: { sel: cartoes, res: function (k) { return resumo(k); } },          // cartões com benefícios
+    4: { sel: compactos, res: function (k) { return resumo(k, "escuro"); } }, // cartões compactos + bloco preto
+    5: { sel: economia, res: resumoParcela },                               // economia + parcela em destaque
+    6: { sel: emPreto, res: function (k) { return resumo(k); } },          // escolhido em preto
   }[versao];
   if (!V) return;
 
-  // esconde a lista e o resumo originais (continuam na página, por trás)
   listaOriginal.classList.add("kt-oculto");
   Array.prototype.forEach.call(secao.querySelectorAll(".resumo, .pre-resumo"), function (e) { e.classList.add("kt-oculto"); });
 
@@ -131,7 +131,6 @@
   function escolher(n) {
     if (n === sel) return;
     sel = n;
-    // marca o plano original: o "Comprar Agora" usa o checkout desse kit
     var input = listaOriginal.querySelector('input[value="' + n + '"]');
     if (input) { input.checked = true; input.dispatchEvent(new Event("change", { bubbles: true })); }
     desenhar(true);
