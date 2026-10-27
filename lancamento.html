@@ -30,7 +30,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="/assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="/assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, /assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/min/oferta.css?v=61a3fa7e2b">
+  <link rel="stylesheet" href="/assets/min/oferta.css?v=7ea5558076">
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -45,25 +45,10 @@
   </div>
 
   <!-- Logo (fica fixo no topo ao rolar) -->
-  <!-- Topo: logo no meio e o menu (três tracinhos) ao lado. Ao rolar, vira um balão de
-       vidro. O menu leva direto às seções (assets/js/oferta.js). -->
   <header class="oferta-topo" data-topo>
-    <div class="topo-balao">
-      <button type="button" class="topo-menu" data-menu-botao aria-label="Abrir o menu" aria-expanded="false" aria-controls="menu-secoes">
-        <span></span><span></span><span></span>
-      </button>
-      <a class="brand" href="/" aria-label="Cellive Skin">
-        <img src="/assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="Cellive Skin" width="157" height="18">
-      </a>
-      <span class="topo-lado" aria-hidden="true"></span>
-    </div>
-    <nav class="menu-secoes" id="menu-secoes" data-menu aria-label="Seções da página" hidden>
-      <a href="#formula" data-menu-ir><span>Conheça a fórmula</span></a>
-      <a href="#planos" data-menu-ir><span>Quero comprar</span></a>
-      <a href="#acao-srrp" data-menu-ir><span>Ação SRRP</span></a>
-      <a href="#avaliacoes" data-menu-ir><span>Avaliações</span></a>
-      <a href="#duvidas" data-menu-ir><span>Principais dúvidas</span></a>
-    </nav>
+    <a class="brand" href="/" aria-label="Cellive Skin">
+      <img src="/assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="Cellive Skin" width="157" height="18">
+    </a>
   </header>
 
   <main class="oferta">
@@ -368,7 +353,7 @@
 
     <!-- ===================== DOBRA 7: a fórmula (versão sem quiz) =====================
          Montada pelo /assets/js/oferta-formula.js com os ativos e seus benefícios. -->
-    <section data-secao="formula" class="oferta-formula" id="formula" aria-labelledby="fp-titulo">
+    <section data-secao="formula" class="oferta-formula" aria-labelledby="fp-titulo">
       <p class="fp-chamada">O que tem dentro</p>
       <h2 class="secao-titulo fp-titulo" id="fp-titulo">
         <span class="titulo-leve">Uma fórmula</span> <strong>completa</strong>
@@ -407,7 +392,7 @@
 
     <!-- ===================== DOBRA 8: ação SRRP =====================
          Medidas copiadas da imagem de referência (739 px de largura). -->
-    <section data-secao="srrp" class="oferta-srrp" id="acao-srrp" data-srrp aria-labelledby="srrp-titulo">
+    <section data-secao="srrp" class="oferta-srrp" data-srrp aria-labelledby="srrp-titulo">
       <!-- Marca d'água "CELLIVE SKIN" na vertical -->
       <img class="srrp-marca" src="/assets/img/logo-cellive-skin.svg?v=063e8d2db7" alt="" width="157" height="18" aria-hidden="true">
       <!-- Frasco: entra pela esquerda conforme a página rola e para na diagonal -->
@@ -1036,7 +1021,7 @@
     </section>
 
     <!-- ===================== DOBRA 22: avaliação dos clientes ===================== -->
-    <section data-secao="avaliacoes" class="oferta-avaliacoes" id="avaliacoes" aria-labelledby="aval-titulo">
+    <section data-secao="avaliacoes" class="oferta-avaliacoes" aria-labelledby="aval-titulo">
       <h2 class="secao-titulo aval-titulo" id="aval-titulo" data-revelar="palavras">
         <span class="titulo-leve">Avaliação dos</span> <strong>clientes</strong>
       </h2>
@@ -1162,7 +1147,7 @@
     </div>
   </dialog>
 
-  <script src="/assets/min/oferta.js?v=71f11d479b" defer></script>
+  <script src="/assets/min/oferta.js?v=13b676af16" defer></script>
   <script src="/assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
   <script src="/assets/min/oferta-formula.js?v=c054566ee7" defer></script>
   <script src="/assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>
