@@ -557,8 +557,9 @@
 }
 
 /* Planos: cartões com a economia à direita.
-   Brilho só nos selos "Mais vendido" e "Mais econômico"; ao tocar num kit, ele
-   dá um pulinho e a parcela corre até o valor novo. Quem pede "menos movimento"
+   Brilho só nos selos "Mais vendido" e "Mais econômico"; o kit escolhido ganha
+   uma sombra azulada. Ao tocar num kit, ele dá um pulinho, a parcela corre até
+   o valor novo e as linhas do resumo que mudaram ficam azuis e são "redigitadas". Quem pede "menos movimento"
    no aparelho vê tudo parado. */
 .planos {
   display: flex;
@@ -581,6 +582,27 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: border-color 0.25s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* sombra azulada em volta do kit escolhido */
+.planos {
+  isolation: isolate;
+}
+
+.plano::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 0 5px rgba(177, 199, 222, 0.45), 0 14px 30px rgba(26, 26, 26, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.plano.is-selecionado::after {
+  opacity: 1;
 }
 
 .plano:active {
@@ -796,6 +818,48 @@
   color: var(--ink);
 }
 
+.resumo-lista li {
+  position: relative;
+  isolation: isolate;
+}
+
+.resumo-lista li > span,
+.resumo-lista li b {
+  transition: color 0.5s ease;
+}
+
+.resumo-lista li.is-novo > span,
+.resumo-lista li.is-novo b {
+  color: var(--blue-ink);
+  transition: none;
+}
+
+/* faixa azul clarinha que abre por trás da linha e some */
+.resumo-lista li::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 22px;
+  right: -6px;
+  z-index: -1;
+  border-radius: 8px;
+  background: var(--blue-soft);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+}
+
+.resumo-lista li.is-novo::after {
+  animation: resumo-realce 1.3s ease-out;
+}
+
+@keyframes resumo-realce {
+  0% { transform: scaleX(0); opacity: 1; }
+  30% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
 .resumo-total {
   display: flex;
   justify-content: space-between;
@@ -806,11 +870,31 @@
   border-top: 1px solid var(--gray-mist);
 }
 
+.resumo-esq {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
 .resumo-rot {
   font-family: var(--font-condensed);
   font-size: 17px;
   font-weight: 700;
+  line-height: 1;
   text-transform: uppercase;
+}
+
+/* preço sem desconto, riscado, separado do valor à vista */
+.resumo-de {
+  color: var(--gray);
+  font-size: 13px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.resumo-de[hidden] {
+  display: none;
 }
 
 .resumo-valores {
@@ -863,6 +947,8 @@
   .plano,
   .plano-selo::after,
   .plano-radio::after,
+  .plano::after,
+  .resumo-lista li::after,
   .resumo .resumo-parcela strong,
   .resumo .resumo-avista {
     animation: none !important;

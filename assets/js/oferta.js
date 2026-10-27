@@ -157,7 +157,7 @@
   /* ---------- Planos ---------- */
   var planos = document.querySelectorAll(".plano");
   var resumo = document.querySelector(".resumo");
-  var resumoGanho = document.querySelector("[data-resumo-ganho]");
+  var resumoLista = document.querySelector("[data-resumo-lista]");
   var resumoParcela = document.querySelector("[data-resumo-parcela]");
   var resumoAvista = document.querySelector("[data-resumo-avista]");
   var resumoDe = document.querySelector("[data-resumo-de]");
@@ -167,7 +167,6 @@
   // "R$ 24,83" -> 24.83 e volta
   var paraNumero = function (t) { return parseFloat(String(t).replace(/[^\d,]/g, "").replace(",", ".")) || 0; };
   var paraReais = function (n) { return "R$ " + n.toFixed(2).replace(".", ","); };
-  var negrito = function (t) { var b = document.createElement("b"); b.textContent = t; return b; };
 
   // a parcela "corre" do valor antigo até o novo
   var contagemParcela = 0;
@@ -182,6 +181,82 @@
       resumoParcela.textContent = t < 1 ? paraReais(de + (ate - de) * suave) : texto;
       if (t < 1) contagemParcela = requestAnimationFrame(passo);
     })(inicio);
+  }
+
+  /* Benefícios de cada kit. Cada linha é uma lista de pedaços [texto, negrito?].
+     Kit sem desconto: 3 linhas. Kits com desconto: o desconto e a economia
+     aparecem em linhas próprias, para a pessoa ver que leva mais. */
+  function beneficios(plano) {
+    var off = plano.getAttribute("data-off");
+    var economia = plano.getAttribute("data-economia");
+    var qtd = (plano.getAttribute("data-qtd") || "").split(" · ");
+    var linhas = [["frete", [["Frete "], ["grátis", 1], [" para todo o Brasil"]]]];
+    if (off && economia) {
+      linhas.push(["off", [[off, 1], [" em cada frasco"]]]);
+      linhas.push(["eco", [["Você economiza "], [economia, 1]]]);
+    }
+    linhas.push(["qtd", [[qtd[0], 1], [qtd[1] ? " · " + qtd[1] + " de tratamento" : ""]]]);
+    linhas.push(["gar", [["Garantia de "], ["30 dias", 1]]]);
+    return linhas;
+  }
+
+  // escreve os pedaços no <span>; com "ate", só os primeiros caracteres (efeito de digitação)
+  function escrever(span, pedacos, ate) {
+    span.textContent = "";
+    var resto = ate == null ? Infinity : ate;
+    pedacos.forEach(function (p) {
+      if (resto <= 0 || !p[0]) return;
+      var t = p[0].slice(0, resto);
+      resto -= t.length;
+      if (p[1]) { var b = document.createElement("b"); b.textContent = t; span.appendChild(b); }
+      else span.appendChild(document.createTextNode(t));
+    });
+  }
+  var textoDe = function (pedacos) { return pedacos.map(function (p) { return p[0]; }).join(""); };
+
+  // linha nova ou que mudou: fica azul e é "redigitada"
+  function digitar(li, pedacos) {
+    var span = li.firstElementChild;
+    var total = textoDe(pedacos).length;
+    var inicio = performance.now(), duracao = Math.min(520, 16 * total);
+    li.classList.remove("is-novo");
+    void li.offsetWidth; // reinicia o realce
+    li.classList.add("is-novo");
+    clearTimeout(li._azul);
+    li._azul = setTimeout(function () { li.classList.remove("is-novo"); }, 1300);
+    cancelAnimationFrame(li._digita);
+    (function passo(agora) {
+      var t = Math.min(1, (agora - inicio) / duracao);
+      escrever(span, pedacos, t < 1 ? Math.ceil(total * t) : null);
+      if (t < 1) li._digita = requestAnimationFrame(passo);
+    })(inicio);
+  }
+
+  function montarLista(plano, animar) {
+    var atuais = {};
+    Array.prototype.forEach.call(resumoLista.children, function (li) { atuais[li.getAttribute("data-k")] = li; });
+    var algumaDigitando = false;
+    beneficios(plano).forEach(function (linha) {
+      var k = linha[0], pedacos = linha[1];
+      var li = atuais[k];
+      var mudou = !li || li.textContent !== textoDe(pedacos);
+      if (!li) {
+        li = document.createElement("li");
+        li.setAttribute("data-k", k);
+        li.appendChild(document.createElement("span"));
+      }
+      delete atuais[k];
+      resumoLista.appendChild(li); // mantém a ordem
+      if (mudou && animar && !semMovimento) { digitar(li, pedacos); algumaDigitando = true; }
+      else if (mudou) escrever(li.firstElementChild, pedacos);
+    });
+    Object.keys(atuais).forEach(function (k) { resumoLista.removeChild(atuais[k]); });
+    // leitor de tela: lê o resumo só depois da digitação
+    if (algumaDigitando) {
+      resumo.setAttribute("aria-busy", "true");
+      clearTimeout(resumo._ocupado);
+      resumo._ocupado = setTimeout(function () { resumo.removeAttribute("aria-busy"); }, 600);
+    }
   }
 
   var refazer = function (el, classe) {
@@ -202,19 +277,10 @@
       p.classList.toggle("is-selecionado", p === plano);
     });
     var de = plano.getAttribute("data-de");
-    var off = plano.getAttribute("data-off");
-    var economia = plano.getAttribute("data-economia");
-    // linha do meio do resumo: desconto do kit (ou quantidade, no kit sem desconto)
-    var linhaGanho = resumoGanho.firstElementChild;
-    linhaGanho.textContent = "";
-    if (off && economia) {
-      linhaGanho.append(negrito(off), " · você economiza ", negrito(economia));
-    } else {
-      var qtd = (plano.getAttribute("data-qtd") || "").split(" · ");
-      linhaGanho.append(negrito(qtd[0]), qtd[1] ? " · " + qtd[1] + " de tratamento" : "");
-    }
+    montarLista(plano, animar);
     resumoAvista.textContent = plano.getAttribute("data-avista");
-    resumoDe.textContent = de ? " · de " + de : "";
+    resumoDe.textContent = de || "";
+    resumoDe.hidden = !de;
     comprar.href = plano.getAttribute("data-link") || "#";
     if (animar) {
       mostrarParcela(plano.getAttribute("data-parcela"));
