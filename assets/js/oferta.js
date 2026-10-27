@@ -295,9 +295,43 @@
     if (window.CelliveRastreio) window.CelliveRastreio.evento(tipo, dados);
   };
 
+  /* Ao escolher um kit, a página se ajusta para mostrar na mesma tela os kits,
+     o resumo, o botão de compra, os selos de confiança e a nota das avaliações.
+     Se não couber tudo, vai tirando do que é menos importante: primeiro os
+     outros kits, depois a nota, depois os selos. Se já está tudo à vista, não mexe. */
+  var secaoPlanos = document.getElementById("planos");
+  var topoFixo = document.querySelector("[data-topo]");
+  function enquadrar(plano) {
+    if (!secaoPlanos) return;
+    var folga = 10;
+    var cima = Math.max(0, topoFixo ? topoFixo.getBoundingClientRect().bottom : 0) + folga;
+    var baixo = window.innerHeight - folga;
+    var espaco = baixo - cima;
+    var visivel = function (el) { return el && el.getClientRects().length ? el : null; };
+    var alto = function (el) { return el.getBoundingClientRect().top - 14; }; // 14 = selo em cima do cartão
+    var fim = function (el) { return el.getBoundingClientRect().bottom; };
+    var inicioKits = alto(planos[0]);
+    var inicioEscolhido = alto(plano);
+    var fins = [secaoPlanos.querySelector(".avaliacao"), secaoPlanos.querySelector(".confianca"), comprar]
+      .filter(visivel).map(fim);
+    var opcoes = [];
+    fins.forEach(function (f) { opcoes.push([inicioKits, f], [inicioEscolhido, f]); });
+    var escolha = null;
+    for (var i = 0; i < opcoes.length; i++) {
+      if (opcoes[i][1] - opcoes[i][0] <= espaco) { escolha = opcoes[i]; break; }
+    }
+    // nem o kit escolhido + botão cabem (tela muito baixa): mostra o botão embaixo
+    if (!escolha) escolha = [fins[fins.length - 1] - espaco, fins[fins.length - 1]];
+    if (escolha[0] >= cima && escolha[1] <= baixo) return; // já está tudo na tela
+    // centraliza o pedaço escolhido no espaço livre
+    var desloca = escolha[0] - cima - (espaco - (escolha[1] - escolha[0])) / 2;
+    window.scrollTo({ top: Math.max(0, window.scrollY + desloca), behavior: semMovimento ? "auto" : "smooth" });
+  }
+
   Array.prototype.forEach.call(planos, function (plano) {
     plano.querySelector("input").addEventListener("change", function () {
       escolher(plano, true);
+      enquadrar(plano);
       rastrear("plano", { val: plano.querySelector("input").value });
     });
   });
