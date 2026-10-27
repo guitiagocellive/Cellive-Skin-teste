@@ -156,19 +156,93 @@
 
   /* ---------- Planos ---------- */
   var planos = document.querySelectorAll(".plano");
-  var resumoPlano = document.querySelector("[data-resumo-plano]");
+  var listaPlanos = document.querySelector(".planos");
+  var resumo = document.querySelector(".resumo");
+  var resumoGanho = document.querySelector("[data-resumo-ganho]");
   var resumoParcela = document.querySelector("[data-resumo-parcela]");
   var resumoAvista = document.querySelector("[data-resumo-avista]");
+  var resumoDe = document.querySelector("[data-resumo-de]");
   var comprar = document.querySelector("[data-comprar]");
+  var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function escolher(plano) {
+  // "R$ 24,83" -> 24.83 e volta
+  var paraNumero = function (t) { return parseFloat(String(t).replace(/[^\d,]/g, "").replace(",", ".")) || 0; };
+  var paraReais = function (n) { return "R$ " + n.toFixed(2).replace(".", ","); };
+  var negrito = function (t) { var b = document.createElement("b"); b.textContent = t; return b; };
+
+  // a parcela "corre" do valor antigo até o novo
+  var contagemParcela = 0;
+  function mostrarParcela(texto) {
+    var de = paraNumero(resumoParcela.textContent), ate = paraNumero(texto);
+    cancelAnimationFrame(contagemParcela);
+    if (semMovimento || !de || !ate || de === ate) { resumoParcela.textContent = texto; return; }
+    var inicio = performance.now(), duracao = 450;
+    (function passo(agora) {
+      var t = Math.min(1, (agora - inicio) / duracao);
+      var suave = 1 - Math.pow(1 - t, 3);
+      resumoParcela.textContent = t < 1 ? paraReais(de + (ate - de) * suave) : texto;
+      if (t < 1) contagemParcela = requestAnimationFrame(passo);
+    })(inicio);
+  }
+
+  var refazer = function (el, classe) {
+    if (!el || semMovimento) return;
+    el.classList.remove(classe);
+    void el.offsetWidth; // reinicia a animação
+    el.classList.add(classe);
+  };
+  Array.prototype.forEach.call([resumo, resumoGanho].concat(Array.prototype.slice.call(planos)), function (el) {
+    if (el) el.addEventListener("animationend", function (ev) {
+      if (ev.target !== el) return;
+      el.classList.remove("is-trocando", "is-realce", "is-escolhendo");
+    });
+  });
+
+  function escolher(plano, animar) {
     Array.prototype.forEach.call(planos, function (p) {
       p.classList.toggle("is-selecionado", p === plano);
     });
-    resumoPlano.textContent = plano.getAttribute("data-resumo");
-    resumoParcela.textContent = plano.getAttribute("data-parcela");
+    var de = plano.getAttribute("data-de");
+    var off = plano.getAttribute("data-off");
+    var economia = plano.getAttribute("data-economia");
+    // linha do meio do resumo: desconto do kit (ou quantidade, no kit sem desconto)
+    var linhaGanho = resumoGanho.firstElementChild;
+    linhaGanho.textContent = "";
+    if (off && economia) {
+      linhaGanho.append(negrito(off), " · você economiza ", negrito(economia));
+    } else {
+      var qtd = (plano.getAttribute("data-qtd") || "").split(" · ");
+      linhaGanho.append(negrito(qtd[0]), qtd[1] ? " · " + qtd[1] + " de tratamento" : "");
+    }
     resumoAvista.textContent = plano.getAttribute("data-avista");
+    resumoDe.textContent = de ? " · de " + de : "";
     comprar.href = plano.getAttribute("data-link") || "#";
+    if (animar) {
+      mostrarParcela(plano.getAttribute("data-parcela"));
+      refazer(plano, "is-escolhendo");
+      refazer(resumo, "is-trocando");
+      if (off) refazer(resumoGanho, "is-realce");
+    } else {
+      resumoParcela.textContent = plano.getAttribute("data-parcela");
+    }
+  }
+
+  // cartões e checks entram com animação quando a seção chega na tela
+  if (!semMovimento && "IntersectionObserver" in window && listaPlanos) {
+    var entrar = [listaPlanos, resumo];
+    entrar.forEach(function (el) { if (el) el.classList.add("vai-entrar"); });
+    var olhoPlanos = new IntersectionObserver(function (itens) {
+      itens.forEach(function (item) {
+        if (!item.isIntersecting) return;
+        item.target.classList.remove("vai-entrar");
+        item.target.classList.add("entrou");
+        olhoPlanos.unobserve(item.target);
+        // terminada a entrada, tira a classe para ela não se repetir num toque
+        var alvo = item.target;
+        setTimeout(function () { alvo.classList.remove("entrou"); }, 1400);
+      });
+    }, { threshold: 0.15 });
+    entrar.forEach(function (el) { if (el) olhoPlanos.observe(el); });
   }
 
   var rastrear = function (tipo, dados) {
@@ -177,7 +251,7 @@
 
   Array.prototype.forEach.call(planos, function (plano) {
     plano.querySelector("input").addEventListener("change", function () {
-      escolher(plano);
+      escolher(plano, true);
       rastrear("plano", { val: plano.querySelector("input").value });
     });
   });
@@ -309,7 +383,7 @@
       }
     };
   }
-  escolher(document.querySelector(".plano input:checked").closest(".plano"));
+  escolher(document.querySelector(".plano input:checked").closest(".plano"), false);
 
   /* ---------- Contagem regressiva ----------
      Começa em 4min30s na primeira visita e continua de onde parou se a pessoa

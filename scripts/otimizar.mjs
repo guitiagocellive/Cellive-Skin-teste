@@ -26,11 +26,10 @@ const CSS = {
   "assets/min/style.css": ["assets/css/style.css"],
   "assets/min/oferta.css": ["assets/css/style.css", "assets/css/oferta.css"],
 };
-const JS = ["rastreio", "proxima", "oferta", "oferta-formula", "oferta-avaliacoes", "quiz-perguntas", "quiz", "kits-teste"];
+const JS = ["rastreio", "proxima", "oferta", "oferta-formula", "oferta-avaliacoes", "quiz-perguntas", "quiz"];
 // páginas públicas (painel e a página /teste antiga ficam de fora)
 const PAGINAS = ["index.html", "quiz.html", "oferta.html", "v2.html", "lancamento.html", "oferta/lancamento.html",
-  "politica-de-privacidade.html", "404.html",
-  ...[1, 2, 3, 4, 5, 6].map((n) => `teste-checkout-${n}.html`)];
+  "politica-de-privacidade.html", "404.html"];
 
 await mkdir(arq("assets/min/"), { recursive: true });
 
