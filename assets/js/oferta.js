@@ -224,11 +224,13 @@
     var span = li.firstElementChild;
     var total = textoDe(pedacos).length;
     var inicio = performance.now(), duracao = Math.min(520, 16 * total);
-    li.classList.remove("is-novo");
+    li.classList.remove("is-novo", "is-realce");
     void li.offsetWidth; // reinicia o realce
-    li.classList.add("is-novo");
+    li.classList.add("is-novo", "is-realce");
+    clearTimeout(li._faixa);
+    li._faixa = setTimeout(function () { li.classList.remove("is-realce"); }, 1500);
     clearTimeout(li._azul);
-    li._azul = setTimeout(function () { li.classList.remove("is-novo"); }, 1300);
+    li._azul = setTimeout(function () { li.classList.remove("is-novo"); }, duracao + 120); // terminou de digitar: escurece
     cancelAnimationFrame(li._digita);
     (function passo(agora) {
       var t = Math.min(1, (agora - inicio) / duracao);
