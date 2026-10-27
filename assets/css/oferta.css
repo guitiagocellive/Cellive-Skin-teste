@@ -375,9 +375,11 @@
   margin-top: 14px;
 }
 
-.selos-azuis span {
-  display: grid;
-  place-items: center;
+.selos-azuis > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   min-height: 32px;
   padding: 4px 8px;
   border-radius: 12px;
@@ -389,6 +391,32 @@
   letter-spacing: 0.02em;
   text-align: center;
   text-transform: uppercase;
+}
+
+/* símbolo antes do texto: bandeira da Coreia e frasco com check;
+   símbolo e texto ficam juntos no centro do selo */
+.selos-azuis > span > span {
+  text-align: left;
+  line-height: 1.2;
+}
+
+.selo-icone {
+  flex: none;
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.selo-bandeira {
+  width: 24px;
+  height: 16px;
+  stroke: none;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.18);
 }
 
 /* Prova social (versão em uma linha) */
