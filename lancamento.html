@@ -30,7 +30,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="/assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="/assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, /assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/min/oferta.css?v=3cf5dcafaf">
+  <link rel="stylesheet" href="/assets/min/oferta.css?v=9f3430437c">
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -311,6 +311,71 @@
           </article>
       </div>
       <div class="depos-pontos" data-depos-pontos aria-hidden="true"></div>
+    </section>
+
+    <!-- ===================== DOBRA 4: dúvidas rápidas (logo depois dos depoimentos) =====================
+         Só 3 perguntas, sem título: os botões abrem a resposta. As dúvidas completas ficam no fim.
+         Visual: pílulas (faq-mini--v4); com faq-mini--azul ficam azul bebê. -->
+    <section data-secao="duvidas-topo" class="faq-mini faq-mini--v4" aria-labelledby="duvidas-topo-titulo">
+      <h2 class="so-leitor" id="duvidas-topo-titulo">Dúvidas rápidas</h2>
+      <div class="faq" data-faq>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t1" id="faq-tp1" data-rastreio="faq" data-rastreio-valor="topo-por-que">
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">01</span>
+              <span class="faq-mini-texto">Por que usar o Sérum Revitalizador?</span>
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-t1" role="region" aria-labelledby="faq-tp1">
+            <div class="faq-conteudo">
+              <ul>
+                <li><strong>Experiência prazerosa:</strong> Possui mecanismos que geram prazer em seguir a rotina.</li>
+                <li><strong>Resultados Visíveis:</strong> Nossa fórmula possui teste de eficácia, que comprovam resultados na pele.</li>
+                <li><strong>Tecnologia coreana:</strong> Nossa fórmula une principais ativos e tecnologias do skincare coreano.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t2" id="faq-tp2" data-rastreio="faq" data-rastreio-valor="topo-rejuvenesce">
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.6 13.6c.9 1.3 2 1.9 3.4 1.9s2.5-.6 3.4-1.9"/><path d="M9.3 9.6h.01M14.7 9.6h.01"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">02</span>
+              <span class="faq-mini-texto">Ele rejuvenesce mesmo a pele?</span>
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-t2" role="region" aria-labelledby="faq-tp2">
+            <div class="faq-conteudo">
+              <p><strong>Sim, e os testes comprovam.</strong> O Sérum Revitalizador passou por testes de eficácia que mostraram resultados reais em apenas <strong>30 dias</strong> de uso:</p>
+              <ul>
+                <li><strong>72%</strong> com melhora da hidratação*</li>
+                <li><strong>69%</strong> com melhora das manchas*</li>
+                <li><strong>66%</strong> com melhora da uniformidade, firmeza e elasticidade*</li>
+              </ul>
+              <p>E quem usou aprovou: <strong>91%</strong> perceberam redução dos sinais de envelhecimento**.</p>
+              <p class="faq-nota">*Avaliação clínica subjetiva, 30 dias. **Opinião dos voluntários. Os resultados podem variar de pessoa para pessoa.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t3" id="faq-tp3" data-rastreio="faq" data-rastreio-valor="topo-regularizado">
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.4-3 7.9-7 9.3-4-1.4-7-4.9-7-9.3V5.8z"/><path d="m8.8 12.2 2.2 2.2 4.3-4.4"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">03</span>
+              <span class="faq-mini-texto">O produto é regularizado?</span>
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-t3" role="region" aria-labelledby="faq-tp3">
+            <div class="faq-conteudo">
+              <p><strong>Sim, regularizado na Anvisa.</strong> O Sérum Revitalizador segue todas as normas da Anvisa para cosméticos e é <strong>dermatologicamente testado</strong>. Você usa com tranquilidade: da fórmula à embalagem, tudo passa por processos rigorosos de qualidade e segurança antes de chegar até você.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ===================== DOBRA 5: você envelhece ===================== -->
@@ -1216,7 +1281,7 @@
     </div>
   </dialog>
 
-  <script src="/assets/min/oferta.js?v=6ea0de3749" defer></script>
+  <script src="/assets/min/oferta.js?v=69b6b9349c" defer></script>
   <script src="/assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
   <script src="/assets/min/oferta-formula.js?v=c054566ee7" defer></script>
   <script src="/assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>

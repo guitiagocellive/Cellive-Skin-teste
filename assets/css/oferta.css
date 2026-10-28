@@ -5376,6 +5376,74 @@ html.lista-aberta {
   contain-intrinsic-size: auto 700px;
 }
 
+/* ==========================================================================
+   Dúvidas rápidas (logo depois dos depoimentos): 3 perguntas, sem título.
+   Visual em pílulas (v4).
+   ========================================================================== */
+.faq-mini {
+  margin-top: calc(var(--vao-secao) - 16px);
+}
+
+.faq-mini .faq {
+  margin-top: 0;
+}
+
+.faq-mini .faq-pergunta {
+  justify-content: flex-start;
+}
+
+.faq-mini-texto {
+  flex: 1;
+}
+
+.faq-mini-icone,
+.faq-mini-num {
+  display: none;
+}
+
+/* v4: pílulas cinza bem claro; a pergunta aberta fica azul bebê
+   (com faq-mini--azul, todas ficam azul bebê) */
+.faq-mini--v4 .faq {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.faq-mini--v4 .faq-item + .faq-item {
+  border-top: 0;
+}
+
+.faq-mini--v4 .faq-item {
+  border-radius: 26px;
+  background: var(--gray-mist);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-mini--v4 .faq-item.is-aberto {
+  background: var(--blue-soft);
+}
+
+.faq-mini--v4 .faq-pergunta {
+  min-height: 52px;
+  padding: 8px 10px 8px 20px;
+}
+
+.faq-mini--v4 .faq-conteudo {
+  padding: 0 20px;
+}
+
+.faq-mini--azul .faq-item {
+  background: var(--blue-soft);
+}
+
+.faq-mini--azul .faq-item.is-aberto {
+  background: var(--blue-mist);
+  box-shadow: inset 0 0 0 1px var(--blue);
+}
+
 /* Seção longe da tela: animações contínuas pausadas (oferta.js marca a classe) */
 .fora-da-tela *,
 .fora-da-tela *::before,

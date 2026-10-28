@@ -666,13 +666,13 @@
     aposPintar(marcarPonto);
   }
 
-  /* ---------- Dúvidas: abre uma por vez ---------- */
-  var itensFaq = document.querySelectorAll(".faq-item");
-  Array.prototype.forEach.call(itensFaq, function (item) {
+  /* ---------- Dúvidas: abre uma por vez (cada lista de dúvidas por conta própria) ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".faq-item"), function (item) {
     var botao = item.querySelector(".faq-pergunta");
     botao.addEventListener("click", function () {
       var abrir = !item.classList.contains("is-aberto");
-      Array.prototype.forEach.call(itensFaq, function (outro) {
+      var lista = item.closest("[data-faq]") || document;
+      Array.prototype.forEach.call(lista.querySelectorAll(".faq-item"), function (outro) {
         var aberto = abrir && outro === item;
         outro.classList.toggle("is-aberto", aberto);
         outro.querySelector(".faq-pergunta").setAttribute("aria-expanded", aberto ? "true" : "false");
