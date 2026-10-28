@@ -5382,3 +5382,439 @@ html.lista-aberta {
 .fora-da-tela *::after {
   animation-play-state: paused !important;
 }
+
+/* ==========================================================================
+   VERSÃO DE COMPUTADOR (telas a partir de 1024px)
+   Mesmos textos, fotos, cores e componentes do celular; muda só o layout.
+   ========================================================================== */
+/* bloco da primeira dobra: no celular é como se não existisse */
+.oferta-dobra {
+  display: contents;
+}
+
+@media (min-width: 1024px) {
+  /* Página mais larga; cada seção com a sua largura, centralizada */
+  .oferta {
+    max-width: 1200px;
+    padding: 0 48px 64px;
+  }
+
+  /* Primeira dobra: fotos à esquerda (acompanham a rolagem só dentro da dobra),
+     compra à direita */
+  .oferta-dobra {
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 470px);
+    justify-content: center;
+    column-gap: 64px;
+  }
+
+  .oferta-produto {
+    display: contents;
+  }
+
+  .oferta-produto > * {
+    grid-column: 2;
+  }
+
+  .oferta-produto > .galeria {
+    grid-column: 1;
+    grid-row: 1 / span 30;
+    align-self: start;
+    position: sticky;
+    top: 96px;
+    margin-top: 24px;
+  }
+
+  .oferta-dobra > .oferta-planos {
+    grid-column: 2;
+    margin-top: 28px;
+  }
+
+  .oferta-produto > .topo-produto {
+    justify-content: flex-start;
+    margin-top: 24px;
+  }
+
+  /* ordem da coluna da direita (números negativos: vêm antes das outras seções) */
+  .oferta-produto > .galeria { order: -9; }
+  .oferta-produto > .topo-produto { order: -9; }
+  .oferta-produto > .produto-nome { order: -8; margin-top: 24px; }
+  .oferta-produto > .avaliacao { order: -7; }
+  .oferta-produto > .proof { order: -6; }
+  .oferta-produto > .produto-chamada { order: -5; }
+  .oferta-produto > .beneficios { order: -4; }
+  .oferta-produto > .selo-derm { order: -3; margin-top: 18px; }
+
+
+
+  /* ---------- Computador: seções do meio ---------- */
+  :root { --vao-secao: 96px; }
+
+  /* as seções saem da coluna do celular; cada uma ganha a sua largura */
+  .oferta > section {
+    max-width: 1104px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Depoimentos: 3 cartões lado a lado */
+  .depos {
+    margin: 40px 0 0;
+    padding: 6px 4px 26px;
+    scroll-padding: 0 4px;
+  }
+
+  .depo {
+    flex: 0 0 calc((100% - 32px) / 3);
+  }
+
+  /* Você envelhece: mesma composição, um pouco maior */
+  .oferta > .oferta-envelhece {
+    max-width: 760px;
+    min-height: 500px;
+    padding: 0 0 10px;
+  }
+
+  /* Conheça o Sérum: produto à esquerda, texto à direita */
+  .oferta > .oferta-conheca {
+    --page-max: 560px;
+    display: grid;
+    grid-template-columns: 560px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: 56px;
+    max-width: 1104px;
+    padding: 0 0 40px;
+    background: radial-gradient(ellipse 45% 70% at 25% 50%, rgba(177, 199, 222, 0.3), rgba(177, 199, 222, 0) 75%);
+  }
+
+  .conheca-palco {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .oferta-conheca .conheca-titulo {
+    grid-column: 2;
+    align-self: end;
+    margin: 0;
+    text-align: left;
+    font-size: 40px;
+  }
+
+  .oferta-conheca .conheca-texto {
+    grid-column: 2;
+    align-self: start;
+    width: auto;
+    max-width: 460px;
+    margin: 18px 0 0;
+    font-size: 19px;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  /* Fórmula: lista de ativos em duas colunas */
+  .oferta > .oferta-formula {
+    max-width: 1000px;
+    padding: 48px 48px 24px;
+    border-radius: 32px;
+  }
+
+  .fp-lista {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .fp-comprar,
+  .fp-mais {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Ação SRRP: mesma composição (frasco + linha do tempo), maior */
+  .oferta > .oferta-srrp {
+    --page-max: 600px;
+    max-width: 600px;
+  }
+
+  /* O que era natural: texto numa coluna confortável de ler */
+  .oferta > .oferta-inimigo {
+    max-width: 760px;
+  }
+
+  .inimigo-titulo { font-size: 40px; }
+  .inimigo-texto { font-size: 19px; line-height: 1.45; }
+
+  /* O reset: foto à esquerda, título e texto à direita */
+  .oferta > .oferta-reset {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: 64px;
+    padding: 0 0 20px;
+  }
+
+  .reset-foto {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    border-radius: 22px;
+  }
+
+  .reset-titulo {
+    grid-column: 2;
+    align-self: end;
+  }
+
+  .reset-titulo .titulo-leve { font-size: 32px; }
+  .reset-titulo strong { font-size: 40px; }
+
+  .reset-texto {
+    grid-column: 2;
+    align-self: start;
+    max-width: 380px;
+    font-size: 21px;
+  }
+
+  /* O que ele te proporciona: as 3 fotos lado a lado, texto embaixo */
+  .oferta > .oferta-aliado {
+    padding: 0;
+  }
+
+  .aliado-titulo .titulo-leve { font-size: 32px; }
+  .aliado-titulo strong { font-size: 40px; }
+
+  .aliado-lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+    margin-top: 44px;
+  }
+
+  .aliado-item,
+  .aliado-dir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .aliado-foto {
+    order: -1;
+    border-radius: 20px;
+  }
+
+  .aliado-texto,
+  .aliado-dir .aliado-texto {
+    text-align: center;
+  }
+
+  /* Microagulhamento: imagem à esquerda, título e texto à direita */
+  .oferta > .oferta-micro {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 56px;
+    align-items: start;
+    padding: 0 0 20px;
+    text-align: left;
+  }
+
+  .oferta-micro > .chamada-italico {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    margin-top: 120px;
+  }
+
+  .oferta-micro .micro-titulo {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .micro-figura {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+  }
+
+  .micro-quadro { width: 100%; }
+
+  .micro-texto {
+    grid-column: 2;
+    grid-row: 3;
+    max-width: 420px;
+    margin-left: 0;
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  /* Clientes, garantia e resultados: o fundo azul vai de uma borda à outra */
+  .oferta > .oferta-clientes,
+  .oferta > .oferta-garantia,
+  .oferta > .oferta-resultados,
+  .oferta > .oferta-faixa {
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  .oferta > .oferta-garantia,
+  .oferta > .oferta-resultados {
+    padding-left: max(48px, calc(50vw - 380px));
+    padding-right: max(48px, calc(50vw - 380px));
+  }
+
+  .cli-trilho,
+  .cli-fila {
+    max-width: none;
+  }
+
+  /* Vídeos: 3 por tela */
+  /* Vídeos: os 4 lado a lado, sem precisar arrastar */
+  .oferta-videos .vid-carrossel {
+    --cartao: 250px;
+    justify-content: center;
+    gap: 28px;
+    padding: 6px 0 22px;
+  }
+
+  .oferta-videos .vid-card {
+    transform: none;
+    opacity: 1;
+  }
+
+  .oferta-videos .vid-controles {
+    display: none;
+  }
+
+  /* Resultado para confiar e os números: mesma composição, um pouco maior */
+  .oferta > .oferta-confianca {
+    max-width: 760px;
+    margin-top: var(--vao-secao);
+    padding: 64px 48px 56px;
+  }
+
+  .oferta > .oferta-numeros {
+    --page-max: 640px;
+    max-width: 760px;
+  }
+
+  /* Jornada: foto à esquerda, gráfico e etapas à direita */
+  .oferta > .oferta-age {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 500px);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 56px;
+    align-items: start;
+  }
+
+  .oferta-age > .chamada-italico,
+  .oferta-age > .age-titulo {
+    grid-column: 1;
+  }
+
+  .oferta-age > .age-titulo {
+    white-space: normal;
+  }
+
+  .oferta-age > .age-foto {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .oferta-age > .jornada {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+  }
+
+  /* Dúvidas: sacola e título à esquerda, perguntas à direita */
+  .oferta > .oferta-duvidas {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) minmax(0, 640px);
+    grid-template-rows: auto 1fr;
+    justify-content: center;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .duvidas-visual,
+  .oferta-duvidas .duvidas-titulo {
+    grid-column: 1;
+  }
+
+  .oferta-duvidas .faq {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+
+  /* Avaliações: resumo à esquerda (acompanha a rolagem), lista à direita */
+  .oferta > .oferta-avaliacoes {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) minmax(0, 640px);
+    grid-template-rows: auto 1fr;
+    justify-content: center;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .oferta-avaliacoes > .aval-titulo,
+  .oferta-avaliacoes > .aval-resumo {
+    grid-column: 1;
+  }
+
+  .oferta-avaliacoes > .aval-resumo {
+    position: sticky;
+    top: 40px;
+  }
+
+  .oferta-avaliacoes > .aval-lista {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+
+  .oferta-avaliacoes > .aval-mais {
+    grid-column: 2;
+  }
+
+  /* Rodapé: marca à esquerda, links e suporte em colunas */
+  .rodape-dentro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 64px;
+    align-items: start;
+    max-width: 1200px;
+    padding: 64px 48px 0;
+  }
+
+  .rodape-logo { grid-column: 1; grid-row: 1; }
+  .rodape-missao { grid-column: 1; grid-row: 2; max-width: 420px; }
+  .rodape-insta { grid-column: 1; grid-row: 3; }
+
+  .rodape-links,
+  .rodape-suporte {
+    grid-row: 1 / span 3;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .rodape-links { grid-column: 2; margin-top: 0; }
+  .rodape-suporte { grid-column: 3; }
+
+  .rodape-legal {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding: 22px 0 0;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .rodape-marca {
+    width: 100%;
+    margin-left: 0;
+  }
+}
