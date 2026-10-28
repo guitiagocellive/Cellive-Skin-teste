@@ -3221,20 +3221,27 @@ a.avaliacao-qtd {
   text-align: center;
 }
 
+/* Chamada numa pílula branca; "RESULTADOS" fino em preto + "REAIS!" forte em azul escuro */
 .resultados-chamada {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 4px 14px rgba(77, 116, 168, 0.14);
   color: var(--blue-ink);
 }
 
-/* "RESULTADOS" fino + "REAIS!" forte em preto (como "Uma fórmula completa") */
 .resultados-titulo {
-  margin: 8px 0 0;
+  margin: 14px 0 0;
 }
 
 .resultados-titulo .titulo-leve {
+  color: var(--ink);
   font-size: clamp(25px, 7.6vw, 30px);
 }
 
 .resultados-titulo strong {
+  color: var(--blue-ink);
   font-size: clamp(28px, 8.6vw, 34px);
 }
 
