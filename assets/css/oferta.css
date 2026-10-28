@@ -5806,7 +5806,7 @@ html.lista-aberta {
   /* ---------- Ação SRRP no computador ----------
      Mesmo visual do celular (bolinhas 1 a 4, fontes, cores, cartões e a marca
      "CELLIVE SKIN" no fundo); muda só a arrumação. O frasco é a foto inteira.
-     Arrumação pela classe srrp--1 a srrp--4. */
+     Arrumação: frasco no centro (classe srrp--4). */
   .oferta > .oferta-srrp {
     --u: min(0.75px, calc((100vw - 96px) / 1472)); /* em telas menores tudo diminui junto */
     max-width: 1104px;
@@ -5834,110 +5834,7 @@ html.lista-aberta {
     filter: drop-shadow(0 calc(12 * var(--u)) calc(18 * var(--u)) rgba(77, 116, 168, 0.18));
   }
 
-  /* 1 · linha do tempo deitada: frasco e título em cima, as 4 etapas lado a lado */
-  .srrp--1 .srrp-marca { left: calc(170 * var(--u)); top: calc(300 * var(--u)); width: calc(820 * var(--u)); }
-  .srrp--1 .srrp-frasco-inteiro { left: calc(300 * var(--u)); top: calc(250 * var(--u)); }
-  .srrp--1 .srrp-cabeca { padding: calc(70 * var(--u)) 0 0 calc(560 * var(--u)); }
-
-  .srrp--1 .srrp-lista {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: calc(34 * var(--u));
-    margin-top: calc(170 * var(--u));
-  }
-
-  .srrp--1 .srrp-lista::before,
-  .srrp--1 .srrp-lista::after {
-    left: 12.5%;
-    right: 12.5%;
-    top: calc(82 * var(--u));
-    bottom: auto;
-    width: auto;
-    height: calc(4 * var(--u));
-  }
-
-  .srrp--1 .srrp-lista::after { transform: scaleX(var(--linha)); transform-origin: left; }
-
-  .srrp--1 .srrp-item,
-  .srrp--1 .srrp-item + .srrp-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: auto;
-    margin-top: 0;
-  }
-
-  .srrp--1 .srrp-frente { position: static; width: auto; height: calc(40 * var(--u)); transform: none; }
-
-  .srrp--1 .srrp-num {
-    position: relative;
-    left: auto;
-    top: auto;
-    margin-top: calc(10 * var(--u));
-    transform: scale(0.85);
-  }
-
-  .srrp--1 .srrp-item.is-visivel .srrp-num { transform: scale(1); }
-
-  .srrp--1 .srrp-cartao {
-    position: relative;
-    left: auto;
-    flex: 1;
-    width: 100%;
-    height: auto;
-    margin-top: calc(34 * var(--u));
-    padding-bottom: calc(34 * var(--u));
-    transform: translateY(calc(30 * var(--u)));
-    transition-delay: calc(var(--n) * 0.08s);
-  }
-
-  /* 2 · zigue-zague: a linha no meio e os cartões de um lado e do outro */
-  .srrp--2 .srrp-marca { left: calc(150 * var(--u)); top: calc(560 * var(--u)); width: calc(1100 * var(--u)); }
-  .srrp--2 .srrp-frasco-inteiro { left: calc(420 * var(--u)); top: calc(250 * var(--u)); }
-  .srrp--2 .srrp-cabeca { padding: calc(70 * var(--u)) 0 0 calc(640 * var(--u)); }
-
-  .srrp--2 .srrp-lista { margin-top: calc(150 * var(--u)); }
-
-  .srrp--2 .srrp-lista::before,
-  .srrp--2 .srrp-lista::after { left: calc(50% - 2 * var(--u)); }
-
-  .srrp--2 .srrp-num { left: 50%; }
-
-  .srrp--2 .srrp-cartao { left: calc(50% + 74 * var(--u)); width: calc(400 * var(--u)); }
-
-  .srrp--2 .srrp-frente {
-    left: calc(50% - 74 * var(--u) - 300 * var(--u));
-    width: calc(300 * var(--u));
-    text-align: right;
-  }
-
-  .srrp--2 .srrp-item:nth-child(even) .srrp-cartao {
-    left: calc(50% - 74 * var(--u) - 400 * var(--u));
-    transform: translateX(calc(-30 * var(--u)));
-  }
-
-  .srrp--2 .srrp-item:nth-child(even) .srrp-frente {
-    left: calc(50% + 74 * var(--u));
-    text-align: left;
-  }
-
-  .srrp--2 .srrp-item.is-visivel .srrp-cartao { transform: none; }
-
-  /* 3 · duas colunas: título e frasco à esquerda; à direita a linha do tempo igual à do celular */
-  .oferta > .srrp--3 {
-    display: grid;
-    grid-template-columns: calc(600 * var(--u)) calc(697 * var(--u));
-    justify-content: center;
-    column-gap: calc(90 * var(--u));
-    align-items: start;
-  }
-
-  .srrp--3 .srrp-marca { left: calc(110 * var(--u)); top: calc(760 * var(--u)); width: calc(1000 * var(--u)); }
-  .srrp--3 .srrp-frasco-inteiro { left: calc(300 * var(--u)); top: calc(760 * var(--u)); }
-  .srrp--3 .srrp-cabeca { grid-column: 1; grid-row: 1; padding: calc(120 * var(--u)) 0 0 calc(60 * var(--u)); }
-  .srrp--3 .srrp-lista { grid-column: 2; grid-row: 1; margin-top: calc(40 * var(--u)); }
-
-  /* 4 · frasco no meio, 2 etapas de cada lado, com as bolinhas viradas para o frasco */
+  /* frasco no meio, 2 etapas de cada lado, com as bolinhas viradas para o frasco */
   .oferta > .srrp--4 {
     display: grid;
     grid-template-columns: minmax(0, 1fr) calc(340 * var(--u)) minmax(0, 1fr);
