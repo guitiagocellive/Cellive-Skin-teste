@@ -11,7 +11,7 @@ let html = await readFile(new URL("v2.html", RAIZ), "utf8");
 const TROCAS = [
   ["<!-- GERADO por scripts/gerar-v2.mjs a partir do oferta.html. Não edite aqui: edite o oferta.html e rode o script. -->",
     "<!-- PÁGINA DE TESTE, GERADA por scripts/gerar-teste.mjs a partir do v2.html. Não edite aqui. -->"],
-  ['<html lang="pt-BR" data-pagina="oferta" data-versao="v2">', '<html lang="pt-BR" data-pagina="teste">'],
+  ['<html lang="pt-BR" data-pagina="oferta" data-versao="v2">', '<html lang="pt-BR" data-pagina="teste" data-versao="v2">'],
   ["<title>Sérum Revitalizador | Cellive Skin</title>", '<title>TESTE · Sérum Revitalizador | Cellive Skin</title>\n  <meta name="robots" content="noindex, nofollow">'],
 ];
 // CSS e JS da oferta → cópias de teste (a v2 pode apontar para assets/css ou para assets/min com ?v=)
