@@ -485,6 +485,18 @@
   color: var(--blue);
 }
 
+/* "(1.430 Avaliações)" é um link para os depoimentos */
+a.avaliacao-qtd {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.oferta-depoimentos {
+  scroll-margin-top: 70px;
+}
+
 /* 5 estrelas desenhadas em SVG */
 .estrelas {
   width: 98px;

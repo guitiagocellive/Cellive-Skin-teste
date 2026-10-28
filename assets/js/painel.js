@@ -156,6 +156,7 @@
       case "cta-capa": return "Capa · botão “Quero melhorar minha pele”";
       case "politica": return "Capa · Política de Privacidade";
       case "barra-compra": return "Barra fixa “Comprar”";
+      case "avaliacoes": return "Link “1.430 Avaliações”" + (v ? " · " + (v === "topo" ? "topo" : "planos") : "");
       case "quero-minha-formula": return "Botão “Quero minha fórmula”";
       case "ver-mais-ativos": return v === "outros" ? "Conheça os outros ativos da fórmula" : "Ver os outros ativos escolhidos";
       case "ver-mais-avaliacoes": return "Ver mais avaliações";
