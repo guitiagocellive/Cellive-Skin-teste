@@ -12,6 +12,8 @@ const TROCAS = [
   ["<!-- GERADO por scripts/gerar-v2.mjs a partir do oferta.html. Não edite aqui: edite o oferta.html e rode o script. -->",
     "<!-- PÁGINA DE TESTE, GERADA por scripts/gerar-teste.mjs a partir do v2.html. Não edite aqui. -->"],
   ['<html lang="pt-BR" data-pagina="oferta" data-versao="v2">', '<html lang="pt-BR" data-pagina="teste" data-versao="v2">'],
+  // a página de teste mostra a oferta DEPOIS do lançamento (preços, "Comprar Agora" e checkout)
+  ['<body class="oferta-body" data-pre-lancamento>', '<body class="oferta-body">'],
   ["<title>Sérum Revitalizador | Cellive Skin</title>", '<title>TESTE · Sérum Revitalizador | Cellive Skin</title>\n  <meta name="robots" content="noindex, nofollow">'],
 ];
 // CSS e JS da oferta → cópias de teste (a v2 pode apontar para assets/css ou para assets/min com ?v=)
