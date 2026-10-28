@@ -3213,27 +3213,6 @@ a.avaliacao-qtd {
   font-weight: 700;
 }
 
-/* Variações do selo (páginas de teste /teste-selo-1 a 3) */
-.selo-anel-texto {
-  fill: var(--blue-ink);
-  font-family: var(--font-condensed);
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 2.6px;
-}
-
-.selo-30-escuro,
-.selo-dias-escuro,
-.selo-palavra {
-  fill: var(--blue-ink);
-  font-family: var(--font-condensed);
-  font-weight: 700;
-}
-
-.selo-30-escuro { font-size: 64px; }
-.selo-dias-escuro { font-size: 26px; letter-spacing: 1px; }
-.selo-palavra { font-size: 15px; letter-spacing: 2px; }
-
 /* ---------- Dobra 15: resultados reais ---------- */
 .oferta-resultados {
   margin: 0 calc(-1 * var(--gutter));
@@ -6060,14 +6039,14 @@ html.lista-aberta {
   }
 
   .garantia-cartao {
-    zoom: 1.3;
+    zoom: 1.45;
     min-height: 190px;
-    padding: 22px 28px 24px 0;
+    padding: 22px 30px 24px 0;
     grid-template-columns: 150px 1fr;
   }
 
-  .garantia-titulo { font-size: 36px; }
-  .garantia-texto p { margin-top: 10px; font-size: 17px; line-height: 1.3; text-wrap: balance; }
+  .garantia-titulo { font-size: 40px; }
+  .garantia-texto p { margin-top: 10px; font-size: 19px; line-height: 1.3; text-wrap: balance; }
 
   /* Vídeos: 3 por tela */
   /* Vídeos: os 4 lado a lado, sem precisar arrastar */
