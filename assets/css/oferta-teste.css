@@ -5804,643 +5804,187 @@ html.lista-aberta {
   }
 
   /* ---------- Ação SRRP no computador ----------
-     Frasco inteiro (sem corte), sem a marca d'água vertical. Os cartões ficam
-     deitados: foto à esquerda, texto à direita. Visual pela classe srrp--a até srrp--i. */
+     Mesmo visual do celular (bolinhas 1 a 4, fontes, cores, cartões e a marca
+     "CELLIVE SKIN" no fundo); muda só a arrumação. O frasco é a foto inteira.
+     Arrumação pela classe srrp--1 a srrp--4. */
   .oferta > .oferta-srrp {
-    display: grid;
+    --u: min(0.75px, calc((100vw - 96px) / 1472)); /* em telas menores tudo diminui junto */
     max-width: 1104px;
-    padding: 0 0 20px;
-    overflow: visible;
+    padding: 0 0 calc(40 * var(--u));
   }
 
-  .oferta-srrp .srrp-marca,
   .oferta-srrp .srrp-frasco {
     display: none;
   }
 
   .oferta-srrp .srrp-frasco-inteiro {
     display: block;
-    justify-self: center;
-    align-self: center;
-    width: 150px;
-    height: auto;
-    filter: drop-shadow(0 18px 26px rgba(77, 116, 168, 0.22));
-    opacity: calc(0.2 + var(--p) * 0.8);
-    transform: translateY(calc((1 - var(--p)) * 40px));
-  }
-
-  .oferta-srrp .srrp-cabeca {
-    padding: 0;
-  }
-
-  .oferta-srrp .srrp-titulo .titulo-leve { font-size: 40px; }
-  .oferta-srrp .srrp-titulo strong { margin-top: 8px; padding-bottom: 10px; font-size: 54px; }
-  .oferta-srrp .srrp-titulo strong::after { width: 116px; height: 5px; }
-
-  .oferta-srrp .srrp-intro {
-    max-width: 480px;
-    margin-top: 22px;
-    font-size: 19px;
-    line-height: 1.4;
-  }
-
-  .oferta-srrp .srrp-lista {
-    margin: 0;
-  }
-
-  .oferta-srrp .srrp-lista::before,
-  .oferta-srrp .srrp-lista::after {
-    display: none;
-  }
-
-  .oferta-srrp .srrp-item,
-  .oferta-srrp .srrp-item + .srrp-item {
-    position: relative;
-    height: auto;
-    margin: 0;
-  }
-
-  .oferta-srrp .srrp-frente {
-    position: static;
-    width: auto;
-    margin: 0 0 8px 30px;
-    color: var(--blue-ink);
-    font-size: 12.5px;
-    letter-spacing: 0.06em;
-    text-align: left;
-    transform: none;
-  }
-
-  .oferta-srrp .srrp-num {
     position: absolute;
-    z-index: 2;
-    left: 0;
-    top: 22px;
-    width: 40px;
-    height: 40px;
-    border-width: 3px;
-    font-size: 21px;
-    transform: translate(-35%, -20%) scale(0.85);
-  }
-
-  .oferta-srrp .srrp-item.is-visivel .srrp-num {
-    transform: translate(-35%, -20%) scale(1);
-  }
-
-  .oferta-srrp .srrp-num::after {
-    inset: -3px;
-    border-width: 3px;
-  }
-
-  /* cartão deitado: foto à esquerda, nome e texto à direita */
-  .oferta-srrp .srrp-cartao {
-    position: relative;
-    left: auto;
-    display: grid;
-    grid-template-columns: 132px minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 18px;
-    width: 100%;
+    z-index: 1;
+    width: calc(150 * var(--u));
     height: auto;
-    min-height: 132px;
-    padding: 0 20px 0 0;
-    border-radius: 24px;
-    box-shadow: 0 8px 26px rgba(77, 116, 168, 0.16);
-    text-align: left;
-    transform: translateY(18px);
-    transition-delay: calc(var(--n) * 0.08s);
+    max-width: none;
+    pointer-events: none;
+    will-change: transform;
+    transform:
+      translate(-50%, -50%)
+      translateX(calc((1 - var(--p)) * -280 * var(--u)))
+      rotate(calc(var(--p) * 35deg));
+    opacity: calc(0.3 + var(--p) * 0.7);
+    filter: drop-shadow(0 calc(12 * var(--u)) calc(18 * var(--u)) rgba(77, 116, 168, 0.18));
   }
 
-  .oferta-srrp .srrp-foto {
-    grid-row: 1 / span 2;
-    height: 100%;
-    min-height: 132px;
-    border-radius: 24px 0 0 24px;
-  }
+  /* 1 · linha do tempo deitada: frasco e título em cima, as 4 etapas lado a lado */
+  .srrp--1 .srrp-marca { left: calc(170 * var(--u)); top: calc(300 * var(--u)); width: calc(820 * var(--u)); }
+  .srrp--1 .srrp-frasco-inteiro { left: calc(300 * var(--u)); top: calc(250 * var(--u)); }
+  .srrp--1 .srrp-cabeca { padding: calc(70 * var(--u)) 0 0 calc(560 * var(--u)); }
 
-  .oferta-srrp .srrp-foto > img {
-    object-fit: cover;
-  }
-
-  .oferta-srrp .srrp-nome {
-    align-self: end;
-    margin: 20px 0 0;
-    font-size: 26px;
-  }
-
-  .oferta-srrp .srrp-texto {
-    margin: 8px 0 18px;
-    font-size: 14.5px;
-    line-height: 1.4;
-  }
-
-  /* A · frasco no centro, 2 etapas de cada lado */
-  .srrp--a {
-    grid-template-columns: minmax(0, 1fr) 260px minmax(0, 1fr);
-    column-gap: 36px;
-    row-gap: 26px;
-  }
-
-  .srrp--a .srrp-cabeca {
-    grid-column: 1 / -1;
-    margin-bottom: 18px;
-    text-align: center;
-  }
-
-  .srrp--a .srrp-titulo strong::after { left: 50%; transform: translateX(-50%); }
-  .srrp--a .srrp-intro { margin-left: auto; margin-right: auto; }
-
-  .srrp--a .srrp-lista { display: contents; }
-  .srrp--a .srrp-item:nth-child(1) { grid-column: 1; grid-row: 2; }
-  .srrp--a .srrp-item:nth-child(2) { grid-column: 1; grid-row: 3; }
-  .srrp--a .srrp-item:nth-child(3) { grid-column: 3; grid-row: 2; }
-  .srrp--a .srrp-item:nth-child(4) { grid-column: 3; grid-row: 3; }
-
-  .srrp--a .srrp-frasco-inteiro {
-    grid-column: 2;
-    grid-row: 2 / span 2;
-    width: 118px;
-  }
-
-  /* brilho azul atrás do frasco */
-  .srrp--a::before {
-    content: "";
-    grid-column: 2;
-    grid-row: 2 / span 2;
-    align-self: center;
-    justify-self: center;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(177, 199, 222, 0.45), rgba(177, 199, 222, 0));
-  }
-
-  /* B · painel azul claro com título e frasco à esquerda; etapas em 2 × 2 */
-  .srrp--b {
-    grid-template-columns: 400px minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 48px;
-    align-items: start;
-  }
-
-  .srrp--b::before {
-    content: "";
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    align-self: stretch;
-    border-radius: 32px;
-    background: linear-gradient(160deg, var(--blue-soft), var(--blue-mist) 70%);
-  }
-
-  .srrp--b .srrp-cabeca {
-    grid-column: 1;
-    grid-row: 1;
-    padding: 44px 40px 0;
-  }
-
-  .srrp--b .srrp-frasco-inteiro {
-    grid-column: 1;
-    grid-row: 2;
-    width: 120px;
-    margin: 26px 0 36px;
-    transform: translateY(calc((1 - var(--p)) * 40px)) rotate(-8deg);
-  }
-
-  .srrp--b .srrp-lista {
+  .srrp--1 .srrp-lista {
     display: grid;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    grid-template-columns: 1fr 1fr;
-    gap: 26px 24px;
-    align-content: center;
-  }
-
-  .srrp--b .srrp-cartao {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    padding: 0 0 4px;
-    text-align: center;
-  }
-
-  .srrp--b .srrp-foto {
-    grid-row: auto;
-    height: 110px;
-    min-height: 0;
-    border-radius: 24px;
-  }
-
-  .srrp--b .srrp-nome { margin-top: 14px; }
-  .srrp--b .srrp-texto { margin: 8px 18px 18px; }
-  .srrp--b .srrp-frente { text-align: center; margin-left: 0; }
-  .srrp--b .srrp-num { top: 24px; }
-
-  /* C · título e frasco à esquerda; etapas em lista vertical com a linha do tempo */
-  .srrp--c {
-    grid-template-columns: 380px minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 64px;
-    align-items: start;
-  }
-
-  .srrp--c .srrp-cabeca { grid-column: 1; grid-row: 1; padding-top: 10px; }
-
-  .srrp--c .srrp-frasco-inteiro {
-    grid-column: 1;
-    grid-row: 2;
-    width: 140px;
-    margin-top: 30px;
-  }
-
-  .srrp--c .srrp-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    padding-left: 62px;
-  }
-
-  .srrp--c .srrp-lista::before,
-  .srrp--c .srrp-lista::after {
-    display: block;
-    left: 20px;
-    top: 50px;
-    bottom: 80px;
-    width: 3px;
-    height: auto;
-  }
-
-  .srrp--c .srrp-lista::after {
-    transform: scaleY(var(--linha));
-    transform-origin: top;
-  }
-
-  .srrp--c .srrp-frente { margin-left: 2px; }
-
-  .srrp--c .srrp-num {
-    left: -62px;
-    top: 50%;
-    transform: translateY(-20%) scale(0.85);
-  }
-
-  .srrp--c .srrp-item.is-visivel .srrp-num {
-    transform: translateY(-20%) scale(1);
-  }
-
-  /* D · linha do tempo horizontal (como estava), com o frasco inteiro */
-  .srrp--d {
-    grid-template-columns: 320px minmax(0, 1fr);
-    column-gap: 40px;
-    align-items: center;
-  }
-
-  .srrp--d .srrp-frasco-inteiro {
-    grid-column: 1;
-    grid-row: 1;
-    width: 120px;
-    margin: 10px 0;
-    transform: translateY(calc((1 - var(--p)) * 40px)) rotate(-10deg);
-  }
-
-  .srrp--d .srrp-cabeca { grid-column: 2; grid-row: 1; }
-
-  .srrp--d .srrp-lista {
-    display: grid;
-    grid-column: 1 / -1;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
-    margin-top: 44px;
+    gap: calc(34 * var(--u));
+    margin-top: calc(170 * var(--u));
   }
 
-  .srrp--d .srrp-lista::before,
-  .srrp--d .srrp-lista::after {
-    display: block;
+  .srrp--1 .srrp-lista::before,
+  .srrp--1 .srrp-lista::after {
     left: 12.5%;
     right: 12.5%;
-    top: 47px;
+    top: calc(82 * var(--u));
     bottom: auto;
     width: auto;
-    height: 4px;
+    height: calc(4 * var(--u));
   }
 
-  .srrp--d .srrp-lista::after {
-    transform: scaleX(var(--linha));
-    transform-origin: left;
+  .srrp--1 .srrp-lista::after { transform: scaleX(var(--linha)); transform-origin: left; }
+
+  .srrp--1 .srrp-item,
+  .srrp--1 .srrp-item + .srrp-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    margin-top: 0;
   }
 
-  .srrp--d .srrp-item { display: flex; flex-direction: column; align-items: center; }
-  .srrp--d .srrp-frente { margin: 0; height: 20px; text-align: center; }
+  .srrp--1 .srrp-frente { position: static; width: auto; height: calc(40 * var(--u)); transform: none; }
 
-  .srrp--d .srrp-num {
+  .srrp--1 .srrp-num {
     position: relative;
     left: auto;
     top: auto;
-    width: 52px;
-    height: 52px;
-    margin-top: 2px;
-    font-size: 27px;
+    margin-top: calc(10 * var(--u));
     transform: scale(0.85);
   }
 
-  .srrp--d .srrp-item.is-visivel .srrp-num { transform: scale(1); }
+  .srrp--1 .srrp-item.is-visivel .srrp-num { transform: scale(1); }
 
-  .srrp--d .srrp-cartao {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    margin-top: 20px;
-    padding: 0 0 4px;
-    text-align: center;
+  .srrp--1 .srrp-cartao {
+    position: relative;
+    left: auto;
+    flex: 1;
+    width: 100%;
+    height: auto;
+    margin-top: calc(34 * var(--u));
+    padding-bottom: calc(34 * var(--u));
+    transform: translateY(calc(30 * var(--u)));
+    transition-delay: calc(var(--n) * 0.08s);
   }
 
-  .srrp--d .srrp-foto { grid-row: auto; height: 110px; min-height: 0; border-radius: 24px; }
-  .srrp--d .srrp-nome { margin-top: 14px; }
-  .srrp--d .srrp-texto { margin: 8px 16px 18px; }
+  /* 2 · zigue-zague: a linha no meio e os cartões de um lado e do outro */
+  .srrp--2 .srrp-marca { left: calc(150 * var(--u)); top: calc(560 * var(--u)); width: calc(1100 * var(--u)); }
+  .srrp--2 .srrp-frasco-inteiro { left: calc(420 * var(--u)); top: calc(250 * var(--u)); }
+  .srrp--2 .srrp-cabeca { padding: calc(70 * var(--u)) 0 0 calc(640 * var(--u)); }
 
-  /* E · título e lista compacta à esquerda (fotos redondas); frasco grande à direita */
-  .srrp--e {
-    grid-template-columns: minmax(0, 1fr) 380px;
-    grid-template-rows: auto 1fr;
-    column-gap: 48px;
+  .srrp--2 .srrp-lista { margin-top: calc(150 * var(--u)); }
+
+  .srrp--2 .srrp-lista::before,
+  .srrp--2 .srrp-lista::after { left: calc(50% - 2 * var(--u)); }
+
+  .srrp--2 .srrp-num { left: 50%; }
+
+  .srrp--2 .srrp-cartao { left: calc(50% + 74 * var(--u)); width: calc(400 * var(--u)); }
+
+  .srrp--2 .srrp-frente {
+    left: calc(50% - 74 * var(--u) - 300 * var(--u));
+    width: calc(300 * var(--u));
+    text-align: right;
+  }
+
+  .srrp--2 .srrp-item:nth-child(even) .srrp-cartao {
+    left: calc(50% - 74 * var(--u) - 400 * var(--u));
+    transform: translateX(calc(-30 * var(--u)));
+  }
+
+  .srrp--2 .srrp-item:nth-child(even) .srrp-frente {
+    left: calc(50% + 74 * var(--u));
+    text-align: left;
+  }
+
+  .srrp--2 .srrp-item.is-visivel .srrp-cartao { transform: none; }
+
+  /* 3 · duas colunas: título e frasco à esquerda; à direita a linha do tempo igual à do celular */
+  .oferta > .srrp--3 {
+    display: grid;
+    grid-template-columns: calc(600 * var(--u)) calc(697 * var(--u));
+    justify-content: center;
+    column-gap: calc(90 * var(--u));
     align-items: start;
   }
 
-  .srrp--e .srrp-cabeca { grid-column: 1; grid-row: 1; }
+  .srrp--3 .srrp-marca { left: calc(110 * var(--u)); top: calc(760 * var(--u)); width: calc(1000 * var(--u)); }
+  .srrp--3 .srrp-frasco-inteiro { left: calc(300 * var(--u)); top: calc(760 * var(--u)); }
+  .srrp--3 .srrp-cabeca { grid-column: 1; grid-row: 1; padding: calc(120 * var(--u)) 0 0 calc(60 * var(--u)); }
+  .srrp--3 .srrp-lista { grid-column: 2; grid-row: 1; margin-top: calc(40 * var(--u)); }
 
-  .srrp--e .srrp-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    grid-column: 1;
-    grid-row: 2;
-    max-width: 600px;
-    margin-top: 34px;
+  /* 4 · frasco no meio, 2 etapas de cada lado, com as bolinhas viradas para o frasco */
+  .oferta > .srrp--4 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(340 * var(--u)) minmax(0, 1fr);
+    row-gap: calc(80 * var(--u));
   }
 
-  .srrp--e .srrp-cartao {
-    grid-template-columns: 72px minmax(0, 1fr);
-    align-items: center;
-    min-height: 0;
-    padding: 14px 22px 14px 16px;
-  }
+  .srrp--4 .srrp-cabeca { grid-column: 1 / -1; padding: calc(60 * var(--u)) 0 calc(30 * var(--u)); text-align: center; }
+  .srrp--4 .srrp-titulo strong::after { left: 50%; transform: translateX(-50%); }
+  .srrp--4 .srrp-intro { max-width: calc(620 * var(--u)); margin-left: auto; margin-right: auto; }
 
-  .srrp--e .srrp-foto {
-    width: 72px;
-    height: 72px;
-    min-height: 0;
-    border-radius: 50%;
-  }
+  .srrp--4 .srrp-lista { display: contents; }
+  .srrp--4 .srrp-lista::before,
+  .srrp--4 .srrp-lista::after { display: none; }
+  .srrp--4 .srrp-item:nth-child(1) { grid-column: 1; grid-row: 2; }
+  .srrp--4 .srrp-item:nth-child(2) { grid-column: 1; grid-row: 3; }
+  .srrp--4 .srrp-item:nth-child(3) { grid-column: 3; grid-row: 2; }
+  .srrp--4 .srrp-item:nth-child(4) { grid-column: 3; grid-row: 3; }
+  .srrp--4 .srrp-item + .srrp-item { margin-top: 0; }
 
-  .srrp--e .srrp-nome { margin: 0; font-size: 22px; }
-  .srrp--e .srrp-texto { margin: 4px 0 0; }
-
-  .srrp--e .srrp-frasco-inteiro {
+  .srrp--4 .srrp-frasco-inteiro {
+    position: relative;
     grid-column: 2;
-    grid-row: 1 / span 2;
-    width: 150px;
-  }
-
-  .srrp--e::before {
-    content: "";
-    grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 2 / span 2;
     align-self: center;
     justify-self: center;
-    width: 360px;
-    height: 360px;
-    border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(177, 199, 222, 0.45), rgba(177, 199, 222, 0));
+    width: calc(170 * var(--u));
+    transform:
+      translateX(calc((1 - var(--p)) * -280 * var(--u)))
+      rotate(calc(var(--p) * 20deg));
   }
 
-  /* F · faixa preta da marca (como "Resultado para confiar"), 4 cartões lado a lado */
-  .oferta > .srrp--f {
-    grid-template-columns: minmax(0, 1fr) 240px;
-    column-gap: 40px;
-    row-gap: 40px;
-    padding: 56px 56px 48px;
-    border-radius: 36px;
-    background:
-      radial-gradient(ellipse 40% 60% at 88% 26%, rgba(177, 199, 222, 0.24), transparent 70%),
-      linear-gradient(180deg, #232425, var(--ink));
-    box-shadow: 0 20px 40px rgba(26, 26, 26, 0.22);
-  }
+  .srrp--4 .srrp-marca { left: 50%; top: calc(720 * var(--u)); width: calc(1000 * var(--u)); }
 
-  .srrp--f .srrp-cabeca { grid-column: 1; grid-row: 1; align-self: center; }
-  .srrp--f .srrp-titulo,
-  .srrp--f .srrp-intro { color: var(--white); }
+  /* lado esquerdo: cartão, bolinha perto do frasco e o nome da frente em cima */
+  .srrp--4 .srrp-item:nth-child(-n + 2) .srrp-cartao { left: auto; right: calc(110 * var(--u)); width: calc(400 * var(--u)); }
+  .srrp--4 .srrp-item:nth-child(-n + 2) .srrp-num { left: auto; right: 0; transform: translate(0, -50%) scale(0.85); }
+  .srrp--4 .srrp-item:nth-child(-n + 2).is-visivel .srrp-num { transform: translate(0, -50%) scale(1); }
+  .srrp--4 .srrp-item:nth-child(-n + 2) .srrp-frente { left: auto; right: calc(110 * var(--u)); width: calc(400 * var(--u)); }
 
-  .srrp--f .srrp-frasco-inteiro {
-    grid-column: 2;
-    grid-row: 1;
-    width: 105px;
-    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
-  }
+  /* lado direito: bolinha perto do frasco e cartão depois dela */
+  .srrp--4 .srrp-item:nth-child(n + 3) .srrp-num { left: 0; transform: translate(0, -50%) scale(0.85); }
+  .srrp--4 .srrp-item:nth-child(n + 3).is-visivel .srrp-num { transform: translate(0, -50%) scale(1); }
+  .srrp--4 .srrp-item:nth-child(n + 3) .srrp-cartao { left: calc(110 * var(--u)); width: calc(400 * var(--u)); }
+  .srrp--4 .srrp-item:nth-child(n + 3) .srrp-frente { left: calc(110 * var(--u)); width: calc(400 * var(--u)); }
 
-  .srrp--f .srrp-lista {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-  }
-
-  .srrp--f .srrp-frente { color: var(--blue); margin-left: 30px; }
-
-  .srrp--f .srrp-cartao {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    padding: 0 0 4px;
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    text-align: center;
-  }
-
-  .srrp--f .srrp-foto { grid-row: auto; height: 104px; min-height: 0; border-radius: 24px 24px 0 0; }
-  .srrp--f .srrp-nome { margin-top: 14px; color: var(--white); }
-  .srrp--f .srrp-texto { margin: 8px 16px 18px; color: rgba(255, 255, 255, 0.72); }
-
-  .srrp--f .srrp-num {
-    background: var(--ink);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: var(--white);
-  }
-
-  .srrp--f .srrp-item.is-visivel .srrp-num { border-color: var(--blue); color: var(--white); }
-
-  /* G · bolhas: fotos redondas lado a lado ligadas por uma linha pontilhada */
-  .srrp--g {
-    grid-template-columns: 240px minmax(0, 1fr);
-    column-gap: 40px;
-    align-items: center;
-  }
-
-  .srrp--g .srrp-frasco-inteiro {
-    grid-column: 1;
-    grid-row: 1;
-    width: 105px;
-    transform: translateY(calc((1 - var(--p)) * 40px)) rotate(-8deg);
-  }
-
-  .srrp--g .srrp-cabeca { grid-column: 2; grid-row: 1; }
-
-  .srrp--g .srrp-lista {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 28px;
-    margin-top: 50px;
-  }
-
-  .srrp--g .srrp-lista::before {
-    display: block;
-    left: 12.5%;
-    right: 12.5%;
-    top: 105px;
-    bottom: auto;
-    width: auto;
-    height: 0;
-    border-top: 2px dashed var(--blue);
-    background: none;
-  }
-
-  .srrp--g .srrp-item { display: flex; flex-direction: column; align-items: center; }
-  .srrp--g .srrp-frente { margin: 0 0 8px; text-align: center; }
-
-  .srrp--g .srrp-cartao {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: visible;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    text-align: center;
-  }
-
-  .srrp--g .srrp-foto {
-    position: relative;
-    z-index: 1;
-    width: 150px;
-    height: 150px;
-    min-height: 0;
-    border: 5px solid var(--white);
-    border-radius: 50%;
-    box-shadow: 0 10px 26px rgba(77, 116, 168, 0.22);
-  }
-
-  .srrp--g .srrp-num { left: calc(50% + 46px); top: 32px; transform: scale(0.85); }
-  .srrp--g .srrp-item.is-visivel .srrp-num { transform: scale(1); }
-  .srrp--g .srrp-nome { align-self: center; margin-top: 18px; }
-  .srrp--g .srrp-texto { margin: 8px 8px 0; }
-
-  /* H · editorial: número grande, foto pequena e texto, em 2 × 2 */
-  .srrp--h {
-    grid-template-columns: 340px minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 64px;
-    align-items: start;
-  }
-
-  .srrp--h .srrp-cabeca { grid-column: 1; grid-row: 1; }
-
-  .srrp--h .srrp-frasco-inteiro {
-    grid-column: 1;
-    grid-row: 2;
-    width: 115px;
-    margin-top: 34px;
-  }
-
-  .srrp--h .srrp-lista {
-    display: grid;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px 44px;
-    align-content: center;
-  }
-
-  .srrp--h .srrp-item {
-    display: flex;
-    flex-direction: column;
-    padding-top: 16px;
-    border-top: 1px solid var(--gray-light);
-  }
-
-  .srrp--h .srrp-num {
-    position: static;
-    order: -1;
-    display: block;
-    width: auto;
-    height: auto;
-    border: 0;
-    background: none;
-    color: var(--blue);
-    font-size: 64px;
-    line-height: 0.9;
-    transform: none;
-  }
-
-  .srrp--h .srrp-item.is-visivel .srrp-num { color: var(--blue); transform: none; }
-  .srrp--h .srrp-num::after { display: none; }
-  .srrp--h .srrp-frente { margin: 10px 0 10px; }
-
-  .srrp--h .srrp-cartao {
-    grid-template-columns: 64px minmax(0, 1fr);
-    align-items: center;
-    min-height: 0;
-    padding: 0;
-    overflow: visible;
-    background: none;
-    box-shadow: none;
-  }
-
-  .srrp--h .srrp-foto { width: 64px; height: 64px; min-height: 0; border-radius: 16px; }
-  .srrp--h .srrp-nome { margin: 0; font-size: 24px; }
-  .srrp--h .srrp-texto { margin: 4px 0 0; }
-
-  /* I · faixa azul de ponta a ponta, tudo centralizado, 4 cartões em pé */
-  .oferta > .srrp--i {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    max-width: none;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    padding: 80px max(48px, calc(50vw - 560px)) 64px;
-    background:
-      radial-gradient(ellipse 40% 260px at 50% 320px, rgba(177, 199, 222, 0.4), transparent 75%),
-      linear-gradient(180deg, rgba(243, 247, 250, 0) 0%, var(--blue-mist) 14%, var(--blue-mist) 86%, rgba(243, 247, 250, 0) 100%);
-    text-align: center;
-  }
-
-  .srrp--i .srrp-cabeca { grid-row: 1; }
-  .srrp--i .srrp-titulo strong::after { left: 50%; transform: translateX(-50%); }
-  .srrp--i .srrp-intro { margin-left: auto; margin-right: auto; }
-
-  .srrp--i .srrp-frasco-inteiro {
-    grid-row: 2;
-    width: 82px;
-    margin: 30px 0 10px;
-  }
-
-  .srrp--i .srrp-lista {
-    display: grid;
-    grid-row: 3;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 22px;
-    width: 100%;
-    margin-top: 26px;
-  }
-
-  .srrp--i .srrp-frente { margin: 0 0 8px; text-align: center; }
-
-  .srrp--i .srrp-cartao {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    padding: 0 0 4px;
-    text-align: center;
-  }
-
-  .srrp--i .srrp-foto { grid-row: auto; height: 110px; min-height: 0; border-radius: 24px; }
-  .srrp--i .srrp-nome { margin-top: 14px; }
-  .srrp--i .srrp-texto { margin: 8px 16px 18px; }
+  /* nome da frente em cima de cada cartão */
+  .srrp--4 .srrp-frente { top: calc(-44 * var(--u)); transform: none; }
 
   /* O que era natural: texto numa coluna confortável de ler */
   .oferta > .oferta-inimigo {
