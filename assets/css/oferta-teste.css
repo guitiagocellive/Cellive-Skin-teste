@@ -3213,6 +3213,27 @@ a.avaliacao-qtd {
   font-weight: 700;
 }
 
+/* Variações do selo (páginas de teste /teste-selo-1 a 3) */
+.selo-anel-texto {
+  fill: var(--blue-ink);
+  font-family: var(--font-condensed);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 2.6px;
+}
+
+.selo-30-escuro,
+.selo-dias-escuro,
+.selo-palavra {
+  fill: var(--blue-ink);
+  font-family: var(--font-condensed);
+  font-weight: 700;
+}
+
+.selo-30-escuro { font-size: 64px; }
+.selo-dias-escuro { font-size: 26px; letter-spacing: 1px; }
+.selo-palavra { font-size: 15px; letter-spacing: 2px; }
+
 /* ---------- Dobra 15: resultados reais ---------- */
 .oferta-resultados {
   margin: 0 calc(-1 * var(--gutter));
@@ -5964,11 +5985,10 @@ html.lista-aberta {
     column-gap: 56px;
     align-items: start;
     padding: 0 0 20px;
-    text-align: left;
+    text-align: center; /* chamada, título e texto centralizados na coluna, como no celular */
   }
 
   .oferta-micro > .chamada-italico {
-    text-align: left; /* alinhada com "O efeito de microagulhamento" */
     grid-column: 2;
     grid-row: 1;
     align-self: end;
@@ -5992,7 +6012,8 @@ html.lista-aberta {
     grid-column: 2;
     grid-row: 3;
     max-width: 420px;
-    margin-left: 0;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 19px;
     line-height: 1.4;
   }
