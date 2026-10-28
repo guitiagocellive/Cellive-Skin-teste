@@ -6007,6 +6007,28 @@ html.lista-aberta {
     margin-right: calc(50% - 50vw);
   }
 
+  /* Resultados: cartões maiores; o do meio fica parado e os outros abrem para os lados */
+  .res-pilha {
+    width: 250px;
+    height: 250px;
+    margin-top: 48px;
+  }
+
+  .res-cartao {
+    height: 220px;
+    padding: 18px 20px;
+    border-radius: 26px;
+    transform: translate3d(calc((var(--n) - 1) * 320px), 0, 0) rotate(var(--giro));
+  }
+
+  .res-cartao:nth-child(1) { --giro: -6deg; z-index: 2; }
+  .res-cartao:nth-child(2) { --giro: 0deg; z-index: 3; }
+  .res-cartao:nth-child(3) { --giro: 6deg; z-index: 1; }
+
+  .res-numero { font-size: 100px; }
+  .res-texto { margin-top: 14px; font-size: 19px; }
+  .res-nota { max-width: none; margin-top: 34px; font-size: 16.5px; }
+
   .oferta > .oferta-resultados {
     padding-left: max(48px, calc(50vw - 380px));
     padding-right: max(48px, calc(50vw - 380px));
