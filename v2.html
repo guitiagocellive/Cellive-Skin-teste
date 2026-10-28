@@ -29,7 +29,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=229f6223f2">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=d75b5253ab">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
@@ -58,8 +58,9 @@
 
   <main class="oferta">
 
-    <!-- Primeira dobra (produto + planos). No celular este bloco não muda nada;
-         no computador vira duas colunas: fotos à esquerda, compra à direita. -->
+    <!-- Primeira dobra (produto, planos, depoimentos e dúvidas rápidas). No celular este bloco
+         não muda nada; no computador vira duas colunas: fotos à esquerda (paradas na tela),
+         e o resto à direita. -->
     <div class="oferta-dobra">
     <!-- ===================== DOBRA 1: produto ===================== -->
     <section data-secao="produto" class="oferta-produto">
@@ -257,7 +258,6 @@
     </section>
 
 
-    </div>
 
     <!-- ===================== DOBRA 3: depoimentos ===================== -->
     <section data-secao="depoimentos" class="oferta-depoimentos" id="depoimentos" aria-labelledby="depo-titulo">
@@ -319,17 +319,18 @@
       <div class="depos-pontos" data-depos-pontos aria-hidden="true"></div>
     </section>
 
-    <!-- ===================== DOBRA 4: principais dúvidas (logo depois dos depoimentos) =====================
-         Perguntas rápidas sobre o produto. As dúvidas completas continuam no fim da página. -->
-    <section data-secao="duvidas-topo" class="oferta-duvidas oferta-duvidas-topo" aria-labelledby="duvidas-topo-titulo">
-      <h2 class="secao-titulo" id="duvidas-topo-titulo">
-        <span class="titulo-leve titulo-sublinhado" data-linha>Principais</span> <strong>dúvidas</strong>
-      </h2>
+    <!-- ===================== DOBRA 4: dúvidas rápidas (logo depois dos depoimentos) =====================
+         Só 3 perguntas, sem título: os botões abrem a resposta. As dúvidas completas ficam no fim.
+         O visual muda pela classe faq-mini--v1 / v2 / v3. -->
+    <section data-secao="duvidas-topo" class="faq-mini faq-mini--v1" aria-labelledby="duvidas-topo-titulo">
+      <h2 class="so-leitor" id="duvidas-topo-titulo">Dúvidas rápidas</h2>
       <div class="faq" data-faq>
         <div class="faq-item">
           <h3>
             <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t1" id="faq-tp1" data-rastreio="faq" data-rastreio-valor="topo-por-que">
-              Por que usar o Sérum Revitalizador?
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">01</span>
+              <span class="faq-mini-texto">Por que usar o Sérum Revitalizador?</span>
               <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
@@ -345,51 +346,14 @@
         </div>
         <div class="faq-item">
           <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t2" id="faq-tp2" data-rastreio="faq" data-rastreio-valor="topo-como-usar">
-              Como usar o Sérum Revitalizador?
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t2" id="faq-tp2" data-rastreio="faq" data-rastreio-valor="topo-rejuvenesce">
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.6 13.6c.9 1.3 2 1.9 3.4 1.9s2.5-.6 3.4-1.9"/><path d="M9.3 9.6h.01M14.7 9.6h.01"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">02</span>
+              <span class="faq-mini-texto">Ele rejuvenesce mesmo a pele?</span>
               <span class="faq-mais" aria-hidden="true"></span>
             </button>
           </h3>
           <div class="faq-resposta" id="faq-t2" role="region" aria-labelledby="faq-tp2">
-            <div class="faq-conteudo">
-              <p><strong>Todos os dias, à noite.</strong> É simples e rápido: com a pele limpa e seca, aplique algumas gotas e espalhe com movimentos suaves, de baixo para cima, até a pele absorver. Pela manhã, use protetor solar com FPS adequado para proteger os seus resultados.</p>
-            </div>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t3" id="faq-tp3" data-rastreio="faq" data-rastreio-valor="topo-srrp">
-              O que é a ação SRRP?
-              <span class="faq-mais" aria-hidden="true"></span>
-            </button>
-          </h3>
-          <div class="faq-resposta" id="faq-t3" role="region" aria-labelledby="faq-tp3">
-            <div class="faq-conteudo">
-              <p><strong>4 frentes de cuidado em uma só fórmula.</strong> É a forma como os ativos foram combinados para cuidar da sua pele por completo: <strong>Sinalização</strong> (GHK-Cu, para uma pele com aspecto mais firme), <strong>Renovação</strong> (Retinaldeído 0,05%, que contribui para minimizar a aparência de rugas e linhas finas), <strong>Regeneração</strong> (PDRN, para uma pele com aspecto revitalizado) e <strong>Potencialização</strong> (microespículas, que deixam a aplicação diferenciada e dão o efeito glow).</p>
-            </div>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t4" id="faq-tp4" data-rastreio="faq" data-rastreio-valor="topo-regularizado">
-              O produto é regularizado?
-              <span class="faq-mais" aria-hidden="true"></span>
-            </button>
-          </h3>
-          <div class="faq-resposta" id="faq-t4" role="region" aria-labelledby="faq-tp4">
-            <div class="faq-conteudo">
-              <p><strong>Sim, regularizado na Anvisa.</strong> O Sérum Revitalizador segue todas as normas da Anvisa para cosméticos e é <strong>dermatologicamente testado</strong>. Você usa com tranquilidade: da fórmula à embalagem, tudo passa por processos rigorosos de qualidade e segurança antes de chegar até você.</p>
-            </div>
-          </div>
-        </div>
-        <div class="faq-item">
-          <h3>
-            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t5" id="faq-tp5" data-rastreio="faq" data-rastreio-valor="topo-rejuvenesce">
-              Ele rejuvenesce mesmo a pele?
-              <span class="faq-mais" aria-hidden="true"></span>
-            </button>
-          </h3>
-          <div class="faq-resposta" id="faq-t5" role="region" aria-labelledby="faq-tp5">
             <div class="faq-conteudo">
               <p><strong>Sim, e os testes comprovam.</strong> O Sérum Revitalizador passou por testes de eficácia que mostraram resultados reais em apenas <strong>30 dias</strong> de uso:</p>
               <ul>
@@ -402,8 +366,25 @@
             </div>
           </div>
         </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-pergunta" aria-expanded="false" aria-controls="faq-t3" id="faq-tp3" data-rastreio="faq" data-rastreio-valor="topo-regularizado">
+              <span class="faq-mini-icone" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 2.8v5.4c0 4.4-3 7.9-7 9.3-4-1.4-7-4.9-7-9.3V5.8z"/><path d="m8.8 12.2 2.2 2.2 4.3-4.4"/></svg></span>
+              <span class="faq-mini-num" aria-hidden="true">03</span>
+              <span class="faq-mini-texto">O produto é regularizado?</span>
+              <span class="faq-mais" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-resposta" id="faq-t3" role="region" aria-labelledby="faq-tp3">
+            <div class="faq-conteudo">
+              <p><strong>Sim, regularizado na Anvisa.</strong> O Sérum Revitalizador segue todas as normas da Anvisa para cosméticos e é <strong>dermatologicamente testado</strong>. Você usa com tranquilidade: da fórmula à embalagem, tudo passa por processos rigorosos de qualidade e segurança antes de chegar até você.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+
+    </div>
 
     <!-- ===================== DOBRA 5: você envelhece ===================== -->
     <section data-secao="envelhece" class="oferta-envelhece" data-aparecer>
