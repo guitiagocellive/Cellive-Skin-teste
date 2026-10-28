@@ -6034,12 +6034,12 @@ html.lista-aberta {
   /* Garantia: cartão maior (selo, caixa e frasco crescem juntos) e texto maior */
   .oferta > .oferta-garantia {
     margin-top: -1px; /* sem fresta branca entre os clientes e a garantia */
-    padding-left: max(48px, calc(50vw - 480px));
-    padding-right: max(48px, calc(50vw - 480px));
+    padding-left: max(48px, calc(50vw - 340px));
+    padding-right: max(48px, calc(50vw - 340px));
   }
 
   .garantia-cartao {
-    zoom: 1.45;
+    zoom: 1; /* 30% menor que a versão anterior (1,45) */
     min-height: 190px;
     padding: 22px 30px 24px 0;
     grid-template-columns: 150px 1fr;
