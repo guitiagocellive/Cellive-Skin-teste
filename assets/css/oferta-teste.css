@@ -5376,9 +5376,152 @@ html.lista-aberta {
   contain-intrinsic-size: auto 700px;
 }
 
-/* Principais dúvidas logo depois dos depoimentos (as completas ficam no fim) */
-.oferta-duvidas-topo {
-  margin-top: calc(var(--vao-secao) - 10px);
+/* ==========================================================================
+   Dúvidas rápidas (logo depois dos depoimentos): 3 perguntas, sem título.
+   Três visuais: v1 linhas finas, v2 botões com ícone, v3 numerada.
+   ========================================================================== */
+.faq-mini {
+  margin-top: calc(var(--vao-secao) - 16px);
+}
+
+.faq-mini .faq {
+  margin-top: 0;
+}
+
+.faq-mini .faq-pergunta {
+  justify-content: flex-start;
+}
+
+.faq-mini-texto {
+  flex: 1;
+}
+
+.faq-mini-icone,
+.faq-mini-num {
+  display: none;
+}
+
+/* v1: só linhas finas, sem cartão */
+.faq-mini--v1 .faq {
+  padding: 0;
+  border-top: 1px solid var(--gray-light);
+  border-bottom: 1px solid var(--gray-light);
+  border-radius: 0;
+  background: none;
+}
+
+.faq-mini--v1 .faq-pergunta {
+  min-height: 58px;
+  font-size: 15px;
+}
+
+.faq-mini--v1 .faq-mais,
+.faq-mini--v1 .faq-pergunta[aria-expanded="true"] .faq-mais {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px var(--blue);
+}
+
+.faq-mini--v1 .faq-mais::before,
+.faq-mini--v1 .faq-mais::after,
+.faq-mini--v1 .faq-pergunta[aria-expanded="true"] .faq-mais::before,
+.faq-mini--v1 .faq-pergunta[aria-expanded="true"] .faq-mais::after {
+  background: var(--blue-ink);
+}
+
+/* v2: cada pergunta é um botão branco, com ícone */
+.faq-mini--v2 .faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.faq-mini--v2 .faq-item + .faq-item {
+  border-top: 0;
+}
+
+.faq-mini--v2 .faq-item {
+  border-radius: 18px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px rgba(177, 199, 222, 0.75), 0 4px 14px rgba(77, 116, 168, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.faq-mini--v2 .faq-item.is-aberto {
+  box-shadow: 0 0 0 1.5px var(--blue), 0 8px 22px rgba(77, 116, 168, 0.16);
+}
+
+.faq-mini--v2 .faq-pergunta {
+  min-height: 58px;
+  padding: 10px 14px 10px 10px;
+}
+
+.faq-mini--v2 .faq-mini-icone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--blue-mist);
+  color: var(--blue-ink);
+}
+
+.faq-mini-icone svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.faq-mini--v2 .faq-mais {
+  background: var(--blue-mist);
+}
+
+.faq-mini--v2 .faq-conteudo {
+  padding: 0 16px 0 58px;
+}
+
+/* v3: cartão quase branco, perguntas numeradas */
+.faq-mini--v3 .faq {
+  padding: 4px 18px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, var(--blue-mist) 0%, var(--white) 100%);
+  box-shadow: inset 0 0 0 1px var(--blue-soft);
+}
+
+.faq-mini--v3 .faq-item + .faq-item {
+  border-top-color: var(--blue-soft);
+}
+
+.faq-mini--v3 .faq-pergunta {
+  min-height: 58px;
+  font-family: var(--font-condensed);
+  font-size: 17px;
+  text-transform: uppercase;
+}
+
+.faq-mini--v3 .faq-mini-num {
+  display: block;
+  flex: none;
+  width: 30px;
+  color: var(--blue);
+  font-family: var(--font-condensed);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.faq-mini--v3 .faq-mais {
+  box-shadow: inset 0 0 0 1px var(--blue-soft);
+}
+
+.faq-mini--v3 .faq-conteudo {
+  padding-left: 42px;
 }
 
 /* Seção longe da tela: animações contínuas pausadas (oferta.js marca a classe) */
@@ -5462,15 +5605,29 @@ html.lista-aberta {
     margin-right: auto;
   }
 
-  /* Depoimentos: 3 cartões lado a lado */
+  /* Depoimentos e dúvidas rápidas: continuam na coluna da direita da primeira dobra */
+  .oferta-dobra > .oferta-depoimentos,
+  .oferta-dobra > .faq-mini {
+    grid-column: 2;
+  }
+
+  .oferta-dobra > .oferta-depoimentos {
+    margin-top: 64px;
+  }
+
+  .oferta-dobra > .faq-mini {
+    margin-top: 40px;
+  }
+
+  /* dois cartões de depoimento por vez */
   .depos {
-    margin: 40px 0 0;
+    margin: 30px 0 0;
     padding: 6px 4px 26px;
     scroll-padding: 0 4px;
   }
 
   .depo {
-    flex: 0 0 calc((100% - 32px) / 3);
+    flex: 0 0 calc((100% - 16px) / 2);
   }
 
   /* Você envelhece: mesma composição, um pouco maior */
@@ -5755,16 +5912,6 @@ html.lista-aberta {
     grid-column: 2;
     grid-row: 1 / span 2;
     margin-top: 0;
-  }
-
-  /* Principais dúvidas do começo: uma coluna centralizada */
-  .oferta > .oferta-duvidas-topo {
-    display: block;
-    max-width: 760px;
-  }
-
-  .oferta-duvidas-topo .faq {
-    margin-top: 28px;
   }
 
   /* Avaliações: resumo à esquerda (acompanha a rolagem), lista à direita */
