@@ -391,28 +391,49 @@
 }
 
 /* Selos azuis */
-.selos-azuis {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+/* Selo "Testado dermatologicamente": vai de uma ponta à outra da foto, fino,
+   fundo branco com borda no azul da marca (o azul só no contorno e na bolinha) */
+.selo-derm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin-top: 14px;
+  min-height: 34px;
+  margin-top: 12px;
+  padding: 3px 36px;
+  border: 1.5px solid var(--blue);
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 3px 10px rgba(177, 199, 222, 0.3);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.selos-azuis span {
+.selo-derm-bola {
+  position: absolute;
+  top: 50%;
+  left: 3px;
   display: grid;
   place-items: center;
-  min-height: 32px;
-  padding: 4px 8px;
-  border-radius: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
   background: var(--blue);
-  box-shadow: 0 2px 8px var(--blue-glow);
-  color: var(--white);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-align: center;
-  text-transform: uppercase;
+  transform: translateY(-50%);
+}
+
+.selo-derm-icone {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Prova social (versão em uma linha) */
