@@ -146,6 +146,10 @@
     "anvisa": "Tem registro na Anvisa?", "resultado": "Realmente dá resultado?", "tempo": "Em quanto tempo vejo resultados?",
     "confiavel": "É confiável comprar?", "garantia": "E se eu não gostar?", "frete": "O frete é grátis?",
     "o-que-e": "O que é o Sérum?", "como-usar": "Como e quando usar?", "srrp": "O que é a ação SRRP?",
+    // principais dúvidas do começo da página (logo depois dos depoimentos)
+    "topo-por-que": "Começo · Por que usar o Sérum?", "topo-como-usar": "Começo · Como usar o Sérum?",
+    "topo-srrp": "Começo · O que é a ação SRRP?", "topo-regularizado": "Começo · O produto é regularizado?",
+    "topo-rejuvenesce": "Começo · Ele rejuvenesce mesmo a pele?",
     // perguntas antigas (números), para os dados de antes da troca
     "1": "O que é o Sérum?", "2": "Como usar?", "3": "O que é a ação SRRP?", "4": "Posso usar todos os dias?", "5": "Em que horário usar?"
   };
