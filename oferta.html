@@ -28,7 +28,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=a8a9f7d22a">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=3cf5dcafaf">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
@@ -59,14 +59,15 @@
 
     <!-- ===================== DOBRA 1: produto ===================== -->
     <section data-secao="produto" class="oferta-produto">
-      <p class="aprovado">
-        <svg class="aprovado-check" viewBox="0 0 24 24" aria-hidden="true">
+      <!-- Topo compacto: check + nome do produto + etiqueta "Aprovada" (protocolo aprovado no quiz) -->
+      <div class="topo-produto">
+        <svg class="topo-produto-check" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="11" fill="#22b14c"/>
           <path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="titulo-leve">Seu protocolo foi</span> <strong>Aprovado!</strong>
-      </p>
-      <h1 class="oferta-titulo">Fórmula Revitalizadora</h1>
+        <h1 class="oferta-titulo"><span class="titulo-leve">Fórmula</span> Revitalizadora</h1>
+        <span class="topo-produto-selo">Aprovada</span>
+      </div>
 
       <!-- Galeria: 7 fotos em assets/img/oferta/produto-1.webp ... produto-7.webp (900 × 900) e miniaturas
            produto-N-mini.webp (160 × 160). As fotos grandes 2 a 7 baixam depois que a primeira dobra carrega. -->
