@@ -5524,7 +5524,7 @@ html.lista-aberta {
   padding-left: 42px;
 }
 
-/* v4: pílulas cinza bem claro; a pergunta aberta fica azul bebê
+/* v4: pílulas cinza bem claro; a pergunta aberta fica azul bem clarinho
    (com faq-mini--azul, todas ficam azul bebê) */
 .faq-mini--v4 .faq {
   display: flex;
@@ -5546,7 +5546,7 @@ html.lista-aberta {
 }
 
 .faq-mini--v4 .faq-item.is-aberto {
-  background: var(--blue-soft);
+  background: var(--blue-mist);
 }
 
 .faq-mini--v4 .faq-pergunta {
