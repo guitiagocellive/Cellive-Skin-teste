@@ -171,30 +171,38 @@
   align-items: center;
 }
 
-.aprovado {
-  display: inline-flex;
+/* Topo compacto: check verde + "Fórmula Revitalizadora" + etiqueta "Aprovada" */
+.topo-produto {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  margin: 8px 0 0;
-  padding: 3px 9px 3px 4px;
-  border-radius: 999px;
-  background: var(--gray-mist);
-  color: var(--gray);
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.oferta-titulo .titulo-leve {
+  color: var(--gray-dark);
+  font-weight: 400;
+}
+
+.topo-produto-check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.topo-produto-selo {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #eaf6ee;
+  color: #1f9a45;
   font-family: var(--font-condensed);
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
-}
-
-.aprovado strong {
-  color: var(--blue);
-  font-weight: 700;
-}
-
-.aprovado-check {
-  width: 14px;
-  height: 14px;
-  flex-shrink: 0;
 }
 
 /* texto que só o Google e os leitores de tela "veem" (ex.: o título da v2) */
@@ -211,10 +219,10 @@
 }
 
 .oferta-titulo {
-  margin: 5px 0 0;
+  margin: 0;
   color: var(--black);
   font-family: var(--font-condensed);
-  font-size: clamp(26px, 8.3vw, 35px);
+  font-size: 21px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.005em;
@@ -226,7 +234,7 @@
 /* Galeria */
 .galeria {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .galeria-principal {

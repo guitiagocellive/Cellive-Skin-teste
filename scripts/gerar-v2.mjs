@@ -24,17 +24,17 @@ const TROCAS = [
   // pré-lançamento: o botão fala do Sérum (na v2 não existe "sua fórmula")
   ['<span data-pre>Quero garantir minha fórmula</span>', '<span data-pre>Quero garantir o meu Sérum</span>'],
   ['<p class="fp-resumo" data-formula-resumo>12 ativos que trabalham juntos na sua pele</p>', '<p class="fp-resumo" data-formula-resumo>24 ativos em uma única fórmula</p>'],
-  // sem quiz não existe "protocolo aprovado": a v2 começa direto pelo nome do produto
-  [`      <p class="aprovado">
-        <svg class="aprovado-check" viewBox="0 0 24 24" aria-hidden="true">
+  // sem quiz não existe "protocolo aprovado" e a v2 não mostra o título acima da foto
+  // (ele fica só para o Google e leitores de tela)
+  [`      <!-- Topo compacto: check + nome do produto + etiqueta "Aprovada" (protocolo aprovado no quiz) -->
+      <div class="topo-produto">
+        <svg class="topo-produto-check" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="11" fill="#22b14c"/>
           <path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="titulo-leve">Seu protocolo foi</span> <strong>Aprovado!</strong>
-      </p>
-`, ""],
-  // a v2 também não mostra o título acima da foto (fica só para o Google e leitores de tela)
-  ['<h1 class="oferta-titulo">Fórmula Revitalizadora</h1>', '<h1 class="so-leitor">Sérum Revitalizador Noturno Cellive Skin</h1>'],
+        <h1 class="oferta-titulo"><span class="titulo-leve">Fórmula</span> Revitalizadora</h1>
+        <span class="topo-produto-selo">Aprovada</span>
+      </div>`, '      <h1 class="so-leitor">Sérum Revitalizador Noturno Cellive Skin</h1>'],
 ];
 
 let html = await readFile(new URL("oferta.html", RAIZ), "utf8");
