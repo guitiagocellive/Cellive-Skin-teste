@@ -828,9 +828,16 @@
       p = Math.min(1, Math.max(0, p));
       return 1 - Math.pow(1 - p, 2);
     };
+    // celular: abrem de cima para baixo. Computador: o do meio fica parado e os
+    // outros dois saem para os lados (esquerda e direita).
+    var deitadoRes = window.matchMedia ? window.matchMedia("(min-width: 1024px)") : { matches: false };
+    var girosDeitado = [-6, 0, 6];
     var desenharRes = function (v) {
+      var deitado = deitadoRes.matches;
       cartoesRes.forEach(function (c, n) {
-        c.style.transform = "translate3d(0," + (n * (28 + 134 * v)).toFixed(2) + "px,0) rotate(" + girosRes[n % 3] + "deg)";
+        c.style.transform = deitado
+          ? "translate3d(" + ((n - 1) * (34 + 286 * v)).toFixed(2) + "px,0,0) rotate(" + (girosDeitado[n % 3] * (0.4 + 0.6 * v)).toFixed(2) + "deg)"
+          : "translate3d(0," + (n * (28 + 134 * v)).toFixed(2) + "px,0) rotate(" + girosRes[n % 3] + "deg)";
       });
     };
     var quadroRes = function () {
