@@ -30,7 +30,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="/assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="/assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, /assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/min/oferta.css?v=2429eb60e6">
+  <link rel="stylesheet" href="/assets/min/oferta.css?v=d202b64200">
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -81,7 +81,6 @@
           </div>
           <div class="galeria-selos">
             <span class="selo selo-escuro">Mais vendido</span>
-            <span class="selo selo-contorno">Anti-aging</span>
             <!-- selo maior: inspirado na tecnologia coreana (bandeira da Coreia do Sul) -->
             <span class="selo-coreia"><svg class="selo-coreia-bandeira" viewBox="0 0 36 24" aria-hidden="true"><rect width="36" height="24" rx="2.5" fill="#fff"/><g transform="rotate(33.7 18 12)"><circle cx="18" cy="12" r="6" fill="#0047a0"/><path d="M12 12a6 6 0 0 1 12 0a3 3 0 0 1-6 0a3 3 0 0 0-6 0z" fill="#cd2e3a"/></g><g fill="#1a1a1a"><g transform="translate(7.4 5.2) rotate(-56.3)"><rect x="-3" y="-2.15" width="6" height="0.9"/><rect x="-3" y="-0.6499999999999999" width="6" height="0.9"/><rect x="-3" y="0.8500000000000001" width="6" height="0.9"/></g><g transform="translate(28.6 18.8) rotate(-56.3)"><rect x="-3" y="-2.15" width="2.6" height="0.9"/><rect x="0.4" y="-2.15" width="2.6" height="0.9"/><rect x="-3" y="-0.6499999999999999" width="2.6" height="0.9"/><rect x="0.4" y="-0.6499999999999999" width="2.6" height="0.9"/><rect x="-3" y="0.8500000000000001" width="2.6" height="0.9"/><rect x="0.4" y="0.8500000000000001" width="2.6" height="0.9"/></g><g transform="translate(28.6 5.2) rotate(56.3)"><rect x="-3" y="-2.15" width="2.6" height="0.9"/><rect x="0.4" y="-2.15" width="2.6" height="0.9"/><rect x="-3" y="-0.6499999999999999" width="6" height="0.9"/><rect x="-3" y="0.8500000000000001" width="2.6" height="0.9"/><rect x="0.4" y="0.8500000000000001" width="2.6" height="0.9"/></g><g transform="translate(7.4 18.8) rotate(56.3)"><rect x="-3" y="-2.15" width="6" height="0.9"/><rect x="-3" y="-0.6499999999999999" width="2.6" height="0.9"/><rect x="0.4" y="-0.6499999999999999" width="2.6" height="0.9"/><rect x="-3" y="0.8500000000000001" width="6" height="0.9"/></g></g></svg><span class="selo-coreia-texto"><small>Inspirado na</small>Tecnologia<br>coreana</span></span>
           </div>
@@ -126,7 +125,7 @@
       <h2 class="produto-nome">Sérum Facial Revitalizador Noturno</h2>
       <div class="avaliacao">
         <span class="estrelas" role="img" aria-label="Nota 4,9 de 5"></span>
-        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(1.430 Avaliações)</span>
+        <span>4,9 / 5,0 estrelas</span> <a class="avaliacao-qtd" href="#depoimentos" data-ir-depoimentos data-rastreio="avaliacoes" data-rastreio-valor="topo">(1.430 Avaliações)</a>
       </div>
 
       <h3 class="produto-chamada">Pareça mais jovem em apenas 2 meses.</h3>
@@ -252,13 +251,13 @@
 
       <div class="avaliacao avaliacao-centro">
         <span class="estrelas" role="img" aria-label="Nota 4,9 de 5"></span>
-        <span>4,9 / 5,0 estrelas</span> <span class="avaliacao-qtd">(1.430 Avaliações)</span>
+        <span>4,9 / 5,0 estrelas</span> <a class="avaliacao-qtd" href="#depoimentos" data-ir-depoimentos data-rastreio="avaliacoes" data-rastreio-valor="planos">(1.430 Avaliações)</a>
       </div>
     </section>
 
 
     <!-- ===================== DOBRA 3: depoimentos ===================== -->
-    <section data-secao="depoimentos" class="oferta-depoimentos" aria-labelledby="depo-titulo">
+    <section data-secao="depoimentos" class="oferta-depoimentos" id="depoimentos" aria-labelledby="depo-titulo">
       <h2 class="secao-titulo" id="depo-titulo">
         <span class="titulo-leve">Amado por</span>
         <span class="circulado" data-circulo>
@@ -1220,7 +1219,7 @@
     </div>
   </dialog>
 
-  <script src="/assets/min/oferta.js?v=ac1fae69f0" defer></script>
+  <script src="/assets/min/oferta.js?v=976428dcc1" defer></script>
   <script src="/assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
   <script src="/assets/min/oferta-formula.js?v=c054566ee7" defer></script>
   <script src="/assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>

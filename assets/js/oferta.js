@@ -1045,6 +1045,16 @@
     });
   });
 
+  /* "(1.430 Avaliações)" leva até a seção "Amado por +5.000 mulheres" */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ir-depoimentos]"), function (link) {
+    link.addEventListener("click", function (ev) {
+      var alvo = document.getElementById("depoimentos");
+      if (!alvo) return;
+      ev.preventDefault();
+      alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
   /* ---------- Barra de compra fixa ----------
      Aparece depois que a pessoa passa do botão "Comprar Agora" e some quando
      ela volta para os planos. O botão leva até a escolha do plano. */
