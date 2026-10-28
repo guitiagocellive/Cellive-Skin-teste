@@ -3,26 +3,39 @@
 (function () {
   "use strict";
 
+  /* Medições da tela (tamanho e posição) só depois que a primeira tela foi
+     desenhada: medir antes obriga o celular a calcular a página inteira no meio
+     do carregamento ("reflow forçado"), o que atrasa a primeira dobra. */
+  var aposPintar = function (fn) {
+    requestAnimationFrame(function () { setTimeout(fn, 0); });
+  };
+
   /* ---------- Galeria (carrossel) ----------
-     As fotos ficam lado a lado num trilhoGal com rolagem que encaixa (o arrasto
-     segue o dedo). Tocar numa miniatura desliza até a foto. O selo "Anti-aging"
+     As fotos ficam lado a lado num trilho com rolagem que encaixa: dá para
+     arrastar com o dedo ou tocar nas miniaturas. Sozinha, a galeria passa para
+     a próxima foto a cada 4 segundos (pausa quando a pessoa mexe nela, quando
+     sai da tela ou quando a aba fica em segundo plano). O selo "Anti-aging"
      só aparece na 1ª foto (as outras têm texto no canto).
      Carregamento: a foto 1 vem com a página; as outras baixam uma por vez
      depois que a primeira dobra termina de carregar (ou na hora, se a pessoa
-     for até ela antes). Cada foto aparece com um esmaecer suave. */
+     for até ela antes), no tamanho certo para a tela (srcset). */
   var trilhoGal = document.querySelector("[data-galeria-trilho]");
   var slides = trilhoGal ? Array.prototype.slice.call(trilhoGal.children) : [];
   var selos = document.querySelector(".galeria-selos");
   var miniaturas = Array.prototype.slice.call(document.querySelectorAll(".miniatura"));
   var fileiraMini = document.querySelector(".galeria-miniaturas");
   var atual = 0;
+  var GAL_TEMPO = 4000;
+  var galSemMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function carregarFoto(i) {
     var slide = slides[i];
     var img = slide && slide.querySelector("img[data-src]");
     if (!img) return null;
     var url = img.getAttribute("data-src");
+    var srcset = img.getAttribute("data-srcset");
     img.removeAttribute("data-src");
+    img.removeAttribute("data-srcset");
     slide.classList.add("is-esperando");
     img.classList.add("is-chegando");
     return new Promise(function (pronto) {
@@ -34,6 +47,7 @@
       };
       img.onload = function () { (img.decode ? img.decode() : Promise.resolve()).then(mostrar, mostrar); };
       img.onerror = function () { slide.classList.remove("is-esperando"); pronto(); };
+      if (srcset) img.srcset = srcset;
       img.src = url;
     });
   }
@@ -58,7 +72,7 @@
     atual = i;
     miniaturas.forEach(function (m, k) {
       m.classList.toggle("is-ativa", k === i);
-      m.setAttribute("aria-selected", k === i ? "true" : "false");
+      if (k === i) m.setAttribute("aria-current", "true"); else m.removeAttribute("aria-current");
     });
     if (selos) selos.classList.toggle("is-escondido", i !== 0);
     // vizinhas na frente da fila
@@ -71,32 +85,59 @@
     }
   }
 
-  if (trilhoGal) {
+  if (trilhoGal && slides.length) {
     var pedidoGal = 0, paradaGal = 0;
+    var mexeuAte = 0;        // até quando a troca automática fica pausada
+    var mexeuAgora = false;  // a última rolagem foi da pessoa (só essas vão para o painel)
+    var galNaTela = true, autoGal = 0;
+
+    var irParaFoto = function (i) {
+      i = (i + slides.length) % slides.length;
+      carregarFoto(i);
+      trilhoGal.scrollTo({ left: i * trilhoGal.clientWidth, behavior: galSemMovimento ? "auto" : "smooth" });
+    };
+    var pausar = function () { mexeuAte = Date.now() + 8000; mexeuAgora = true; };
+
     trilhoGal.addEventListener("scroll", function () {
       if (!pedidoGal) pedidoGal = requestAnimationFrame(function () {
         pedidoGal = 0;
         marcar(Math.round(trilhoGal.scrollLeft / trilhoGal.clientWidth));
       });
-      // registra no painel quando a rolagem para
+      // registra no painel quando a rolagem feita pela pessoa para
       clearTimeout(paradaGal);
-      paradaGal = setTimeout(function () { rastrear("clique", { e: "galeria", val: String(atual + 1) }); }, 400);
+      paradaGal = setTimeout(function () {
+        if (mexeuAgora) rastrear("clique", { e: "galeria", val: String(atual + 1) });
+        mexeuAgora = false;
+      }, 400);
     }, { passive: true });
 
+    ["touchstart", "pointerdown", "wheel"].forEach(function (ev) {
+      trilhoGal.addEventListener(ev, pausar, { passive: true });
+    });
     miniaturas.forEach(function (mini, i) {
-      mini.addEventListener("click", function () {
-        carregarFoto(i);
-        trilhoGal.scrollTo({ left: i * trilhoGal.clientWidth, behavior: "smooth" });
-      });
+      mini.addEventListener("click", function () { pausar(); irParaFoto(i); });
     });
 
     // começou a mexer na galeria: as fotos vizinhas vêm na hora
     trilhoGal.addEventListener("touchstart", function () { carregarFoto(1); baixarEmFila(); }, { once: true, passive: true });
 
-    // primeira dobra carregada: as outras fotos começam a baixar
+    // troca automática a cada 4 s (só com a galeria na tela e a aba aberta)
+    var agendarGal = function () {
+      clearTimeout(autoGal);
+      autoGal = setTimeout(function () {
+        if (galNaTela && !document.hidden && Date.now() >= mexeuAte) irParaFoto(atual + 1);
+        agendarGal();
+      }, GAL_TEMPO);
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { galNaTela = es[0].isIntersecting; }, { threshold: 0.5 }).observe(trilhoGal);
+    }
+
+    // primeira dobra carregada: as outras fotos começam a baixar e a troca automática começa
     var depoisDaDobra = function () {
       if (window.requestIdleCallback) requestIdleCallback(baixarEmFila, { timeout: 1200 });
       else setTimeout(baixarEmFila, 300);
+      agendarGal();
     };
     if (document.readyState === "complete") depoisDaDobra();
     else window.addEventListener("load", depoisDaDobra);
@@ -110,33 +151,194 @@
     var olhoSecoes = new IntersectionObserver(function (entradas) {
       entradas.forEach(function (e) { e.target.classList.toggle("fora-da-tela", !e.isIntersecting); });
     }, { rootMargin: "250px 0px" });
-    Array.prototype.forEach.call(document.querySelectorAll("main.oferta > section"), function (sec) { olhoSecoes.observe(sec); });
+    Array.prototype.forEach.call(document.querySelectorAll("main.oferta > section, .oferta-dobra > section"), function (sec) { olhoSecoes.observe(sec); });
   }
 
   /* ---------- Planos ---------- */
   var planos = document.querySelectorAll(".plano");
-  var resumoPlano = document.querySelector("[data-resumo-plano]");
+  var resumo = document.querySelector(".resumo");
+  var resumoLista = document.querySelector("[data-resumo-lista]");
   var resumoParcela = document.querySelector("[data-resumo-parcela]");
   var resumoAvista = document.querySelector("[data-resumo-avista]");
+  var resumoDe = document.querySelector("[data-resumo-de]");
   var comprar = document.querySelector("[data-comprar]");
+  var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function escolher(plano) {
+  // "R$ 24,83" -> 24.83 e volta
+  var paraNumero = function (t) { return parseFloat(String(t).replace(/[^\d,]/g, "").replace(",", ".")) || 0; };
+  var paraReais = function (n) { return "R$ " + n.toFixed(2).replace(".", ","); };
+
+  // a parcela "corre" do valor antigo até o novo
+  var contagemParcela = 0;
+  function mostrarParcela(texto) {
+    var de = paraNumero(resumoParcela.textContent), ate = paraNumero(texto);
+    cancelAnimationFrame(contagemParcela);
+    if (semMovimento || !de || !ate || de === ate) { resumoParcela.textContent = texto; return; }
+    var inicio = performance.now(), duracao = 450;
+    (function passo(agora) {
+      var t = Math.min(1, (agora - inicio) / duracao);
+      var suave = 1 - Math.pow(1 - t, 3);
+      resumoParcela.textContent = t < 1 ? paraReais(de + (ate - de) * suave) : texto;
+      if (t < 1) contagemParcela = requestAnimationFrame(passo);
+    })(inicio);
+  }
+
+  /* Benefícios de cada kit (no máximo 4 linhas). Cada linha é uma lista de
+     pedaços [texto, tipo]: tipo 0 = normal, 1 = negrito, 2 e 3 = dentro do
+     fundo azul da economia (normal e negrito). Kit sem desconto: 3 linhas. */
+  function beneficios(plano) {
+    var off = plano.getAttribute("data-off");
+    var economia = plano.getAttribute("data-economia");
+    var qtd = (plano.getAttribute("data-qtd") || "").split(" · ");
+    var linhas = [
+      ["qtd", [[qtd[0], 1], [qtd[1] ? " · " + qtd[1] + " de tratamento" : ""]]],
+      ["frete", [["Frete "], ["grátis", 1], [" para todo o Brasil"]]],
+    ];
+    if (off && economia) linhas.push(["off", [[off, 1], [" · "], ["Você economiza ", 2], [economia, 3]]]);
+    linhas.push(["gar", [["Garantia de "], ["30 dias", 1]]]);
+    return linhas;
+  }
+
+  // escreve os pedaços no <span>; com "ate", só os primeiros caracteres (efeito de digitação)
+  function escrever(span, pedacos, ate) {
+    span.textContent = "";
+    var resto = ate == null ? Infinity : ate;
+    var pilula = null;
+    pedacos.forEach(function (p) {
+      if (resto <= 0 || !p[0]) return;
+      var t = p[0].slice(0, resto), tipo = p[1] || 0;
+      resto -= t.length;
+      var onde = span;
+      if (tipo >= 2) {
+        if (!pilula) { pilula = document.createElement("span"); pilula.className = "resumo-pilula"; span.appendChild(pilula); }
+        onde = pilula;
+      }
+      if (tipo === 1 || tipo === 3) { var b = document.createElement("b"); b.textContent = t; onde.appendChild(b); }
+      else onde.appendChild(document.createTextNode(t));
+    });
+  }
+  var textoDe = function (pedacos) { return pedacos.map(function (p) { return p[0]; }).join(""); };
+
+  // linha nova ou que mudou: fica azul e é "redigitada"
+  function digitar(li, pedacos) {
+    var span = li.firstElementChild;
+    var total = textoDe(pedacos).length;
+    var inicio = performance.now(), duracao = Math.min(520, 16 * total);
+    li.classList.remove("is-novo", "is-realce");
+    void li.offsetWidth; // reinicia o realce
+    li.classList.add("is-novo", "is-realce");
+    clearTimeout(li._faixa);
+    li._faixa = setTimeout(function () { li.classList.remove("is-realce"); }, 1500);
+    clearTimeout(li._azul);
+    li._azul = setTimeout(function () { li.classList.remove("is-novo"); }, duracao + 120); // terminou de digitar: escurece
+    cancelAnimationFrame(li._digita);
+    (function passo(agora) {
+      var t = Math.min(1, (agora - inicio) / duracao);
+      escrever(span, pedacos, t < 1 ? Math.ceil(total * t) : null);
+      if (t < 1) li._digita = requestAnimationFrame(passo);
+    })(inicio);
+  }
+
+  function montarLista(plano, animar) {
+    var atuais = {};
+    Array.prototype.forEach.call(resumoLista.children, function (li) { atuais[li.getAttribute("data-k")] = li; });
+    var algumaDigitando = false;
+    beneficios(plano).forEach(function (linha) {
+      var k = linha[0], pedacos = linha[1];
+      var li = atuais[k];
+      var mudou = !li || li.textContent !== textoDe(pedacos);
+      if (!li) {
+        li = document.createElement("li");
+        li.setAttribute("data-k", k);
+        li.appendChild(document.createElement("span"));
+      }
+      delete atuais[k];
+      resumoLista.appendChild(li); // mantém a ordem
+      if (mudou && animar && !semMovimento) { digitar(li, pedacos); algumaDigitando = true; }
+      else if (mudou) escrever(li.firstElementChild, pedacos);
+    });
+    Object.keys(atuais).forEach(function (k) { resumoLista.removeChild(atuais[k]); });
+    // leitor de tela: lê o resumo só depois da digitação
+    if (algumaDigitando) {
+      resumo.setAttribute("aria-busy", "true");
+      clearTimeout(resumo._ocupado);
+      resumo._ocupado = setTimeout(function () { resumo.removeAttribute("aria-busy"); }, 600);
+    }
+  }
+
+  var refazer = function (el, classe) {
+    if (!el || semMovimento) return;
+    el.classList.remove(classe);
+    void el.offsetWidth; // reinicia a animação
+    el.classList.add(classe);
+  };
+  Array.prototype.forEach.call([resumo].concat(Array.prototype.slice.call(planos)), function (el) {
+    if (el) el.addEventListener("animationend", function (ev) {
+      if (ev.target !== el) return;
+      el.classList.remove("is-trocando", "is-escolhendo");
+    });
+  });
+
+  function escolher(plano, animar) {
     Array.prototype.forEach.call(planos, function (p) {
       p.classList.toggle("is-selecionado", p === plano);
     });
-    resumoPlano.textContent = plano.getAttribute("data-resumo");
-    resumoParcela.textContent = plano.getAttribute("data-parcela");
+    var de = plano.getAttribute("data-de");
+    montarLista(plano, animar);
     resumoAvista.textContent = plano.getAttribute("data-avista");
+    resumoDe.textContent = de || "";
+    resumoDe.hidden = !de;
     comprar.href = plano.getAttribute("data-link") || "#";
+    if (animar) {
+      mostrarParcela(plano.getAttribute("data-parcela"));
+      refazer(plano, "is-escolhendo");
+      refazer(resumo, "is-trocando");
+    } else {
+      resumoParcela.textContent = plano.getAttribute("data-parcela");
+    }
   }
 
   var rastrear = function (tipo, dados) {
     if (window.CelliveRastreio) window.CelliveRastreio.evento(tipo, dados);
   };
 
+  /* Ao escolher um kit, a página se ajusta para mostrar na mesma tela os kits,
+     o resumo, o botão de compra, os selos de confiança e a nota das avaliações.
+     Se não couber tudo, vai tirando do que é menos importante: primeiro os
+     outros kits, depois a nota, depois os selos. Se já está tudo à vista, não mexe. */
+  var secaoPlanos = document.getElementById("planos");
+  var topoFixo = document.querySelector("[data-topo]");
+  function enquadrar(plano) {
+    if (!secaoPlanos) return;
+    var folga = 10;
+    var cima = Math.max(0, topoFixo ? topoFixo.getBoundingClientRect().bottom : 0) + folga;
+    var baixo = window.innerHeight - folga;
+    var espaco = baixo - cima;
+    var visivel = function (el) { return el && el.getClientRects().length ? el : null; };
+    var alto = function (el) { return el.getBoundingClientRect().top - 14; }; // 14 = selo em cima do cartão
+    var fim = function (el) { return el.getBoundingClientRect().bottom; };
+    var inicioKits = alto(planos[0]);
+    var inicioEscolhido = alto(plano);
+    var fins = [secaoPlanos.querySelector(".avaliacao"), secaoPlanos.querySelector(".confianca"), comprar]
+      .filter(visivel).map(fim);
+    var opcoes = [];
+    fins.forEach(function (f) { opcoes.push([inicioKits, f], [inicioEscolhido, f]); });
+    var escolha = null;
+    for (var i = 0; i < opcoes.length; i++) {
+      if (opcoes[i][1] - opcoes[i][0] <= espaco) { escolha = opcoes[i]; break; }
+    }
+    // nem o kit escolhido + botão cabem (tela muito baixa): mostra o botão embaixo
+    if (!escolha) escolha = [fins[fins.length - 1] - espaco, fins[fins.length - 1]];
+    if (escolha[0] >= cima && escolha[1] <= baixo) return; // já está tudo na tela
+    // centraliza o pedaço escolhido no espaço livre
+    var desloca = escolha[0] - cima - (espaco - (escolha[1] - escolha[0])) / 2;
+    window.scrollTo({ top: Math.max(0, window.scrollY + desloca), behavior: semMovimento ? "auto" : "smooth" });
+  }
+
   Array.prototype.forEach.call(planos, function (plano) {
     plano.querySelector("input").addEventListener("change", function () {
-      escolher(plano);
+      escolher(plano, true);
+      enquadrar(plano);
       rastrear("plano", { val: plano.querySelector("input").value });
     });
   });
@@ -150,6 +352,13 @@
     if (preLancamento) {
       ev.preventDefault();
       abrirLista(marcado ? marcado.value : null);
+      return;
+    }
+    // lançado, mas o kit ainda não tem link de checkout (ex.: na prévia /oferta/lancamento)
+    var link = comprar.getAttribute("href");
+    if (!link || link === "#") {
+      ev.preventDefault();
+      alert("Prévia do lançamento: o link do checkout deste kit ainda não foi colocado.");
     }
   });
 
@@ -261,7 +470,7 @@
       }
     };
   }
-  escolher(document.querySelector(".plano input:checked").closest(".plano"));
+  escolher(document.querySelector(".plano input:checked").closest(".plano"), false);
 
   /* ---------- Contagem regressiva ----------
      Começa em 4min30s na primeira visita e continua de onde parou se a pessoa
@@ -321,6 +530,51 @@
     }
   }
 
+  /* ---------- Faixa do topo: sempre em uma linha ----------
+     Se o texto couber, fica parado. Se não couber, duplica o texto e faz correr
+     em loop, a uma velocidade confortável de ler. Confere de novo quando a fonte
+     da marca termina de carregar e quando a tela muda de tamanho. */
+  var promoFaixa = document.querySelector("[data-faixa-topo]");
+  var promoTrilho = promoFaixa && promoFaixa.querySelector("[data-faixa-trilho]");
+  if (promoFaixa && promoTrilho) {
+    var promoVisivel = function () {
+      return Array.prototype.filter.call(promoTrilho.children, function (el) {
+        return !el.hasAttribute("data-copia") && el.offsetWidth > 0;
+      })[0];
+    };
+    var semMovPromo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var conferirPromo = function () {
+      var item = promoVisivel();
+      if (!item) return;
+      Array.prototype.forEach.call(promoTrilho.querySelectorAll("[data-copia]"), function (c) { c.remove(); });
+      promoFaixa.classList.remove("is-correndo");
+      var cabe = item.offsetWidth <= promoFaixa.clientWidth - 32;
+      if (cabe || semMovPromo) return;
+      var copia = item.cloneNode(true);
+      copia.setAttribute("data-copia", "");
+      copia.setAttribute("aria-hidden", "true");
+      promoTrilho.appendChild(copia);
+      promoFaixa.classList.add("is-correndo");
+      var distancia = promoTrilho.scrollWidth / 2;
+      promoFaixa.style.setProperty("--promo-tempo", Math.max(8, distancia / 45).toFixed(1) + "s"); // ~45 px por segundo
+    };
+    aposPintar(conferirPromo);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { aposPintar(conferirPromo); });
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", function () { aposPintar(conferirPromo); });
+    var larguraPromo = window.innerWidth;
+    window.addEventListener("resize", function () {
+      if (window.innerWidth === larguraPromo) return; // a barra do navegador subir/descer não conta
+      larguraPromo = window.innerWidth;
+      conferirPromo();
+    });
+    // longe da tela, o texto para de correr
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens) {
+        promoFaixa.classList.toggle("is-parada", !itens[0].isIntersecting);
+      }).observe(promoFaixa);
+    }
+  }
+
   /* ---------- Topo: vira balão quando gruda no alto da tela ---------- */
   var topo = document.querySelector("[data-topo]");
   var faixaTopo = document.querySelector(".promo-faixa");
@@ -329,81 +583,7 @@
   function rolou() { topo.classList.toggle("is-rolando", window.scrollY > topoGruda + 8); }
   window.addEventListener("scroll", rolou, { passive: true });
   window.addEventListener("resize", medirTopo);
-  medirTopo();
-
-  /* ---------- Menu do topo (três tracinhos) ----------
-     Abre um painel com as seções; tocar numa delas fecha o menu e rola até lá.
-     As seções de baixo só ganham a altura real quando chegam perto da tela
-     (content-visibility), então, quando a rolagem para, a posição é conferida
-     e corrigida se precisar. */
-  var menuBotao = document.querySelector("[data-menu-botao]");
-  var menu = document.querySelector("[data-menu]");
-  var menuTimer = 0;
-
-  function abrirMenu() {
-    clearTimeout(menuTimer);
-    menu.hidden = false;
-    requestAnimationFrame(function () { requestAnimationFrame(function () { menu.classList.add("is-aberto"); }); });
-    menuBotao.setAttribute("aria-expanded", "true");
-    menuBotao.setAttribute("aria-label", "Fechar o menu");
-    rastrear("clique", { e: "menu-abrir" });
-  }
-  function fecharMenu() {
-    if (menu.hidden) return;
-    menu.classList.remove("is-aberto");
-    menuBotao.setAttribute("aria-expanded", "false");
-    menuBotao.setAttribute("aria-label", "Abrir o menu");
-    menuTimer = setTimeout(function () { menu.hidden = true; }, 320);
-  }
-
-  function quandoParar(cb) {
-    var ultimo = -1;
-    var vigia = setInterval(function () {
-      if (window.scrollY === ultimo) { clearInterval(vigia); cb(); }
-      ultimo = window.scrollY;
-    }, 120);
-  }
-  function irParaSecao(alvo) {
-    var folga = topo.offsetHeight + 12;
-    var destino = function () { return Math.max(0, alvo.getBoundingClientRect().top + window.scrollY - folga); };
-    var tentativas = 0;
-    var conferir = function () {
-      var y = destino();
-      if (Math.abs(window.scrollY - y) > 6 && tentativas++ < 4) {
-        window.scrollTo({ top: y, behavior: "smooth" });
-        quandoParar(conferir);
-      }
-    };
-    window.scrollTo({ top: destino(), behavior: "smooth" });
-    quandoParar(conferir);
-  }
-
-  if (menuBotao && menu) {
-    menuBotao.addEventListener("click", function () {
-      if (menu.hidden || !menu.classList.contains("is-aberto")) abrirMenu(); else fecharMenu();
-    });
-    Array.prototype.forEach.call(menu.querySelectorAll("[data-menu-ir]"), function (link) {
-      link.addEventListener("click", function (ev) {
-        var id = link.getAttribute("href").slice(1);
-        var alvo = document.getElementById(id);
-        if (!alvo) return;
-        ev.preventDefault();
-        fecharMenu();
-        rastrear("clique", { e: "menu", val: id });
-        irParaSecao(alvo);
-      });
-    });
-    // fecha ao tocar fora, com Esc ou ao rolar a página
-    document.addEventListener("pointerdown", function (ev) {
-      if (!menu.hidden && !menu.contains(ev.target) && !menuBotao.contains(ev.target)) fecharMenu();
-    });
-    document.addEventListener("keydown", function (ev) { if (ev.key === "Escape") fecharMenu(); });
-    var rolagemAoAbrir = 0;
-    menuBotao.addEventListener("click", function () { rolagemAoAbrir = window.scrollY; });
-    window.addEventListener("scroll", function () {
-      if (!menu.hidden && menu.classList.contains("is-aberto") && Math.abs(window.scrollY - rolagemAoAbrir) > 60) fecharMenu();
-    }, { passive: true });
-  }
+  aposPintar(medirTopo);
 
   /* ---------- Entrada dos textos ----------
      Separa os títulos marcados com data-revelar="palavras" em palavras (sem
@@ -483,7 +663,7 @@
       });
     };
     depos.addEventListener("scroll", marcarPonto, { passive: true });
-    marcarPonto();
+    aposPintar(marcarPonto);
   }
 
   /* ---------- Dúvidas: abre uma por vez ---------- */
@@ -551,7 +731,7 @@
     var pedirSrrp = function () { if (!pedidoSrrp) pedidoSrrp = requestAnimationFrame(atualizarSrrp); };
     window.addEventListener("scroll", pedirSrrp, { passive: true });
     window.addEventListener("resize", pedirSrrp);
-    atualizarSrrp();
+    aposPintar(atualizarSrrp);
   }
 
   /* ---------- Depoimentos em loop ----------
@@ -564,11 +744,19 @@
       copia.setAttribute("aria-hidden", "true");
       trilho.appendChild(copia);
     });
-    var ajustarTempo = function () {
-      trilho.style.setProperty("--cli-tempo", Math.round(trilho.scrollWidth / 2 / 30) + "s");
+    // velocidade pela largura da fila; a largura vem do observador (sem medir na abertura)
+    var ajustarTempo = function (largura) {
+      if (!(largura > 200)) return; // seção ainda não desenhada (fica com os 50 s padrão)
+      trilho.style.setProperty("--cli-tempo", Math.round(largura / 2 / 30) + "s");
     };
-    ajustarTempo();
-    window.addEventListener("load", ajustarTempo);
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(function (es) {
+        var box = es[0].borderBoxSize && es[0].borderBoxSize[0];
+        ajustarTempo(box ? box.inlineSize : es[0].contentRect.width);
+      }).observe(trilho);
+    } else {
+      window.addEventListener("load", function () { ajustarTempo(trilho.scrollWidth); });
+    }
   }
 
   /* ---------- Resultados: cartões que se abrem com a rolagem ----------
@@ -604,10 +792,12 @@
       if (!rodandoRes && alvoRes !== atualRes) { rodandoRes = true; requestAnimationFrame(quadroRes); }
     };
     if (!semMovimento) {
-      atualRes = alvoRes = medirRes();
-      desenharRes(atualRes);
-      window.addEventListener("scroll", aoRolarRes, { passive: true });
-      window.addEventListener("resize", aoRolarRes);
+      aposPintar(function () {
+        atualRes = alvoRes = medirRes();
+        desenharRes(atualRes);
+        window.addEventListener("scroll", aoRolarRes, { passive: true });
+        window.addEventListener("resize", aoRolarRes);
+      });
     }
 
     var contar = function (alvo) {
@@ -725,7 +915,7 @@
     anterior.addEventListener("click", function () { irPara(atualVid - 1); });
     proximo.addEventListener("click", function () { irPara(atualVid + 1); });
     carrossel.addEventListener("scroll", function () { requestAnimationFrame(marcarVid); }, { passive: true });
-    marcarVid();
+    aposPintar(marcarVid);
   }
 
   /* ---------- Os números falam por si ----------
@@ -745,7 +935,7 @@
     var pedirNum = function () { if (!pedidoNum) pedidoNum = requestAnimationFrame(atualizarNum); };
     window.addEventListener("scroll", pedirNum, { passive: true });
     window.addEventListener("resize", pedirNum);
-    atualizarNum();
+    aposPintar(atualizarNum);
 
     var listaNum = numeros.querySelector("[data-num-lista]");
     var contarBarras = function () {
@@ -789,6 +979,7 @@
     var grafCorte = graf && graf.querySelector("[data-graf-corte]");
     var grafAtivo = graf && graf.querySelector("[data-graf-ativo]");
     var grafGuia = graf && graf.querySelector("[data-graf-guia]");
+    var grafRotulos = graf ? Array.prototype.slice.call(graf.querySelectorAll("[data-graf-rotulo]")) : [];
     var grafPos = grafPontos.length ? grafPontos[0].slice() : null;
     var grafTween = 0;
     var moverGraf = function (i) {
@@ -843,6 +1034,7 @@
         painel.hidden = !ativo;
       });
       moverGraf(atualJor);
+      grafRotulos.forEach(function (rot, k) { rot.classList.toggle("is-ativo", k === atualJor); });
     };
     if (semMovimento) manual();
 
@@ -898,6 +1090,16 @@
     });
   });
 
+  /* "(1.430 Avaliações)" leva até a seção "Amado por +5.000 mulheres" */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ir-depoimentos]"), function (link) {
+    link.addEventListener("click", function (ev) {
+      var alvo = document.getElementById("depoimentos");
+      if (!alvo) return;
+      ev.preventDefault();
+      alvo.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
   /* ---------- Barra de compra fixa ----------
      Aparece depois que a pessoa passa do botão "Comprar Agora" e some quando
      ela volta para os planos. O botão leva até a escolha do plano. */
@@ -917,7 +1119,7 @@
     };
     window.addEventListener("scroll", conferirBarra, { passive: true });
     window.addEventListener("resize", conferirBarra);
-    conferirBarra();
+    aposPintar(conferirBarra);
     botaoBarra.addEventListener("click", function (ev) {
       var planosSecao = document.getElementById("planos");
       if (!planosSecao) return;

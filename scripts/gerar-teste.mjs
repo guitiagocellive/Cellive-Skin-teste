@@ -13,9 +13,17 @@ const TROCAS = [
     "<!-- PÁGINA DE TESTE, GERADA por scripts/gerar-teste.mjs a partir do v2.html. Não edite aqui. -->"],
   ['<html lang="pt-BR" data-pagina="oferta" data-versao="v2">', '<html lang="pt-BR" data-pagina="teste">'],
   ["<title>Sérum Revitalizador | Cellive Skin</title>", '<title>TESTE · Sérum Revitalizador | Cellive Skin</title>\n  <meta name="robots" content="noindex, nofollow">'],
-  ['href="assets/css/oferta.css"', 'href="assets/css/oferta-teste.css"'],
-  ['src="assets/js/oferta.js"', 'src="assets/js/oferta-teste.js"'],
 ];
+// CSS e JS da oferta → cópias de teste (a v2 pode apontar para assets/css ou para assets/min com ?v=)
+for (const [re, para] of [
+  // o assets/min/oferta.css junta style.css + oferta.css; no teste vão os dois separados
+  [/<link rel="stylesheet" href="assets\/(?:css|min)\/oferta\.css(?:\?v=[a-f0-9]+)?">/,
+    '<link rel="stylesheet" href="assets/css/style.css">\n  <link rel="stylesheet" href="assets/css/oferta-teste.css">'],
+  [/src="assets\/(?:js|min)\/oferta\.js(?:\?v=[a-f0-9]+)?"/, 'src="assets/js/oferta-teste.js"'],
+]) {
+  if (!re.test(html)) { console.error("Não encontrei no v2.html: " + re); process.exit(1); }
+  html = html.replace(re, para);
+}
 for (const [de, para] of TROCAS) {
   if (!html.includes(de)) { console.error("Não encontrei no v2.html: " + de); process.exit(1); }
   html = html.split(de).join(para);

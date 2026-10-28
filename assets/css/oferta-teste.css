@@ -13,13 +13,53 @@
 
 /* Faixa de promoção */
 .promo-faixa {
-  padding: 10px 16px;
+  overflow: hidden;
+  padding: 9px 0;
   background: var(--blue);
   color: var(--white);
   font-size: 13.5px;
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
+  white-space: nowrap; /* nunca passa de uma linha */
+}
+
+/* texto parado e centralizado quando cabe na tela */
+.promo-trilho {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.promo-item {
+  flex: none;
+}
+
+/* não coube: o texto corre em loop (o oferta.js duplica o texto) */
+.promo-faixa.is-correndo .promo-trilho {
+  justify-content: flex-start;
+  width: max-content;
+  padding: 0;
+  animation: promo-corre var(--promo-tempo, 14s) linear infinite;
+}
+
+.promo-faixa.is-correndo .promo-item {
+  padding-right: 48px;
+}
+
+.promo-faixa.is-parada .promo-trilho {
+  animation-play-state: paused;
+}
+
+@keyframes promo-corre {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-faixa.is-correndo .promo-trilho {
+    animation: none;
+  }
 }
 
 .promo-faixa strong {
@@ -34,69 +74,59 @@
 }
 
 /* Logo fixo no topo, com sombra quando a página rola */
-/* Topo: na primeira dobra é a faixa branca com a logo no meio e o menu (três
-   tracinhos) ao lado. Quando gruda no alto da tela (is-rolando), vira um balão:
-   uma cápsula branca em volta da logo e do menu e, atrás, um desfoque
-   em degradê estilo iPhone (mais forte e um pouco mais escuro no alto, clareando
-   até sumir). A altura do topo não muda (nada pula); só opacidade e escala animam. */
+/* Topo: na primeira dobra é a faixa branca com a logo. Quando gruda no alto da
+   tela (is-rolando), vira um balão: a logo fica numa cápsula de vidro fosco
+   (cantos totalmente arredondados) e, atrás, um desfoque em degradê que some
+   para baixo. A altura do topo não muda (nada na página pula); só opacidade e
+   escala são animadas. */
 .oferta-topo {
   position: sticky;
   top: 0;
   z-index: 30;
   display: flex;
   justify-content: center;
-  padding: 9px 16px;
+  padding: 18px 16px 14px;
   background: var(--white);
   transition: background-color 0.35s ease;
 }
 
-/* desfoque em degradê estilo iPhone atrás do balão */
+/* desfoque em degradê atrás do balão */
 .oferta-topo::before {
   content: "";
   position: absolute;
-  inset: 0 0 -40px;
+  inset: 0 0 -18px;
   z-index: -1;
-  background: linear-gradient(to bottom, rgba(26, 26, 26, 0.08), rgba(26, 26, 26, 0.03) 55%, rgba(26, 26, 26, 0));
-  -webkit-backdrop-filter: blur(16px) brightness(0.88) saturate(1.7);
-  backdrop-filter: blur(16px) brightness(0.88) saturate(1.7);
-  -webkit-mask-image: linear-gradient(to bottom, #000 20%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0.35) 70%, transparent);
-  mask-image: linear-gradient(to bottom, #000 20%, rgba(0, 0, 0, 0.75) 45%, rgba(0, 0, 0, 0.35) 70%, transparent);
+  /* véu bem leve e desfoque com brilho e cor reforçados: o fundo fica claro e
+     vivo, sem o cinza que o desfoque comum deixa */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+  -webkit-backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
+  backdrop-filter: blur(6px) saturate(1.8) brightness(1.08);
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
+  mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.55) 65%, transparent);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
 }
 
-/* logo no meio, menu à esquerda e um espaço igual à direita (logo centralizada) */
-.topo-balao {
+.oferta-topo .brand {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 6px;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.topo-balao .brand {
-  position: relative;
-}
-
-.topo-lado {
-  flex: none;
-  width: 32px;
-}
-
-/* o balão: cápsula branca (o degradê escuro fica só em volta, não dentro dele) */
-.topo-balao::before {
+/* o balão (cápsula) em volta da logo */
+.oferta-topo .brand::before {
   content: "";
   position: absolute;
-  inset: -6px -10px;
+  inset: -12px -30px;
   z-index: -1;
-  border: 1px solid rgba(26, 26, 26, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 999px;
-  background: var(--white);
-  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.1), 0 1px 2px rgba(26, 26, 26, 0.05);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.6));
+  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
+  backdrop-filter: blur(20px) saturate(1.8) brightness(1.1);
   opacity: 0;
-  transform: scale(0.94);
+  transform: scale(0.9);
   transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -108,131 +138,21 @@
   opacity: 1;
 }
 
-.oferta-topo.is-rolando .topo-balao {
-  transform: scale(0.92);
+.oferta-topo.is-rolando .brand {
+  transform: scale(0.86);
 }
 
-.oferta-topo.is-rolando .topo-balao::before {
+/* o balão encolhe junto com a logo (fica com cerca de 190 × 36 px) */
+.oferta-topo.is-rolando .brand::before {
   opacity: 1;
   transform: scale(1);
-}
-
-/* três tracinhos; viram um X quando o menu abre */
-.topo-menu {
-  flex: none;
-  display: grid;
-  place-content: center;
-  gap: 4px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.topo-menu span {
-  display: block;
-  width: 18px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--ink);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
-}
-
-.topo-menu[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-.topo-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0.3); }
-.topo-menu[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-
-.topo-menu:active {
-  transform: scale(0.92);
-}
-
-/* painel do menu: vidro claro que desce do balão */
-.menu-secoes {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  width: min(300px, calc(100% - 32px));
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 18px 44px rgba(26, 26, 26, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  -webkit-backdrop-filter: blur(24px) saturate(1.8);
-  backdrop-filter: blur(24px) saturate(1.8);
-  opacity: 0;
-  transform: translate(-50%, -8px) scale(0.96);
-  transform-origin: 50% 0;
-  transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.menu-secoes.is-aberto {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
-}
-
-.menu-secoes a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 14px 14px 16px;
-  border-radius: 16px;
-  color: var(--ink);
-  font-family: var(--font-condensed);
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  text-transform: uppercase;
-  -webkit-tap-highlight-color: transparent;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
-}
-
-.menu-secoes a + a {
-  box-shadow: 0 -1px 0 rgba(26, 26, 26, 0.06);
-}
-
-.menu-secoes.is-aberto a {
-  opacity: 1;
-  transform: none;
-}
-
-.menu-secoes.is-aberto a:nth-child(2) { transition-delay: 0.03s; }
-.menu-secoes.is-aberto a:nth-child(3) { transition-delay: 0.06s; }
-.menu-secoes.is-aberto a:nth-child(4) { transition-delay: 0.09s; }
-.menu-secoes.is-aberto a:nth-child(5) { transition-delay: 0.12s; }
-
-/* setinha à direita de cada item */
-.menu-secoes a::after {
-  content: "";
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-top: 2px solid var(--blue);
-  border-right: 2px solid var(--blue);
-  transform: rotate(45deg);
-}
-
-.menu-secoes a:active {
-  background: rgba(177, 199, 222, 0.22);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oferta-topo,
   .oferta-topo::before,
-  .topo-balao,
-  .topo-balao::before,
-  .topo-menu span,
-  .menu-secoes,
-  .menu-secoes a {
+  .oferta-topo .brand,
+  .oferta-topo .brand::before {
     transition: none;
   }
 }
@@ -251,34 +171,58 @@
   align-items: center;
 }
 
-.aprovado {
+/* Topo compacto: check verde + "Fórmula Revitalizadora" + etiqueta "Aprovada" */
+.topo-produto {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin: 14px 0 0;
-  color: var(--gray-soft);
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.oferta-titulo .titulo-leve {
+  color: var(--gray-dark);
+  font-weight: 400;
+}
+
+.topo-produto-check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.topo-produto-selo {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #eaf6ee;
+  color: #1f9a45;
   font-family: var(--font-condensed);
-  font-size: 18px;
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
 }
 
-.aprovado strong {
-  color: var(--blue);
-  font-weight: 700;
-}
-
-.aprovado-check {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
+/* texto que só o Google e os leitores de tela "veem" (ex.: o título da v2) */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .oferta-titulo {
-  margin: 8px 0 0;
+  margin: 0;
   color: var(--black);
   font-family: var(--font-condensed);
-  font-size: clamp(26px, 8.3vw, 35px);
+  font-size: 21px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.005em;
@@ -290,7 +234,7 @@
 /* Galeria */
 .galeria {
   width: 100%;
-  margin-top: 18px;
+  margin-top: 10px;
 }
 
 .galeria-principal {
@@ -301,6 +245,9 @@
    O arrasto é do próprio navegador (segue o dedo, sem travar). */
 .galeria-trilho {
   display: flex;
+  align-items: stretch;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* o quadro da foto é sempre quadrado, em qualquer celular */
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -308,6 +255,12 @@
   border-radius: 18px;
   background: var(--gray-mist);
   outline: none;
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  .galeria-trilho {
+    height: min(calc(100vw - 44px), 436px);
+  }
 }
 
 .galeria-trilho::-webkit-scrollbar {
@@ -318,7 +271,8 @@
   display: grid;
   flex: 0 0 100%;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: auto; /* ocupa a altura toda do quadro quadrado */
+  min-height: 0;
   border: 0;
   background: var(--gray-mist);
   font-size: 10px;
@@ -331,18 +285,22 @@
   content: none;
 }
 
-.galeria-foto.is-esperando {
-  background: linear-gradient(100deg, var(--gray-mist) 35%, #fbfbfc 50%, var(--gray-mist) 65%) 0 0 / 300% 100%;
+.galeria-foto.is-esperando::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 70%);
+  transform: translateX(-100%);
   animation: galeria-espera 1.3s linear infinite;
 }
 
 @keyframes galeria-espera {
-  from { background-position: 100% 0; }
-  to { background-position: 0 0; }
+  to { transform: translateX(100%); }
 }
 
+/* a foto aparece inteira, sem recorte (as fotos são quadradas, como o quadro) */
 .galeria-foto > img {
-  object-fit: cover;
+  object-fit: contain;
   transition: opacity 0.45s ease;
 }
 
@@ -350,30 +308,8 @@
   opacity: 0;
 }
 
-/* Ao deslizar, cada foto vira um cartão de cantos arredondados que encolhe um
-   pouco ao sair e cresce ao entrar (só escala: o celular anima sem redesenhar).
-   Nos navegadores sem animação ligada à rolagem, desliza normal. */
-@supports (animation-timeline: view()) {
-  .galeria-trilho {
-    background: transparent;
-  }
-
-  .galeria-foto {
-    border-radius: 18px;
-    animation: galeria-cartao linear both;
-    animation-timeline: view(inline);
-  }
-
-  .galeria-foto.is-esperando {
-    animation: galeria-espera 1.3s linear infinite;
-  }
-
-  @keyframes galeria-cartao {
-    0% { scale: 0.86; }
-    40%, 60% { scale: 1; }
-    100% { scale: 0.86; }
-  }
-}
+/* As fotos deslizam sempre do mesmo tamanho: o quadro é quadrado (1:1) e
+   nenhuma foto encolhe ou cresce na troca. */
 
 .galeria-selos {
   position: absolute;
@@ -405,6 +341,48 @@
   border: 1.5px solid var(--black);
   background: rgba(255, 255, 255, 0.6);
   color: var(--black);
+}
+
+/* Selo "Inspirado na tecnologia coreana": cartão branco com a bandeira */
+.selo-coreia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  padding: 10px 8px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(26, 26, 26, 0.12);
+  color: var(--ink);
+  text-align: center;
+}
+
+.selo-coreia-bandeira {
+  width: 36px;
+  height: 24px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.08), 0 2px 5px rgba(26, 26, 26, 0.14);
+}
+
+.selo-coreia-texto {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.selo-coreia-texto small {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--gray);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .galeria-miniaturas {
@@ -443,8 +421,8 @@
 
 /* Não selecionada: esbranquiçada e levemente desfocada */
 .miniatura .slot > img {
-  filter: blur(1.2px);
-  transform: scale(1.04); /* esconde a borda clara que o desfoque cria */
+  filter: blur(0.6px);
+  transform: scale(1.02); /* esconde a borda clara que o desfoque cria */
   transition: filter 0.35s ease, transform 0.35s ease;
 }
 
@@ -452,7 +430,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.4);
   transition: opacity 0.35s ease;
 }
 
@@ -475,28 +453,49 @@
 }
 
 /* Selos azuis */
-.selos-azuis {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+/* Selo "Testado dermatologicamente": vai de uma ponta à outra da foto, fino,
+   fundo branco com borda no azul da marca (o azul só no contorno e na bolinha) */
+.selo-derm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin-top: 14px;
+  min-height: 34px;
+  margin-top: 12px;
+  padding: 3px 36px;
+  border: 1.5px solid var(--blue);
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow: 0 3px 10px rgba(177, 199, 222, 0.3);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.selos-azuis span {
+.selo-derm-bola {
+  position: absolute;
+  top: 50%;
+  left: 3px;
   display: grid;
   place-items: center;
-  min-height: 32px;
-  padding: 4px 8px;
-  border-radius: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
   background: var(--blue);
-  box-shadow: 0 2px 8px var(--blue-glow);
-  color: var(--white);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-align: center;
-  text-transform: uppercase;
+  transform: translateY(-50%);
+}
+
+.selo-derm-icone {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* Prova social (versão em uma linha) */
@@ -546,6 +545,18 @@
 
 .avaliacao-qtd {
   color: var(--blue);
+}
+
+/* "(1.430 Avaliações)" é um link para os depoimentos */
+a.avaliacao-qtd {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.oferta-depoimentos {
+  scroll-margin-top: 70px;
 }
 
 /* 5 estrelas desenhadas em SVG */
@@ -635,24 +646,6 @@
   width: var(--v);
 }
 
-/* brilho que passa pela barra de tempos em tempos */
-.estoque-barra span::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  transform: translateX(-100%);
-  animation: estoque-brilho 2.6s ease-in-out 2s infinite;
-}
-
-@keyframes estoque-brilho {
-  0% { transform: translateX(-100%); }
-  60%, 100% { transform: translateX(275%); }
-}
-
 /* nos últimos segundos da contagem, o relógio pulsa */
 .estoque-info > span.is-urgente {
   animation: estoque-pulso 1s ease-in-out infinite;
@@ -695,36 +688,57 @@
   font-weight: 700;
 }
 
-/* Planos */
+/* Planos: cartões com a economia à direita.
+   Brilho só nos selos "Mais vendido" e "Mais econômico"; o kit escolhido ganha
+   uma sombra azulada. Ao tocar num kit, ele dá um pulinho, a parcela corre até
+   o valor novo e as linhas do resumo que mudaram ficam azuis e são "redigitadas". Quem pede "menos movimento"
+   no aparelho vê tudo parado. */
 .planos {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 22px;
 }
 
 .plano {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-    "radio info preco"
-    "radio tags tags";
+  display: flex;
   align-items: center;
-  column-gap: 14px;
-  row-gap: 8px;
-  padding: 14px 16px 14px 12px;
-  border: 2px solid var(--gray-mist);
+  gap: 12px;
+  min-height: 82px;
+  padding: 16px;
+  border: 1.5px solid var(--gray-light);
   border-radius: 20px;
   background: var(--white);
-  color: var(--black);
+  color: var(--ink);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.15s ease;
+  transition: border-color 0.25s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* sombra azulada em volta do kit escolhido */
+.planos {
+  isolation: isolate;
+}
+
+.plano::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: 0 0 0 5px rgba(177, 199, 222, 0.45), 0 14px 30px rgba(26, 26, 26, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.plano.is-selecionado::after {
+  opacity: 1;
 }
 
 .plano:active {
-  transform: scale(0.99);
+  transform: scale(0.985);
 }
 
 .plano input {
@@ -734,167 +748,357 @@
 }
 
 .plano-radio {
-  grid-area: radio;
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
   width: 22px;
   height: 22px;
   border: 2px solid var(--gray-light);
   border-radius: 50%;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.plano-radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--white);
+  transform: scale(0);
 }
 
 .plano-info {
-  grid-area: info;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  position: relative;
+  flex: 1;
+  min-width: 0;
 }
 
 .plano-nome {
+  display: block;
   font-family: var(--font-condensed);
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
 }
 
-.plano-frasco {
+.plano-sub {
+  display: block;
+  margin-top: 4px;
   color: var(--gray);
-  font-size: 12.5px;
+  font-size: 12px;
+  line-height: 1.3;
 }
 
-.plano-preco {
-  grid-area: preco;
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: center;
-  justify-items: end;
-  column-gap: 8px;
-  row-gap: 2px;
+.plano-frasco > span {
+  white-space: nowrap;
+}
+
+.plano-dir {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
   text-align: right;
 }
 
-.plano-preco strong {
-  grid-column: 2;
-  font-size: 19px;
+.plano-eco {
+  padding: 5px 10px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.plano-eco.is-cheio {
+  background: var(--gray-mist);
+  color: var(--gray-dark);
+}
+
+.plano-total {
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
 }
 
-.plano-preco > span:last-child {
-  grid-column: 1 / 3;
-  color: var(--gray);
-  font-family: var(--font-condensed);
-  font-size: 13px;
-}
-
-.plano-tags {
-  grid-area: tags;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag {
-  padding: 3px 9px;
+.plano-chip {
+  display: none;
+  padding: 5px 10px;
   border-radius: 999px;
-  font-size: 10px;
+  background: var(--gray-mist);
+  color: var(--ink);
+  font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
+}
+
+.plano-selo {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  z-index: 2;
+  overflow: hidden;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 1.3;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.tag-dias {
+.plano-selo.is-claro {
   background: var(--blue);
-  color: var(--white);
-  font-style: italic;
-}
-
-.tag-frete {
-  background: var(--gray-mist);
   color: var(--ink);
-  font-style: italic;
 }
 
-.tag-off {
-  grid-column: 1;
-  background: var(--blue-mist);
-  color: var(--blue-ink);
+.plano-selo::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-130%) skewX(-18deg);
+  animation: plano-reflexo 3.6s ease-in-out 1s infinite;
 }
 
-.tag-vendido {
-  background: var(--blue-ink);
-  color: var(--white);
-}
-
-.tag-economico {
-  background: #22b14c;
-  color: var(--white);
-}
-
-/* Plano escolhido: cartão preto */
+/* Plano escolhido */
 .plano.is-selecionado {
-  border-color: var(--gray-dark);
-  background: var(--ink);
-  color: var(--white);
-}
-
-.plano.is-selecionado .plano-frasco,
-.plano.is-selecionado .plano-preco > span:last-child {
-  color: var(--gray-light);
+  border: 2px solid var(--ink);
+  padding: 15.5px;
 }
 
 .plano.is-selecionado .plano-radio {
-  border-color: var(--gray-soft);
-  background: radial-gradient(circle, var(--gray-soft) 0 45%, transparent 48%);
+  border-color: var(--ink);
+  background: var(--ink);
 }
 
-.plano.is-selecionado .tag-frete {
-  background: var(--white);
+.plano.is-selecionado .plano-radio::after {
+  transform: scale(1);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* toque: o cartão dá um "pulinho" ao ser escolhido (classe posta pelo oferta.js) */
+.plano.is-escolhendo {
+  animation: plano-pulo 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .plano:has(input:focus-visible) {
   outline: 3px solid var(--blue-ink);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+@keyframes plano-pulo {
+  0% { transform: scale(0.97); }
+  55% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes plano-reflexo {
+  0%, 55% { transform: translateX(-130%) skewX(-18deg); }
+  80%, 100% { transform: translateX(260%) skewX(-18deg); }
 }
 
 /* Resumo */
 .resumo {
-  margin-top: 18px;
-  text-align: center;
+  display: grid;
+  gap: 7px;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 22px;
+  background: var(--white);
 }
 
-.resumo-plano {
-  display: inline-block;
+.resumo-lista {
+  display: grid;
+  gap: 7px;
   margin: 0;
-  padding: 2px 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.resumo-lista li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gray-dark);
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.resumo-lista li::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2 2 4-4.2' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100%;
+}
+
+.resumo-lista b {
+  color: var(--ink);
+}
+
+.resumo-lista li {
+  position: relative;
+  isolation: isolate;
+}
+
+/* fundo azul da marca na economia */
+.resumo-pilula {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* Linha redigitada: as letras surgem em cinza claro sobre um degradê do azul
+   da marca e, no fim, escurecem devagar até as cores normais. */
+.resumo-lista li > span,
+.resumo-lista li b,
+.resumo-pilula {
+  transition: color 0.7s ease;
+}
+
+.resumo-lista li.is-novo > span,
+.resumo-lista li.is-novo b,
+.resumo-lista li.is-novo .resumo-pilula {
+  color: var(--gray-soft);
+  transition: none;
+}
+
+.resumo-lista li::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 22px;
+  right: -6px;
+  z-index: -1;
   border-radius: 8px;
-  background: var(--gray-mist);
-  color: var(--gray);
+  background: linear-gradient(90deg, rgba(177, 199, 222, 0.55) 0%, rgba(224, 233, 242, 0.7) 55%, rgba(243, 247, 250, 0) 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+}
+
+.resumo-lista li.is-realce::after {
+  animation: resumo-realce 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes resumo-realce {
+  0% { transform: scaleX(0); opacity: 1; }
+  35% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+.resumo-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gray-mist);
+}
+
+.resumo-esq {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.resumo-rot {
   font-family: var(--font-condensed);
-  font-size: 21px;
+  font-size: 17px;
   font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* preço sem desconto, riscado, separado do valor à vista */
+.resumo-de {
+  color: var(--gray);
+  font-size: 13px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.resumo-de[hidden] {
+  display: none;
+}
+
+.resumo-valores {
+  text-align: right;
 }
 
 .resumo-parcela {
-  margin: 8px 0 0;
-  color: var(--gray);
+  display: block;
+  color: var(--gray-dark);
   font-size: 13px;
 }
 
 .resumo-parcela strong {
-  margin-left: 4px;
-  font-size: 30px;
+  display: inline-block;
+  color: var(--ink);
+  font-size: 26px;
   font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .resumo-avista {
-  margin: 2px 0 0;
+  display: block;
   color: var(--gray);
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.resumo-avista strong {
-  color: var(--gray);
+/* valores entram deslizando ao trocar de kit */
+.resumo.is-trocando .resumo-parcela strong,
+.resumo.is-trocando .resumo-avista {
+  animation: resumo-valor 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes resumo-valor {
+  from { opacity: 0.2; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 360px) {
+  .plano { gap: 10px; padding: 14px 12px; }
+  .plano.is-selecionado { padding: 13.5px 11.5px; }
+  .plano-nome { font-size: 18px; }
+  .plano-eco { padding: 5px 8px; font-size: 10.5px; }
+  .resumo { padding: 14px; }
+  .resumo-parcela strong { font-size: 23px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plano,
+  .plano-selo::after,
+  .plano-radio::after,
+  .plano::after,
+  .resumo-lista li::after,
+  .resumo .resumo-parcela strong,
+  .resumo .resumo-avista {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* Botão de compra */
@@ -1189,12 +1393,17 @@
   background: var(--blue);
 }
 
+/* Dúvidas: um cartão cinza-claro com as perguntas empilhadas (cabem numa tela);
+   cada uma abre a resposta logo abaixo, com botão + / − */
 .faq {
-  margin-top: 24px;
+  margin-top: 20px;
+  padding: 4px 16px;
+  border-radius: 22px;
+  background: var(--gray-mist);
 }
 
-.faq-item {
-  border-bottom: 1.5px solid var(--gray-light);
+.faq-item + .faq-item {
+  border-top: 1px solid var(--gray-light);
 }
 
 .faq-item h3 {
@@ -1205,36 +1414,68 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 22px 4px 22px 2px;
+  min-height: 50px;
+  padding: 8px 0;
   border: 0;
   background: none;
-  color: var(--black);
+  color: var(--ink);
   font-family: var(--font);
-  font-size: clamp(13px, 3.65vw, 15.5px);
+  font-size: 14.5px;
   font-weight: 700;
   line-height: 1.25;
   text-align: left;
-  text-transform: uppercase;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.faq-seta {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: var(--blue);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 0.35s ease;
+.faq-pergunta:focus-visible {
+  outline: 3px solid var(--blue-ink);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
-.faq-pergunta[aria-expanded="true"] .faq-seta {
-  transform: rotate(180deg);
+/* botão redondo: + fechado, − aberto */
+.faq-mais {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--white);
+  transition: background-color 0.25s ease;
+}
+
+.faq-mais::before,
+.faq-mais::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, background-color 0.25s ease;
+}
+
+.faq-mais::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais {
+  background: var(--ink);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais::before {
+  background: var(--white);
+}
+
+.faq-pergunta[aria-expanded="true"] .faq-mais::after {
+  background: var(--white);
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 /* Abre e fecha suave (a altura vai de 0 até o tamanho do texto) */
@@ -1251,9 +1492,9 @@
 .faq-conteudo {
   overflow: hidden;
   min-height: 0;
-  color: var(--gray);
-  font-size: 15px;
-  line-height: 1.38;
+  color: var(--gray-dark);
+  font-size: 13.5px;
+  line-height: 1.45;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -1265,7 +1506,11 @@
 .faq-conteudo ul,
 .faq-conteudo p {
   margin: 0;
-  padding: 0 2px 20px;
+  padding: 0 0 8px;
+}
+
+.faq-conteudo > :last-child {
+  padding-bottom: 14px;
 }
 
 .faq-conteudo ul {
@@ -1278,7 +1523,7 @@
 }
 
 .faq-conteudo li + li {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .faq-conteudo li::before {
@@ -1293,8 +1538,23 @@
 }
 
 .faq-conteudo strong {
-  color: var(--gray-dark);
+  color: var(--ink);
   font-weight: 700;
+}
+
+/* base dos números (avaliação clínica / opinião dos voluntários) */
+.faq-conteudo .faq-nota {
+  color: var(--gray);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-mais,
+  .faq-mais::before,
+  .faq-mais::after {
+    transition: none;
+  }
 }
 
 /* ---------- Barra de compra fixa ---------- */
@@ -4055,15 +4315,29 @@
 }
 
 /* rótulo "30 dias" no gráfico */
+/* rótulos de dias: claros; o da etapa escolhida fica preto */
 .graf-rotulo rect {
-  fill: var(--ink);
+  fill: var(--white);
+  stroke: var(--gray-light);
+  stroke-width: 1;
+  transition: fill 0.35s ease, stroke 0.35s ease;
 }
 
 .graf-rotulo text {
-  fill: var(--white);
+  fill: var(--gray);
   font-family: var(--font);
   font-size: 10px;
   font-weight: 700;
+  transition: fill 0.35s ease;
+}
+
+.graf-rotulo.is-ativo rect {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+
+.graf-rotulo.is-ativo text {
+  fill: var(--white);
 }
 
 /* ---------- Dobra 21: principais dúvidas (sacola em cima) ---------- */
@@ -4601,7 +4875,6 @@
 @media (prefers-reduced-motion: reduce) {
   .comprar,
   .comprar::after,
-  .estoque-barra span::after,
   .estoque-info > span.is-urgente {
     animation: none;
   }
@@ -4702,9 +4975,9 @@
 body:not([data-pre-lancamento]) [data-pre],
 [data-pre-lancamento] [data-pos],
 [data-pre-lancamento] .plano-frasco,
-[data-pre-lancamento] .plano-preco,
-[data-pre-lancamento] .tag-off,
-[data-pre-lancamento] .tag-economico {
+[data-pre-lancamento] .plano-eco,
+[data-pre-lancamento] .plano-total,
+[data-pre-lancamento] .plano-selo.is-claro {
   display: none !important;
 }
 
@@ -4726,11 +4999,9 @@ body:not([data-pre-lancamento]) [data-pre],
   [data-pre-lancamento] .comprar { font-size: 19px; }
 }
 
-[data-pre-lancamento] .plano {
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "radio info"
-    "radio tags";
+/* sem preços: à direita do kit fica só o "Frete grátis" */
+[data-pre-lancamento] .plano-chip {
+  display: inline-block;
 }
 
 .pre-chamada {
@@ -5080,8 +5351,9 @@ html.lista-aberta {
   pointer-events: none;
 }
 
+/* as fotos aceitam arrastar para os lados (galeria) e para cima/baixo (página) */
 .galeria-foto {
-  touch-action: pan-y;
+  touch-action: pan-x pan-y;
 }
 
 /* ==========================================================================
@@ -5109,4 +5381,440 @@ html.lista-aberta {
 .fora-da-tela *::before,
 .fora-da-tela *::after {
   animation-play-state: paused !important;
+}
+
+/* ==========================================================================
+   VERSÃO DE COMPUTADOR (telas a partir de 1024px)
+   Mesmos textos, fotos, cores e componentes do celular; muda só o layout.
+   ========================================================================== */
+/* bloco da primeira dobra: no celular é como se não existisse */
+.oferta-dobra {
+  display: contents;
+}
+
+@media (min-width: 1024px) {
+  /* Página mais larga; cada seção com a sua largura, centralizada */
+  .oferta {
+    max-width: 1200px;
+    padding: 0 48px 64px;
+  }
+
+  /* Primeira dobra: fotos à esquerda (acompanham a rolagem só dentro da dobra),
+     compra à direita */
+  .oferta-dobra {
+    display: grid;
+    grid-template-columns: minmax(0, 560px) minmax(0, 470px);
+    justify-content: center;
+    column-gap: 64px;
+  }
+
+  .oferta-produto {
+    display: contents;
+  }
+
+  .oferta-produto > * {
+    grid-column: 2;
+  }
+
+  .oferta-produto > .galeria {
+    grid-column: 1;
+    grid-row: 1 / span 30;
+    align-self: start;
+    position: sticky;
+    top: 96px;
+    margin-top: 24px;
+  }
+
+  .oferta-dobra > .oferta-planos {
+    grid-column: 2;
+    margin-top: 28px;
+  }
+
+  .oferta-produto > .topo-produto {
+    justify-content: flex-start;
+    margin-top: 24px;
+  }
+
+  /* ordem da coluna da direita (números negativos: vêm antes das outras seções) */
+  .oferta-produto > .galeria { order: -9; }
+  .oferta-produto > .topo-produto { order: -9; }
+  .oferta-produto > .produto-nome { order: -8; margin-top: 24px; }
+  .oferta-produto > .avaliacao { order: -7; }
+  .oferta-produto > .proof { order: -6; }
+  .oferta-produto > .produto-chamada { order: -5; }
+  .oferta-produto > .beneficios { order: -4; }
+  .oferta-produto > .selo-derm { order: -3; margin-top: 18px; }
+
+
+
+  /* ---------- Computador: seções do meio ---------- */
+  :root { --vao-secao: 96px; }
+
+  /* as seções saem da coluna do celular; cada uma ganha a sua largura */
+  .oferta > section {
+    max-width: 1104px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Depoimentos: 3 cartões lado a lado */
+  .depos {
+    margin: 40px 0 0;
+    padding: 6px 4px 26px;
+    scroll-padding: 0 4px;
+  }
+
+  .depo {
+    flex: 0 0 calc((100% - 32px) / 3);
+  }
+
+  /* Você envelhece: mesma composição, um pouco maior */
+  .oferta > .oferta-envelhece {
+    max-width: 760px;
+    min-height: 500px;
+    padding: 0 0 10px;
+  }
+
+  /* Conheça o Sérum: produto à esquerda, texto à direita */
+  .oferta > .oferta-conheca {
+    --page-max: 560px;
+    display: grid;
+    grid-template-columns: 560px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: 56px;
+    max-width: 1104px;
+    padding: 0 0 40px;
+    background: radial-gradient(ellipse 45% 70% at 25% 50%, rgba(177, 199, 222, 0.3), rgba(177, 199, 222, 0) 75%);
+  }
+
+  .conheca-palco {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .oferta-conheca .conheca-titulo {
+    grid-column: 2;
+    align-self: end;
+    margin: 0;
+    text-align: left;
+    font-size: 40px;
+  }
+
+  .oferta-conheca .conheca-texto {
+    grid-column: 2;
+    align-self: start;
+    width: auto;
+    max-width: 460px;
+    margin: 18px 0 0;
+    font-size: 19px;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  /* Fórmula: lista de ativos em duas colunas */
+  .oferta > .oferta-formula {
+    max-width: 1000px;
+    padding: 48px 48px 24px;
+    border-radius: 32px;
+  }
+
+  .fp-lista {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .fp-comprar,
+  .fp-mais {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Ação SRRP: mesma composição (frasco + linha do tempo), maior */
+  .oferta > .oferta-srrp {
+    --page-max: 600px;
+    max-width: 600px;
+  }
+
+  /* O que era natural: texto numa coluna confortável de ler */
+  .oferta > .oferta-inimigo {
+    max-width: 760px;
+  }
+
+  .inimigo-titulo { font-size: 40px; }
+  .inimigo-texto { font-size: 19px; line-height: 1.45; }
+
+  /* O reset: foto à esquerda, título e texto à direita */
+  .oferta > .oferta-reset {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    column-gap: 64px;
+    padding: 0 0 20px;
+  }
+
+  .reset-foto {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    border-radius: 22px;
+  }
+
+  .reset-titulo {
+    grid-column: 2;
+    align-self: end;
+  }
+
+  .reset-titulo .titulo-leve { font-size: 32px; }
+  .reset-titulo strong { font-size: 40px; }
+
+  .reset-texto {
+    grid-column: 2;
+    align-self: start;
+    max-width: 380px;
+    font-size: 21px;
+  }
+
+  /* O que ele te proporciona: as 3 fotos lado a lado, texto embaixo */
+  .oferta > .oferta-aliado {
+    padding: 0;
+  }
+
+  .aliado-titulo .titulo-leve { font-size: 32px; }
+  .aliado-titulo strong { font-size: 40px; }
+
+  .aliado-lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+    margin-top: 44px;
+  }
+
+  .aliado-item,
+  .aliado-dir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .aliado-foto {
+    order: -1;
+    border-radius: 20px;
+  }
+
+  .aliado-texto,
+  .aliado-dir .aliado-texto {
+    text-align: center;
+  }
+
+  /* Microagulhamento: imagem à esquerda, título e texto à direita */
+  .oferta > .oferta-micro {
+    display: grid;
+    grid-template-columns: minmax(0, 600px) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 56px;
+    align-items: start;
+    padding: 0 0 20px;
+    text-align: left;
+  }
+
+  .oferta-micro > .chamada-italico {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    margin-top: 120px;
+  }
+
+  .oferta-micro .micro-titulo {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .micro-figura {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+  }
+
+  .micro-quadro { width: 100%; }
+
+  .micro-texto {
+    grid-column: 2;
+    grid-row: 3;
+    max-width: 420px;
+    margin-left: 0;
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  /* Clientes, garantia e resultados: o fundo azul vai de uma borda à outra */
+  .oferta > .oferta-clientes,
+  .oferta > .oferta-garantia,
+  .oferta > .oferta-resultados,
+  .oferta > .oferta-faixa {
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  .oferta > .oferta-garantia,
+  .oferta > .oferta-resultados {
+    padding-left: max(48px, calc(50vw - 380px));
+    padding-right: max(48px, calc(50vw - 380px));
+  }
+
+  .cli-trilho,
+  .cli-fila {
+    max-width: none;
+  }
+
+  /* Vídeos: 3 por tela */
+  /* Vídeos: os 4 lado a lado, sem precisar arrastar */
+  .oferta-videos .vid-carrossel {
+    --cartao: 250px;
+    justify-content: center;
+    gap: 28px;
+    padding: 6px 0 22px;
+  }
+
+  .oferta-videos .vid-card {
+    transform: none;
+    opacity: 1;
+  }
+
+  .oferta-videos .vid-controles {
+    display: none;
+  }
+
+  /* Resultado para confiar e os números: mesma composição, um pouco maior */
+  .oferta > .oferta-confianca {
+    max-width: 760px;
+    margin-top: var(--vao-secao);
+    padding: 64px 48px 56px;
+  }
+
+  .oferta > .oferta-numeros {
+    --page-max: 640px;
+    max-width: 760px;
+  }
+
+  /* Jornada: foto à esquerda, gráfico e etapas à direita */
+  .oferta > .oferta-age {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 500px);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 56px;
+    align-items: start;
+  }
+
+  .oferta-age > .chamada-italico,
+  .oferta-age > .age-titulo {
+    grid-column: 1;
+  }
+
+  .oferta-age > .age-titulo {
+    white-space: normal;
+  }
+
+  .oferta-age > .age-foto {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .oferta-age > .jornada {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+  }
+
+  /* Dúvidas: sacola e título à esquerda, perguntas à direita */
+  .oferta > .oferta-duvidas {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) minmax(0, 640px);
+    grid-template-rows: auto 1fr;
+    justify-content: center;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .duvidas-visual,
+  .oferta-duvidas .duvidas-titulo {
+    grid-column: 1;
+  }
+
+  .oferta-duvidas .faq {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+
+  /* Avaliações: resumo à esquerda (acompanha a rolagem), lista à direita */
+  .oferta > .oferta-avaliacoes {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) minmax(0, 640px);
+    grid-template-rows: auto 1fr;
+    justify-content: center;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .oferta-avaliacoes > .aval-titulo,
+  .oferta-avaliacoes > .aval-resumo {
+    grid-column: 1;
+  }
+
+  .oferta-avaliacoes > .aval-resumo {
+    position: sticky;
+    top: 40px;
+  }
+
+  .oferta-avaliacoes > .aval-lista {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+
+  .oferta-avaliacoes > .aval-mais {
+    grid-column: 2;
+  }
+
+  /* Rodapé: marca à esquerda, links e suporte em colunas */
+  .rodape-dentro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 64px;
+    align-items: start;
+    max-width: 1200px;
+    padding: 64px 48px 0;
+  }
+
+  .rodape-logo { grid-column: 1; grid-row: 1; }
+  .rodape-missao { grid-column: 1; grid-row: 2; max-width: 420px; }
+  .rodape-insta { grid-column: 1; grid-row: 3; }
+
+  .rodape-links,
+  .rodape-suporte {
+    grid-row: 1 / span 3;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .rodape-links { grid-column: 2; margin-top: 0; }
+  .rodape-suporte { grid-column: 3; }
+
+  .rodape-legal {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding: 22px 0 0;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .rodape-marca {
+    width: 100%;
+    margin-left: 0;
+  }
 }
