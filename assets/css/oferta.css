@@ -13,13 +13,53 @@
 
 /* Faixa de promoção */
 .promo-faixa {
-  padding: 10px 16px;
+  overflow: hidden;
+  padding: 9px 0;
   background: var(--blue);
   color: var(--white);
   font-size: 13.5px;
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
+  white-space: nowrap; /* nunca passa de uma linha */
+}
+
+/* texto parado e centralizado quando cabe na tela */
+.promo-trilho {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.promo-item {
+  flex: none;
+}
+
+/* não coube: o texto corre em loop (o oferta.js duplica o texto) */
+.promo-faixa.is-correndo .promo-trilho {
+  justify-content: flex-start;
+  width: max-content;
+  padding: 0;
+  animation: promo-corre var(--promo-tempo, 14s) linear infinite;
+}
+
+.promo-faixa.is-correndo .promo-item {
+  padding-right: 48px;
+}
+
+.promo-faixa.is-parada .promo-trilho {
+  animation-play-state: paused;
+}
+
+@keyframes promo-corre {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-faixa.is-correndo .promo-trilho {
+    animation: none;
+  }
 }
 
 .promo-faixa strong {

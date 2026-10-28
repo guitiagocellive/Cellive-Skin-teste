@@ -28,7 +28,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=d202b64200">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=38dcb56af7">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=127b2a7cd3" defer></script>
 </head>
@@ -39,9 +39,13 @@
 <body class="oferta-body" data-pre-lancamento>
 
   <!-- Faixa de promoção -->
-  <div class="promo-faixa">
-    <span data-pos><strong>Promoção relâmpago:</strong> <span>ATÉ 33% OFF NA 3ª UNIDADE</span></span>
-    <span data-pre><strong>Lançamento em breve:</strong> <span>ENTRE NO GRUPO VIP E GANHE CUPOM</span></span>
+  <!-- Faixa do topo: sempre em uma linha. Se o texto não couber na tela,
+       o oferta.js faz ele correr em loop (devagar, para dar para ler). -->
+  <div class="promo-faixa" data-faixa-topo>
+    <div class="promo-trilho" data-faixa-trilho>
+      <span class="promo-item" data-pos><strong>Promoção relâmpago:</strong> <span>ATÉ 33% OFF NA 3ª UNIDADE</span></span>
+      <span class="promo-item" data-pre><strong>Lançamento em breve:</strong> <span>ENTRE NO GRUPO VIP E GANHE CUPOM</span></span>
+    </div>
   </div>
 
   <!-- Logo (fica fixo no topo ao rolar) -->
@@ -1219,7 +1223,7 @@
     </div>
   </dialog>
 
-  <script src="assets/min/oferta.js?v=976428dcc1" defer></script>
+  <script src="assets/min/oferta.js?v=6ea0de3749" defer></script>
   <script src="assets/min/quiz-perguntas.js?v=1b57969129" defer></script>
   <script src="assets/min/oferta-formula.js?v=c054566ee7" defer></script>
   <script src="assets/min/oferta-avaliacoes.js?v=fc7ac52cb1" defer></script>
