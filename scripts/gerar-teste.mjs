@@ -37,11 +37,11 @@ let js = await readFile(new URL("assets/js/oferta.js", RAIZ), "utf8");
 if (!js.includes('fetch("/api/lead"')) { console.error("Não encontrei o envio do cadastro no oferta.js"); process.exit(1); }
 js = js.replace('fetch("/api/lead"', 'fetch("/api/lead?teste=1"');
 await writeFile(new URL("assets/js/oferta-teste.js", RAIZ), js);
-// versões das dúvidas rápidas (op.celliveskin.com/teste-faq-1, -2 e -3), só para comparar
-for (const n of [1, 2, 3]) {
+// dúvidas rápidas em pílulas: cinza (/teste-pilula-cinza) e azul bebê (/teste-pilula-azul), para comparar
+for (const [nome, classe] of [["cinza", "faq-mini faq-mini--v4"], ["azul", "faq-mini faq-mini--v4 faq-mini--azul"]]) {
   const versao = html
-    .replace("faq-mini faq-mini--v1", "faq-mini faq-mini--v" + n)
-    .replace("<title>TESTE · ", "<title>TESTE FAQ " + n + " · ");
-  await writeFile(new URL("teste-faq-" + n + ".html", RAIZ), versao);
+    .replace('class="faq-mini faq-mini--v4"', 'class="' + classe + '"')
+    .replace("<title>TESTE · ", "<title>TESTE PÍLULA " + nome.toUpperCase() + " · ");
+  await writeFile(new URL("teste-pilula-" + nome + ".html", RAIZ), versao);
 }
-console.log("teste.html, teste-faq-1 a 3, oferta-teste.css e oferta-teste.js gerados.");
+console.log("teste.html, teste-pilula-cinza e -azul, oferta-teste.css e oferta-teste.js gerados.");
