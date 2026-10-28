@@ -1372,6 +1372,11 @@ a.avaliacao-qtd {
   background: var(--blue);
 }
 
+/* Ação SRRP: o frasco inteiro só aparece no computador */
+.srrp-frasco-inteiro {
+  display: none;
+}
+
 /* setas dos depoimentos: só no computador */
 .depos-controles {
   display: flex;
@@ -5798,112 +5803,88 @@ html.lista-aberta {
     margin-right: auto;
   }
 
-  /* Ação SRRP: frasco inteiro à esquerda e título à direita; as 4 etapas lado a lado
-     embaixo, com a linha enchendo da esquerda para a direita */
+  /* ---------- Ação SRRP no computador ----------
+     Frasco inteiro (sem corte), sem a marca d'água vertical. Os cartões ficam
+     deitados: foto à esquerda, texto à direita. Visual pela classe srrp--a/b/c/d. */
   .oferta > .oferta-srrp {
     display: grid;
-    grid-template-columns: 420px minmax(0, 1fr);
-    align-items: center;
-    column-gap: 40px;
     max-width: 1104px;
     padding: 0 0 20px;
     overflow: visible;
   }
 
-  .oferta-srrp .srrp-marca {
-    left: 210px;
-    top: 230px;
-    width: 600px;
-    opacity: 0.04;
+  .oferta-srrp .srrp-marca,
+  .oferta-srrp .srrp-frasco {
+    display: none;
   }
 
-  .oferta-srrp .srrp-frasco {
-    position: relative;
-    left: auto;
-    top: auto;
-    grid-column: 1;
-    grid-row: 1;
+  .oferta-srrp .srrp-frasco-inteiro {
+    display: block;
     justify-self: center;
-    width: 170px;
-    margin: 30px 0;
-    transform:
-      translateX(calc((1 - var(--p)) * -160px))
-      rotate(calc(var(--p) * 28deg));
-    filter: drop-shadow(0 16px 24px rgba(77, 116, 168, 0.2));
+    align-self: center;
+    width: 150px;
+    height: auto;
+    filter: drop-shadow(0 18px 26px rgba(77, 116, 168, 0.22));
+    opacity: calc(0.2 + var(--p) * 0.8);
+    transform: translateY(calc((1 - var(--p)) * 40px));
   }
 
   .oferta-srrp .srrp-cabeca {
-    grid-column: 2;
-    grid-row: 1;
     padding: 0;
   }
 
-  .oferta-srrp .srrp-titulo .titulo-leve { font-size: 44px; }
-  .oferta-srrp .srrp-titulo strong { margin-top: 10px; padding-bottom: 10px; font-size: 56px; }
-  .oferta-srrp .srrp-titulo strong::after { width: 120px; height: 5px; }
+  .oferta-srrp .srrp-titulo .titulo-leve { font-size: 40px; }
+  .oferta-srrp .srrp-titulo strong { margin-top: 8px; padding-bottom: 10px; font-size: 54px; }
+  .oferta-srrp .srrp-titulo strong::after { width: 116px; height: 5px; }
 
   .oferta-srrp .srrp-intro {
-    max-width: 460px;
-    margin-top: 26px;
-    font-size: 20px;
+    max-width: 480px;
+    margin-top: 22px;
+    font-size: 19px;
     line-height: 1.4;
   }
 
   .oferta-srrp .srrp-lista {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
-    margin-top: 40px;
+    margin: 0;
   }
 
-  /* linha horizontal passando pelos números */
   .oferta-srrp .srrp-lista::before,
   .oferta-srrp .srrp-lista::after {
-    left: 12.5%;
-    right: 12.5%;
-    top: 62px;
-    bottom: auto;
-    width: auto;
-    height: 4px;
-  }
-
-  .oferta-srrp .srrp-lista::after {
-    transform: scaleX(var(--linha));
-    transform-origin: left;
+    display: none;
   }
 
   .oferta-srrp .srrp-item,
   .oferta-srrp .srrp-item + .srrp-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: relative;
     height: auto;
-    margin-top: 0;
+    margin: 0;
   }
 
   .oferta-srrp .srrp-frente {
     position: static;
     width: auto;
-    height: 20px;
-    font-size: 14px;
+    margin: 0 0 8px 30px;
+    color: var(--blue-ink);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-align: left;
     transform: none;
   }
 
   .oferta-srrp .srrp-num {
-    position: relative;
-    left: auto;
-    top: auto;
-    width: 56px;
-    height: 56px;
-    margin-top: 14px;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 22px;
+    width: 40px;
+    height: 40px;
     border-width: 3px;
-    font-size: 30px;
-    transform: scale(0.85);
+    font-size: 21px;
+    transform: translate(-35%, -20%) scale(0.85);
   }
 
   .oferta-srrp .srrp-item.is-visivel .srrp-num {
-    transform: scale(1);
+    transform: translate(-35%, -20%) scale(1);
   }
 
   .oferta-srrp .srrp-num::after {
@@ -5911,33 +5892,269 @@ html.lista-aberta {
     border-width: 3px;
   }
 
+  /* cartão deitado: foto à esquerda, nome e texto à direita */
   .oferta-srrp .srrp-cartao {
     position: relative;
     left: auto;
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 18px;
     width: 100%;
     height: auto;
-    margin-top: 22px;
-    padding-bottom: 22px;
-    border-radius: 28px;
-    box-shadow: 0 8px 26px rgba(77, 116, 168, 0.17);
-    transform: translateY(24px);
+    min-height: 132px;
+    padding: 0 20px 0 0;
+    border-radius: 24px;
+    box-shadow: 0 8px 26px rgba(77, 116, 168, 0.16);
+    text-align: left;
+    transform: translateY(18px);
+    transition-delay: calc(var(--n) * 0.08s);
   }
 
   .oferta-srrp .srrp-foto {
-    height: 110px;
-    border-radius: 28px;
+    grid-row: 1 / span 2;
+    height: 100%;
+    min-height: 132px;
+    border-radius: 24px 0 0 24px;
+  }
+
+  .oferta-srrp .srrp-foto > img {
+    object-fit: cover;
   }
 
   .oferta-srrp .srrp-nome {
-    margin-top: 16px;
-    font-size: 30px;
+    align-self: end;
+    margin: 20px 0 0;
+    font-size: 26px;
   }
 
   .oferta-srrp .srrp-texto {
-    margin: 10px 18px 0;
-    font-size: 15px;
+    margin: 8px 0 18px;
+    font-size: 14.5px;
     line-height: 1.4;
   }
+
+  /* A · frasco no centro, 2 etapas de cada lado */
+  .srrp--a {
+    grid-template-columns: minmax(0, 1fr) 260px minmax(0, 1fr);
+    column-gap: 36px;
+    row-gap: 26px;
+  }
+
+  .srrp--a .srrp-cabeca {
+    grid-column: 1 / -1;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .srrp--a .srrp-titulo strong::after { left: 50%; transform: translateX(-50%); }
+  .srrp--a .srrp-intro { margin-left: auto; margin-right: auto; }
+
+  .srrp--a .srrp-lista { display: contents; }
+  .srrp--a .srrp-item:nth-child(1) { grid-column: 1; grid-row: 2; }
+  .srrp--a .srrp-item:nth-child(2) { grid-column: 1; grid-row: 3; }
+  .srrp--a .srrp-item:nth-child(3) { grid-column: 3; grid-row: 2; }
+  .srrp--a .srrp-item:nth-child(4) { grid-column: 3; grid-row: 3; }
+
+  .srrp--a .srrp-frasco-inteiro {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    width: 118px;
+  }
+
+  /* brilho azul atrás do frasco */
+  .srrp--a::before {
+    content: "";
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: center;
+    justify-self: center;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(177, 199, 222, 0.45), rgba(177, 199, 222, 0));
+  }
+
+  /* B · painel azul claro com título e frasco à esquerda; etapas em 2 × 2 */
+  .srrp--b {
+    grid-template-columns: 400px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 48px;
+    align-items: start;
+  }
+
+  .srrp--b::before {
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    border-radius: 32px;
+    background: linear-gradient(160deg, var(--blue-soft), var(--blue-mist) 70%);
+  }
+
+  .srrp--b .srrp-cabeca {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 44px 40px 0;
+  }
+
+  .srrp--b .srrp-frasco-inteiro {
+    grid-column: 1;
+    grid-row: 2;
+    width: 120px;
+    margin: 26px 0 36px;
+    transform: translateY(calc((1 - var(--p)) * 40px)) rotate(-8deg);
+  }
+
+  .srrp--b .srrp-lista {
+    display: grid;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 24px;
+    align-content: center;
+  }
+
+  .srrp--b .srrp-cartao {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 0 0 4px;
+    text-align: center;
+  }
+
+  .srrp--b .srrp-foto {
+    grid-row: auto;
+    height: 110px;
+    min-height: 0;
+    border-radius: 24px;
+  }
+
+  .srrp--b .srrp-nome { margin-top: 14px; }
+  .srrp--b .srrp-texto { margin: 8px 18px 18px; }
+  .srrp--b .srrp-frente { text-align: center; margin-left: 0; }
+  .srrp--b .srrp-num { top: 24px; }
+
+  /* C · título e frasco à esquerda; etapas em lista vertical com a linha do tempo */
+  .srrp--c {
+    grid-template-columns: 380px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  .srrp--c .srrp-cabeca { grid-column: 1; grid-row: 1; padding-top: 10px; }
+
+  .srrp--c .srrp-frasco-inteiro {
+    grid-column: 1;
+    grid-row: 2;
+    width: 140px;
+    margin-top: 30px;
+  }
+
+  .srrp--c .srrp-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    padding-left: 62px;
+  }
+
+  .srrp--c .srrp-lista::before,
+  .srrp--c .srrp-lista::after {
+    display: block;
+    left: 20px;
+    top: 50px;
+    bottom: 80px;
+    width: 3px;
+    height: auto;
+  }
+
+  .srrp--c .srrp-lista::after {
+    transform: scaleY(var(--linha));
+    transform-origin: top;
+  }
+
+  .srrp--c .srrp-frente { margin-left: 2px; }
+
+  .srrp--c .srrp-num {
+    left: -62px;
+    top: 50%;
+    transform: translateY(-20%) scale(0.85);
+  }
+
+  .srrp--c .srrp-item.is-visivel .srrp-num {
+    transform: translateY(-20%) scale(1);
+  }
+
+  /* D · linha do tempo horizontal (como estava), com o frasco inteiro */
+  .srrp--d {
+    grid-template-columns: 320px minmax(0, 1fr);
+    column-gap: 40px;
+    align-items: center;
+  }
+
+  .srrp--d .srrp-frasco-inteiro {
+    grid-column: 1;
+    grid-row: 1;
+    width: 120px;
+    margin: 10px 0;
+    transform: translateY(calc((1 - var(--p)) * 40px)) rotate(-10deg);
+  }
+
+  .srrp--d .srrp-cabeca { grid-column: 2; grid-row: 1; }
+
+  .srrp--d .srrp-lista {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 44px;
+  }
+
+  .srrp--d .srrp-lista::before,
+  .srrp--d .srrp-lista::after {
+    display: block;
+    left: 12.5%;
+    right: 12.5%;
+    top: 47px;
+    bottom: auto;
+    width: auto;
+    height: 4px;
+  }
+
+  .srrp--d .srrp-lista::after {
+    transform: scaleX(var(--linha));
+    transform-origin: left;
+  }
+
+  .srrp--d .srrp-item { display: flex; flex-direction: column; align-items: center; }
+  .srrp--d .srrp-frente { margin: 0; height: 20px; text-align: center; }
+
+  .srrp--d .srrp-num {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 52px;
+    height: 52px;
+    margin-top: 2px;
+    font-size: 27px;
+    transform: scale(0.85);
+  }
+
+  .srrp--d .srrp-item.is-visivel .srrp-num { transform: scale(1); }
+
+  .srrp--d .srrp-cartao {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    margin-top: 20px;
+    padding: 0 0 4px;
+    text-align: center;
+  }
+
+  .srrp--d .srrp-foto { grid-row: auto; height: 110px; min-height: 0; border-radius: 24px; }
+  .srrp--d .srrp-nome { margin-top: 14px; }
+  .srrp--d .srrp-texto { margin: 8px 16px 18px; }
 
   /* O que era natural: texto numa coluna confortável de ler */
   .oferta > .oferta-inimigo {
