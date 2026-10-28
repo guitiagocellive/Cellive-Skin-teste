@@ -3222,17 +3222,20 @@ a.avaliacao-qtd {
 }
 
 .resultados-chamada {
-  color: var(--gray);
+  color: var(--blue-ink);
 }
 
+/* "RESULTADOS" fino + "REAIS!" forte em preto (como "Uma fórmula completa") */
 .resultados-titulo {
-  margin: 6px 0 0;
-  color: var(--blue-ink);
-  font-family: var(--font-condensed);
+  margin: 8px 0 0;
+}
+
+.resultados-titulo .titulo-leve {
+  font-size: clamp(25px, 7.6vw, 30px);
+}
+
+.resultados-titulo strong {
   font-size: clamp(28px, 8.6vw, 34px);
-  font-weight: 700;
-  line-height: 1.1;
-  text-transform: uppercase;
 }
 
 /* Cartões dos percentuais: começam juntos (um quase em cima do outro) e se
@@ -6024,6 +6027,10 @@ html.lista-aberta {
   .res-cartao:nth-child(1) { --giro: -6deg; z-index: 2; }
   .res-cartao:nth-child(2) { --giro: 0deg; z-index: 3; }
   .res-cartao:nth-child(3) { --giro: 6deg; z-index: 1; }
+
+  .resultados-chamada { font-size: 17px; }
+  .resultados-titulo .titulo-leve { font-size: 34px; }
+  .resultados-titulo strong { font-size: 42px; }
 
   .res-numero { font-size: 100px; }
   .res-texto { margin-top: 14px; font-size: 19px; }
