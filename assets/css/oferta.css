@@ -172,13 +172,16 @@
 }
 
 .aprovado {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 14px 0 0;
-  color: var(--gray-soft);
+  gap: 5px;
+  margin: 8px 0 0;
+  padding: 3px 9px 3px 4px;
+  border-radius: 999px;
+  background: var(--gray-mist);
+  color: var(--gray);
   font-family: var(--font-condensed);
-  font-size: 18px;
+  font-size: 13px;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -189,8 +192,8 @@
 }
 
 .aprovado-check {
-  width: 17px;
-  height: 17px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
 }
 
@@ -208,7 +211,7 @@
 }
 
 .oferta-titulo {
-  margin: 8px 0 0;
+  margin: 5px 0 0;
   color: var(--black);
   font-family: var(--font-condensed);
   font-size: clamp(26px, 8.3vw, 35px);
@@ -223,7 +226,7 @@
 /* Galeria */
 .galeria {
   width: 100%;
-  margin-top: 18px;
+  margin-top: 12px;
 }
 
 .galeria-principal {
@@ -234,6 +237,9 @@
    O arrasto é do próprio navegador (segue o dedo, sem travar). */
 .galeria-trilho {
   display: flex;
+  align-items: stretch;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* o quadro da foto é sempre quadrado, em qualquer celular */
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -241,6 +247,12 @@
   border-radius: 18px;
   background: var(--gray-mist);
   outline: none;
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  .galeria-trilho {
+    height: min(calc(100vw - 44px), 436px);
+  }
 }
 
 .galeria-trilho::-webkit-scrollbar {
@@ -251,7 +263,8 @@
   display: grid;
   flex: 0 0 100%;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: auto; /* ocupa a altura toda do quadro quadrado */
+  min-height: 0;
   border: 0;
   background: var(--gray-mist);
   font-size: 10px;
@@ -277,8 +290,9 @@
   to { transform: translateX(100%); }
 }
 
+/* a foto aparece inteira, sem recorte (as fotos são quadradas, como o quadro) */
 .galeria-foto > img {
-  object-fit: cover;
+  object-fit: contain;
   transition: opacity 0.45s ease;
 }
 
