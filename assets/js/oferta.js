@@ -530,6 +530,51 @@
     }
   }
 
+  /* ---------- Faixa do topo: sempre em uma linha ----------
+     Se o texto couber, fica parado. Se não couber, duplica o texto e faz correr
+     em loop, a uma velocidade confortável de ler. Confere de novo quando a fonte
+     da marca termina de carregar e quando a tela muda de tamanho. */
+  var promoFaixa = document.querySelector("[data-faixa-topo]");
+  var promoTrilho = promoFaixa && promoFaixa.querySelector("[data-faixa-trilho]");
+  if (promoFaixa && promoTrilho) {
+    var promoVisivel = function () {
+      return Array.prototype.filter.call(promoTrilho.children, function (el) {
+        return !el.hasAttribute("data-copia") && el.offsetWidth > 0;
+      })[0];
+    };
+    var semMovPromo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var conferirPromo = function () {
+      var item = promoVisivel();
+      if (!item) return;
+      Array.prototype.forEach.call(promoTrilho.querySelectorAll("[data-copia]"), function (c) { c.remove(); });
+      promoFaixa.classList.remove("is-correndo");
+      var cabe = item.offsetWidth <= promoFaixa.clientWidth - 32;
+      if (cabe || semMovPromo) return;
+      var copia = item.cloneNode(true);
+      copia.setAttribute("data-copia", "");
+      copia.setAttribute("aria-hidden", "true");
+      promoTrilho.appendChild(copia);
+      promoFaixa.classList.add("is-correndo");
+      var distancia = promoTrilho.scrollWidth / 2;
+      promoFaixa.style.setProperty("--promo-tempo", Math.max(8, distancia / 45).toFixed(1) + "s"); // ~45 px por segundo
+    };
+    aposPintar(conferirPromo);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { aposPintar(conferirPromo); });
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", function () { aposPintar(conferirPromo); });
+    var larguraPromo = window.innerWidth;
+    window.addEventListener("resize", function () {
+      if (window.innerWidth === larguraPromo) return; // a barra do navegador subir/descer não conta
+      larguraPromo = window.innerWidth;
+      conferirPromo();
+    });
+    // longe da tela, o texto para de correr
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (itens) {
+        promoFaixa.classList.toggle("is-parada", !itens[0].isIntersecting);
+      }).observe(promoFaixa);
+    }
+  }
+
   /* ---------- Topo: vira balão quando gruda no alto da tela ---------- */
   var topo = document.querySelector("[data-topo]");
   var faixaTopo = document.querySelector(".promo-faixa");
