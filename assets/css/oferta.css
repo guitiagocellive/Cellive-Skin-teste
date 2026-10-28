@@ -413,8 +413,8 @@
 
 /* Não selecionada: esbranquiçada e levemente desfocada */
 .miniatura .slot > img {
-  filter: blur(1.2px);
-  transform: scale(1.04); /* esconde a borda clara que o desfoque cria */
+  filter: blur(0.6px);
+  transform: scale(1.02); /* esconde a borda clara que o desfoque cria */
   transition: filter 0.35s ease, transform 0.35s ease;
 }
 
@@ -422,7 +422,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.4);
   transition: opacity 0.35s ease;
 }
 
