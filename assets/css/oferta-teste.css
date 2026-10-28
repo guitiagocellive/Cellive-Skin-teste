@@ -5376,6 +5376,11 @@ html.lista-aberta {
   contain-intrinsic-size: auto 700px;
 }
 
+/* Principais dúvidas logo depois dos depoimentos (as completas ficam no fim) */
+.oferta-duvidas-topo {
+  margin-top: calc(var(--vao-secao) - 10px);
+}
+
 /* Seção longe da tela: animações contínuas pausadas (oferta.js marca a classe) */
 .fora-da-tela *,
 .fora-da-tela *::before,
@@ -5750,6 +5755,16 @@ html.lista-aberta {
     grid-column: 2;
     grid-row: 1 / span 2;
     margin-top: 0;
+  }
+
+  /* Principais dúvidas do começo: uma coluna centralizada */
+  .oferta > .oferta-duvidas-topo {
+    display: block;
+    max-width: 760px;
+  }
+
+  .oferta-duvidas-topo .faq {
+    margin-top: 28px;
   }
 
   /* Avaliações: resumo à esquerda (acompanha a rolagem), lista à direita */
