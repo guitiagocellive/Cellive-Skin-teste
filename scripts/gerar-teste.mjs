@@ -39,13 +39,6 @@ let js = await readFile(new URL("assets/js/oferta.js", RAIZ), "utf8");
 if (!js.includes('fetch("/api/lead"')) { console.error("Não encontrei o envio do cadastro no oferta.js"); process.exit(1); }
 js = js.replace('fetch("/api/lead"', 'fetch("/api/lead?teste=1"');
 await writeFile(new URL("assets/js/oferta-teste.js", RAIZ), js);
-// versões da seção da Ação SRRP no computador (/teste-srrp-1 a 4), para comparar
-for (const v of ["1", "2", "3", "4"]) {
-  const versao = html
-    .replace('class="oferta-srrp srrp--1"', 'class="oferta-srrp srrp--' + v + '"')
-    .replace("<title>TESTE · ", "<title>TESTE SRRP " + v + " · ");
-  await writeFile(new URL("teste-srrp-" + v + ".html", RAIZ), versao);
-}
 // dúvidas rápidas em pílulas: cinza (/teste-pilula-cinza) e azul bebê (/teste-pilula-azul), para comparar
 for (const [nome, classe] of [["cinza", "faq-mini faq-mini--v4"], ["azul", "faq-mini faq-mini--v4 faq-mini--azul"]]) {
   const versao = html
