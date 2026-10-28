@@ -316,7 +316,16 @@
             </div>
           </article>
       </div>
-      <div class="depos-pontos" data-depos-pontos aria-hidden="true"></div>
+      <!-- Setas: só aparecem no computador (no celular a pessoa arrasta com o dedo) -->
+      <div class="depos-controles">
+        <button type="button" class="vid-seta depos-seta" data-rastreio="depoimentos-seta" data-rastreio-valor="anterior" data-depos-anterior aria-label="Depoimento anterior">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        </button>
+        <div class="depos-pontos" data-depos-pontos aria-hidden="true"></div>
+        <button type="button" class="vid-seta depos-seta" data-rastreio="depoimentos-seta" data-rastreio-valor="proximo" data-depos-proximo aria-label="Próximo depoimento">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
+      </div>
     </section>
 
     <!-- ===================== DOBRA 4: dúvidas rápidas (logo depois dos depoimentos) =====================

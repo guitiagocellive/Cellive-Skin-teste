@@ -664,6 +664,49 @@
     };
     depos.addEventListener("scroll", marcarPonto, { passive: true });
     aposPintar(marcarPonto);
+
+    // Computador: setas passam um cartão por vez e dá para arrastar com o mouse
+    var deposAnterior = document.querySelector("[data-depos-anterior]");
+    var deposProximo = document.querySelector("[data-depos-proximo]");
+    var passoDepo = function () {
+      return cartoes.length > 1 ? cartoes[1].offsetLeft - cartoes[0].offsetLeft : depos.clientWidth;
+    };
+    var marcarSetas = function () {
+      if (!deposAnterior || !deposProximo) return;
+      deposAnterior.disabled = depos.scrollLeft <= 2;
+      deposProximo.disabled = depos.scrollLeft >= depos.scrollWidth - depos.clientWidth - 2;
+    };
+    if (deposAnterior && deposProximo) {
+      deposAnterior.addEventListener("click", function () { depos.scrollBy({ left: -passoDepo(), behavior: "smooth" }); });
+      deposProximo.addEventListener("click", function () { depos.scrollBy({ left: passoDepo(), behavior: "smooth" }); });
+      depos.addEventListener("scroll", marcarSetas, { passive: true });
+      aposPintar(marcarSetas);
+    }
+    var arrasto = null;
+    depos.addEventListener("pointerdown", function (e) {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      arrasto = { x: e.clientX, inicio: depos.scrollLeft, moveu: false };
+      depos.classList.add("is-arrastando");
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!arrasto) return;
+      var dx = e.clientX - arrasto.x;
+      if (Math.abs(dx) > 4) arrasto.moveu = true;
+      depos.scrollLeft = arrasto.inicio - dx;
+    });
+    window.addEventListener("pointerup", function () {
+      if (!arrasto) return;
+      var moveu = arrasto.moveu;
+      arrasto = null;
+      depos.classList.remove("is-arrastando");
+      // termina encaixado no cartão mais próximo
+      var passo = passoDepo();
+      depos.scrollTo({ left: Math.round(depos.scrollLeft / passo) * passo, behavior: "smooth" });
+      if (moveu) {
+        // um arrasto não vale como clique no cartão
+        depos.addEventListener("click", function bloquear(ev) { ev.preventDefault(); ev.stopPropagation(); }, { capture: true, once: true });
+      }
+    });
   }
 
   /* ---------- Dúvidas: abre uma por vez (cada lista de dúvidas por conta própria) ---------- */
@@ -721,11 +764,21 @@
       var inicio = primeiro.top + primeiro.height / 2;
       var fim = ultimo.top + ultimo.height / 2;
       var ponta = alto * 0.62;
-      var linha = semMovimento ? 1 : Math.min(1, Math.max(0, (ponta - inicio) / (fim - inicio)));
+      // no computador as etapas ficam lado a lado: a linha enche da esquerda para a
+      // direita enquanto a lista sobe na tela, e cada etapa acende quando a linha chega nela
+      var horizontal = Math.abs(fim - inicio) < 4;
+      var linha;
+      if (horizontal) {
+        var topoLista = listaSrrp.getBoundingClientRect().top;
+        linha = semMovimento ? 1 : Math.min(1, Math.max(0, (alto * 0.85 - topoLista) / (alto * 0.4)));
+      } else {
+        linha = semMovimento ? 1 : Math.min(1, Math.max(0, (ponta - inicio) / (fim - inicio)));
+      }
       listaSrrp.style.setProperty("--linha", linha.toFixed(3));
-      Array.prototype.forEach.call(etapasSrrp, function (item) {
+      Array.prototype.forEach.call(etapasSrrp, function (item, i) {
         var n = item.querySelector(".srrp-num").getBoundingClientRect();
-        if (semMovimento || n.top + n.height / 2 <= ponta + 1) item.classList.add("is-visivel");
+        var chegou = horizontal ? linha >= i / Math.max(1, etapasSrrp.length - 1) - 0.001 : n.top + n.height / 2 <= ponta + 1;
+        if (semMovimento || chegou) item.classList.add("is-visivel");
       });
     };
     var pedirSrrp = function () { if (!pedidoSrrp) pedidoSrrp = requestAnimationFrame(atualizarSrrp); };

@@ -167,6 +167,7 @@
       case "faq": return "Dúvida · " + (FAQ[v] || v);
       case "video": return "Vídeo " + v + " (play)";
       case "videos-seta": return "Vídeos · seta " + (v === "anterior" ? "anterior" : "próxima");
+      case "depoimentos-seta": return "Depoimentos · seta " + (v === "anterior" ? "anterior" : "próxima");
       case "galeria": return "Galeria · foto " + v;
       case "jornada": return "Jornada · " + (JORNADA[v] || v);
       case "whatsapp": return "WhatsApp · " + (v === "rodape-suporte" ? "suporte" : "falar com atendente");
