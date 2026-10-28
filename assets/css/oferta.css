@@ -5968,6 +5968,7 @@ html.lista-aberta {
   }
 
   .oferta-micro > .chamada-italico {
+    text-align: left; /* alinhada com "O efeito de microagulhamento" */
     grid-column: 2;
     grid-row: 1;
     align-self: end;
@@ -6006,7 +6007,6 @@ html.lista-aberta {
     margin-right: calc(50% - 50vw);
   }
 
-  .oferta > .oferta-garantia,
   .oferta > .oferta-resultados {
     padding-left: max(48px, calc(50vw - 380px));
     padding-right: max(48px, calc(50vw - 380px));
@@ -6016,6 +6016,37 @@ html.lista-aberta {
   .cli-fila {
     max-width: none;
   }
+
+  /* Clientes: cartões maiores, mais fáceis de ler */
+  .cli-trilho { gap: 24px; }
+
+  .cli-card {
+    width: 320px;
+    padding: 26px 26px 28px;
+    border-radius: 30px;
+  }
+
+  .cli-foto { width: 44px; height: 44px; }
+  .cli-nome { font-size: 16.5px; }
+  .cli-estrelas { width: 120px; height: 23px; margin-top: 16px; }
+  .cli-texto { margin-top: 12px; font-size: 15.5px; line-height: 1.4; }
+
+  /* Garantia: cartão maior (selo, caixa e frasco crescem juntos) e texto maior */
+  .oferta > .oferta-garantia {
+    margin-top: -1px; /* sem fresta branca entre os clientes e a garantia */
+    padding-left: max(48px, calc(50vw - 480px));
+    padding-right: max(48px, calc(50vw - 480px));
+  }
+
+  .garantia-cartao {
+    zoom: 1.3;
+    min-height: 190px;
+    padding: 22px 28px 24px 0;
+    grid-template-columns: 150px 1fr;
+  }
+
+  .garantia-titulo { font-size: 36px; }
+  .garantia-texto p { margin-top: 10px; font-size: 17px; line-height: 1.3; text-wrap: balance; }
 
   /* Vídeos: 3 por tela */
   /* Vídeos: os 4 lado a lado, sem precisar arrastar */
