@@ -151,7 +151,7 @@
     var olhoSecoes = new IntersectionObserver(function (entradas) {
       entradas.forEach(function (e) { e.target.classList.toggle("fora-da-tela", !e.isIntersecting); });
     }, { rootMargin: "250px 0px" });
-    Array.prototype.forEach.call(document.querySelectorAll("main.oferta > section"), function (sec) { olhoSecoes.observe(sec); });
+    Array.prototype.forEach.call(document.querySelectorAll("main.oferta > section, .oferta-dobra > section"), function (sec) { olhoSecoes.observe(sec); });
   }
 
   /* ---------- Planos ---------- */
