@@ -246,26 +246,8 @@
   opacity: 0;
 }
 
-/* Ao deslizar, cada foto vira um cartão de cantos arredondados que encolhe um
-   pouco ao sair e cresce ao entrar (só escala: o celular anima sem redesenhar).
-   Nos navegadores sem animação ligada à rolagem, desliza normal. */
-@supports (animation-timeline: view()) {
-  .galeria-trilho {
-    background: transparent;
-  }
-
-  .galeria-foto {
-    border-radius: 18px;
-    animation: galeria-cartao linear both;
-    animation-timeline: view(inline);
-  }
-
-  @keyframes galeria-cartao {
-    0% { scale: 0.86; }
-    40%, 60% { scale: 1; }
-    100% { scale: 0.86; }
-  }
-}
+/* As fotos deslizam sempre do mesmo tamanho: o quadro é quadrado (1:1) e
+   nenhuma foto encolhe ou cresce na troca. */
 
 .galeria-selos {
   position: absolute;
