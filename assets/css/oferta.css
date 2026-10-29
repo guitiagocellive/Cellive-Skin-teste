@@ -6142,34 +6142,40 @@ html.lista-aberta {
   .conf-mini-nome { font-size: 17.5px; }
   .conf-mini-texto { font-size: 13.5px; }
 
-  /* Os números: frascos nas laterais, título em cima e as 6 barras em 2 colunas */
+  /* Os números: de uma borda à outra da tela (sem corte), frascos inteiros nas
+     laterais, título em cima e as 6 barras finas em 2 colunas */
   .oferta > .oferta-numeros {
     --u: 0.82px;
-    max-width: 1104px;
-    padding: 70px 150px 90px;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 70px max(150px, calc(50vw - 420px)) 90px;
     background:
-      radial-gradient(ellipse 22% 40% at 100% 62%, rgba(177, 199, 222, 0.35), transparent 70%),
-      radial-gradient(ellipse 20% 36% at 0% 34%, rgba(177, 199, 222, 0.25), transparent 70%);
+      radial-gradient(ellipse 340px 300px at max(64px, calc(50% - 540px)) 36%, rgba(177, 199, 222, 0.28), transparent 70%),
+      radial-gradient(ellipse 360px 320px at min(calc(100% - 64px), calc(50% + 540px)) 66%, rgba(177, 199, 222, 0.32), transparent 70%);
   }
 
-  .num-frasco-esq { left: 64px; top: 34%; width: 96px; }
-  .num-frasco-dir { left: calc(100% - 64px); top: 68%; width: 104px; }
+  .num-frasco-esq { left: max(112px, calc(50% - 540px)); top: 36%; width: 100px; }
+  .num-frasco-dir { left: min(calc(100% - 128px), calc(50% + 540px)); top: 58%; width: 108px; }
 
-  .num-sub { max-width: 560px; margin-top: 40px; font-size: 21px; }
+  .num-sub { max-width: 560px; margin-top: 36px; font-size: 20px; }
 
   .num-lista {
     grid-template-columns: 1fr 1fr;
-    gap: 22px 28px;
-    margin-top: 48px;
+    gap: 16px 28px;
+    margin-top: 44px;
   }
 
-  .num-barra { height: 54px; }
-  .num-rotulo { padding-left: 20px; font-size: 17px; }
-  .num-valor { padding: 0 16px 0 10px; font-size: 18px; }
+  /* barras finas, como no celular */
+  .num-barra { height: 34px; }
+  .num-rotulo { padding-left: 16px; font-size: 15px; }
+  .num-valor { padding: 0 12px 0 8px; font-size: 15px; }
 
   /* notebooks menores: barras numa coluna só e a grade preta com o frasco mais estreito */
   @media (max-width: 1199px) {
     .num-lista { grid-template-columns: 1fr; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .num-frasco-esq { left: 112px; width: 86px; }
+    .num-frasco-dir { left: calc(100% - 124px); width: 92px; }
     .oferta > .oferta-confianca { grid-template-columns: minmax(0, 1fr) 210px minmax(0, 1fr); column-gap: 26px; padding: 56px 40px 48px; }
     .oferta-confianca .conf-palco { height: 280px; }
     .conf-luz { width: 260px; height: 260px; margin: -130px 0 0 -130px; }
