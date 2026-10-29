@@ -4575,6 +4575,21 @@ a.avaliacao-qtd {
   margin-top: 30px;
 }
 
+/* Resumo das notas num cartão branco com sombra azul; "4,9" em azul escuro e
+   barras no azul da marca (versão 1) */
+.oferta-avaliacoes .aval-resumo {
+  gap: 18px;
+  padding: 20px 18px;
+  border-radius: 24px;
+  background: var(--white);
+  box-shadow: 0 10px 30px rgba(77, 116, 168, 0.18);
+}
+
+.oferta-avaliacoes .aval-numero { color: var(--blue-ink); }
+.oferta-avaliacoes .aval-cheio { background: var(--blue); }
+.oferta-avaliacoes .aval-trilho { background: var(--blue-mist); }
+.oferta-avaliacoes .aval-linha { color: var(--gray-dark); }
+
 /* Layout em cartões: cada avaliação num cartão branco com sombra azul (como os
    depoimentos de cima); nome e estrelas na mesma linha, "Compra verificada" no
    azul da marca e a data embaixo das estrelas. */
