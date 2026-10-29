@@ -39,4 +39,11 @@ let js = await readFile(new URL("assets/js/oferta.js", RAIZ), "utf8");
 if (!js.includes('fetch("/api/lead"')) { console.error("Não encontrei o envio do cadastro no oferta.js"); process.exit(1); }
 js = js.replace('fetch("/api/lead"', 'fetch("/api/lead?teste=1"');
 await writeFile(new URL("assets/js/oferta-teste.js", RAIZ), js);
+// cartões dos depoimentos em teste (/teste-depo-a e /teste-depo-d)
+for (const v of ["a", "d"]) {
+  const de = 'class="oferta-depoimentos"';
+  if (!html.includes(de)) { console.error("Não encontrei a seção dos depoimentos"); process.exit(1); }
+  await writeFile(new URL("teste-depo-" + v + ".html", RAIZ),
+    html.replace(de, 'class="oferta-depoimentos depo-estilo-' + v + '"').replace("<title>TESTE · ", "<title>TESTE DEPOIMENTOS " + v.toUpperCase() + " · "));
+}
 console.log("teste.html, oferta-teste.css e oferta-teste.js gerados.");

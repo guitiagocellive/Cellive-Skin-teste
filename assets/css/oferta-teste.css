@@ -1377,6 +1377,64 @@ a.avaliacao-qtd {
   display: none;
 }
 
+/* Cartões dos depoimentos em teste (páginas /teste-depo-a e /teste-depo-d):
+   nome em negrito à esquerda, estrelas à direita, "Compra verificada" com check
+   azul embaixo do nome e o texto num balão azul clarinho. */
+:is(.depo-estilo-a, .depo-estilo-d) .depo-corpo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "nome estrelas" "verif estrelas" "texto texto";
+  column-gap: 10px;
+  padding: 18px 20px 22px;
+}
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-topo { display: contents; }
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-nome {
+  grid-area: nome;
+  padding: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-nome::after { display: none; }
+
+:is(.depo-estilo-a, .depo-estilo-d) .estrelas { grid-area: estrelas; align-self: center; }
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada {
+  grid-area: verif;
+  margin: 4px 0 0;
+  color: var(--blue-ink);
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada svg { width: 15px; height: 15px; }
+:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada circle { fill: var(--verified); }
+
+:is(.depo-estilo-a, .depo-estilo-d) .depo-texto {
+  grid-area: texto;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--blue-mist);
+  color: var(--gray-dark);
+}
+
+/* D: estrelas dentro de uma pílula azul clarinha */
+.depo-estilo-d .estrelas {
+  width: 96px;
+  height: 28px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background-color: var(--blue-mist);
+  background-origin: content-box;
+}
+
 /* setas dos depoimentos: só no computador */
 .depos-controles {
   display: flex;
