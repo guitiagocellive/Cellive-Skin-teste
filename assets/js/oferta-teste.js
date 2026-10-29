@@ -16,9 +16,9 @@
      a próxima foto a cada 4 segundos (pausa quando a pessoa mexe nela, quando
      sai da tela ou quando a aba fica em segundo plano). O selo "Anti-aging"
      só aparece na 1ª foto (as outras têm texto no canto).
-     Carregamento: a foto 1 vem com a página; a 2ª logo depois da primeira dobra;
-     as outras uma à frente da que está na tela (ou todas, se a pessoa mexer na
-     galeria), no tamanho certo para a tela (srcset). */
+     Carregamento: a foto 1 vem com a página; a 2ª quando a pessoa interage com a
+     página (é quando a troca automática começa); as outras uma à frente da que
+     está na tela (ou todas, se a pessoa mexer na galeria), no tamanho certo (srcset). */
   var trilhoGal = document.querySelector("[data-galeria-trilho]");
   var slides = trilhoGal ? Array.prototype.slice.call(trilhoGal.children) : [];
   var selos = document.querySelector(".galeria-selos");
@@ -133,16 +133,20 @@
       new IntersectionObserver(function (es) { galNaTela = es[0].isIntersecting; }, { threshold: 0.5 }).observe(trilhoGal);
     }
 
-    // primeira dobra carregada: só a 2ª foto já vem (é a próxima da troca automática);
-    // as outras chegam uma à frente da que está na tela, ou todas se a pessoa mexer
-    var depoisDaDobra = function () {
-      var segunda = function () { carregarFoto(1); };
-      if (window.requestIdleCallback) requestIdleCallback(segunda, { timeout: 1200 });
-      else setTimeout(segunda, 300);
+    // A troca automática (e a 2ª foto) só começa quando a pessoa interage com a página
+    // (rola, toca, mexe o mouse ou usa o teclado). Assim a primeira tela fica parada
+    // enquanto carrega, e nada é baixado antes da hora.
+    var galIniciada = false;
+    var iniciarGal = function () {
+      if (galIniciada) return;
+      galIniciada = true;
+      INTERACOES.forEach(function (ev) { window.removeEventListener(ev, iniciarGal, OPCOES_INTERACAO); });
+      carregarFoto(1);
       agendarGal();
     };
-    if (document.readyState === "complete") depoisDaDobra();
-    else window.addEventListener("load", depoisDaDobra);
+    var INTERACOES = ["scroll", "touchstart", "pointerdown", "mousemove", "keydown", "wheel"];
+    var OPCOES_INTERACAO = { passive: true };
+    INTERACOES.forEach(function (ev) { window.addEventListener(ev, iniciarGal, OPCOES_INTERACAO); });
   }
 
   /* ---------- Animações só onde a pessoa está olhando ----------
