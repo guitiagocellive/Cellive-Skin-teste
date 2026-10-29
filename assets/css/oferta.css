@@ -5995,7 +5995,23 @@ html.lista-aberta {
     margin-top: 0;
   }
 
-  .micro-quadro { width: 100%; }
+  /* imagem 15% menor; cada legenda fica centralizada em cima da sua linha */
+  .micro-quadro { width: 85%; }
+
+  .micro-ponto-esq { --linha-inicio: 8px; }
+  .micro-ponto-dir { --linha-inicio: 28px; }
+
+  .micro-ponto-esq .micro-legenda,
+  .micro-ponto-dir .micro-legenda {
+    right: auto;
+    left: var(--x);
+    text-align: center;
+    transform: translate(-50%, 6px);
+  }
+
+  .micro-figura.is-visivel .micro-legenda {
+    transform: translate(-50%, 0);
+  }
 
   .micro-texto {
     grid-column: 2;
