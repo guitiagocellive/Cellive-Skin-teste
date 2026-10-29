@@ -4575,6 +4575,87 @@ a.avaliacao-qtd {
   margin-top: 30px;
 }
 
+/* Layout em cartões: cada avaliação num cartão branco com sombra azul (como os
+   depoimentos de cima); nome e estrelas na mesma linha, "Compra verificada" no
+   azul da marca e a data embaixo das estrelas. */
+.aval-lista .aval-item {
+  grid-template-columns: 40px 1fr;
+  column-gap: 10px;
+  margin-top: 14px;
+  padding: 18px 16px 18px 14px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--white);
+  box-shadow: 0 10px 30px rgba(77, 116, 168, 0.18);
+}
+
+.aval-lista .aval-avatar {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  box-shadow: none;
+  background: var(--blue-soft);
+  color: var(--blue-ink);
+  font-size: 18px;
+}
+
+.aval-lista .aval-corpo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "nome estrelas" "verif data" "texto texto" "fotos fotos";
+  column-gap: 8px;
+}
+
+.aval-lista .aval-nome {
+  grid-area: nome;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+}
+
+.aval-lista .aval-nome strong { font-weight: 700; }
+.aval-lista .aval-meta { display: contents; }
+
+.aval-lista .aval-meta .estrelas {
+  grid-area: estrelas;
+  align-self: center;
+  justify-self: end;
+  width: 72px;
+  height: 13px;
+}
+
+.aval-lista .aval-meta > span:not(.estrelas) {
+  grid-area: data;
+  align-self: center;
+  justify-self: end;
+  margin-top: 2px;
+  color: var(--gray-soft);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.aval-lista .aval-verificada {
+  grid-area: verif;
+  margin-top: 2px;
+  color: var(--blue);
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.aval-lista .aval-verif circle { fill: var(--blue); }
+
+.aval-lista .aval-texto {
+  grid-area: texto;
+  margin-top: 12px;
+  color: var(--gray-dark);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+
+.aval-lista .aval-fotos { grid-area: fotos; }
+
 .aval-item {
   display: grid;
   grid-template-columns: 38px 1fr;
