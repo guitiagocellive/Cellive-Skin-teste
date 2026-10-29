@@ -7,6 +7,7 @@
    Se algum texto da lista não for encontrado (porque o oferta.html mudou),
    o script para com erro em vez de gerar uma página pela metade. */
 import { readFile, writeFile } from "node:fs/promises";
+import { semCssCritico, gerar as gerarCssCritico } from "./css-critico.mjs";
 
 const RAIZ = new URL("../", import.meta.url);
 
@@ -37,7 +38,8 @@ const TROCAS = [
       </div>`, '      <h1 class="so-leitor">Sérum Revitalizador Noturno Cellive Skin</h1>'],
 ];
 
-let html = await readFile(new URL("oferta.html", RAIZ), "utf8");
+// a v2 (OP) usa o CSS normal: sem o bloco de CSS da primeira dobra do oferta.html
+let html = semCssCritico(await readFile(new URL("oferta.html", RAIZ), "utf8"));
 const faltando = [];
 for (const [de, para] of TROCAS) {
   if (!html.includes(de)) { faltando.push(de); continue; }
@@ -56,3 +58,6 @@ await import("./gerar-lancamento.mjs");
 
 // CSS/JS compactados e endereços versionados em todas as páginas
 await import("./otimizar.mjs");
+
+// CSS da primeira dobra dentro do oferta.html (oferta do quiz), já com o CSS final
+await gerarCssCritico();
