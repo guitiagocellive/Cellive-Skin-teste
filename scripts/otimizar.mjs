@@ -25,6 +25,8 @@ const codigo = (buf) => createHash("sha256").update(buf).digest("hex").slice(0, 
 const CSS = {
   "assets/min/style.css": ["assets/css/style.css"],
   "assets/min/oferta.css": ["assets/css/style.css", "assets/css/oferta.css"],
+  // versão de computador: arquivo à parte, a página só usa a partir de 1024px
+  "assets/min/oferta-computador.css": ["assets/css/oferta-computador.css"],
 };
 const JS = ["rastreio", "proxima", "oferta", "oferta-formula", "oferta-avaliacoes", "quiz-perguntas", "quiz"];
 // páginas públicas (painel e a página /teste antiga ficam de fora)
@@ -58,6 +60,7 @@ async function versionar(caminho) {
   let p = caminho;
   if (p === "assets/css/style.css") p = "assets/min/style.css";
   else if (p === "assets/css/oferta.css") p = "assets/min/oferta.css";
+  else if (p === "assets/css/oferta-computador.css") p = "assets/min/oferta-computador.css";
   else {
     const m = p.match(/^assets\/js\/([\w-]+)\.js$/);
     if (m && jsExiste.includes(m[1])) p = `assets/min/${m[1]}.js`;

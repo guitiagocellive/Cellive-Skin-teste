@@ -16,9 +16,9 @@
      a próxima foto a cada 4 segundos (pausa quando a pessoa mexe nela, quando
      sai da tela ou quando a aba fica em segundo plano). O selo "Anti-aging"
      só aparece na 1ª foto (as outras têm texto no canto).
-     Carregamento: a foto 1 vem com a página; as outras baixam uma por vez
-     depois que a primeira dobra termina de carregar (ou na hora, se a pessoa
-     for até ela antes), no tamanho certo para a tela (srcset). */
+     Carregamento: a foto 1 vem com a página; a 2ª logo depois da primeira dobra;
+     as outras uma à frente da que está na tela (ou todas, se a pessoa mexer na
+     galeria), no tamanho certo para a tela (srcset). */
   var trilhoGal = document.querySelector("[data-galeria-trilho]");
   var slides = trilhoGal ? Array.prototype.slice.call(trilhoGal.children) : [];
   var selos = document.querySelector(".galeria-selos");
@@ -133,10 +133,12 @@
       new IntersectionObserver(function (es) { galNaTela = es[0].isIntersecting; }, { threshold: 0.5 }).observe(trilhoGal);
     }
 
-    // primeira dobra carregada: as outras fotos começam a baixar e a troca automática começa
+    // primeira dobra carregada: só a 2ª foto já vem (é a próxima da troca automática);
+    // as outras chegam uma à frente da que está na tela, ou todas se a pessoa mexer
     var depoisDaDobra = function () {
-      if (window.requestIdleCallback) requestIdleCallback(baixarEmFila, { timeout: 1200 });
-      else setTimeout(baixarEmFila, 300);
+      var segunda = function () { carregarFoto(1); };
+      if (window.requestIdleCallback) requestIdleCallback(segunda, { timeout: 1200 });
+      else setTimeout(segunda, 300);
       agendarGal();
     };
     if (document.readyState === "complete") depoisDaDobra();
