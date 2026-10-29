@@ -84,7 +84,7 @@ window.QUIZ_FLUXO = [
           { texto: "Entre 35 - 40 anos", imagem: "/assets/img/quiz/idade-35-40.webp" },
           { texto: "+40 anos", imagem: "/assets/img/quiz/idade-40-mais.webp" },
         ],
-        ativo: { id: "acido-hialuronico", nome: "Ácido Hialurônico", imagem: "/assets/img/ativos/acido-hialuronico-p.webp" },
+        ativo: { id: "acido-hialuronico", nome: "Ácido Hialurônico", imagem: "/assets/img/ativos/acido-hialuronico.webp" },
       },
       {
         id: "sensibilidade",
@@ -96,7 +96,7 @@ window.QUIZ_FLUXO = [
           "Raramente.",
           "Minha pele não é sensível.",
         ],
-        ativo: { id: "pdrn", nome: "PDRN", imagem: "/assets/img/ativos/pdrn-p.webp" },
+        ativo: { id: "pdrn", nome: "PDRN", imagem: "/assets/img/ativos/pdrn.webp" },
       },
       {
         id: "botox-peeling",
@@ -108,7 +108,7 @@ window.QUIZ_FLUXO = [
           "Já pensei, mas acho muito invasivo.",
           "Nunca pensei.",
         ],
-        ativo: { id: "ghk-cu", nome: "GHK-Cu", imagem: "/assets/img/ativos/ghk-cu-p.webp" },
+        ativo: { id: "ghk-cu", nome: "GHK-Cu", imagem: "/assets/img/ativos/ghk-cu.webp" },
       },
       {
         id: "linhas-testa",
@@ -120,7 +120,7 @@ window.QUIZ_FLUXO = [
           "Algumas linhas já ficam visíveis.",
           "Nunca reparei.",
         ],
-        ativo: { id: "acetyl-hexapeptide-8", nome: "Hexapeptídeo-8", imagem: "/assets/img/ativos/acetyl-hexapeptide-8-p.webp" },
+        ativo: { id: "acetyl-hexapeptide-8", nome: "Hexapeptídeo-8", imagem: "/assets/img/ativos/acetyl-hexapeptide-8.webp" },
       },
       {
         id: "rotina-skincare",
@@ -132,7 +132,7 @@ window.QUIZ_FLUXO = [
           "Só usei alguns produtos.",
           "Nunca tentei.",
         ],
-        ativo: { id: "pentapeptide-4", nome: "Pentapeptídeo-4", imagem: "/assets/img/ativos/pentapeptide-4-p.webp" },
+        ativo: { id: "pentapeptide-4", nome: "Pentapeptídeo-4", imagem: "/assets/img/ativos/pentapeptide-4.webp" },
       },
       {
         id: "sinais",
@@ -148,7 +148,7 @@ window.QUIZ_FLUXO = [
           { texto: "Aspecto envelhecido", imagem: "/assets/img/quiz/sinal-aspecto-envelhecido.webp" },
           { texto: "Manchas", imagem: "/assets/img/quiz/sinal-manchas.webp" },
         ],
-        ativo: { id: "retinal", nome: "Retinal", imagem: "/assets/img/ativos/retinal-p.webp" },
+        ativo: { id: "retinal", nome: "Retinal", imagem: "/assets/img/ativos/retinal.webp" },
       },
       {
         id: "protetor-solar",
@@ -160,7 +160,7 @@ window.QUIZ_FLUXO = [
           "Apenas quando fico muito tempo no sol.",
           "Quase nunca.",
         ],
-        ativo: { id: "vitamina-e", nome: "Vitamina E", imagem: "/assets/img/ativos/vitamina-e-p.webp" },
+        ativo: { id: "vitamina-e", nome: "Vitamina E", imagem: "/assets/img/ativos/vitamina-e.webp" },
       },
       {
         id: "firmeza",
@@ -172,7 +172,7 @@ window.QUIZ_FLUXO = [
           "Comecei a perceber.",
           "Não percebo.",
         ],
-        ativo: { id: "glutationa", nome: "Glutationa", imagem: "/assets/img/ativos/glutationa-p.webp" },
+        ativo: { id: "glutationa", nome: "Glutationa", imagem: "/assets/img/ativos/glutationa.webp" },
       },
       {
         id: "espelho",
@@ -184,7 +184,7 @@ window.QUIZ_FLUXO = [
           "Sinto que minha pele está envelhecida.",
           "Percebo uma pele sem viço ou opaca.",
         ],
-        ativo: { id: "tetrapeptide-7", nome: "Tetrapeptídeo-7", imagem: "/assets/img/ativos/tetrapeptide-7-p.webp" },
+        ativo: { id: "tetrapeptide-7", nome: "Tetrapeptídeo-7", imagem: "/assets/img/ativos/tetrapeptide-7.webp" },
       },
       {
         id: "ativo-rejuvenescimento",
@@ -196,7 +196,7 @@ window.QUIZ_FLUXO = [
           "Já usei, mas parei.",
           "Nunca utilizei.",
         ],
-        ativo: { id: "alfa-arbutina", nome: "Alfa-Arbutina", imagem: "/assets/img/ativos/alfa-arbutina-p.webp" },
+        ativo: { id: "alfa-arbutina", nome: "Alfa-Arbutina", imagem: "/assets/img/ativos/alfa-arbutina.webp" },
       },
       {
         // ATENÇÃO: texto repetido da pergunta anterior, aguardando o texto final.
@@ -209,7 +209,7 @@ window.QUIZ_FLUXO = [
           "Uso séruns anti-idade.",
           "Nunca utilizei.",
         ],
-        ativo: { id: "exos-skin", nome: "Exos Skin", imagem: "/assets/img/ativos/exos-skin-p.webp" },
+        ativo: { id: "exos-skin", nome: "Exos Skin", imagem: "/assets/img/ativos/exos-skin.webp" },
       },
       {
         id: "linhas-olhos",
@@ -221,7 +221,7 @@ window.QUIZ_FLUXO = [
           "Sim, aparecem até com o rosto relaxado.",
           "Não percebo.",
         ],
-        ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "/assets/img/ativos/niacinamida-p.webp" },
+        ativo: { id: "niacinamida", nome: "Niacinamida", imagem: "/assets/img/ativos/niacinamida.webp" },
       },
     ],
   },
