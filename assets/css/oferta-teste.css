@@ -1263,7 +1263,7 @@ a.avaliacao-qtd {
   overflow: hidden;
   border-radius: 30px;
   background: var(--white);
-  box-shadow: 0 6px 22px rgba(77, 116, 168, 0.21);
+  box-shadow: 0 10px 30px rgba(77, 116, 168, 0.32); /* sombra azulada mais marcada */
   scroll-snap-align: start;
 }
 
@@ -1405,7 +1405,7 @@ a.avaliacao-qtd {
 :is(.depo-estilo-a, .depo-estilo-d) .depo-verificada {
   grid-area: verif;
   margin: 4px 0 0;
-  color: var(--blue-ink);
+  color: var(--blue); /* azul da marca */
   font-family: var(--font);
   font-size: 12.5px;
   font-weight: 600;
@@ -1414,7 +1414,7 @@ a.avaliacao-qtd {
 }
 
 :is(.depo-estilo-a, .depo-estilo-d) .depo-verificada svg { width: 15px; height: 15px; }
-:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada circle { fill: var(--verified); }
+:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada circle { fill: var(--blue); }
 
 :is(.depo-estilo-a, .depo-estilo-d) .depo-texto {
   grid-area: texto;
