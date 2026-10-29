@@ -1377,10 +1377,10 @@ a.avaliacao-qtd {
   display: none;
 }
 
-/* Cartões dos depoimentos em teste (páginas /teste-depo-a e /teste-depo-d):
-   nome em negrito à esquerda, estrelas à direita, "Compra verificada" com check
-   azul embaixo do nome e o texto num balão azul clarinho. */
-:is(.depo-estilo-a, .depo-estilo-d) .depo-corpo {
+/* Cartões dos depoimentos (versão 2A): nome em negrito à esquerda, estrelas à
+   direita, "Compra verificada" com check no azul da marca embaixo do nome e o
+   texto num balão azul clarinho. */
+.oferta-depoimentos .depo-corpo {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas: "nome estrelas" "verif estrelas" "texto texto";
@@ -1388,9 +1388,9 @@ a.avaliacao-qtd {
   padding: 18px 20px 22px;
 }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-topo { display: contents; }
+.oferta-depoimentos .depo-topo { display: contents; }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-nome {
+.oferta-depoimentos .depo-nome {
   grid-area: nome;
   padding: 0;
   font-family: var(--font);
@@ -1398,11 +1398,11 @@ a.avaliacao-qtd {
   font-weight: 700;
 }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-nome::after { display: none; }
+.oferta-depoimentos .depo-nome::after { display: none; }
 
-:is(.depo-estilo-a, .depo-estilo-d) .estrelas { grid-area: estrelas; align-self: center; }
+.oferta-depoimentos .estrelas { grid-area: estrelas; align-self: center; }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada {
+.oferta-depoimentos .depo-verificada {
   grid-area: verif;
   margin: 4px 0 0;
   color: var(--blue); /* azul da marca */
@@ -1413,26 +1413,16 @@ a.avaliacao-qtd {
   white-space: nowrap;
 }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada svg { width: 15px; height: 15px; }
-:is(.depo-estilo-a, .depo-estilo-d) .depo-verificada circle { fill: var(--blue); }
+.oferta-depoimentos .depo-verificada svg { width: 15px; height: 15px; }
+.oferta-depoimentos .depo-verificada circle { fill: var(--blue); }
 
-:is(.depo-estilo-a, .depo-estilo-d) .depo-texto {
+.oferta-depoimentos .depo-texto {
   grid-area: texto;
   margin-top: 14px;
   padding: 12px 14px;
   border-radius: 14px;
   background: var(--blue-mist);
   color: var(--gray-dark);
-}
-
-/* D: estrelas dentro de uma pílula azul clarinha */
-.depo-estilo-d .estrelas {
-  width: 96px;
-  height: 28px;
-  padding: 7px 9px;
-  border-radius: 999px;
-  background-color: var(--blue-mist);
-  background-origin: content-box;
 }
 
 /* setas dos depoimentos: só no computador */
