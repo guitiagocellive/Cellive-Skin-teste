@@ -13,6 +13,7 @@ const RAIZ = new URL("../", import.meta.url);
 
 const TROCAS = [
   // ícone: preto na OP (azul fica no quiz)
+  ["/assets/img/icone/quiz.svg", "/assets/img/icone/op.svg"],
   ["/assets/img/icone/quiz-48.png", "/assets/img/icone/op-48.png"],
   ["/assets/img/icone/quiz-96.png", "/assets/img/icone/op-96.png"],
   ["/assets/img/icone/quiz-192.png", "/assets/img/icone/op-192.png"],
