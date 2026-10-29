@@ -12,6 +12,12 @@ import { semCssCritico, gerar as gerarCssCritico } from "./css-critico.mjs";
 const RAIZ = new URL("../", import.meta.url);
 
 const TROCAS = [
+  // ícone: preto na OP (azul fica no quiz)
+  ["/assets/img/icone/quiz-48.png", "/assets/img/icone/op-48.png"],
+  ["/assets/img/icone/quiz-96.png", "/assets/img/icone/op-96.png"],
+  ["/assets/img/icone/quiz-192.png", "/assets/img/icone/op-192.png"],
+  ["/assets/img/icone/quiz-apple-180.png", "/assets/img/icone/op-apple-180.png"],
+  ["Ícone do site (aba do navegador e resultado do Google): azul (quiz)", "Ícone do site (aba do navegador e resultado do Google): preto (OP)"],
   // marca a página como v2 (o painel separa os números por versão)
   ['<html lang="pt-BR" data-pagina="oferta">', '<html lang="pt-BR" data-pagina="oferta" data-versao="v2">'],
   ["<title>Fórmula Revitalizadora | Cellive Skin</title>", "<title>Sérum Revitalizador | Cellive Skin</title>"],
