@@ -8,11 +8,12 @@
    números), não aparece no Google e usa caminhos a partir da raiz (a página fica
    dentro de /oferta/). Roda sozinho no fim do scripts/gerar-v2.mjs. */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { semCssCritico } from "./css-critico.mjs";
 
 const RAIZ = new URL("../", import.meta.url);
 
 async function gerar(origem, destino, rotulo) {
-  let html = await readFile(new URL(origem, RAIZ), "utf8");
+  let html = semCssCritico(await readFile(new URL(origem, RAIZ), "utf8"));
   html = html
     .replace(/<!-- GERADO por scripts\/gerar-v2\.mjs[^>]*-->\n?/, "")
     .replace("<!doctype html>", `<!doctype html>\n<!-- PRÉVIA DO LANÇAMENTO, GERADA por scripts/gerar-lancamento.mjs a partir do ${origem}. Não edite aqui. -->`)
