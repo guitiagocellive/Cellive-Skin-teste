@@ -14,7 +14,7 @@
    Rode este script sempre depois de mexer neles (o gerar-v2.mjs já roda no fim).
    Pode rodar quantas vezes quiser: o resultado é sempre o mesmo. */
 import { transform } from "esbuild";
-import { readFile, writeFile, mkdir, access } from "node:fs/promises";
+import { readFile, writeFile, mkdir, access, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 
 const RAIZ = new URL("../", import.meta.url);
@@ -51,7 +51,19 @@ const minificar = async (nome, ajuste) => {
   const { code } = await transform(texto, { loader: "js", minify: true, legalComments: "none" });
   await writeFile(arq(`assets/min/${nome}.js`), code);
 };
-for (const nome of jsExiste) if (nome !== "proxima") await minificar(nome);
+// fotos das avaliações: o endereço leva a versão das fotos (?v=), assim o celular não
+// fica com uma resposta antiga guardada (ex.: "não existe" de antes da foto subir)
+const versaoFotosAvaliacoes = async () => {
+  const pasta = "assets/img/oferta/";
+  const nomes = (await readdir(arq(pasta))).filter((n) => /^avaliacao-\d+-\d+\.webp$/.test(n)).sort();
+  const h = createHash("sha256");
+  for (const n of nomes) h.update(n).update(await readFile(arq(pasta + n)));
+  return h.digest("hex").slice(0, 10);
+};
+const AJUSTES = {
+  "oferta-avaliacoes": async (texto) => texto.replace("__FOTOS_V__", await versaoFotosAvaliacoes()),
+};
+for (const nome of jsExiste) if (nome !== "proxima") await minificar(nome, AJUSTES[nome]);
 
 // 3) endereço versionado de cada arquivo
 const cache = new Map();
