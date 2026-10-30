@@ -47,7 +47,7 @@
     // Depoimentos enviados pela Cellive (idade das respostas do quiz; data aproximada)
     {
       nome: "Khloe Araujo",
-      nota: 4,
+      nota: 4.5,
       idade: 32,
       quando: "3 semanas atrás",
       texto: "Gostei muito da embalagem, principalmente do pump. Pra mim, essas coisas práticas fazem diferença porque sou meio enrolada com rotina de skincare, e como esse produto é só um passo, não procrastino mais minha rotina de skincare ksksks.",
