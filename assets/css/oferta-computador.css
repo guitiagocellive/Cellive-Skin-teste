@@ -42,10 +42,22 @@
     margin-top: 28px;
   }
 
+  /* "Fórmula Revitalizadora Aprovada": linha própria, no meio, logo abaixo da logo
+     (ocupa as duas colunas; fotos e compra começam embaixo dela) */
   .oferta-produto > .topo-produto {
-    justify-content: flex-start;
-    margin-top: 24px;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
   }
+
+  /* com o selo (oferta do quiz), as fotos começam na linha de baixo */
+  .oferta-produto:has(> .topo-produto) > .galeria { grid-row: 2 / span 30; }
+
+  .topo-produto .oferta-titulo { font-size: 28px; }
+  .topo-produto-check { width: 24px; height: 24px; }
+  .topo-produto-selo { padding: 4px 10px; border-radius: 7px; font-size: 15px; }
 
   /* ordem da coluna da direita (números negativos: vêm antes das outras seções) */
   .oferta-produto > .galeria { order: -9; }
