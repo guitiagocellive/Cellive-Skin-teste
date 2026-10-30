@@ -33,7 +33,7 @@
       idade: 33,
       quando: "2 meses atrás",
       texto: "Já tinha comprado alguns produtos no TikTok e nenhum tinha funcionado. Comprei esse quando vi um vídeo e, depois que comecei a usar, minhas rugas na testa estão sumindo, estou amando. Sem contar o cheiro, nunca tinha visto um skincare tão bom de usar. AMEI!!!",
-      fotos: 1,
+      fotos: 0,
     },
     {
       nome: "Maria Eduarda",
@@ -237,7 +237,13 @@
         img.src = "/assets/img/oferta/avaliacao-" + n + "-" + f + ".webp";
         img.alt = "Foto enviada por " + a.nome;
         img.loading = "lazy";
-        img.onerror = function () { this.hidden = true; };
+        // foto que não existe: some o quadradinho (e a fileira, se ficar vazia)
+        img.onerror = function () {
+          var q = this.parentNode, fila = q && q.parentNode;
+          if (!q || !fila) return;
+          fila.removeChild(q);
+          if (!fila.children.length && fila.parentNode) fila.parentNode.removeChild(fila);
+        };
         slot.appendChild(img);
         fotos.appendChild(slot);
       }
