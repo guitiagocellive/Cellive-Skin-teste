@@ -4628,7 +4628,8 @@ a.avaliacao-qtd {
   font-size: 15px;
 }
 
-.aval-lista .aval-nome strong { font-weight: 700; }
+.aval-lista .aval-nome { color: var(--gray-soft); } /* idade em cinza claro */
+.aval-lista .aval-nome strong { color: var(--ink); font-weight: 700; } /* nome em destaque */
 .aval-lista .aval-meta { display: contents; }
 
 .aval-lista .aval-meta .estrelas {
@@ -5553,18 +5554,14 @@ html.lista-aberta {
   contain-intrinsic-size: auto 700px;
 }
 
-/* As seções com sombra ou enfeite passando da borda também entram, com uma
-   margem de folga para nada ser cortado (overflow-clip-margin). Assim, quando
-   as fontes chegam, o celular só recalcula o que está perto da tela. */
+/* Outras seções grandes também entram, com uma folga de 80px (overflow-clip-margin).
+   Ficam de fora as que têm sombra encostando na borda (SRRP, garantia, jornada e
+   avaliações): o Safari do iPhone ignora a folga e cortaria a sombra nas laterais. */
 .oferta-conheca,
 .oferta-formula,
-.oferta-srrp,
 .oferta-aliado,
-.oferta-garantia,
 .oferta-faixa,
 .oferta-numeros,
-.oferta-age,
-.oferta-avaliacoes,
 .rodape {
   content-visibility: auto;
   contain-intrinsic-size: auto 800px;
