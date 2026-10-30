@@ -33,7 +33,7 @@
       idade: 33,
       quando: "2 meses atrás",
       texto: "Já tinha comprado alguns produtos no TikTok e nenhum tinha funcionado. Comprei esse quando vi um vídeo e, depois que comecei a usar, minhas rugas na testa estão sumindo, estou amando. Sem contar o cheiro, nunca tinha visto um skincare tão bom de usar. AMEI!!!",
-      fotos: 0,
+      fotos: 1,
     },
     {
       nome: "Maria Eduarda",
