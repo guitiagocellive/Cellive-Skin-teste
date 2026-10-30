@@ -3,6 +3,7 @@
      nome   - nome da cliente
      idade  - idade (número; opcional)
      quando - ex.: "3 meses atrás" (opcional)
+     nota   - estrelas de 1 a 5 (opcional; sem ela fica 5)
      texto  - o depoimento, como a cliente escreveu
      fotos  - (opcional) quantas fotos ela enviou (0, 1, 2 ou 3). As fotos ficam em
               assets/img/oferta/avaliacao-<número da avaliação>-<1, 2 ou 3>.webp
@@ -23,6 +24,7 @@
     },
     {
       nome: "Leticia Souza",
+      nota: 4,
       idade: 31,
       quando: "3 meses atrás",
       texto: "Esse sérum mudou completamente minha autoestima! Agora posso sair sem maquiagem sem me achar feia.",
@@ -37,6 +39,7 @@
     },
     {
       nome: "Maria Eduarda",
+      nota: 4,
       idade: 31,
       quando: "2 meses atrás",
       texto: "Estou gostando muito da experiência. Estou usando faz uns 47 dias e sinto que minha pele está muito melhor. Sinto um viço INCRÍVEL. Recomendo muito.",
@@ -63,6 +66,7 @@
     },
     {
       nome: "Lorraine Souza",
+      nota: 4,
       idade: 37,
       quando: "4 dias atrás",
       texto: "Tenho umas linhas fininhas que me incomodam quando passo maquiagem. Ultimamente achei que ficaram menos aparentes, então tô animada pra continuar acompanhando.",
@@ -93,6 +97,7 @@
     },
     {
       nome: "Sthefany Silva",
+      nota: 4,
       idade: 26,
       quando: "6 meses atrás",
       texto: "Gente, tô chocada com a maciez da minha pele. Eu comprei pensando mais nas ruguinhas, mas a primeira coisa que percebi foi a diferença no toque. Sabe quando você lava o rosto e já sente a pele gostosa, mesmo sem passar nada naquele momento? Foi isso que me ganhou.",
@@ -203,7 +208,11 @@
     return e;
   }
 
-  var ESTRELAS = '<span class="estrelas" role="img" aria-label="Nota 5 de 5"></span>';
+  function estrelas(nota) {
+    nota = nota >= 1 && nota <= 5 ? Math.round(nota) : 5;
+    var classe = nota === 5 ? "estrelas" : "estrelas estrelas-" + nota;
+    return '<span class="' + classe + '" role="img" aria-label="Nota ' + nota + ' de 5"></span>';
+  }
   var VERIFICADA = '<svg class="aval-verif" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg>';
 
   function cartao(a, n) {
@@ -224,7 +233,7 @@
     corpo.appendChild(verif);
 
     var meta = el("div", "aval-meta");
-    meta.innerHTML = ESTRELAS;
+    meta.innerHTML = estrelas(a.nota);
     if (a.quando) meta.appendChild(el("span", null, a.quando));
     corpo.appendChild(meta);
 
