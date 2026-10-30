@@ -3,7 +3,7 @@
      nome   - nome da cliente
      idade  - idade (número; opcional)
      quando - ex.: "3 meses atrás" (opcional)
-     nota   - estrelas de 1 a 5 (opcional; sem ela fica 5)
+     nota   - estrelas de 1 a 5, de meia em meia (ex.: 4 ou 4.5; opcional, sem ela fica 5)
      texto  - o depoimento, como a cliente escreveu
      fotos  - (opcional) quantas fotos ela enviou (0, 1, 2 ou 3). As fotos ficam em
               assets/img/oferta/avaliacao-<número da avaliação>-<1, 2 ou 3>.webp
@@ -24,7 +24,6 @@
     },
     {
       nome: "Leticia Souza",
-      nota: 4,
       idade: 31,
       quando: "3 meses atrás",
       texto: "Esse sérum mudou completamente minha autoestima! Agora posso sair sem maquiagem sem me achar feia.",
@@ -48,6 +47,7 @@
     // Depoimentos enviados pela Cellive (idade das respostas do quiz; data aproximada)
     {
       nome: "Khloe Araujo",
+      nota: 4,
       idade: 32,
       quando: "3 semanas atrás",
       texto: "Gostei muito da embalagem, principalmente do pump. Pra mim, essas coisas práticas fazem diferença porque sou meio enrolada com rotina de skincare, e como esse produto é só um passo, não procrastino mais minha rotina de skincare ksksks.",
@@ -66,7 +66,7 @@
     },
     {
       nome: "Lorraine Souza",
-      nota: 4,
+      nota: 4.5,
       idade: 37,
       quando: "4 dias atrás",
       texto: "Tenho umas linhas fininhas que me incomodam quando passo maquiagem. Ultimamente achei que ficaram menos aparentes, então tô animada pra continuar acompanhando.",
@@ -122,6 +122,7 @@
     },
     {
       nome: "Ayla Lima",
+      nota: 4.5,
       idade: 36,
       quando: "5 meses atrás",
       texto: "Tô usando há dois meses e minhas ruguinhas perto dos olhos parecem mais suaves. Já quero outro frasquinho!",
@@ -140,6 +141,7 @@
     },
     {
       nome: "Clara Souza",
+      nota: 4,
       idade: 33,
       quando: "6 meses atrás",
       texto: "Até minha maquiagem tá ficando mais bonita. Sinto a pele hidratada e a base marcando menos as linhas.",
@@ -170,6 +172,7 @@
     },
     {
       nome: "Liz Rodrigues",
+      nota: 4.5,
       idade: 32,
       quando: "1 mês atrás",
       texto: "Tô gostando muito da textura da minha pele. Sinto ela mais uniforme e até os poros parecem menos aparentes.",
@@ -208,10 +211,12 @@
     return e;
   }
 
+  // nota de meia em meia estrela: 5 (padrão), 4,5 ou 4 têm desenho próprio no CSS
   function estrelas(nota) {
-    nota = nota >= 1 && nota <= 5 ? Math.round(nota) : 5;
-    var classe = nota === 5 ? "estrelas" : "estrelas estrelas-" + nota;
-    return '<span class="' + classe + '" role="img" aria-label="Nota ' + nota + ' de 5"></span>';
+    nota = nota >= 1 && nota <= 5 ? Math.round(nota * 2) / 2 : 5;
+    var classe = nota === 5 ? "estrelas" : "estrelas estrelas-" + String(nota).replace(".", "-");
+    var texto = String(nota).replace(".", ",");
+    return '<span class="' + classe + '" role="img" aria-label="Nota ' + texto + ' de 5"></span>';
   }
   var VERIFICADA = '<svg class="aval-verif" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="m7.4 12.3 3 3 6.2-6.4"/></svg>';
 
