@@ -1651,8 +1651,9 @@ a.avaliacao-qtd {
   transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1);
 }
 
+/* --barra-desvio: correção do iPhone (oferta.js cola a barra no fim da tela) */
 .barra-compra.is-visivel {
-  transform: translate(-50%, 0);
+  transform: translate(-50%, var(--barra-desvio, 0px));
 }
 
 .barra-compra-foto {

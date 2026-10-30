@@ -1186,6 +1186,39 @@
     window.addEventListener("scroll", conferirBarra, { passive: true });
     window.addEventListener("resize", conferirBarra);
     aposPintar(conferirBarra);
+
+    // Proteção para o iPhone (iOS 26): às vezes o Safari e o navegador que abre
+    // dentro de outros apps (WhatsApp, Instagram) deixam a barra "presa" no meio da
+    // tela depois que a barra do navegador encolhe ou o teclado fecha. Aqui a barra
+    // é colada no fim da área que a pessoa está vendo (visualViewport). No normal a
+    // diferença é zero e nada muda. Com zoom de pinça ou teclado aberto não mexe.
+    var vv = window.visualViewport;
+    if (vv) {
+      var desvioAtual = 0, pedido = false;
+      var colarBarra = function () {
+        pedido = false;
+        var ativo = document.activeElement;
+        var digitando = ativo && /^(INPUT|TEXTAREA|SELECT)$/.test(ativo.tagName);
+        var desvio = 0;
+        if (!digitando && vv.scale < 1.01) {
+          desvio = Math.round(vv.offsetTop + vv.height - window.innerHeight);
+          if (Math.abs(desvio) < 2 || Math.abs(desvio) > window.innerHeight / 2) desvio = 0;
+        }
+        if (desvio === desvioAtual) return;
+        desvioAtual = desvio;
+        barra.style.setProperty("--barra-desvio", desvio + "px");
+      };
+      var pedirColar = function () {
+        if (pedido) return;
+        pedido = true;
+        requestAnimationFrame(colarBarra);
+      };
+      vv.addEventListener("resize", pedirColar);
+      vv.addEventListener("scroll", pedirColar);
+      window.addEventListener("scroll", pedirColar, { passive: true });
+      window.addEventListener("pageshow", pedirColar);
+      document.addEventListener("focusout", function () { setTimeout(pedirColar, 350); });
+    }
     botaoBarra.addEventListener("click", function (ev) {
       var planosSecao = document.getElementById("planos");
       if (!planosSecao) return;
