@@ -3062,11 +3062,11 @@ a.avaliacao-qtd {
   text-align: left;
 }
 
+/* foto, estrelas e texto começam na mesma linha da esquerda */
 .cli-topo {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-left: 6px;
 }
 
 .cli-foto {
@@ -3099,7 +3099,7 @@ a.avaliacao-qtd {
   display: block;
   width: 100px;
   height: 19px;
-  margin: 14px 0 0 6px;
+  margin: 14px 0 0;
 }
 
 .cli-texto {
