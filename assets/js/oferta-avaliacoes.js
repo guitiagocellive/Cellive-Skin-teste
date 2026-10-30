@@ -189,6 +189,8 @@
     },
   ];
 
+  // versão das fotos (o scripts/otimizar.mjs troca pelo código das fotos ao gerar)
+  var FOTOS_V = "__FOTOS_V__";
   var POR_VEZ = 5;
   var lista = document.querySelector("[data-aval-lista]");
   var botao = document.querySelector("[data-aval-mais]");
@@ -234,7 +236,7 @@
         var slot = el("span", "slot aval-foto");
         slot.setAttribute("data-label", "Foto " + f);
         var img = el("img");
-        img.src = "/assets/img/oferta/avaliacao-" + n + "-" + f + ".webp";
+        img.src = "/assets/img/oferta/avaliacao-" + n + "-" + f + ".webp?v=" + FOTOS_V;
         img.alt = "Foto enviada por " + a.nome;
         img.loading = "lazy";
         // foto que não existe: some o quadradinho (e a fileira, se ficar vazia)
