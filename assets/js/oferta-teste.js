@@ -632,7 +632,7 @@
           obsRevelar.unobserve(item.target);
         }
       });
-    }, { threshold: 0.6 });
+    }, { threshold: 0.35 }); // aparece mais cedo (antes esperava 60% na tela)
     Array.prototype.forEach.call(revelar, function (el) { obsRevelar.observe(el); });
   } else {
     Array.prototype.forEach.call(revelar, function (el) { el.classList.add("is-visivel"); });
