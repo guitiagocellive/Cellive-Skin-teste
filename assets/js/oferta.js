@@ -1035,6 +1035,7 @@
       if (ligar === rodaLigada) return;
       rodaLigada = ligar;
       carrossel.classList.toggle("vid-roda", ligar);
+      if (ligar) carrossel.scrollLeft = 0;
       cardsVid.forEach(function (card) {
         card._off = undefined;
         if (!ligar) { card.style.removeProperty("--off"); card.classList.remove("is-longe"); }
@@ -1077,7 +1078,11 @@
 
     anterior.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid - 1); else irPara(atualVid - 1); });
     proximo.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid + 1); else irPara(atualVid + 1); });
-    carrossel.addEventListener("scroll", function () { if (!rodaLigada) requestAnimationFrame(marcarVid); }, { passive: true });
+    carrossel.addEventListener("scroll", function () {
+      // na roda a caixa não pode rolar de lado (o navegador às vezes rola ao tocar num cartão)
+      if (rodaLigada) { if (carrossel.scrollLeft) carrossel.scrollLeft = 0; return; }
+      requestAnimationFrame(marcarVid);
+    }, { passive: true });
     var conferirTela = function () { ligarRoda(!telaGrande.matches && nVid >= 3); };
     if (telaGrande.addEventListener) telaGrande.addEventListener("change", conferirTela);
     else if (telaGrande.addListener) telaGrande.addListener(conferirTela);

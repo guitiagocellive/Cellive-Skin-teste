@@ -3578,6 +3578,7 @@ a.avaliacao-qtd {
   margin-top: 4px;
   padding: 0;
   overflow: hidden;
+  overflow: clip; /* a roda não rola de lado: quem move os cartões é o oferta.js */
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
