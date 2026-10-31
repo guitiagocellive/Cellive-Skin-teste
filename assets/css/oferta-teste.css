@@ -3560,7 +3560,8 @@ a.avaliacao-qtd {
 .vid-carrossel.vid-roda {
   position: relative;
   display: block;
-  height: calc(var(--cartao) * 16 / 9 + 76px); /* folga para a sombra azul do vídeo do meio */
+  height: calc(var(--cartao) * 16 / 9 + 84px); /* folga para o brilho azul do vídeo do meio */
+  margin-top: 4px;
   padding: 0;
   overflow: hidden;
   touch-action: pan-y;
@@ -3571,7 +3572,7 @@ a.avaliacao-qtd {
 .vid-roda .vid-card {
   --off: 0;
   position: absolute;
-  top: 26px;
+  top: 42px;
   left: 50%;
   width: var(--cartao);
   margin-left: calc(var(--cartao) / -2);
@@ -3582,12 +3583,17 @@ a.avaliacao-qtd {
   transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* vídeo do meio em destaque: sombra azul da marca em volta */
+/* vídeo do meio em destaque: brilho azul suave em volta (sem contorno) */
 .vid-roda .vid-card.is-atual {
   transform: translateX(0) scale(1);
   opacity: 1;
   z-index: 2;
-  box-shadow: 0 16px 40px rgba(77, 116, 168, 0.55), 0 0 0 3px rgba(177, 199, 222, 0.9);
+  box-shadow: 0 0 36px rgba(177, 199, 222, 0.95), 0 10px 28px rgba(77, 116, 168, 0.22);
+}
+
+/* na roda, a pessoa passa tocando nas capas dos lados ou arrastando: sem setas e bolinhas */
+.oferta-videos:has(.vid-roda) .vid-controles {
+  display: none;
 }
 
 /* longe do meio: escondido (é por onde o cartão dá a volta) */
