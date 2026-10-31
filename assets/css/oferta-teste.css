@@ -3554,6 +3554,55 @@ a.avaliacao-qtd {
   display: inline;
 }
 
+/* Celular: roda de vídeos (o oferta.js liga a classe vid-roda). Um cartão no meio e os
+   vizinhos menores dos dois lados; passando do último volta para o primeiro.
+   --off: posição do cartão em relação ao do meio (0 = meio, -1 esquerda, 1 direita). */
+.vid-carrossel.vid-roda {
+  position: relative;
+  display: block;
+  height: calc(var(--cartao) * 16 / 9 + 28px);
+  padding: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.vid-roda .vid-card {
+  --off: 0;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: var(--cartao);
+  margin-left: calc(var(--cartao) / -2);
+  transform: translateX(calc(var(--off) * var(--tela) * 0.47)) scale(0.76);
+  opacity: 0.55;
+  z-index: 1;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.5s ease;
+}
+
+.vid-roda .vid-card.is-atual {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  z-index: 2;
+}
+
+/* longe do meio: escondido (é por onde o cartão dá a volta) */
+.vid-roda .vid-card.is-longe {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* vizinhos: o botão de play some e o toque leva o cartão para o meio */
+.vid-roda .vid-card:not(.is-atual) .vid-play {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vid-roda .vid-card.sem-transicao {
+  transition: none;
+}
+
 .vid-controles {
   display: flex;
   align-items: center;
