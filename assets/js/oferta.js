@@ -960,8 +960,15 @@
     if ("IntersectionObserver" in window) {
       var olhoVid = new IntersectionObserver(function (entradas) {
         if (entradas.some(function (e) { return e.isIntersecting; })) { olhoVid.disconnect(); prepararVideos(); }
-      }, { rootMargin: "700px 0px" });
+      }, { rootMargin: "250px 0px" });
       olhoVid.observe(carrossel);
+      // capas: baixam bem antes (quando a pessoa ainda está umas 3 telas acima)
+      var olhoCapa = new IntersectionObserver(function (entradas) {
+        if (!entradas.some(function (e) { return e.isIntersecting; })) return;
+        olhoCapa.disconnect();
+        cardsVid.forEach(function (card) { var c = card.querySelector(".vid-capa"); if (c) c.loading = "eager"; });
+      }, { rootMargin: "2500px 0px" });
+      olhoCapa.observe(carrossel);
     } else {
       prepararVideos();
     }
