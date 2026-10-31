@@ -3392,10 +3392,10 @@ a.avaliacao-qtd {
 .faixa-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 15px 22px;
+  gap: 10px;
+  padding: 10px 20px;
   color: var(--white);
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 700;
   letter-spacing: 0.01em;
   text-transform: uppercase;
@@ -3404,8 +3404,8 @@ a.avaliacao-qtd {
 
 .faixa-item svg {
   flex: none;
-  width: 30px;
-  height: 30px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: var(--white);
   stroke-width: 1.5;
@@ -5107,10 +5107,10 @@ a.avaliacao-qtd {
    outra (clientes → garantia → resultados → faixa → vídeos), o ajuste é no
    padding, para o fundo não ganhar uma faixa branca no meio.
    ========================================================================== */
-:root { --vao-secao: 48px; }
+:root { --vao-secao: 56px; }
 
-.oferta-planos { margin-top: calc(var(--vao-secao) + 10px); } /* primeira dobra: como estava */
-.oferta-depoimentos { margin-top: calc(var(--vao-secao) + 33px); }
+.oferta-planos { margin-top: calc(var(--vao-secao) + 2px); } /* primeira dobra: como estava */
+.oferta-depoimentos { margin-top: calc(var(--vao-secao) + 25px); }
 .oferta-envelhece { margin-top: calc(var(--vao-secao) - 10px); }
 .oferta-conheca { margin-top: calc(var(--vao-secao) - 43px); }
 .oferta-formula { margin-top: calc(var(--vao-secao) - 64px); }
@@ -5121,10 +5121,10 @@ a.avaliacao-qtd {
 .oferta-micro { margin-top: var(--vao-secao); }
 .oferta-clientes { margin-top: calc(var(--vao-secao) - 58px); }
 .oferta-garantia { padding-top: calc(var(--vao-secao) - 36px); }
-.oferta-resultados { padding-top: calc(var(--vao-secao) - 28px); padding-bottom: var(--vao-secao); }
+.oferta-resultados { padding-top: calc(var(--vao-secao) - 28px); padding-bottom: calc(var(--vao-secao) - 16px); }
 /* a faixa azul fica sobre um fundo contínuo: o tom de cima continua embaixo e some devagar */
 .oferta-videos {
-  padding-top: var(--vao-secao);
+  padding-top: calc(var(--vao-secao) - 16px);
   background: linear-gradient(180deg, var(--blue-mist) 0, rgba(243, 247, 250, 0) 180px);
 }
 .oferta-confianca { margin-top: calc(var(--vao-secao) - 64px); } /* ~48px abaixo do vídeo do meio */
@@ -5655,7 +5655,7 @@ html.lista-aberta {
    Visual em pílulas (v4); com faq-mini--azul, todas azul bebê.
    ========================================================================== */
 .faq-mini {
-  margin-top: var(--vao-secao); /* primeira dobra: como estava */
+  margin-top: calc(var(--vao-secao) - 8px); /* primeira dobra: como estava */
 }
 
 .faq-mini .faq {
@@ -5763,7 +5763,7 @@ html.lista-aberta {
 /* ---------- Dobra final: volta para a escolha do kit ---------- */
 .oferta-final {
   margin-top: calc(var(--vao-secao) - 18px);
-  padding-bottom: var(--vao-secao);
+  padding-bottom: 8px;
 }
 
 .final-cartao {
