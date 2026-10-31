@@ -753,13 +753,19 @@
   var srrp = document.querySelector("[data-srrp]");
   var listaSrrp = document.querySelector("[data-srrp-lista]");
   var etapasSrrp = listaSrrp ? listaSrrp.querySelectorAll(".srrp-item") : [];
+  var frascoInteiro = srrp && srrp.querySelector(".srrp-frasco-inteiro");
   var semMovimento = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (srrp && listaSrrp) {
     var pedidoSrrp = 0;
     var atualizarSrrp = function () {
       pedidoSrrp = 0;
       var alto = window.innerHeight;
-      var p = (alto * 0.9 - srrp.getBoundingClientRect().top) / (alto * 0.6);
+      // computador: o frasco inteiro fica no meio dos cartões, bem abaixo do título; o giro
+      // acompanha o próprio frasco (começa quando ele entra na tela e termina perto do meio)
+      var noComputador = frascoInteiro && frascoInteiro.offsetParent !== null;
+      var p = noComputador
+        ? (alto - frascoInteiro.getBoundingClientRect().top) / (alto * 0.55)
+        : (alto * 0.9 - srrp.getBoundingClientRect().top) / (alto * 0.6);
       p = Math.min(1, Math.max(0, p));
       p = 1 - Math.pow(1 - p, 2);
       srrp.style.setProperty("--p", semMovimento ? "1" : p.toFixed(3));
@@ -783,7 +789,10 @@
       listaSrrp.style.setProperty("--linha", linha.toFixed(3));
       Array.prototype.forEach.call(etapasSrrp, function (item, i) {
         var n = item.querySelector(".srrp-num").getBoundingClientRect();
-        var chegou = horizontal ? linha >= i / Math.max(1, etapasSrrp.length - 1) - 0.001 : n.top + n.height / 2 <= ponta + 1;
+        // computador: a fileira acende quando o cartão já entrou na tela (perto do pé dela)
+        var chegou = horizontal ? linha >= i / Math.max(1, etapasSrrp.length - 1) - 0.001
+          : noComputador ? item.getBoundingClientRect().top <= alto * 0.82
+          : n.top + n.height / 2 <= ponta + 1;
         if (semMovimento || chegou) item.classList.add("is-visivel");
       });
     };
