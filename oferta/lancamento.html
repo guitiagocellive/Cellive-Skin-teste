@@ -36,8 +36,8 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="/assets/img/oferta/produto-1.webp?v=a05fd76d7f" imagesrcset="/assets/img/oferta/produto-1-720.webp?v=28fcc0fb17 720w, /assets/img/oferta/produto-1.webp?v=a05fd76d7f 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="/assets/min/oferta.css?v=3cd8744c02">
-  <link rel="stylesheet" href="/assets/min/oferta-computador.css?v=67cd8306c8" media="(min-width: 1024px)">
+  <link rel="stylesheet" href="/assets/min/oferta.css?v=d80c87ede8">
+  <link rel="stylesheet" href="/assets/min/oferta-computador.css?v=c4aab11a1f" media="(min-width: 1024px)">
 </head>
 <!-- PRÉ-LANÇAMENTO: com data-pre-lancamento, os preços ficam escondidos e o botão de compra abre o
      cadastro do grupo VIP no WhatsApp. No lançamento, é só apagar o data-pre-lancamento (e rodar
@@ -567,7 +567,7 @@
     <section data-secao="inimigo" class="oferta-inimigo" aria-labelledby="inimigo-titulo">
       <p class="chamada-italico" data-revelar="palavras">O verdadeiro inimigo</p>
       <h2 class="inimigo-titulo" id="inimigo-titulo" data-revelar="palavras" style="--atraso: 0.25s">O que era natural está ficando escasso</h2>
-      <p class="inimigo-texto" data-revelar="bloco" style="--atraso: 0.55s">A partir dos 25 anos, o colágeno e a elastina diminuem, a renovação celular desacelera e a pele perde firmeza e viço. As linhas ficam marcadas e o rosto parece mais cansado. Não é descuido seu, é o tempo agindo. Por isso criamos o <strong>Sérum Revitalizador</strong>, para devolver à pele o que o tempo foi levando.</p>
+      <p class="inimigo-texto" style="--atraso: 0.55s">A partir dos 25 anos, o colágeno e a elastina diminuem, a renovação celular desacelera e a pele perde firmeza e viço. As linhas ficam marcadas e o rosto parece mais cansado. Não é descuido seu, é o tempo agindo. Por isso criamos o <strong>Sérum Revitalizador</strong>, para devolver à pele o que o tempo foi levando.</p>
     </section>
 
     <!-- ===================== DOBRA 10: o reset ===================== -->
@@ -588,7 +588,7 @@
         <img src="/assets/img/oferta/reset-rosto-720.webp?v=2adc4c59fc" srcset="/assets/img/oferta/reset-rosto-720.webp?v=2adc4c59fc 720w, /assets/img/oferta/reset-rosto-1080.webp?v=8a393ef752 1080w, /assets/img/oferta/reset-rosto.webp?v=6da1e857f2 1280w" sizes="(min-width: 1024px) 582px, 86vw" width="1280" height="800" alt="Dedo aplicando o sérum no rosto" loading="lazy" onerror="this.hidden=true">
       </span>
 
-      <p class="reset-texto" data-revelar="bloco">Sua pele não precisa de mais um produto. Ela precisa de uma fórmula dedicada a reativar os fatores de jovialidade: auxiliar a produção de colágeno e elastina, devolver firmeza, acelerar a renovação celular e fortalecer a barreira cutânea. Tudo com a <strong>ação SRRP</strong>, em um único passo. <strong>Esse é o reset que sua pele estava esperando.</strong></p>
+      <p class="reset-texto">Sua pele não precisa de mais um produto. Ela precisa de uma fórmula dedicada a reativar os fatores de jovialidade: auxiliar a produção de colágeno e elastina, devolver firmeza, acelerar a renovação celular e fortalecer a barreira cutânea. Tudo com a <strong>ação SRRP</strong>, em um único passo. <strong>Esse é o reset que sua pele estava esperando.</strong></p>
     </section>
 
     <!-- ===================== DOBRA 11: o seu novo aliado ===================== -->
@@ -660,7 +660,7 @@
         </div>
       </figure>
 
-      <p class="micro-texto" data-revelar="bloco">As <strong>MICROESPÍCULAS</strong>, tecnologia em alta no <strong style="white-space: nowrap">K-Beauty</strong>, criam microcanais invisíveis na pele para que a fórmula não fique só na superfície. A diferença que você sente não está só na sensação: está nos <strong>ativos chegando além da superfície da pele</strong>, onde fazem efeito de verdade.</p>
+      <p class="micro-texto">As <strong>MICROESPÍCULAS</strong>, tecnologia em alta no <strong style="white-space: nowrap">K-Beauty</strong>, criam microcanais invisíveis na pele para que a fórmula não fique só na superfície. A diferença que você sente não está só na sensação: está nos <strong>ativos chegando além da superfície da pele</strong>, onde fazem efeito de verdade.</p>
     </section>
 
     <!-- ===================== DOBRA 13: um pouco dos nossos clientes =====================
@@ -803,7 +803,7 @@
          Capa: a imagem (vid-capa) baixa antes de a pessoa chegar e, até ela chegar, o cartão
          já mostra uma prévia borrada embutida aqui (background-image), então nunca fica branco. -->
     <section data-secao="videos" class="oferta-videos" aria-labelledby="videos-titulo">
-      <p class="fp-chamada videos-chamada" data-revelar="palavras">Mais depoimentos</p>
+      <p class="pilula videos-chamada" data-revelar="bloco" style="--atraso: 0s">Mais depoimentos</p>
       <h2 class="secao-titulo videos-titulo" id="videos-titulo" data-revelar="palavras" style="--atraso: 0.2s">
         <span class="titulo-leve">Vejam o que</span> <strong>elas falam</strong>
       </h2>
@@ -1255,6 +1255,20 @@
       <button type="button" class="aval-mais" data-rastreio="ver-mais-avaliacoes" data-aval-mais hidden>Ver mais avaliações</button>
     </section>
 
+    <!-- ===================== DOBRA FINAL: volta para a escolha do kit =====================
+         Foto: a mesma da galeria (produto-1), que o navegador já baixou no topo da página. -->
+    <section data-secao="chamada-final" class="oferta-final" aria-labelledby="final-titulo">
+      <div class="final-cartao" data-aparecer>
+        <span class="slot final-foto"><img src="/assets/img/oferta/produto-1-720.webp?v=28fcc0fb17" alt="Sérum Revitalizador Noturno Cellive Skin" width="720" height="720" loading="lazy" decoding="async" onerror="this.hidden=true"></span>
+        <p class="pilula final-pilula">Sua vez de sentir a diferença</p>
+        <h2 class="secao-titulo final-titulo" id="final-titulo">
+          <span class="titulo-leve">Comece hoje o</span> <strong>seu reset</strong>
+        </h2>
+        <p class="final-texto">Escolha o kit ideal para você. Frete grátis para todo o Brasil e garantia de 30 dias.</p>
+        <a class="fp-comprar final-comprar" href="#planos" data-ir-planos data-rastreio="chamada-final">Escolher meu kit</a>
+      </div>
+    </section>
+
   </main>
 
   <!-- ===================== RODAPÉ ===================== -->
@@ -1335,7 +1349,7 @@
     </div>
   </dialog>
 
-  <script src="/assets/min/oferta.js?v=b8ece28aab" defer></script>
+  <script src="/assets/min/oferta.js?v=34116db862" defer></script>
   <script src="/assets/min/quiz-perguntas.js?v=c666bf3499" defer></script>
   <script src="/assets/min/oferta-formula.js?v=008ad36e1f" defer></script>
   <script src="/assets/min/oferta-avaliacoes.js?v=63d58949c9" defer></script>
