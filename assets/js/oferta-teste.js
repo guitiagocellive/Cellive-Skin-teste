@@ -987,10 +987,95 @@
       var card = cardsVid[Math.max(0, Math.min(cardsVid.length - 1, i))];
       carrossel.scrollTo({ left: card.offsetLeft + card.offsetWidth / 2 - carrossel.clientWidth / 2, behavior: "smooth" });
     };
-    anterior.addEventListener("click", function () { irPara(atualVid - 1); });
-    proximo.addEventListener("click", function () { irPara(atualVid + 1); });
-    carrossel.addEventListener("scroll", function () { requestAnimationFrame(marcarVid); }, { passive: true });
-    aposPintar(marcarVid);
+    /* Celular: roda. Um cartão no meio, os vizinhos menores dos lados; do último volta
+       para o primeiro. Passa arrastando para o lado, pelas setas ou tocando num vizinho.
+       No computador os 4 ficam lado a lado (sem roda). */
+    var nVid = cardsVid.length;
+    var telaGrande = window.matchMedia("(min-width: 1024px)");
+    var rodaLigada = false;
+    var posicaoRoda = function (i) {
+      var off = ((i - atualVid) % nVid + nVid) % nVid;
+      if (off > nVid / 2) off -= nVid;
+      return off;
+    };
+    var desenharRoda = function () {
+      cardsVid.forEach(function (card, i) {
+        var off = posicaoRoda(i);
+        var antes = card._off;
+        // deu a volta (ex.: da direita para a esquerda): pula escondido, sem atravessar a tela
+        if (antes !== undefined && Math.abs(off - antes) > 1) {
+          card.classList.add("sem-transicao", "is-longe");
+          card.style.setProperty("--off", off + (off > 0 ? 1 : -1));
+          void card.offsetWidth;
+          card.classList.remove("sem-transicao");
+        }
+        card._off = off;
+        card.style.setProperty("--off", off);
+        card.classList.toggle("is-atual", off === 0);
+        card.classList.toggle("is-longe", Math.abs(off) > 1);
+      });
+      Array.prototype.forEach.call(pontosVid.children, function (p, i) { p.classList.toggle("is-ativo", i === atualVid); });
+    };
+    var irRoda = function (i) {
+      var novo = (i % nVid + nVid) % nVid;
+      if (novo === atualVid) return;
+      var v = cardsVid[atualVid].querySelector("video");
+      if (!v.paused) v.pause(); // saiu do meio: pausa
+      atualVid = novo;
+      desenharRoda();
+    };
+    var ligarRoda = function (ligar) {
+      if (ligar === rodaLigada) return;
+      rodaLigada = ligar;
+      carrossel.classList.toggle("vid-roda", ligar);
+      cardsVid.forEach(function (card) {
+        card._off = undefined;
+        if (!ligar) { card.style.removeProperty("--off"); card.classList.remove("is-longe"); }
+      });
+      anterior.disabled = false;
+      proximo.disabled = false;
+      if (ligar) desenharRoda(); else marcarVid();
+    };
+
+    // arrastar para o lado (o arrasto para cima/baixo continua rolando a página)
+    var inicioX = null, inicioY = 0;
+    carrossel.addEventListener("pointerdown", function (ev) {
+      if (!rodaLigada) return;
+      inicioX = ev.clientX; inicioY = ev.clientY;
+    });
+    carrossel.addEventListener("pointerup", function (ev) {
+      if (!rodaLigada || inicioX === null) return;
+      var dx = ev.clientX - inicioX, dy = ev.clientY - inicioY;
+      inicioX = null;
+      if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+        carrossel._arrastou = true;
+        setTimeout(function () { carrossel._arrastou = false; }, 0);
+        irRoda(atualVid + (dx < 0 ? 1 : -1));
+      }
+    });
+    carrossel.addEventListener("pointercancel", function () { inicioX = null; });
+    // tocar num vizinho traz ele para o meio
+    cardsVid.forEach(function (card, i) {
+      card.addEventListener("click", function (ev) {
+        if (!rodaLigada) return;
+        if (carrossel._arrastou) { ev.preventDefault(); ev.stopPropagation(); return; }
+        if (!card.classList.contains("is-atual")) { ev.preventDefault(); ev.stopPropagation(); irRoda(i); }
+      }, true);
+    });
+    carrossel.addEventListener("keydown", function (ev) {
+      if (!rodaLigada) return;
+      if (ev.key === "ArrowRight") { ev.preventDefault(); irRoda(atualVid + 1); }
+      if (ev.key === "ArrowLeft") { ev.preventDefault(); irRoda(atualVid - 1); }
+    });
+
+    anterior.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid - 1); else irPara(atualVid - 1); });
+    proximo.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid + 1); else irPara(atualVid + 1); });
+    carrossel.addEventListener("scroll", function () { if (!rodaLigada) requestAnimationFrame(marcarVid); }, { passive: true });
+    var conferirTela = function () { ligarRoda(!telaGrande.matches && nVid >= 3); };
+    if (telaGrande.addEventListener) telaGrande.addEventListener("change", conferirTela);
+    else if (telaGrande.addListener) telaGrande.addListener(conferirTela);
+    conferirTela();
+    aposPintar(function () { if (!rodaLigada) marcarVid(); });
   }
 
   /* ---------- Os números falam por si ----------
