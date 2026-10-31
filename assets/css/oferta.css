@@ -3560,7 +3560,7 @@ a.avaliacao-qtd {
 .vid-carrossel.vid-roda {
   position: relative;
   display: block;
-  height: calc(var(--cartao) * 16 / 9 + 28px);
+  height: calc(var(--cartao) * 16 / 9 + 76px); /* folga para a sombra azul do vídeo do meio */
   padding: 0;
   overflow: hidden;
   touch-action: pan-y;
@@ -3571,20 +3571,23 @@ a.avaliacao-qtd {
 .vid-roda .vid-card {
   --off: 0;
   position: absolute;
-  top: 6px;
+  top: 26px;
   left: 50%;
   width: var(--cartao);
   margin-left: calc(var(--cartao) / -2);
   transform: translateX(calc(var(--off) * var(--tela) * 0.47)) scale(0.76);
-  opacity: 0.55;
+  opacity: 0.45;
+  box-shadow: none;
   z-index: 1;
-  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.5s ease;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.5s ease, box-shadow 0.5s ease;
 }
 
+/* vídeo do meio em destaque: sombra azul da marca em volta */
 .vid-roda .vid-card.is-atual {
   transform: translateX(0) scale(1);
   opacity: 1;
   z-index: 2;
+  box-shadow: 0 16px 40px rgba(77, 116, 168, 0.55), 0 0 0 3px rgba(177, 199, 222, 0.9);
 }
 
 /* longe do meio: escondido (é por onde o cartão dá a volta) */
