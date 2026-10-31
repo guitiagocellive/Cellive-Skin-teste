@@ -1005,22 +1005,40 @@
       if (off > nVid / 2) off -= nVid;
       return off;
     };
+    // cartões que deram a volta (ex.: da direita para a esquerda) pulam escondidos, sem
+    // atravessar a tela: primeiro vão para fora da tela sem animação e, dois quadros depois,
+    // entram animando. Funciona igual no Safari (iPhone) e no Chrome.
+    var pendentesRoda = [], quadroRoda = 0;
+    var assentarPendentes = function () {
+      if (quadroRoda) { cancelAnimationFrame(quadroRoda); quadroRoda = 0; }
+      pendentesRoda.forEach(function (card) {
+        card.classList.remove("sem-transicao");
+        card.style.setProperty("--off", card._off);
+        card.classList.toggle("is-longe", Math.abs(card._off) > 1);
+      });
+      pendentesRoda = [];
+    };
     var desenharRoda = function () {
+      assentarPendentes();
       cardsVid.forEach(function (card, i) {
         var off = posicaoRoda(i);
         var antes = card._off;
-        // deu a volta (ex.: da direita para a esquerda): pula escondido, sem atravessar a tela
+        card._off = off;
+        card.classList.toggle("is-atual", off === 0);
         if (antes !== undefined && Math.abs(off - antes) > 1) {
           card.classList.add("sem-transicao", "is-longe");
           card.style.setProperty("--off", off + (off > 0 ? 1 : -1));
-          void card.offsetWidth;
-          card.classList.remove("sem-transicao");
+          pendentesRoda.push(card);
+        } else {
+          card.style.setProperty("--off", off);
+          card.classList.toggle("is-longe", Math.abs(off) > 1);
         }
-        card._off = off;
-        card.style.setProperty("--off", off);
-        card.classList.toggle("is-atual", off === 0);
-        card.classList.toggle("is-longe", Math.abs(off) > 1);
       });
+      if (pendentesRoda.length) {
+        quadroRoda = requestAnimationFrame(function () {
+          quadroRoda = requestAnimationFrame(function () { quadroRoda = 0; assentarPendentes(); });
+        });
+      }
       Array.prototype.forEach.call(pontosVid.children, function (p, i) { p.classList.toggle("is-ativo", i === atualVid); });
     };
     var irRoda = function (i) {
@@ -1056,20 +1074,26 @@
       var dx = ev.clientX - inicioX, dy = ev.clientY - inicioY;
       inicioX = null;
       if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
-        carrossel._arrastou = true;
-        setTimeout(function () { carrossel._arrastou = false; }, 0);
+        // no iPhone o arrasto também vira um "toque" logo depois: ignora por um instante
+        // para o cartão não andar duas vezes
+        carrossel._arrastouAte = Date.now() + 450;
         irRoda(atualVid + (dx < 0 ? 1 : -1));
       }
     });
     carrossel.addEventListener("pointercancel", function () { inicioX = null; });
-    // tocar num vizinho traz ele para o meio
-    cardsVid.forEach(function (card, i) {
-      card.addEventListener("click", function (ev) {
-        if (!rodaLigada) return;
-        if (carrossel._arrastou) { ev.preventDefault(); ev.stopPropagation(); return; }
-        if (!card.classList.contains("is-atual")) { ev.preventDefault(); ev.stopPropagation(); irRoda(i); }
-      }, true);
-    });
+    // toque: à direita do vídeo do meio avança, à esquerda volta, no meio dá play.
+    // Vale pela posição na tela (não pelo cartão tocado), então funciona até no meio da
+    // animação e com toques rápidos seguidos.
+    carrossel.addEventListener("click", function (ev) {
+      if (!rodaLigada || !ev.detail) return; // ev.detail 0 = teclado (Enter no botão): segue normal
+      if (Date.now() < (carrossel._arrastouAte || 0)) { ev.preventDefault(); ev.stopPropagation(); return; }
+      var caixa = carrossel.getBoundingClientRect();
+      var distancia = ev.clientX - (caixa.left + caixa.width / 2);
+      var metade = cardsVid[0].offsetWidth / 2;
+      if (Math.abs(distancia) <= metade) return; // no vídeo do meio: play/pausa normal
+      ev.preventDefault(); ev.stopPropagation();
+      irRoda(atualVid + (distancia > 0 ? 1 : -1));
+    }, true);
     carrossel.addEventListener("keydown", function (ev) {
       if (!rodaLigada) return;
       if (ev.key === "ArrowRight") { ev.preventDefault(); irRoda(atualVid + 1); }
