@@ -4,7 +4,7 @@
 
    Mesmo CSS, JS e textos da v2; só muda o HTML:
    - sem o selo "Testado dermatologicamente" abaixo das fotos;
-   - "Esgotando rápido" sem a frase "Devido à alta demanda...";
+   - "Esgotando rápido" sem a frase de baixo;
    Por enquanto é página de avaliação: sem rastreio do painel e fora do Google. */
 import { readFile, writeFile } from "node:fs/promises";
 
