@@ -385,27 +385,6 @@
   letter-spacing: 0.08em;
 }
 
-/* Selo "Testado dermatologicamente": mesmo cartão do selo da Coreia, ícone no azul da marca */
-.selo-dermato-icone {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 2px 6px rgba(77, 116, 168, 0.25);
-}
-.selo-dermato-icone svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: var(--white);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.selo-dermato .selo-coreia-texto { max-width: 104px; font-size: 10px; hyphens: manual; }
-
 .galeria-miniaturas {
   display: flex;
   gap: 9px;
