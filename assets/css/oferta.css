@@ -1437,7 +1437,8 @@ a.avaliacao-qtd {
 
 /* Cartões mais estreitos e texto em 5 linhas com "Ver mais" (abre o texto de todos os
    cartões de uma vez; "Ver menos" fecha). O botão é criado pelo oferta.js. */
-.oferta-depoimentos .depo { flex-basis: 84%; }
+.oferta-depoimentos .depo { flex-basis: 78%; }
+.oferta-depoimentos .depo-foto { aspect-ratio: 4 / 3; }
 /* nome e estrelas na mesma linha (estrelas à direita, na altura do nome);
    "Compra verificada" sozinho embaixo, ocupando a largura toda */
 .oferta-depoimentos .depo-corpo {
@@ -1445,10 +1446,10 @@ a.avaliacao-qtd {
   grid-template-areas: "nome estrelas" "verif verif" "texto texto";
   column-gap: 8px;
   align-items: center;
-  padding: 16px 16px 18px;
+  padding: 14px 16px 16px;
 }
-.oferta-depoimentos .depo-nome { overflow: hidden; font-size: 17px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; } /* sempre em uma linha */
-.oferta-depoimentos .depo-corpo .estrelas { width: 90px; height: 17px; }
+.oferta-depoimentos .depo-nome { overflow: hidden; font-size: 16px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; } /* sempre em uma linha */
+.oferta-depoimentos .depo-corpo .estrelas { width: 80px; height: 15px; }
 /* "Compra verificada" no meio entre o nome e a caixa do texto (mesmo espaço em cima e embaixo) */
 .oferta-depoimentos .depo-corpo .depo-verificada { margin-top: 10px; }
 .oferta-depoimentos .depo-corpo .depo-texto { margin-top: 9px; }
@@ -1468,7 +1469,7 @@ a.avaliacao-qtd {
 .depo-mais {
   grid-column: 1 / -1;
   justify-self: center;
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   padding: 4px 0;
   border: 0;
   background: none;
