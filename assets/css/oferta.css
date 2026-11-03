@@ -3650,6 +3650,7 @@ a.avaliacao-qtd {
   align-items: center;
   gap: 6px;
   padding: 0;
+  font: inherit; /* botão não herda a fonte sozinho: nome em Acumin */
   border: 0;
   background: none;
   cursor: pointer;
