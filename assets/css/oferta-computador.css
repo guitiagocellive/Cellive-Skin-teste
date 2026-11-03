@@ -103,8 +103,9 @@
     cursor: grab;
   }
 
-  .depo {
-    flex: 0 0 80%;
+  .depo,
+  .oferta-depoimentos .depo {
+    flex: 0 0 66%;
   }
 
   .depo img {
