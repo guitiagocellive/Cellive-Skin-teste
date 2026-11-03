@@ -1449,6 +1449,9 @@ a.avaliacao-qtd {
 }
 .oferta-depoimentos .depo-nome { overflow: hidden; font-size: 14.5px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; } /* sempre em uma linha */
 .oferta-depoimentos .depo-corpo .estrelas { width: 70px; height: 13px; }
+/* "Compra verificada" no meio entre o nome e a caixa do texto (mesmo espaço em cima e embaixo) */
+.oferta-depoimentos .depo-corpo .depo-verificada { margin-top: 10px; }
+.oferta-depoimentos .depo-corpo .depo-texto { margin-top: 9px; }
 @media (max-width: 340px) { /* celulares bem estreitos: nome um pouco menor para caber inteiro */
   .oferta-depoimentos .depo-nome { font-size: 13.5px; }
   .oferta-depoimentos .depo-corpo .estrelas { width: 64px; height: 12px; }
