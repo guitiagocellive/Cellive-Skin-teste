@@ -3565,64 +3565,139 @@ a.avaliacao-qtd {
   display: inline;
 }
 
-/* Celular: roda de vídeos (o oferta.js liga a classe vid-roda). Um cartão no meio e os
-   vizinhos menores dos dois lados; passando do último volta para o primeiro.
-   --off: posição do cartão em relação ao do meio (0 = meio, -1 esquerda, 1 direita). */
-.vid-carrossel.vid-roda {
-  position: relative;
-  display: block;
-  height: calc(var(--cartao) * 16 / 9 + 76px); /* folga para o brilho azul do vídeo do meio */
-  margin-top: 4px;
+/* Celular: Stories (o oferta.js monta e liga a classe com-stories na seção). Bolinhas em
+   cima, um player só embaixo com as barrinhas de progresso e o brilho azul. */
+.com-stories .vid-carrossel,
+.com-stories .vid-controles {
+  display: none;
+}
+
+.vid-stories {
+  margin-top: 22px;
+}
+
+.vs-fila {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 var(--gutter);
+}
+
+.vs-bolinha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vs-aro {
+  display: block;
+  padding: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-ink), var(--blue));
+  transition: transform 0.3s ease;
+}
+
+.vs-aro img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.vs-bolinha.is-atual .vs-aro {
+  transform: scale(1.08);
+}
+
+.vs-bolinha.is-visto .vs-aro {
+  background: var(--gray-light);
+}
+
+.vs-nome {
+  max-width: 82px;
   overflow: hidden;
-  overflow: clip; /* a roda não rola de lado: quem move os cartões é o oferta.js */
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vs-bolinha:not(.is-atual) .vs-nome {
+  color: var(--gray);
+}
+
+.vs-player {
+  position: relative;
+  width: calc(min(100vw, var(--page-max)) * 0.62);
+  aspect-ratio: 9 / 16;
+  margin: 22px auto 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--blue-mist) center / cover;
+  box-shadow: 0 0 36px rgba(177, 199, 222, 0.95), 0 10px 28px rgba(77, 116, 168, 0.22);
+  cursor: pointer;
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
 }
 
-.vid-roda .vid-card {
-  --off: 0;
+.vs-capa,
+.vs-video {
   position: absolute;
-  top: 42px;
-  left: 50%;
-  width: var(--cartao);
-  margin-left: calc(var(--cartao) / -2);
-  transform: translateX(calc(var(--off) * var(--tela) * 0.47)) scale(0.76);
-  opacity: 0.45;
-  box-shadow: none;
-  z-index: 1;
-  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.5s ease, box-shadow 0.5s ease;
-  will-change: transform;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* vídeo do meio em destaque: brilho azul suave em volta (sem contorno) */
-.vid-roda .vid-card.is-atual {
-  transform: translateX(0) scale(1);
+.vs-video {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.vs-player.tem-video .vs-video {
   opacity: 1;
+}
+
+.vs-barras {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
   z-index: 2;
-  box-shadow: 0 0 36px rgba(177, 199, 222, 0.95), 0 10px 28px rgba(77, 116, 168, 0.22);
+  display: flex;
+  gap: 4px;
 }
 
-/* na roda, a pessoa passa tocando nas capas dos lados ou arrastando: sem setas e bolinhas */
-.oferta-videos:has(.vid-roda) .vid-controles {
-  display: none;
+.vs-barras i {
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.45);
 }
 
-/* longe do meio: escondido (é por onde o cartão dá a volta) */
-.vid-roda .vid-card.is-longe {
+.vs-barras b {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--white);
+}
+
+.vs-player .vid-play {
+  pointer-events: none; /* o toque é tratado pelo player inteiro */
+}
+
+.vs-player.is-tocando .vid-play {
   opacity: 0;
-  pointer-events: none;
-}
-
-/* vizinhos: o botão de play some e o toque leva o cartão para o meio */
-.vid-roda .vid-card:not(.is-atual) .vid-play {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.vid-roda .vid-card.sem-transicao {
-  transition: none;
 }
 
 .vid-controles {
@@ -5127,7 +5202,7 @@ a.avaliacao-qtd {
   padding-top: calc(var(--vao-secao) - 16px);
   background: linear-gradient(180deg, var(--blue-mist) 0, rgba(243, 247, 250, 0) 180px);
 }
-.oferta-confianca { margin-top: calc(var(--vao-secao) - 64px); } /* ~48px abaixo do vídeo do meio */
+.oferta-confianca { margin-top: calc(var(--vao-secao) - 30px); } /* ~56px abaixo do player de vídeo */
 .oferta-numeros { margin-top: calc(var(--vao-secao) - 45px); padding-bottom: var(--vao-secao); }
 .oferta-duvidas { margin-top: calc(var(--vao-secao) - 54px); }
 .oferta-avaliacoes { margin-top: calc(var(--vao-secao) - 20px); padding-bottom: calc(var(--vao-secao) - 48px); }
