@@ -655,6 +655,32 @@
   /* ---------- Depoimentos: pontinhos acompanham o cartão da vez ---------- */
   var depos = document.querySelector("[data-depos]");
   var pontos = document.querySelector("[data-depos-pontos]");
+
+  /* "Ver mais" nos depoimentos: o texto mostra 5 linhas; o botão (só onde o texto não
+     cabe) abre o texto de todos os cartões de uma vez e vira "Ver menos". */
+  if (depos) {
+    var textosDepo = depos.querySelectorAll(".depo-texto"), botoesDepo = [];
+    Array.prototype.forEach.call(textosDepo, function (t) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "depo-mais"; b.textContent = "Ver mais";
+      b.setAttribute("aria-expanded", "false");
+      b.setAttribute("data-rastreio", "depoimentos-ver-mais");
+      b.addEventListener("click", function () {
+        var abrir = !depos.classList.contains("depos-abertos");
+        depos.classList.toggle("depos-abertos", abrir);
+        botoesDepo.forEach(function (x) { x.textContent = abrir ? "Ver menos" : "Ver mais"; x.setAttribute("aria-expanded", abrir ? "true" : "false"); });
+      });
+      t.insertAdjacentElement("afterend", b);
+      botoesDepo.push(b);
+    });
+    var conferirDepo = function () {
+      if (depos.classList.contains("depos-abertos")) return;
+      Array.prototype.forEach.call(textosDepo, function (t, i) { botoesDepo[i].hidden = t.scrollHeight <= t.clientHeight + 2; });
+    };
+    conferirDepo();
+    window.addEventListener("load", conferirDepo);
+    window.addEventListener("resize", conferirDepo);
+  }
   if (depos && pontos) {
     var cartoes = depos.querySelectorAll(".depo");
     Array.prototype.forEach.call(cartoes, function () {

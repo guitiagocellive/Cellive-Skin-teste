@@ -1435,6 +1435,47 @@ a.avaliacao-qtd {
   color: var(--gray-dark);
 }
 
+/* Cartões mais estreitos e texto em 5 linhas com "Ver mais" (abre o texto de todos os
+   cartões de uma vez; "Ver menos" fecha). O botão é criado pelo oferta.js. */
+.oferta-depoimentos .depo { flex-basis: 70%; }
+.oferta-depoimentos .depo-corpo { padding: 16px 16px 18px; }
+.oferta-depoimentos .depo-corpo .estrelas { width: 84px; height: 16px; }
+.oferta-depoimentos .depo-texto {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  padding-bottom: 0;
+  border-bottom: 12px solid var(--blue-mist); /* a linha seguinte não aparece no respiro de baixo */
+}
+.depos-abertos .depo-texto { display: block; -webkit-line-clamp: unset; }
+.depo-mais {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin: 10px 0 0;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--blue);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.depo-mais::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 0 3px 7px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  transition: transform 0.25s ease;
+}
+.depos-abertos .depo-mais::after { transform: translateY(3px) rotate(-135deg); }
+
 /* setas dos depoimentos: só no computador */
 .depos-controles {
   display: flex;
