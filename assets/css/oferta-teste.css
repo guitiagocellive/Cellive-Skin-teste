@@ -1438,12 +1438,17 @@ a.avaliacao-qtd {
 /* Cartões mais estreitos e texto em 5 linhas com "Ver mais" (abre o texto de todos os
    cartões de uma vez; "Ver menos" fecha). O botão é criado pelo oferta.js. */
 .oferta-depoimentos .depo { flex-basis: 70%; }
+/* nome e estrelas na mesma linha (estrelas à direita, na altura do nome);
+   "Compra verificada" sozinho embaixo, ocupando a largura toda */
 .oferta-depoimentos .depo-corpo {
   grid-template-columns: minmax(0, 1fr) auto; /* nome longo quebra a linha em vez de empurrar o texto para fora */
+  grid-template-areas: "nome estrelas" "verif verif" "texto texto";
+  column-gap: 8px;
+  align-items: center;
   padding: 16px 16px 18px;
 }
-.oferta-depoimentos .depo-nome { overflow-wrap: anywhere; }
-.oferta-depoimentos .depo-corpo .estrelas { width: 84px; height: 16px; }
+.oferta-depoimentos .depo-nome { overflow-wrap: anywhere; font-size: 15.5px; line-height: 1.2; }
+.oferta-depoimentos .depo-corpo .estrelas { width: 74px; height: 14px; align-self: start; margin-top: 2px; } /* no meio da 1ª linha do nome */
 .oferta-depoimentos .depo-texto {
   display: -webkit-box;
   -webkit-box-orient: vertical;
