@@ -5230,11 +5230,11 @@ a.avaliacao-qtd {
 .oferta-envelhece { margin-top: calc(var(--vao-secao) - 10px); }
 .oferta-conheca { margin-top: calc(var(--vao-secao) - 43px); }
 .oferta-formula { margin-top: calc(var(--vao-secao) - 64px); }
-.oferta-srrp { margin-top: calc(var(--vao-secao) - 22px); }
-.oferta-inimigo { margin-top: calc(var(--vao-secao) - 19px); }
+.oferta-srrp { margin-top: calc(var(--vao-secao) - 41px); } /* depois do reset */
+.oferta-inimigo { margin-top: var(--vao-secao); }
 .oferta-reset { margin-top: var(--vao-secao); }
-.oferta-aliado { margin-top: calc(var(--vao-secao) - 30px); }
-.oferta-micro { margin-top: var(--vao-secao); }
+.oferta-aliado { margin-top: calc(var(--vao-secao) - 22px); } /* logo depois da fórmula */
+.oferta-micro { margin-top: calc(var(--vao-secao) - 21px); }
 .oferta-clientes { margin-top: calc(var(--vao-secao) - 58px); }
 .oferta-garantia { padding-top: calc(var(--vao-secao) - 36px); }
 .oferta-resultados { padding-top: calc(var(--vao-secao) - 28px); padding-bottom: calc(var(--vao-secao) - 16px); }
