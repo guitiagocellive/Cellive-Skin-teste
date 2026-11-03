@@ -1438,15 +1438,19 @@ a.avaliacao-qtd {
 /* Cartões mais estreitos e texto em 5 linhas com "Ver mais" (abre o texto de todos os
    cartões de uma vez; "Ver menos" fecha). O botão é criado pelo oferta.js. */
 .oferta-depoimentos .depo { flex-basis: 70%; }
-.oferta-depoimentos .depo-corpo { padding: 16px 16px 18px; }
+.oferta-depoimentos .depo-corpo {
+  grid-template-columns: minmax(0, 1fr) auto; /* nome longo quebra a linha em vez de empurrar o texto para fora */
+  padding: 16px 16px 18px;
+}
+.oferta-depoimentos .depo-nome { overflow-wrap: anywhere; }
 .oferta-depoimentos .depo-corpo .estrelas { width: 84px; height: 16px; }
 .oferta-depoimentos .depo-texto {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   overflow: hidden;
-  padding-bottom: 0;
-  border-bottom: 12px solid var(--blue-mist); /* a linha seguinte não aparece no respiro de baixo */
+  padding: 14px 14px 0; /* mesmo respiro nos quatro lados */
+  border-bottom: 14px solid var(--blue-mist); /* a linha seguinte não aparece no respiro de baixo */
 }
 .depos-abertos .depo-texto { display: block; -webkit-line-clamp: unset; }
 .depo-mais {
