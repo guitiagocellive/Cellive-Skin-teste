@@ -710,7 +710,7 @@ a.avaliacao-qtd {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 22px;
+  margin-top: 28px; /* "Esgotando rápido" → kits (sem título no meio) */
 }
 
 .plano {
@@ -5245,7 +5245,7 @@ a.avaliacao-qtd {
    ========================================================================== */
 :root { --vao-secao: 56px; }
 
-.oferta-planos { margin-top: calc(var(--vao-secao) + 2px); } /* primeira dobra: como estava */
+.oferta-planos { margin-top: 28px; } /* benefícios → "Esgotando rápido" */
 .oferta-depoimentos { margin-top: calc(var(--vao-secao) + 25px); }
 .oferta-envelhece { margin-top: calc(var(--vao-secao) - 10px); }
 .oferta-conheca { margin-top: calc(var(--vao-secao) - 43px); }
