@@ -1,0 +1,380 @@
+<!doctype html>
+<!-- PÁGINA DE UPSELL (pós-compra): aparece depois que a cliente paga, oferecendo mais 1 frasco
+     com desconto, na mesma caixa. Estrutura inspirada na referência da TonaFace, com a identidade
+     da Cellive. Os valores e links ficam no <body> (data-cfg-*). -->
+<html lang="pt-BR" data-pagina="upsell">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pedido confirmado | Cellive Skin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="/assets/img/icone/op.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css">
+  <link rel="preload" as="image" href="/assets/img/oferta/produto-1-720.webp">
+  <style>
+    :root {
+      --font: "acumin-pro", "Acumin Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --cond: "acumin-pro-condensed", "Acumin Pro Condensed", "Arial Narrow", sans-serif;
+      --ink: #1a1a1a;
+      --gray: #7c7d81;
+      --gray-dark: #4b4c4f;
+      --gray-light: #dfe1e5;
+      --gray-mist: #f2f3f5;
+      --blue: #b1c7de;
+      --blue-soft: #e0e9f2;
+      --blue-mist: #f3f7fa;
+      --blue-ink: #4d74a8;
+      --star: #f9c80e;
+      --white: #ffffff;
+      --max: 480px;
+      --gutter: 20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { margin: 0; background: var(--white); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    img { display: block; max-width: 100%; }
+    button { font: inherit; }
+    .pagina { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter) 120px; }
+
+    /* topo: logo + pagamento aprovado */
+    .topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: var(--max); margin: 0 auto; padding: 16px var(--gutter); border-bottom: 1px solid var(--gray-light); }
+    .topo img { width: 118px; height: auto; }
+    .topo-ok { display: flex; align-items: center; gap: 9px; text-align: left; }
+    .topo-ok svg { flex: none; width: 30px; height: 30px; }
+    .topo-ok b { display: block; font-size: 13.5px; }
+    .topo-ok span { display: block; color: var(--gray); font-size: 12px; }
+
+    /* etapas */
+    .etapas { display: flex; align-items: flex-start; justify-content: space-between; margin: 22px 0 0; padding: 0; list-style: none; }
+    .etapa { flex: 0 0 76px; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--gray); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-align: center; text-transform: uppercase; }
+    .etapa i { display: grid; place-items: center; width: 32px; height: 32px; border: 2px solid var(--gray-light); border-radius: 50%; background: var(--white); color: var(--gray); font-style: normal; font-size: 14px; }
+    .etapa.feita { color: var(--blue-ink); }
+    .etapa.feita i { border-color: var(--blue-ink); background: var(--blue-ink); color: var(--white); }
+    .etapa.atual { color: var(--ink); }
+    .etapa.atual i { border-color: var(--ink); background: var(--ink); color: var(--white); box-shadow: 0 0 0 6px var(--blue-soft); }
+    .etapa-linha { flex: 1; height: 3px; margin-top: 15px; border-radius: 2px; background: var(--gray-light); }
+    .etapa-linha.feita { background: var(--blue-ink); }
+
+    /* chamada */
+    .pilula { display: inline-block; padding: 7px 16px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-ink); font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .chamada { margin-top: 26px; text-align: center; }
+    h1 { margin: 14px 0 0; font-family: var(--cond); font-size: 34px; font-weight: 700; line-height: 1.02; text-transform: uppercase; }
+    h1 em { color: var(--blue-ink); font-style: normal; }
+    .chamada p { margin: 12px 0 0; color: var(--gray-dark); font-size: 15.5px; line-height: 1.45; }
+
+    /* tempo */
+    .tempo { margin-top: 20px; padding: 14px; border-radius: 18px; background: var(--blue-mist); border: 1px solid var(--blue-soft); text-align: center; }
+    .tempo p { margin: 0; color: var(--gray-dark); font-size: 14px; }
+    .tempo strong { display: inline-block; margin-top: 8px; padding: 5px 16px; border-radius: 12px; background: var(--white); color: var(--blue-ink); font-family: var(--cond); font-size: 28px; font-variant-numeric: tabular-nums; }
+
+    /* produto */
+    .produto { position: relative; margin-top: 22px; overflow: hidden; border-radius: 24px; background: var(--gray-mist); aspect-ratio: 1; }
+    .produto img { width: 100%; height: 100%; object-fit: cover; }
+    .selo { position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .bola { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 104px; height: 104px; border-radius: 50%; background: var(--blue-ink); color: var(--white); text-align: center; box-shadow: 0 10px 26px rgba(77, 116, 168, .45); }
+    .bola b { display: block; font-family: var(--cond); font-size: 30px; line-height: .95; }
+    .bola > div > span { display: block; margin-top: 2px; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .nota { display: flex; align-items: center; gap: 8px; margin-top: 18px; color: var(--gray-dark); font-size: 14px; }
+    .estrelas { color: var(--star); letter-spacing: 1px; font-size: 16px; }
+    .nota b { color: var(--ink); }
+    h2.produto-nome { margin: 8px 0 0; font-size: 24px; line-height: 1.15; }
+    .produto-desc { margin: 6px 0 0; color: var(--gray-dark); font-size: 15px; line-height: 1.4; }
+
+    /* tabela de preço */
+    .preco { margin-top: 18px; overflow: hidden; border: 1px solid var(--gray-light); border-radius: 18px; }
+    .preco div { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 16px; border-bottom: 1px dashed var(--gray-light); font-size: 15px; }
+    .preco div:last-child { border-bottom: 0; background: var(--gray-mist); }
+    .preco .desc { color: var(--blue-ink); font-weight: 700; }
+    .preco .gratis { color: var(--blue-ink); font-weight: 700; text-transform: uppercase; }
+    .preco .total { font-size: 18px; font-weight: 700; }
+    .preco .total s { margin-right: 8px; color: var(--gray); font-size: 15px; font-weight: 400; }
+    .preco .total b { font-size: 22px; }
+
+    /* para quem */
+    .quem { margin-top: 22px; }
+    .quem h3 { margin: 0; font-size: 15px; }
+    .quem-opcoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .quem-opcoes button { padding: 9px 14px; border: 1.5px solid var(--gray-light); border-radius: 999px; background: var(--white); color: var(--gray-dark); font-size: 14px; font-weight: 600; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+    .quem-opcoes button[aria-pressed="true"] { border-color: var(--blue-ink); background: var(--blue-mist); color: var(--blue-ink); }
+    .quem-frase { min-height: 20px; margin: 10px 0 0; color: var(--gray-dark); font-size: 14px; }
+
+    /* benefícios */
+    .lista { margin: 22px 0 0; padding: 0; list-style: none; }
+    .lista li { position: relative; padding: 6px 0 6px 30px; font-size: 15.5px; line-height: 1.35; }
+    .lista li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 18px; height: 18px; border-radius: 50%; background: var(--blue-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 12.4 3.2 3.2L17 8.8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; }
+
+    /* botão */
+    .comprar { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 64px; margin-top: 22px; padding: 12px 18px; border: 0; border-radius: 999px; background: var(--ink); color: var(--white); text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 10px 26px rgba(77, 116, 168, .35); -webkit-tap-highlight-color: transparent; transition: transform .15s ease; }
+    .comprar:active { transform: scale(.98); }
+    .comprar b { font-size: 19px; }
+    .comprar > span { margin-top: 2px; color: var(--blue); font-size: 13px; font-weight: 600; }
+    .garantias { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; color: var(--gray-dark); font-size: 12.5px; }
+    .garantias span { display: flex; align-items: center; gap: 5px; }
+    .garantias svg { width: 15px; height: 15px; fill: none; stroke: var(--blue-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .recusar { display: block; margin: 16px auto 0; padding: 4px; border: 0; background: none; color: var(--gray); font-size: 14px; text-align: center; text-decoration: underline; cursor: pointer; }
+
+    /* depoimento curto */
+    .citacao { margin-top: 26px; padding: 16px 18px; border-left: 4px solid var(--blue); border-radius: 0 18px 18px 0; background: var(--blue-mist); }
+    .citacao p { margin: 0; color: var(--gray-dark); font-size: 15px; line-height: 1.45; }
+    .citacao footer { margin-top: 8px; font-size: 13.5px; font-weight: 700; }
+    .citacao footer span { color: var(--star); }
+
+    /* seções */
+    .secao { margin-top: 48px; text-align: center; }
+    .secao h2 { margin: 0; font-size: 25px; font-weight: 400; line-height: 1.1; text-transform: uppercase; }
+    .secao h2 strong { font-family: var(--cond); font-size: 1.22em; font-weight: 700; }
+    .secao > p { margin: 10px 0 0; color: var(--gray-dark); font-size: 15px; line-height: 1.45; }
+    .motivos { display: grid; gap: 12px; margin-top: 20px; }
+    .motivo { padding: 20px 18px; border: 1px solid var(--gray-light); border-radius: 20px; background: var(--white); }
+    .motivo-icone { display: grid; place-items: center; width: 46px; height: 46px; margin: 0 auto; border-radius: 50%; background: var(--blue-soft); }
+    .motivo-icone svg { width: 24px; height: 24px; fill: none; stroke: var(--blue-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .motivo h3 { margin: 12px 0 0; font-size: 17px; }
+    .motivo p { margin: 6px 0 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.4; }
+
+    /* avaliações */
+    .avaliacoes { margin: 48px calc(-1 * var(--gutter)) 0; padding: 36px var(--gutter); background: var(--blue-mist); }
+    .avaliacoes .secao { margin-top: 0; }
+    .aval { margin-top: 14px; padding: 18px; border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(77, 116, 168, .16); text-align: left; }
+    .aval-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .aval-tag { color: var(--blue-ink); font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .aval h3 { margin: 10px 0 0; font-size: 18px; line-height: 1.25; }
+    .aval p { margin: 8px 0 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.45; }
+    .aval footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gray-light); font-size: 14px; }
+    .aval footer b span { color: var(--gray); font-weight: 400; }
+    .aval-verif { display: flex; align-items: center; gap: 5px; color: var(--blue); font-size: 12px; font-weight: 700; }
+    .aval-verif svg { width: 15px; height: 15px; }
+
+    /* garantia */
+    .garantia { display: flex; align-items: center; gap: 16px; margin-top: 36px; padding: 18px; border-radius: 22px; background: var(--blue-mist); border: 1px solid var(--blue-soft); }
+    .garantia-selo { flex: none; display: grid; place-items: center; width: 86px; height: 86px; border: 4px solid var(--white); border-radius: 50%; background: var(--blue-ink); color: var(--white); text-align: center; box-shadow: 0 0 0 3px var(--blue); }
+    .garantia-selo b { display: block; font-family: var(--cond); font-size: 30px; line-height: .9; }
+    .garantia-selo span { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+    .garantia p { margin: 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.45; }
+    .garantia p strong { color: var(--ink); }
+
+    /* dúvidas */
+    .duvidas { margin-top: 40px; }
+    .duvida { border-bottom: 1px solid var(--gray-light); }
+    .duvida button { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 16px 2px; border: 0; background: none; color: var(--ink); font-size: 15.5px; font-weight: 700; text-align: left; cursor: pointer; }
+    .duvida button::after { content: "+"; flex: none; color: var(--gray); font-size: 22px; font-weight: 400; transition: transform .2s ease; }
+    .duvida button[aria-expanded="true"]::after { transform: rotate(45deg); }
+    .duvida div { display: none; padding: 0 2px 16px; color: var(--gray-dark); font-size: 14.5px; line-height: 1.45; }
+    .duvida button[aria-expanded="true"] + div { display: block; }
+
+    /* barra fixa */
+    .barra { position: fixed; left: 50%; bottom: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; max-width: var(--max); padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%); border-radius: 22px 22px 0 0; background: var(--white); box-shadow: 0 -4px 22px rgba(26, 26, 26, .1); }
+    .barra b { display: block; font-size: 16px; }
+    .barra > div > span { display: block; color: var(--gray); font-size: 12.5px; }
+    .barra b span, .comprar b span, .bola b span { display: inline; margin: 0; color: inherit; font: inherit; letter-spacing: inherit; }
+    .barra .comprar { width: auto; min-height: 50px; margin: 0; padding: 0 22px; box-shadow: none; }
+    .barra .comprar b { font-size: 16px; }
+
+    @media (min-width: 900px) {
+      .pagina { padding-bottom: 140px; }
+      h1 { font-size: 40px; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<!-- VALORES (troque aqui):
+     data-cfg-preco-normal / data-cfg-preco-oferta: preço do frasco extra
+     data-cfg-link-sim: link do upsell de 1 clique da B4You (ao aceitar)
+     data-cfg-link-nao: para onde vai quem recusar (página de obrigado / próximo passo da B4You)
+     data-cfg-minutos: tempo do contador -->
+<body data-cfg-preco-normal="197,90" data-cfg-preco-oferta="99,90" data-cfg-link-sim="#" data-cfg-link-nao="#" data-cfg-minutos="5">
+
+  <header class="topo">
+    <img src="/assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
+    <div class="topo-ok">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4d74a8"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>Pagamento aprovado</b><span>Seu pedido está confirmado</span></div>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <ol class="etapas" aria-label="Etapas do pedido">
+      <li class="etapa feita"><i aria-hidden="true">✓</i>Pedido feito</li>
+      <li class="etapa-linha feita" aria-hidden="true"></li>
+      <li class="etapa atual" aria-current="step"><i aria-hidden="true">2</i>Seu bônus</li>
+      <li class="etapa-linha" aria-hidden="true"></li>
+      <li class="etapa"><i aria-hidden="true">3</i>Pronto</li>
+    </ol>
+
+    <section class="chamada">
+      <span class="pilula">Obrigada pelo seu pedido</span>
+      <h1>Você desbloqueou <em>R$&nbsp;<span data-economia>98</span> de desconto</em> em mais um frasco</h1>
+      <p>Leve um segundo Sérum para sua mãe, irmã ou melhor amiga, ou garanta o seu próximo mês. Ele vai <strong>na mesma caixa</strong>, sem frete extra.</p>
+    </section>
+
+    <div class="tempo" role="timer" aria-live="off">
+      <p>Desconto reservado enquanto preparamos seu pedido:</p>
+      <strong data-tempo>5:00</strong>
+    </div>
+
+    <div class="produto">
+      <img src="/assets/img/oferta/produto-1-720.webp" alt="Sérum Revitalizador Noturno Cellive Skin" width="720" height="720">
+      <span class="selo">Mais vendido</span>
+      <div class="bola"><div><b>-R$&nbsp;<span data-economia>98</span></b><span>Só nesta página</span></div></div>
+    </div>
+
+    <div class="nota"><span class="estrelas" aria-label="Nota 4,9 de 5">★★★★★</span><span><b>4,9/5</b> · +5.000 mulheres usam</span></div>
+    <h2 class="produto-nome">Sérum Revitalizador Noturno</h2>
+    <p class="produto-desc">1 frasco · 30 dias de uso. O mesmo sérum que você acabou de comprar.</p>
+
+    <div class="preco">
+      <div><span>Preço normal</span><span>R$ <span data-preco-normal>197,90</span></span></div>
+      <div class="desc"><span>Seu desconto exclusivo</span><span>− R$ <span data-economia-centavos>98,00</span></span></div>
+      <div><span>Frete (mesma caixa)</span><span class="gratis">Grátis</span></div>
+      <div class="total"><span>Você paga hoje</span><span><s>R$ <span data-preco-normal>197,90</span></s><b>R$ <span data-preco-oferta>99,90</span></b></span></div>
+    </div>
+
+    <div class="quem">
+      <h3>Para quem é?</h3>
+      <div class="quem-opcoes" role="group" aria-label="Para quem é o frasco extra">
+        <button type="button" aria-pressed="false" data-frase="Um presente que ela vai sentir na pele, todas as noites.">Para minha mãe</button>
+        <button type="button" aria-pressed="false" data-frase="Vocês fazem o ritual juntas e comparam os resultados.">Irmã ou amiga</button>
+        <button type="button" aria-pressed="false" data-frase="Você emenda o segundo mês sem pausa no tratamento.">Reserva para mim</button>
+      </div>
+      <p class="quem-frase" data-quem-frase></p>
+    </div>
+
+    <ul class="lista">
+      <li>Reduz linhas finas e rugas</li>
+      <li>Aspecto de pele jovem e radiante</li>
+      <li>Auxilia na produção de colágeno e elastina</li>
+      <li>Garantia de reembolso de 30 dias</li>
+    </ul>
+
+    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>99,90</span></b><span>Vai junto com o seu pedido</span></a>
+    <div class="garantias">
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Compra em 1 clique</span>
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>Mesma entrega</span>
+    </div>
+    <button type="button" class="recusar" data-nao data-rastreio="upsell-nao">Não, obrigada. Vou abrir mão do desconto</button>
+
+    <blockquote class="citacao">
+      <p>"Uma amiga comentou que minha pele tava bonita sem saber que eu estava usando. Fiquei me achando e passei um dos meus potes para ela kkk."</p>
+      <footer>Maria Clara · Compra verificada · <span>★★★★★</span></footer>
+    </blockquote>
+
+    <section class="secao">
+      <h2>Por que adicionar <strong>agora?</strong></h2>
+      <p>Este preço só existe nesta página, enquanto seu pedido é preparado.</p>
+      <div class="motivos">
+        <div class="motivo">
+          <div class="motivo-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+          <h3>R$ <span data-economia>98</span> de desconto, já aplicado</h3>
+          <p>O desconto vale só aqui. Depois que você sair desta página, o frasco volta ao preço normal.</p>
+        </div>
+        <div class="motivo">
+          <div class="motivo-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg></div>
+          <h3>Frete grátis, mesma caixa</h3>
+          <p>Ele vai junto com o seu pedido, então não tem custo de envio a mais.</p>
+        </div>
+        <div class="motivo">
+          <div class="motivo-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-4.5"/></svg></div>
+          <h3>Garantia de 30 dias</h3>
+          <p>A mesma garantia do seu pedido. Não gostou? Devolvemos 100% do valor.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="avaliacoes">
+      <div class="secao">
+        <h2>Quem usa, <strong>aprova</strong></h2>
+        <p>Nota 4,9/5 de mais de 5.000 mulheres.</p>
+      </div>
+      <article class="aval">
+        <div class="aval-topo"><span class="aval-tag">Linhas finas</span><span class="estrelas" aria-label="Nota 5 de 5">★★★★★</span></div>
+        <h3>"Comprei meio desconfiada, mas gostei demais."</h3>
+        <p>"Minha pele tá mais viçosa e aquelas linhazinhas estão sumindo, tinha até pensado em fazer botox, mas depois desse produto eu até desisti ksksks. AMEI.❤"</p>
+        <footer><b>Luna dos Santos <span>35</span></b><span class="aval-verif"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#b1c7de"/><path d="m7.4 12.3 3 3 6.2-6.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Compra verificada</span></footer>
+      </article>
+      <article class="aval">
+        <div class="aval-topo"><span class="aval-tag">Rugas na testa</span><span class="estrelas" aria-label="Nota 5 de 5">★★★★★</span></div>
+        <h3>"Minhas rugas na testa estão sumindo."</h3>
+        <p>"Já tinha comprado alguns produtos no TikTok e nenhum tinha funcionado. Comprei esse quando vi um vídeo e, depois que comecei a usar, minhas rugas na testa estão sumindo, estou amando. Sem contar o cheiro, nunca tinha visto um skincare tão bom de usar. AMEI!!!"</p>
+        <footer><b>Monique Araujo <span>33</span></b><span class="aval-verif"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#b1c7de"/><path d="m7.4 12.3 3 3 6.2-6.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Compra verificada</span></footer>
+      </article>
+      <article class="aval">
+        <div class="aval-topo"><span class="aval-tag">Elogio das amigas</span><span class="estrelas" aria-label="Nota 5 de 5">★★★★★</span></div>
+        <h3>"Realmente o produto funciona."</h3>
+        <p>"Uma amiga perguntou o que eu estava usando porque achou minha pele bonita. Eu já vinha percebendo uma diferença, mas ouvir isso sem ter comentado nada foi muito SURREAL! Contei que estava usando o sérum há algumas semanas."</p>
+        <footer><b>Jeniffer Martins <span>36</span></b><span class="aval-verif"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#b1c7de"/><path d="m7.4 12.3 3 3 6.2-6.4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Compra verificada</span></footer>
+      </article>
+    </section>
+
+    <div class="garantia">
+      <div class="garantia-selo"><div><b>30</b><span>DIAS</span></div></div>
+      <p><strong>Risco zero.</strong> Se você, ou quem ganhou o frasco, não gostar dos resultados em até 30 dias, nós reembolsamos 100% do valor deste frasco.</p>
+    </div>
+
+    <section class="duvidas">
+      <div class="secao" style="margin-top:0"><h2>Principais <strong>dúvidas</strong></h2></div>
+      <div class="duvida"><button type="button" aria-expanded="false">Vou pagar frete de novo?</button><div>Não. O frasco extra vai na mesma caixa do seu pedido, com frete grátis.</div></div>
+      <div class="duvida"><button type="button" aria-expanded="false">Preciso digitar o cartão de novo?</button><div>Não. É compra em 1 clique: o pagamento usa os mesmos dados da compra que você acabou de fazer.</div></div>
+      <div class="duvida"><button type="button" aria-expanded="false">Isso vira uma assinatura?</button><div>Não. É uma compra única, sem cobrança recorrente.</div></div>
+      <div class="duvida"><button type="button" aria-expanded="false">E se eu me arrepender?</button><div>Você tem a garantia de 30 dias: se não gostar dos resultados, devolvemos 100% do valor deste frasco.</div></div>
+    </section>
+
+    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim-2"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>99,90</span></b><span>1 clique · vai junto com o seu pedido</span></a>
+    <button type="button" class="recusar" data-nao data-rastreio="upsell-nao-2">Não, obrigada. Vou abrir mão do desconto</button>
+  </main>
+
+  <div class="barra">
+    <div><b>+1 Sérum · R$ <span data-preco-oferta>99,90</span></b><span>Desconto aplicado · <span data-tempo>5:00</span></span></div>
+    <a class="comprar" href="#" data-sim data-rastreio="upsell-barra"><b>Adicionar</b></a>
+  </div>
+
+  <script>
+  (function () {
+    var corpo = document.body;
+    var real = function (t) { return parseFloat(String(t).replace(/\./g, "").replace(",", ".")) || 0; };
+    var fmt = function (n) { return n.toFixed(2).replace(".", ","); };
+    var normal = real(corpo.getAttribute("data-cfg-preco-normal")), oferta = real(corpo.getAttribute("data-cfg-preco-oferta"));
+    var economia = normal - oferta;
+    var por = function (sel, txt) { Array.prototype.forEach.call(document.querySelectorAll(sel), function (e) { e.textContent = txt; }); };
+    por("[data-preco-normal]", fmt(normal));
+    por("[data-preco-oferta]", fmt(oferta));
+    por("[data-economia]", Math.round(economia));
+    por("[data-economia-centavos]", fmt(economia));
+
+    // botões: sim → upsell da B4You; não → próxima página
+    var linkSim = corpo.getAttribute("data-cfg-link-sim"), linkNao = corpo.getAttribute("data-cfg-link-nao");
+    Array.prototype.forEach.call(document.querySelectorAll("[data-sim]"), function (b) {
+      b.href = linkSim;
+      b.addEventListener("click", function (ev) { if (!linkSim || linkSim === "#") { ev.preventDefault(); alert("Prévia: o link do upsell da B4You ainda não foi colocado."); } });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-nao]"), function (b) {
+      b.addEventListener("click", function () { if (linkNao && linkNao !== "#") location.href = linkNao; else alert("Prévia: o link de quem recusa ainda não foi colocado."); });
+    });
+
+    // contador (para em 0:00; a oferta não some sozinha)
+    var fim = Date.now() + (parseFloat(corpo.getAttribute("data-cfg-minutos")) || 5) * 60000;
+    var tick = function () {
+      var s = Math.max(0, Math.round((fim - Date.now()) / 1000));
+      por("[data-tempo]", Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2));
+      if (s > 0) setTimeout(tick, 1000);
+    };
+    tick();
+
+    // para quem é
+    var frase = document.querySelector("[data-quem-frase]");
+    var opcoes = document.querySelectorAll(".quem-opcoes button");
+    Array.prototype.forEach.call(opcoes, function (b) {
+      b.addEventListener("click", function () {
+        Array.prototype.forEach.call(opcoes, function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+        frase.textContent = b.getAttribute("data-frase");
+      });
+    });
+
+    // dúvidas
+    Array.prototype.forEach.call(document.querySelectorAll(".duvida button"), function (b) {
+      b.addEventListener("click", function () { b.setAttribute("aria-expanded", b.getAttribute("aria-expanded") === "true" ? "false" : "true"); });
+    });
+  })();
+  </script>
+</body>
+</html>
