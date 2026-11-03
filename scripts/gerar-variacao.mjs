@@ -26,7 +26,7 @@ const seloFim = html.indexOf("      </div>\n", html.indexOf('<div class="selo-de
 html = html.slice(0, seloIni) + html.slice(seloFim).replace(/^\n/, "");
 
 // 2) frase do estoque
-html = html.replace(/\s*<p class="estoque-texto">[^<]*<\/p>/, () => "");
+html = html.replace(/\s*<p class="estoque-texto">[\s\S]*?<\/p>/, () => "");
 if (html.includes('class="estoque-texto"')) erro("a frase do estoque continua");
 
 // sem rastreio do painel (avaliação não entra nos números)
