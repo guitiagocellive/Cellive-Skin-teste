@@ -35,7 +35,12 @@ html = html.replace('<body class="oferta-body" data-pre-lancamento>', '<body cla
 html = html.replace(/\s*<!-- Rastreamento próprio[^>]*-->\s*<script src="assets\/(?:js|min)\/rastreio\.js[^"]*" defer><\/script>/, "");
 if (html.includes("rastreio.js")) { console.error("Não consegui tirar o rastreio.js"); process.exit(1); }
 await writeFile(new URL("teste.html", RAIZ), html);
-await copyFile(new URL("assets/css/oferta.css", RAIZ), new URL("assets/css/oferta-teste.css", RAIZ));
+// CSS da página de teste = oferta.css + o que estiver em teste-extra.css (testes só desta página)
+{
+  let css = await readFile(new URL("assets/css/oferta.css", RAIZ), "utf8");
+  try { css += "\n\n" + await readFile(new URL("assets/css/teste-extra.css", RAIZ), "utf8"); } catch (e) {}
+  await writeFile(new URL("assets/css/oferta-teste.css", RAIZ), css);
+}
 let js = await readFile(new URL("assets/js/oferta.js", RAIZ), "utf8");
 if (!js.includes('fetch("/api/lead"')) { console.error("Não encontrei o envio do cadastro no oferta.js"); process.exit(1); }
 js = js.replace('fetch("/api/lead"', 'fetch("/api/lead?teste=1"');

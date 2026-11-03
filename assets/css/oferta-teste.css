@@ -5945,3 +5945,16 @@ html.lista-aberta {
   align-self: stretch;
   margin: 20px 0 0;
 }
+
+
+/* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
+   Teste atual: cartões do "Amado por +5.000 mulheres" um pouco menores (o texto da avaliação
+   fica do mesmo tamanho). */
+@media (max-width: 1023px) {
+  .oferta-depoimentos .depo { flex-basis: 78%; }
+}
+.oferta-depoimentos .depo-foto { aspect-ratio: 4 / 3; }
+.oferta-depoimentos .depo-nome { font-size: 16px; }
+.oferta-depoimentos .depo-corpo .estrelas { width: 80px; height: 15px; }
+.oferta-depoimentos .depo-corpo { padding: 14px 16px 16px; }
+.oferta-depoimentos .depo-mais { margin-top: 8px; }
