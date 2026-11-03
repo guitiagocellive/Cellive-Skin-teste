@@ -734,4 +734,10 @@
   .final-texto { max-width: none; margin-left: 0; font-size: 17px; }
   .final-cartao .final-titulo { justify-self: start; justify-content: flex-start; margin-top: 14px; font-size: 30px; text-align: left; }
   .final-cartao .final-comprar { justify-self: start; align-self: start; width: 100%; max-width: 360px; margin: 24px 0 0 6px; }
+
+  /* Ordem fórmula → aliado → inimigo → reset → SRRP → microagulhamento: espaços entre elas */
+  .oferta > .oferta-aliado { margin-top: calc(var(--vao-secao) - 30px); }
+  .oferta > .oferta-inimigo { margin-top: calc(var(--vao-secao) + 11px); }
+  .oferta > .oferta-srrp { margin-top: calc(var(--vao-secao) - 72px); }
+  .oferta > .oferta-micro { margin-top: calc(var(--vao-secao) - 30px); }
 }
