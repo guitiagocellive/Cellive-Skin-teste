@@ -62,12 +62,15 @@
   /* ordem da coluna da direita (números negativos: vêm antes das outras seções) */
   .oferta-produto > .galeria { order: -9; }
   .oferta-produto > .topo-produto { order: -9; }
-  .oferta-produto > .produto-nome { order: -8; margin-top: 24px; }
-  .oferta-produto > .avaliacao { order: -7; }
-  .oferta-produto > .proof { order: -6; }
+  /* prova social (3 fotos + "+5.000 mulheres") em cima do nome do produto */
+  .oferta-produto > .proof { order: -8; margin-top: 24px; }
+  .oferta-produto > .produto-nome { order: -7; margin-top: 14px; }
+  .oferta-produto > .avaliacao { order: -6; }
   .oferta-produto > .produto-chamada { order: -5; }
   .oferta-produto > .beneficios { order: -4; }
-  .oferta-produto > .selo-derm { order: -3; margin-top: 18px; }
+  /* "Testado dermatologicamente" sai da coluna da direita e vai para baixo das miniaturas */
+  .oferta-produto > .selo-derm { display: none; }
+  .galeria .selo-derm.selo-derm--galeria { display: flex; margin-top: 16px; }
 
 
 

@@ -455,6 +455,9 @@
 /* Selos azuis */
 /* Selo "Testado dermatologicamente": vai de uma ponta à outra da foto, fino,
    fundo branco com borda no azul da marca (o azul só no contorno e na bolinha) */
+/* cópia do selo dentro da galeria: só no computador */
+.selo-derm.selo-derm--galeria { display: none; }
+
 .selo-derm {
   position: relative;
   display: flex;
