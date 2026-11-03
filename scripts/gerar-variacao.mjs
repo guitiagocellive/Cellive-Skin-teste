@@ -35,8 +35,8 @@ const AJUSTE = `<style>
     html[data-versao="v2-minimalista"] .oferta-depoimentos .depo-corpo .estrelas { width: 84px; height: 16px; }
     html[data-versao="v2-minimalista"] .depos-abertos .depo-texto { display: block; -webkit-line-clamp: unset; }
     html[data-versao="v2-minimalista"] .depo-mais {
-      grid-column: 1 / -1; justify-self: start; margin: 8px 0 0 2px; padding: 4px 0; border: 0; background: none;
-      color: var(--blue-ink); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+      grid-column: 1 / -1; justify-self: center; margin: 10px 0 0; padding: 4px 0; border: 0; background: none;
+      color: var(--blue); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
     html[data-versao="v2-minimalista"] .depo-mais::after {
