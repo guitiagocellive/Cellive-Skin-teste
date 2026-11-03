@@ -950,6 +950,7 @@
     // Os vídeos não baixam na abertura da página (preload="none"); o começo de
     // cada um só é lido quando a pessoa chega perto da seção.
     var prepararVideos = function () {
+      if (!window.matchMedia("(min-width: 1024px)").matches) return; // celular: Stories (baixa só no play)
       cardsVid.forEach(function (card) {
         var v = card.querySelector("video");
         // a capa do vídeo também só baixa aqui (não disputa com a primeira dobra)
@@ -994,124 +995,137 @@
       var card = cardsVid[Math.max(0, Math.min(cardsVid.length - 1, i))];
       carrossel.scrollTo({ left: card.offsetLeft + card.offsetWidth / 2 - carrossel.clientWidth / 2, behavior: "smooth" });
     };
-    /* Celular: roda. Um cartão no meio, os vizinhos menores dos lados; do último volta
-       para o primeiro. Passa arrastando para o lado, pelas setas ou tocando num vizinho.
-       No computador os 4 ficam lado a lado (sem roda). */
-    var nVid = cardsVid.length;
+    /* Celular: Stories. Uma fileira de bolinhas (uma por vídeo) e um player só embaixo,
+       com as barrinhas de progresso em cima, como no Instagram. Tocar numa bolinha troca o
+       vídeo; no player, tocar na direita avança, na esquerda volta e no meio dá play/pausa;
+       arrastar para o lado também troca. Quando um vídeo acaba, o próximo começa sozinho.
+       Um elemento <video> só (o iPhone deixa continuar tocando nele sem novo toque) e o
+       arquivo só baixa quando a pessoa aperta o play. No computador: os 4 lado a lado. */
     var telaGrande = window.matchMedia("(min-width: 1024px)");
-    var rodaLigada = false;
-    var posicaoRoda = function (i) {
-      var off = ((i - atualVid) % nVid + nVid) % nVid;
-      if (off > nVid / 2) off -= nVid;
-      return off;
-    };
-    // cartões que deram a volta (ex.: da direita para a esquerda) pulam escondidos, sem
-    // atravessar a tela: primeiro vão para fora da tela sem animação e, dois quadros depois,
-    // entram animando. Funciona igual no Safari (iPhone) e no Chrome.
-    var pendentesRoda = [], quadroRoda = 0;
-    var assentarPendentes = function () {
-      if (quadroRoda) { cancelAnimationFrame(quadroRoda); quadroRoda = 0; }
-      pendentesRoda.forEach(function (card) {
-        card.classList.remove("sem-transicao");
-        card.style.setProperty("--off", card._off);
-        card.classList.toggle("is-longe", Math.abs(card._off) > 1);
+    var storiesLigado = false, stories = null;
+    var dadosVid = cardsVid.map(function (card, i) {
+      var v = card.querySelector("video"), capa = card.querySelector(".vid-capa"), fonte = v.querySelector("source");
+      return {
+        nome: card.getAttribute("data-nome") || "Depoimento " + (i + 1),
+        capa: capa ? capa.getAttribute("src") : v.getAttribute("data-poster") || v.poster,
+        fundo: card.style.backgroundImage,
+        video: fonte ? fonte.getAttribute("src") : v.getAttribute("src")
+      };
+    });
+    var montarStories = function () {
+      var el = function (tag, cls, attrs) {
+        var e = document.createElement(tag); if (cls) e.className = cls;
+        if (attrs) Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+        return e;
+      };
+      var raiz = el("div", "vid-stories");
+      var fila = el("div", "vs-fila", { role: "tablist", "aria-label": "Escolha um depoimento" });
+      var player = el("div", "vs-player");
+      var barras = el("div", "vs-barras", { "aria-hidden": "true" });
+      var capa = el("img", "vs-capa", { alt: "", width: "432", height: "768", decoding: "async" });
+      var video = el("video", "vs-video", { playsinline: "", preload: "none" });
+      var botao = cardsVid[0].querySelector(".vid-play").cloneNode(true);
+      var bolinhas = dadosVid.map(function (d, i) {
+        var b = el("button", "vs-bolinha", { type: "button", role: "tab", "aria-label": "Ver " + d.nome });
+        var aro = el("span", "vs-aro");
+        var img = el("img", "", { src: d.capa, alt: "", width: "70", height: "70", decoding: "async" });
+        aro.appendChild(img); b.appendChild(aro);
+        var nome = el("span", "vs-nome"); nome.textContent = d.nome; b.appendChild(nome);
+        b.addEventListener("click", function () { irStory(i, true); });
+        fila.appendChild(b);
+        var barra = el("i"); barra.appendChild(el("b")); barras.appendChild(barra);
+        return b;
       });
-      pendentesRoda = [];
+      player.appendChild(capa); player.appendChild(video); player.appendChild(barras); player.appendChild(botao);
+      raiz.appendChild(fila); raiz.appendChild(player);
+      carrossel.parentNode.insertBefore(raiz, carrossel);
+      return { raiz: raiz, player: player, capa: capa, video: video, botao: botao, bolinhas: bolinhas, barras: barras.children, atual: 0, vistos: {} };
     };
-    var desenharRoda = function () {
-      assentarPendentes();
-      cardsVid.forEach(function (card, i) {
-        var off = posicaoRoda(i);
-        var antes = card._off;
-        card._off = off;
-        card.classList.toggle("is-atual", off === 0);
-        if (antes !== undefined && Math.abs(off - antes) > 1) {
-          card.classList.add("sem-transicao", "is-longe");
-          card.style.setProperty("--off", off + (off > 0 ? 1 : -1));
-          pendentesRoda.push(card);
-        } else {
-          card.style.setProperty("--off", off);
-          card.classList.toggle("is-longe", Math.abs(off) > 1);
-        }
+    var desenharStory = function () {
+      var st = stories, d = dadosVid[st.atual];
+      st.player.style.backgroundImage = d.fundo;
+      st.capa.src = d.capa;
+      st.bolinhas.forEach(function (b, i) {
+        b.classList.toggle("is-atual", i === st.atual);
+        b.classList.toggle("is-visto", !!st.vistos[i] && i !== st.atual);
+        b.setAttribute("aria-selected", i === st.atual ? "true" : "false");
       });
-      if (pendentesRoda.length) {
-        quadroRoda = requestAnimationFrame(function () {
-          quadroRoda = requestAnimationFrame(function () { quadroRoda = 0; assentarPendentes(); });
+      Array.prototype.forEach.call(st.barras, function (barra, i) {
+        barra.firstChild.style.width = i < st.atual ? "100%" : "0%";
+      });
+      st.botao.setAttribute("aria-label", "Assistir ao " + d.nome.toLowerCase());
+    };
+    var tocarStory = function () {
+      var st = stories, d = dadosVid[st.atual], v = st.video;
+      if (v.getAttribute("src") !== d.video) { v.src = d.video; v.load(); }
+      if (window.CelliveRastreio) window.CelliveRastreio.evento("clique", { e: "video", val: st.atual + 1 });
+      var promessa = v.play();
+      if (promessa && promessa.catch) promessa.catch(function () {});
+    };
+    var irStory = function (i, tocar) {
+      var st = stories, n = dadosVid.length;
+      var novo = (i % n + n) % n;
+      if (novo !== st.atual) {
+        st.vistos[st.atual] = true;
+        st.video.pause();
+        st.video.removeAttribute("src"); st.video.load(); // solta o arquivo anterior
+        st.player.classList.remove("is-tocando", "tem-video");
+        st.atual = novo;
+        desenharStory();
+      }
+      if (tocar) tocarStory();
+    };
+    var progressoStory = function () {
+      var st = stories, v = st.video;
+      if (v.duration) st.barras[st.atual].firstChild.style.width = (v.currentTime / v.duration * 100).toFixed(2) + "%";
+      if (!v.paused) requestAnimationFrame(progressoStory);
+    };
+    var ligarStories = function (ligar) {
+      if (ligar === storiesLigado) return;
+      storiesLigado = ligar;
+      if (ligar && !stories) {
+        stories = montarStories();
+        var st = stories, v = st.video;
+        v.addEventListener("playing", function () { st.player.classList.add("is-tocando", "tem-video"); requestAnimationFrame(progressoStory); });
+        v.addEventListener("pause", function () { st.player.classList.remove("is-tocando"); });
+        v.addEventListener("ended", function () {
+          st.barras[st.atual].firstChild.style.width = "100%";
+          if (st.atual < dadosVid.length - 1) irStory(st.atual + 1, true);
+          else { st.vistos[st.atual] = true; irStory(0, false); }
         });
+        // toque no player: direita avança, esquerda volta, meio dá play/pausa
+        var inicioX = null, inicioY = 0, arrastouAte = 0;
+        st.player.addEventListener("pointerdown", function (ev) { inicioX = ev.clientX; inicioY = ev.clientY; });
+        st.player.addEventListener("pointerup", function (ev) {
+          if (inicioX === null) return;
+          var dx = ev.clientX - inicioX, dy = ev.clientY - inicioY; inicioX = null;
+          if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) { arrastouAte = Date.now() + 450; irStory(st.atual + (dx < 0 ? 1 : -1), !v.paused); }
+        });
+        st.player.addEventListener("pointercancel", function () { inicioX = null; });
+        st.player.addEventListener("click", function (ev) {
+          ev.preventDefault();
+          if (Date.now() < arrastouAte) return;
+          var r = st.player.getBoundingClientRect(), x = ev.detail ? (ev.clientX - r.left) / r.width : 0.5;
+          if (x > 0.72) irStory(st.atual + 1, true);
+          else if (x < 0.28) irStory(st.atual - 1, true);
+          else if (v.paused) tocarStory();
+          else v.pause();
+        });
+        desenharStory();
       }
-      Array.prototype.forEach.call(pontosVid.children, function (p, i) { p.classList.toggle("is-ativo", i === atualVid); });
-    };
-    var irRoda = function (i) {
-      var novo = (i % nVid + nVid) % nVid;
-      if (novo === atualVid) return;
-      var v = cardsVid[atualVid].querySelector("video");
-      if (!v.paused) v.pause(); // saiu do meio: pausa
-      atualVid = novo;
-      desenharRoda();
-    };
-    var ligarRoda = function (ligar) {
-      if (ligar === rodaLigada) return;
-      rodaLigada = ligar;
-      carrossel.classList.toggle("vid-roda", ligar);
-      if (ligar) carrossel.scrollLeft = 0;
-      cardsVid.forEach(function (card) {
-        card._off = undefined;
-        if (!ligar) { card.style.removeProperty("--off"); card.classList.remove("is-longe"); }
-      });
-      anterior.disabled = false;
-      proximo.disabled = false;
-      if (ligar) desenharRoda(); else marcarVid();
+      carrossel.closest(".oferta-videos").classList.toggle("com-stories", ligar);
+      if (!ligar && stories) stories.video.pause();
+      if (ligar) cardsVid.forEach(function (card) { var vv = card.querySelector("video"); if (!vv.paused) vv.pause(); });
     };
 
-    // arrastar para o lado (o arrasto para cima/baixo continua rolando a página)
-    var inicioX = null, inicioY = 0;
-    carrossel.addEventListener("pointerdown", function (ev) {
-      if (!rodaLigada) return;
-      inicioX = ev.clientX; inicioY = ev.clientY;
-    });
-    carrossel.addEventListener("pointerup", function (ev) {
-      if (!rodaLigada || inicioX === null) return;
-      var dx = ev.clientX - inicioX, dy = ev.clientY - inicioY;
-      inicioX = null;
-      if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
-        // no iPhone o arrasto também vira um "toque" logo depois: ignora por um instante
-        // para o cartão não andar duas vezes
-        carrossel._arrastouAte = Date.now() + 450;
-        irRoda(atualVid + (dx < 0 ? 1 : -1));
-      }
-    });
-    carrossel.addEventListener("pointercancel", function () { inicioX = null; });
-    // toque: à direita do vídeo do meio avança, à esquerda volta, no meio dá play.
-    // Vale pela posição na tela (não pelo cartão tocado), então funciona até no meio da
-    // animação e com toques rápidos seguidos.
-    carrossel.addEventListener("click", function (ev) {
-      if (!rodaLigada || !ev.detail) return; // ev.detail 0 = teclado (Enter no botão): segue normal
-      if (Date.now() < (carrossel._arrastouAte || 0)) { ev.preventDefault(); ev.stopPropagation(); return; }
-      var caixa = carrossel.getBoundingClientRect();
-      var distancia = ev.clientX - (caixa.left + caixa.width / 2);
-      var metade = cardsVid[0].offsetWidth / 2;
-      if (Math.abs(distancia) <= metade) return; // no vídeo do meio: play/pausa normal
-      ev.preventDefault(); ev.stopPropagation();
-      irRoda(atualVid + (distancia > 0 ? 1 : -1));
-    }, true);
-    carrossel.addEventListener("keydown", function (ev) {
-      if (!rodaLigada) return;
-      if (ev.key === "ArrowRight") { ev.preventDefault(); irRoda(atualVid + 1); }
-      if (ev.key === "ArrowLeft") { ev.preventDefault(); irRoda(atualVid - 1); }
-    });
-
-    anterior.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid - 1); else irPara(atualVid - 1); });
-    proximo.addEventListener("click", function () { if (rodaLigada) irRoda(atualVid + 1); else irPara(atualVid + 1); });
-    carrossel.addEventListener("scroll", function () {
-      // na roda a caixa não pode rolar de lado (o navegador às vezes rola ao tocar num cartão)
-      if (rodaLigada) { if (carrossel.scrollLeft) carrossel.scrollLeft = 0; return; }
-      requestAnimationFrame(marcarVid);
-    }, { passive: true });
-    var conferirTela = function () { ligarRoda(!telaGrande.matches && nVid >= 3); };
+    anterior.addEventListener("click", function () { irPara(atualVid - 1); });
+    proximo.addEventListener("click", function () { irPara(atualVid + 1); });
+    carrossel.addEventListener("scroll", function () { requestAnimationFrame(marcarVid); }, { passive: true });
+    var conferirTela = function () { ligarStories(!telaGrande.matches); };
     if (telaGrande.addEventListener) telaGrande.addEventListener("change", conferirTela);
     else if (telaGrande.addListener) telaGrande.addListener(conferirTela);
     conferirTela();
-    aposPintar(function () { if (!rodaLigada) marcarVid(); });
+    aposPintar(marcarVid);
   }
 
   /* ---------- Os números falam por si ----------
