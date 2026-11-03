@@ -25,6 +25,10 @@ if (seloIni < 0) erro("não encontrei o selo");
 const seloFim = html.indexOf("      </div>\n", html.indexOf('<div class="selo-derm">', seloIni)) + "      </div>\n".length;
 html = html.slice(0, seloIni) + html.slice(seloFim).replace(/^\n/, "");
 
+// 1b) cópia do selo embaixo das miniaturas (computador)
+html = html.replace(/\s*<!-- Computador: o selo fica aqui[^>]*-->\s*<div class="selo-derm selo-derm--galeria"[\s\S]*?\n          <\/div>\n/, "\n");
+if (html.includes("selo-derm")) erro("o selo continua na página");
+
 // 2) frase do estoque
 html = html.replace(/\s*<p class="estoque-texto">[\s\S]*?<\/p>/, () => "");
 if (html.includes('class="estoque-texto"')) erro("a frase do estoque continua");
