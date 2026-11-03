@@ -28,6 +28,9 @@
       --blue-ink: #4d74a8;
       --star: #f9c80e;
       --white: #ffffff;
+      --verde: #22b14c;
+      --verde-escuro: #1f9a45;
+      --verde-claro: #eaf6ee;
       --max: 480px;
       --gutter: 20px;
     }
@@ -50,30 +53,30 @@
     .etapas { display: flex; align-items: flex-start; justify-content: space-between; margin: 22px 0 0; padding: 0; list-style: none; }
     .etapa { flex: 0 0 76px; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--gray); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-align: center; text-transform: uppercase; }
     .etapa i { display: grid; place-items: center; width: 32px; height: 32px; border: 2px solid var(--gray-light); border-radius: 50%; background: var(--white); color: var(--gray); font-style: normal; font-size: 14px; }
-    .etapa.feita { color: var(--blue-ink); }
-    .etapa.feita i { border-color: var(--blue-ink); background: var(--blue-ink); color: var(--white); }
+    .etapa.feita { color: var(--verde-escuro); }
+    .etapa.feita i { border-color: var(--verde); background: var(--verde); color: var(--white); }
     .etapa.atual { color: var(--ink); }
     .etapa.atual i { border-color: var(--ink); background: var(--ink); color: var(--white); box-shadow: 0 0 0 6px var(--blue-soft); }
     .etapa-linha { flex: 1; height: 3px; margin-top: 15px; border-radius: 2px; background: var(--gray-light); }
-    .etapa-linha.feita { background: var(--blue-ink); }
+    .etapa-linha.feita { background: var(--verde); }
 
     /* chamada */
-    .pilula { display: inline-block; padding: 7px 16px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-ink); font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .pilula { display: inline-block; padding: 7px 16px; border-radius: 999px; background: var(--verde-claro); color: var(--verde-escuro); font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     .chamada { margin-top: 26px; text-align: center; }
     h1 { margin: 14px 0 0; font-family: var(--cond); font-size: 34px; font-weight: 700; line-height: 1.02; text-transform: uppercase; }
-    h1 em { color: var(--blue-ink); font-style: normal; }
+    h1 em { color: var(--verde-escuro); font-style: normal; }
     .chamada p { margin: 12px 0 0; color: var(--gray-dark); font-size: 15.5px; line-height: 1.45; }
 
     /* tempo */
-    .tempo { margin-top: 20px; padding: 14px; border-radius: 18px; background: var(--blue-mist); border: 1px solid var(--blue-soft); text-align: center; }
+    .tempo { margin-top: 20px; padding: 14px; border-radius: 18px; background: var(--blue-mist); border: 1.5px solid var(--blue); text-align: center; }
     .tempo p { margin: 0; color: var(--gray-dark); font-size: 14px; }
-    .tempo strong { display: inline-block; margin-top: 8px; padding: 5px 16px; border-radius: 12px; background: var(--white); color: var(--blue-ink); font-family: var(--cond); font-size: 28px; font-variant-numeric: tabular-nums; }
+    .tempo strong { display: inline-block; margin-top: 8px; padding: 5px 16px; border-radius: 12px; background: var(--white); color: var(--ink); font-family: var(--cond); font-size: 28px; font-variant-numeric: tabular-nums; }
 
     /* produto */
     .produto { position: relative; margin-top: 22px; overflow: hidden; border-radius: 24px; background: var(--gray-mist); aspect-ratio: 1; }
     .produto img { width: 100%; height: 100%; object-fit: cover; }
     .selo { position: absolute; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-    .bola { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 104px; height: 104px; border-radius: 50%; background: var(--blue-ink); color: var(--white); text-align: center; box-shadow: 0 10px 26px rgba(77, 116, 168, .45); }
+    .bola { position: absolute; right: 14px; bottom: 14px; display: grid; place-items: center; width: 104px; height: 104px; border-radius: 50%; background: var(--blue); color: var(--ink); text-align: center; box-shadow: 0 10px 26px rgba(77, 116, 168, .35); }
     .bola b { display: block; font-family: var(--cond); font-size: 30px; line-height: .95; }
     .bola > div > span { display: block; margin-top: 2px; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
     .nota { display: flex; align-items: center; gap: 8px; margin-top: 18px; color: var(--gray-dark); font-size: 14px; }
@@ -86,33 +89,26 @@
     .preco { margin-top: 18px; overflow: hidden; border: 1px solid var(--gray-light); border-radius: 18px; }
     .preco div { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 16px; border-bottom: 1px dashed var(--gray-light); font-size: 15px; }
     .preco div:last-child { border-bottom: 0; background: var(--gray-mist); }
-    .preco .desc { color: var(--blue-ink); font-weight: 700; }
-    .preco .gratis { color: var(--blue-ink); font-weight: 700; text-transform: uppercase; }
+    .preco .desc { color: var(--verde-escuro); font-weight: 700; }
+    .preco .gratis { color: var(--verde-escuro); font-weight: 700; text-transform: uppercase; }
     .preco .total { font-size: 18px; font-weight: 700; }
     .preco .total s { margin-right: 8px; color: var(--gray); font-size: 15px; font-weight: 400; }
     .preco .total b { font-size: 22px; }
 
-    /* para quem */
-    .quem { margin-top: 22px; }
-    .quem h3 { margin: 0; font-size: 15px; }
-    .quem-opcoes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-    .quem-opcoes button { padding: 9px 14px; border: 1.5px solid var(--gray-light); border-radius: 999px; background: var(--white); color: var(--gray-dark); font-size: 14px; font-weight: 600; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-    .quem-opcoes button[aria-pressed="true"] { border-color: var(--blue-ink); background: var(--blue-mist); color: var(--blue-ink); }
-    .quem-frase { min-height: 20px; margin: 10px 0 0; color: var(--gray-dark); font-size: 14px; }
 
     /* benefícios */
     .lista { margin: 22px 0 0; padding: 0; list-style: none; }
     .lista li { position: relative; padding: 6px 0 6px 30px; font-size: 15.5px; line-height: 1.35; }
-    .lista li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 18px; height: 18px; border-radius: 50%; background: var(--blue-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 12.4 3.2 3.2L17 8.8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; }
+    .lista li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m7 12.4 3.2 3.2L17 8.8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat; }
 
     /* botão */
-    .comprar { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 64px; margin-top: 22px; padding: 12px 18px; border: 0; border-radius: 999px; background: var(--ink); color: var(--white); text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 10px 26px rgba(77, 116, 168, .35); -webkit-tap-highlight-color: transparent; transition: transform .15s ease; }
+    .comprar { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 64px; margin-top: 22px; padding: 12px 18px; border: 0; border-radius: 999px; background: var(--ink); color: var(--white); text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 10px 26px rgba(177, 199, 222, .7); -webkit-tap-highlight-color: transparent; transition: transform .15s ease; }
     .comprar:active { transform: scale(.98); }
     .comprar b { font-size: 19px; }
     .comprar > span { margin-top: 2px; color: var(--blue); font-size: 13px; font-weight: 600; }
     .garantias { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; color: var(--gray-dark); font-size: 12.5px; }
     .garantias span { display: flex; align-items: center; gap: 5px; }
-    .garantias svg { width: 15px; height: 15px; fill: none; stroke: var(--blue-ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .garantias svg { width: 15px; height: 15px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .recusar { display: block; margin: 16px auto 0; padding: 4px; border: 0; background: none; color: var(--gray); font-size: 14px; text-align: center; text-decoration: underline; cursor: pointer; }
 
     /* depoimento curto */
@@ -129,7 +125,7 @@
     .motivos { display: grid; gap: 12px; margin-top: 20px; }
     .motivo { padding: 20px 18px; border: 1px solid var(--gray-light); border-radius: 20px; background: var(--white); }
     .motivo-icone { display: grid; place-items: center; width: 46px; height: 46px; margin: 0 auto; border-radius: 50%; background: var(--blue-soft); }
-    .motivo-icone svg { width: 24px; height: 24px; fill: none; stroke: var(--blue-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .motivo-icone svg { width: 24px; height: 24px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .motivo h3 { margin: 12px 0 0; font-size: 17px; }
     .motivo p { margin: 6px 0 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.4; }
 
@@ -138,7 +134,7 @@
     .avaliacoes .secao { margin-top: 0; }
     .aval { margin-top: 14px; padding: 18px; border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(77, 116, 168, .16); text-align: left; }
     .aval-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-    .aval-tag { color: var(--blue-ink); font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .aval-tag { color: var(--blue); font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
     .aval h3 { margin: 10px 0 0; font-size: 18px; line-height: 1.25; }
     .aval p { margin: 8px 0 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.45; }
     .aval footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--gray-light); font-size: 14px; }
@@ -148,7 +144,7 @@
 
     /* garantia */
     .garantia { display: flex; align-items: center; gap: 16px; margin-top: 36px; padding: 18px; border-radius: 22px; background: var(--blue-mist); border: 1px solid var(--blue-soft); }
-    .garantia-selo { flex: none; display: grid; place-items: center; width: 86px; height: 86px; border: 4px solid var(--white); border-radius: 50%; background: var(--blue-ink); color: var(--white); text-align: center; box-shadow: 0 0 0 3px var(--blue); }
+    .garantia-selo { flex: none; display: grid; place-items: center; width: 86px; height: 86px; border: 4px solid var(--white); border-radius: 50%; background: var(--blue); color: var(--ink); text-align: center; box-shadow: 0 0 0 3px var(--blue-soft); }
     .garantia-selo b { display: block; font-family: var(--cond); font-size: 30px; line-height: .9; }
     .garantia-selo span { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
     .garantia p { margin: 0; color: var(--gray-dark); font-size: 14.5px; line-height: 1.45; }
@@ -183,12 +179,12 @@
      data-cfg-link-sim: link do upsell de 1 clique da B4You (ao aceitar)
      data-cfg-link-nao: para onde vai quem recusar (página de obrigado / próximo passo da B4You)
      data-cfg-minutos: tempo do contador -->
-<body data-cfg-preco-normal="197,90" data-cfg-preco-oferta="99,90" data-cfg-link-sim="#" data-cfg-link-nao="#" data-cfg-minutos="5">
+<body data-cfg-preco-normal="197,90" data-cfg-preco-oferta="97,90" data-cfg-link-sim="#" data-cfg-link-nao="#" data-cfg-minutos="5">
 
   <header class="topo">
     <img src="/assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
     <div class="topo-ok">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#4d74a8"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#22b14c"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div><b>Pagamento aprovado</b><span>Seu pedido está confirmado</span></div>
     </div>
   </header>
@@ -204,7 +200,7 @@
 
     <section class="chamada">
       <span class="pilula">Obrigada pelo seu pedido</span>
-      <h1>Você desbloqueou <em>R$&nbsp;<span data-economia>98</span> de desconto</em> em mais um frasco</h1>
+      <h1>Você desbloqueou <em>R$&nbsp;<span data-economia>100</span> de desconto</em> em mais um frasco</h1>
       <p>Leve um segundo Sérum para sua mãe, irmã ou melhor amiga, ou garanta o seu próximo mês. Ele vai <strong>na mesma caixa</strong>, sem frete extra.</p>
     </section>
 
@@ -216,7 +212,7 @@
     <div class="produto">
       <img src="/assets/img/oferta/produto-1-720.webp" alt="Sérum Revitalizador Noturno Cellive Skin" width="720" height="720">
       <span class="selo">Mais vendido</span>
-      <div class="bola"><div><b>-R$&nbsp;<span data-economia>98</span></b><span>Só nesta página</span></div></div>
+      <div class="bola"><div><b>-R$&nbsp;<span data-economia>100</span></b><span>Só nesta página</span></div></div>
     </div>
 
     <div class="nota"><span class="estrelas" aria-label="Nota 4,9 de 5">★★★★★</span><span><b>4,9/5</b> · +5.000 mulheres usam</span></div>
@@ -225,20 +221,11 @@
 
     <div class="preco">
       <div><span>Preço normal</span><span>R$ <span data-preco-normal>197,90</span></span></div>
-      <div class="desc"><span>Seu desconto exclusivo</span><span>− R$ <span data-economia-centavos>98,00</span></span></div>
+      <div class="desc"><span>Seu desconto exclusivo</span><span>− R$ <span data-economia-centavos>100,00</span></span></div>
       <div><span>Frete (mesma caixa)</span><span class="gratis">Grátis</span></div>
-      <div class="total"><span>Você paga hoje</span><span><s>R$ <span data-preco-normal>197,90</span></s><b>R$ <span data-preco-oferta>99,90</span></b></span></div>
+      <div class="total"><span>Você paga hoje</span><span><s>R$ <span data-preco-normal>197,90</span></s><b>R$ <span data-preco-oferta>97,90</span></b></span></div>
     </div>
 
-    <div class="quem">
-      <h3>Para quem é?</h3>
-      <div class="quem-opcoes" role="group" aria-label="Para quem é o frasco extra">
-        <button type="button" aria-pressed="false" data-frase="Um presente que ela vai sentir na pele, todas as noites.">Para minha mãe</button>
-        <button type="button" aria-pressed="false" data-frase="Vocês fazem o ritual juntas e comparam os resultados.">Irmã ou amiga</button>
-        <button type="button" aria-pressed="false" data-frase="Você emenda o segundo mês sem pausa no tratamento.">Reserva para mim</button>
-      </div>
-      <p class="quem-frase" data-quem-frase></p>
-    </div>
 
     <ul class="lista">
       <li>Reduz linhas finas e rugas</li>
@@ -247,7 +234,7 @@
       <li>Garantia de reembolso de 30 dias</li>
     </ul>
 
-    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>99,90</span></b><span>Vai junto com o seu pedido</span></a>
+    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>97,90</span></b><span>Vai junto com o seu pedido</span></a>
     <div class="garantias">
       <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Compra em 1 clique</span>
       <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>Mesma entrega</span>
@@ -265,7 +252,7 @@
       <div class="motivos">
         <div class="motivo">
           <div class="motivo-icone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
-          <h3>R$ <span data-economia>98</span> de desconto, já aplicado</h3>
+          <h3>R$ <span data-economia>100</span> de desconto, já aplicado</h3>
           <p>O desconto vale só aqui. Depois que você sair desta página, o frasco volta ao preço normal.</p>
         </div>
         <div class="motivo">
@@ -319,12 +306,12 @@
       <div class="duvida"><button type="button" aria-expanded="false">E se eu me arrepender?</button><div>Você tem a garantia de 30 dias: se não gostar dos resultados, devolvemos 100% do valor deste frasco.</div></div>
     </section>
 
-    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim-2"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>99,90</span></b><span>1 clique · vai junto com o seu pedido</span></a>
+    <a class="comprar" href="#" data-sim data-rastreio="upsell-sim-2"><b>Sim! Quero adicionar · R$ <span data-preco-oferta>97,90</span></b><span>1 clique · vai junto com o seu pedido</span></a>
     <button type="button" class="recusar" data-nao data-rastreio="upsell-nao-2">Não, obrigada. Vou abrir mão do desconto</button>
   </main>
 
   <div class="barra">
-    <div><b>+1 Sérum · R$ <span data-preco-oferta>99,90</span></b><span>Desconto aplicado · <span data-tempo>5:00</span></span></div>
+    <div><b>+1 Sérum · R$ <span data-preco-oferta>97,90</span></b><span>Desconto aplicado · <span data-tempo>5:00</span></span></div>
     <a class="comprar" href="#" data-sim data-rastreio="upsell-barra"><b>Adicionar</b></a>
   </div>
 
@@ -360,15 +347,6 @@
     };
     tick();
 
-    // para quem é
-    var frase = document.querySelector("[data-quem-frase]");
-    var opcoes = document.querySelectorAll(".quem-opcoes button");
-    Array.prototype.forEach.call(opcoes, function (b) {
-      b.addEventListener("click", function () {
-        Array.prototype.forEach.call(opcoes, function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
-        frase.textContent = b.getAttribute("data-frase");
-      });
-    });
 
     // dúvidas
     Array.prototype.forEach.call(document.querySelectorAll(".duvida button"), function (b) {
