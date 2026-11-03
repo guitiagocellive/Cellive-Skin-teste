@@ -29,6 +29,16 @@ html = html.slice(0, seloIni) + html.slice(seloFim).replace(/^\n/, "");
 html = html.replace(/\s*<!-- Computador: o selo fica aqui[^>]*-->\s*<div class="selo-derm selo-derm--galeria"[\s\S]*?\n          <\/div>\n/, "\n");
 if (html.includes("selo-derm")) erro("o selo continua na página");
 
+// 1c) sem o título "Selecione seu plano ideal" (os kits vêm logo depois do "Esgotando rápido")
+trocar('      <h2 class="secao-titulo" data-pos><span class="titulo-leve">Selecione seu</span> <strong>plano ideal</strong></h2>\n', "", "título dos planos");
+
+// espaços: benefícios → "Esgotando rápido" e "Esgotando rápido" → kits
+const AJUSTE = `<style>
+    html[data-versao="v2-minimalista"] .oferta-planos { margin-top: 28px; }
+    html[data-versao="v2-minimalista"] .planos { margin-top: 28px; }
+  </style>`;
+trocar("</head>", "  " + AJUSTE + "\n</head>", "</head>");
+
 // 2) frase do estoque
 html = html.replace(/\s*<p class="estoque-texto">[\s\S]*?<\/p>/, () => "");
 if (html.includes('class="estoque-texto"')) erro("a frase do estoque continua");
