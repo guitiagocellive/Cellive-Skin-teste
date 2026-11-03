@@ -59,8 +59,8 @@
       texto: "Minha pele tava com aquele aspecto meio ressecado, sabe? Agora sinto ela mais hidratada e com uma aparência mais bonita. 😊",
     },
     {
-      nome: "Thamilis Cavalcanti",
-      idade: 30,
+      nome: "Evelyn Veras",
+      idade: 34,
       quando: "1 mês atrás",
       texto: "Eu sou do time que compra skincare e esquece de usar 😂 Dessa vez consegui encaixar na rotina da noite e tô gostando desse momento de cuidado, porque com esse sérum é mais facil, pq não tenho que passar diversos produtos. Sem contar que esse foi um dos unicos que de fato funcionaram.",
     },
