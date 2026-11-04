@@ -3108,10 +3108,10 @@ a.avaliacao-qtd {
 }
 
 .cli-trilho {
+  --cli-vao: 18px;
   display: flex;
-  gap: 18px;
   width: max-content;
-  padding-left: 18px;
+  padding-left: 0; /* o espaço vai em cada cartão: as duas metades ficam exatamente iguais */
   animation: cli-anda var(--cli-tempo, 50s) linear infinite;
 }
 
@@ -3123,6 +3123,7 @@ a.avaliacao-qtd {
 .cli-card {
   flex: none;
   width: 222px;
+  margin-right: var(--cli-vao, 18px);
   padding: 20px 18px 22px;
   border-radius: 26px;
   background: var(--white);

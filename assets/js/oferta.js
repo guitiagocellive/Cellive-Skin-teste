@@ -833,23 +833,39 @@
      emenda. A velocidade é a mesma em qualquer tela (cerca de 30 px/s). */
   var trilho = document.querySelector("[data-cli-trilho]");
   if (trilho) {
-    Array.prototype.slice.call(trilho.children).forEach(function (card) {
-      var copia = card.cloneNode(true);
-      copia.setAttribute("aria-hidden", "true");
-      trilho.appendChild(copia);
-    });
-    // velocidade pela largura da fila; a largura vem do observador (sem medir na abertura)
-    var ajustarTempo = function (largura) {
-      if (!(largura > 200)) return; // seção ainda não desenhada (fica com os 50 s padrão)
-      trilho.style.setProperty("--cli-tempo", Math.round(largura / 2 / 30) + "s");
+    // A fila tem duas metades iguais; cada metade precisa ser pelo menos tão larga quanto a
+    // faixa, senão sobra um vão à direita no começo da volta (telas largas de computador).
+    // Por isso cada metade repete os cartões quantas vezes for preciso.
+    var faixaCli = trilho.parentNode;
+    var originais = Array.prototype.slice.call(trilho.children);
+    var repeticoes = 0; // quantas vezes os cartões aparecem em cada metade
+    var montarFila = function (porMetade) {
+      if (porMetade === repeticoes) return;
+      repeticoes = porMetade;
+      while (trilho.children.length > originais.length) trilho.removeChild(trilho.lastChild);
+      for (var k = 1; k < porMetade * 2; k++) {
+        originais.forEach(function (card) {
+          var copia = card.cloneNode(true);
+          copia.setAttribute("aria-hidden", "true");
+          trilho.appendChild(copia);
+        });
+      }
+    };
+    montarFila(1);
+    // velocidade igual em qualquer tela (cerca de 30 px/s); medidas vêm do observador
+    var ajustar = function () {
+      var largFaixa = faixaCli.clientWidth, largFila = trilho.scrollWidth;
+      if (!(largFaixa > 200 && largFila > 200)) return; // seção ainda não desenhada
+      var umGrupo = largFila / (repeticoes * 2);
+      var precisa = Math.max(1, Math.ceil(largFaixa / umGrupo));
+      if (precisa !== repeticoes) { montarFila(precisa); largFila = umGrupo * precisa * 2; }
+      trilho.style.setProperty("--cli-tempo", Math.round(largFila / 2 / 30) + "s");
     };
     if ("ResizeObserver" in window) {
-      new ResizeObserver(function (es) {
-        var box = es[0].borderBoxSize && es[0].borderBoxSize[0];
-        ajustarTempo(box ? box.inlineSize : es[0].contentRect.width);
-      }).observe(trilho);
+      new ResizeObserver(function () { requestAnimationFrame(ajustar); }).observe(faixaCli);
     } else {
-      window.addEventListener("load", function () { ajustarTempo(trilho.scrollWidth); });
+      window.addEventListener("load", ajustar);
+      window.addEventListener("resize", ajustar);
     }
   }
 

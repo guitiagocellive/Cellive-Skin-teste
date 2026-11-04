@@ -474,7 +474,7 @@
   }
 
   /* Clientes: cartões maiores, mais fáceis de ler */
-  .cli-trilho { gap: 24px; }
+  .cli-trilho { --cli-vao: 24px; }
 
   .cli-card {
     width: 320px;
