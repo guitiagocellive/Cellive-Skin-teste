@@ -1097,12 +1097,20 @@
       });
       st.botao.setAttribute("aria-label", "Assistir ao " + d.nome.toLowerCase());
     };
-    var tocarStory = function () {
+    // deixa o vídeo da vez já baixando (antes do play), para começar na hora
+    var prepararStory = function () {
       var st = stories, d = dadosVid[st.atual], v = st.video;
-      if (v.getAttribute("src") !== d.video) { v.src = d.video; v.load(); }
+      if (v.getAttribute("src") !== d.video) { v.preload = "auto"; v.src = d.video; }
+    };
+    var tocarStory = function () {
+      var st = stories, v = st.video;
+      prepararStory();
       if (window.CelliveRastreio) window.CelliveRastreio.evento("clique", { e: "video", val: st.atual + 1 });
+      // até o vídeo começar de fato, mostra "carregando" e um novo toque no meio não pausa
+      st.iniciando = Date.now();
+      st.player.classList.add("is-carregando");
       var promessa = v.play();
-      if (promessa && promessa.catch) promessa.catch(function () {});
+      if (promessa && promessa.catch) promessa.catch(function () { st.iniciando = 0; st.player.classList.remove("is-carregando"); });
     };
     var irStory = function (i, tocar) {
       var st = stories, n = dadosVid.length;
@@ -1128,8 +1136,17 @@
       if (ligar && !stories) {
         stories = montarStories();
         var st = stories, v = st.video;
-        v.addEventListener("playing", function () { st.player.classList.add("is-tocando", "tem-video"); requestAnimationFrame(progressoStory); });
-        v.addEventListener("pause", function () { st.player.classList.remove("is-tocando"); });
+        v.addEventListener("playing", function () { st.iniciando = 0; st.player.classList.remove("is-carregando"); st.player.classList.add("is-tocando", "tem-video"); requestAnimationFrame(progressoStory); });
+        v.addEventListener("pause", function () { st.iniciando = 0; st.player.classList.remove("is-tocando", "is-carregando"); });
+        v.addEventListener("waiting", function () { if (!v.paused) st.player.classList.add("is-carregando"); });
+        v.addEventListener("error", function () { st.iniciando = 0; st.player.classList.remove("is-carregando"); });
+        // quando a seção vai chegando na tela, o primeiro vídeo já começa a baixar
+        if ("IntersectionObserver" in window) {
+          var obsVid = new IntersectionObserver(function (itens) {
+            if (itens.some(function (it) { return it.isIntersecting; })) { obsVid.disconnect(); if (v.paused) prepararStory(); }
+          }, { rootMargin: "900px 0px" });
+          obsVid.observe(st.player);
+        }
         v.addEventListener("ended", function () {
           st.barras[st.atual].firstChild.style.width = "100%";
           if (st.atual < dadosVid.length - 1) irStory(st.atual + 1, true);
@@ -1151,6 +1168,7 @@
           if (x > 0.72) irStory(st.atual + 1, true);
           else if (x < 0.28) irStory(st.atual - 1, true);
           else if (v.paused) tocarStory();
+          else if (st.iniciando && Date.now() - st.iniciando < 8000) return; // ainda carregando: não pausa
           else v.pause();
         });
         desenharStory();
