@@ -3763,6 +3763,29 @@ a.avaliacao-qtd {
   opacity: 0;
 }
 
+/* carregando: o play vira uma rodinha girando (aparece logo no toque) */
+.vs-player.is-carregando .vid-play {
+  opacity: 1;
+}
+
+.vs-player.is-carregando .vid-play svg {
+  opacity: 0;
+}
+
+.vs-player.is-carregando .vid-play::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  border: 3px solid rgba(26, 26, 26, 0.15);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: vs-gira 0.8s linear infinite;
+}
+
+@keyframes vs-gira {
+  to { transform: rotate(360deg); }
+}
+
 .vid-controles {
   display: flex;
   align-items: center;
