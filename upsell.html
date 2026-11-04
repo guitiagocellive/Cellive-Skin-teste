@@ -208,14 +208,30 @@
       .barra { max-width: none; border-radius: 0; padding-left: max(40px, calc(50vw - 480px)); padding-right: max(40px, calc(50vw - 480px)); }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+    /* janela de pagamento da B4You (só aparece se o 1 clique não puder ser usado, ex.: Pix/boleto) */
+    .comprar.is-carregando { opacity: .75; pointer-events: none; }
+    .modal-container { position: fixed; inset: 0; z-index: 9999999; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(15, 27, 53, .55); }
+    .modal-container.mostrar { display: flex; }
+    .modal-container .modal { position: relative; width: 100%; max-width: 720px; max-height: calc(100vh - 32px); overflow: auto; border-radius: 18px; background: var(--white); animation: modal-entra .3s ease; }
+    @keyframes modal-entra { from { opacity: 0; transform: translateY(-40px); } }
+    .modal-container .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; }
+    .modal-container .modal-header h3 { margin: 0; font-family: var(--font); font-size: 20px; font-weight: 700; color: var(--ink); }
+    .modal-container .modal-fechar { width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: #f2f4f7; color: var(--ink); font: inherit; font-size: 22px; line-height: 1; cursor: pointer; }
+    .modal-container .border { height: 1px; background: #f0f1f1; }
+    .modal-container .modal-body iframe { display: block; width: 100%; height: 65vh; min-height: 420px; border: 0; }
+    .modal-container .modal-footer { padding: 16px 20px; background: #f7f7f7; }
+    .modal-container .protected-buy { display: flex; align-items: center; gap: 11px; }
+    .modal-container .protected-buy .frame { flex: none; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #f2f4f7; }
+    .modal-container .protected-buy img { width: 22px; height: 22px; }
+    .modal-container .protected-buy span { font-size: 12px; line-height: 1.5; color: #828282; }
   </style>
 </head>
 <!-- VALORES (troque aqui):
      data-cfg-preco-normal / data-cfg-preco-oferta: preço do frasco extra
-     data-cfg-link-sim: link do upsell de 1 clique da B4You (ao aceitar)
-     data-cfg-link-nao: para onde vai quem recusar (página de obrigado / próximo passo da B4You)
-     data-cfg-minutos: tempo do contador -->
-<body data-cfg-preco-normal="197,90" data-cfg-preco-oferta="97,90" data-cfg-link-sim="https://checkout.b4you.com.br/kmPmqkhs9l/3Steps" data-cfg-link-nao="#" data-cfg-minutos="5">
+     data-cfg-minutos: tempo do contador
+     A oferta de upsell da B4You fica no script do fim da página (upsellOffer). -->
+<body data-cfg-preco-normal="197,90" data-cfg-preco-oferta="97,90" data-cfg-minutos="5">
 
   <header class="topo">
     <img src="/assets/img/logo-cellive-skin.svg" alt="Cellive Skin" width="157" height="18">
@@ -371,6 +387,10 @@
     <a class="comprar" href="#" data-sim data-rastreio="upsell-barra"><b>Adicionar</b></a>
   </div>
 
+  <!-- Upsell B4You: botões originais (escondidos) + janela de pagamento -->
+  <button type="button" id="acceptUpsell" hidden>Sim</button>
+  <div id="refuseUpsell" hidden></div>
+  <div id="modal-upsell-container" class="modal-container"><div class="modal" id="modal-upsell"><div class="modal-header"><h3 class="subtitulo">Pagamento adicional</h3><button type="button" class="modal-fechar" id="closeModalIcon" aria-label="Fechar">&times;</button></div><div class="border"></div><div class="modal-body"><iframe id="frameModalBody" src="" title="Pagamento adicional"></iframe></div><div class="modal-footer"><div class="protected-buy"><div class="frame"><img src="https://cdn.b4you.com.br/upsell-script/production/css/images/bxs-check-shield.svg" alt=""></div><span>Protegemos suas informações de pagamento usando criptografia para fornecer segurança</span></div></div></div></div>
   <script>
   (function () {
     var corpo = document.body;
@@ -384,23 +404,37 @@
     por("[data-economia]", Math.round(economia));
     por("[data-economia-centavos]", fmt(economia));
 
-    // botões: sim → upsell da B4You; não → próxima página
-    var linkSim = corpo.getAttribute("data-cfg-link-sim"), linkNao = corpo.getAttribute("data-cfg-link-nao");
-    // repassa para o checkout o que veio no endereço desta página (dados que a B4You manda
-    // depois da compra e as UTMs dos anúncios), sem repetir o que o link já tiver
-    if (linkSim && linkSim !== "#" && location.search.length > 1) {
-      try {
-        var destino = new URL(linkSim);
-        new URLSearchParams(location.search).forEach(function (v, k) { if (!destino.searchParams.has(k)) destino.searchParams.set(k, v); });
-        linkSim = destino.toString();
-      } catch (e) {}
-    }
-    Array.prototype.forEach.call(document.querySelectorAll("[data-sim]"), function (b) {
-      b.href = linkSim;
-      b.addEventListener("click", function (ev) { if (!linkSim || linkSim === "#") { ev.preventDefault(); alert("Prévia: o link do upsell da B4You ainda não foi colocado."); } });
+    // botões: usam o script de upsell da B4You (1 clique). Os botões da B4You ficam escondidos
+    // e os nossos só "apertam" eles. Sem sale_item_id no endereço é só prévia (não houve compra).
+    var compra = new URLSearchParams(location.search).get("sale_item_id");
+    var aceitar = document.getElementById("acceptUpsell"), recusar = document.getElementById("refuseUpsell");
+    var janela = document.getElementById("modal-upsell-container");
+    var ocupado = false, sims = document.querySelectorAll("[data-sim]");
+    var carregando = function (sim) {
+      ocupado = sim;
+      Array.prototype.forEach.call(sims, function (b) {
+        b.classList.toggle("is-carregando", sim);
+        var t = b.querySelector("b");
+        if (!t.getAttribute("data-texto")) t.setAttribute("data-texto", t.innerHTML);
+        t.innerHTML = sim ? "Processando…" : t.getAttribute("data-texto");
+      });
+    };
+    // quando a janela de pagamento abre ou fecha, os botões voltam ao normal
+    new MutationObserver(function () { if (ocupado) carregando(false); }).observe(janela, { attributes: true, attributeFilter: ["class"] });
+    Array.prototype.forEach.call(sims, function (b) {
+      b.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        if (!compra) { alert("Prévia: esta página só funciona depois de uma compra (a B4You manda os dados do pedido no endereço)."); return; }
+        if (ocupado) return;
+        carregando(true);
+        aceitar.click();
+      });
     });
     Array.prototype.forEach.call(document.querySelectorAll("[data-nao]"), function (b) {
-      b.addEventListener("click", function () { if (linkNao && linkNao !== "#") location.href = linkNao; else alert("Prévia: o link de quem recusa ainda não foi colocado."); });
+      b.addEventListener("click", function () {
+        if (!compra) { alert("Prévia: esta página só funciona depois de uma compra."); return; }
+        recusar.click();
+      });
     });
 
     // contador (para em 0:00; a oferta não some sozinha)
@@ -428,5 +462,14 @@
     });
   })();
   </script>
+  <script>
+    let upsellOffer = "kmPmqkhs9l";
+    let upsellPlan = "";
+    let acceptUpsellURL = "";
+    let refuseUpsellURL = "";
+    let deliveryURL = "https://checkout.b4you.com.br/compra-realizada";
+    let oneClick = true;
+  </script>
+  <script src="https://cdn.b4you.com.br/upsell-script/production/js/script.js"></script>
 </body>
 </html>
