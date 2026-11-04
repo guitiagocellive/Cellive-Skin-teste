@@ -13,7 +13,8 @@
     "assets/img/oferta/produto-1-mini.webp", "assets/img/oferta/produto-2-mini.webp",
     "assets/img/oferta/produto-3-mini.webp", "assets/img/oferta/produto-4-mini.webp",
     "assets/img/oferta/produto-5-mini.webp", "assets/img/oferta/produto-6-mini.webp",
-    "assets/img/oferta/produto-7-mini.webp",
+    "assets/img/oferta/produto-7-mini.webp", "assets/img/oferta/produto-8-mini.webp",
+    "assets/img/oferta/produto-9-mini.webp", "assets/img/oferta/produto-10-mini.webp",
   ];
   var PROXIMA = {
     // capa → quiz
