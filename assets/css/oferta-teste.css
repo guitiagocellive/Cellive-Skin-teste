@@ -5979,88 +5979,97 @@ html.lista-aberta {
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
    Vazio = a página de teste fica igual às oficiais.
 
-   VERSÃO MINIMALISTA (em teste): mesmas seções e textos, sem degradês, sem sombras e sem brilhos.
-   Onde a sombra era o que separava um cartão do fundo, entra uma linha fina cinza (--min-linha).
-   A seção "Você envelhece" (oferta-envelhece) fica como está. */
+   VERSÃO CLEAN SÓ EM ALGUMAS SEÇÕES (em teste). As seções escolhidas ficam sem degradês,
+   sombras e brilhos (onde a sombra separava o cartão do fundo, entra uma linha fina cinza).
+   Todas as outras seções ficam iguais ao site.
+   Seções clean: amado por +5.000 mulheres, conheça o sérum (+ um pouco mais vivo), fórmula
+   completa (título com mais destaque), o reset, fórmula com ação SRRP, microagulhamento,
+   clientes (só os cartões), jornada, avaliação dos clientes (+ destaque) e chamada final
+   (+ animação). */
 
 :root { --min-linha: #e4e7eb; }
 
-/* ---------- Topo: barra branca lisa, sem desfoque ---------- */
-html body .oferta-topo::before {
-  background: var(--white) !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-mask-image: none !important;
-  mask-image: none !important;
-  border-bottom: 1px solid var(--min-linha);
-}
-html body .oferta-topo .brand::before {
-  background: var(--white) !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-}
+/* ---------- Amado por +5.000 mulheres: sombra mais suave nos cartões ---------- */
+.oferta-depoimentos .depo { box-shadow: 0 8px 22px rgba(77, 116, 168, 0.14) !important; }
 
-/* ---------- Cartões: sem sombra, com linha fina ---------- */
-.depo, .fp-item, .srrp-cartao, .cli-card, .garantia-cartao, .res-cartao, .vid-card, .jornada,
-.oferta-avaliacoes .aval-resumo, .aval-lista .aval-item, .final-cartao, .fp-mini, .fp-chip,
-.resultados-chamada, .selo-coreia, .selo-derm {
-  box-shadow: 0 0 0 1px var(--min-linha) !important;
-}
-.selo-coreia { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-.cli-avatar, .vid-play, .vs-player, .barra-compra-botao, .selo-coreia-bandeira { box-shadow: none !important; }
-.fp-bolha { box-shadow: 0 0 0 1.5px var(--blue-soft) !important; }
-
-/* ---------- Botões: preto liso, sem ondas nem brilho pulsando ---------- */
-.comprar, .lista-enviar { background: var(--ink) !important; box-shadow: none !important; }
-.comprar::after { box-shadow: none !important; animation: none !important; }
-.fp-comprar::before, .fp-comprar::after { display: none !important; }
-
-/* ---------- Kits: sem reflexo correndo e sem brilho em volta ---------- */
-.plano::after { box-shadow: none !important; }
-.plano-selo::after { display: none !important; }
-.resumo-lista li::after { display: none !important; }
-
-/* ---------- Barra fixa de compra: linha em cima no lugar da sombra ---------- */
-.barra-compra { box-shadow: none !important; border-top: 1px solid var(--min-linha); }
-
-/* ---------- Fundos das seções: cores lisas ---------- */
+/* ---------- Conheça o Sérum: fundo branco, com um círculo azul liso atrás do produto ---------- */
 .oferta-conheca, .oferta > .oferta-conheca { background: var(--white) !important; }
+.oferta-conheca .palco-luz {
+  width: calc(440 * var(--u)) !important;
+  height: calc(440 * var(--u)) !important;
+  background: var(--blue-soft) !important;
+}
+.oferta-conheca .palco-frasco { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.16)) !important; }
+
+/* ---------- Uma fórmula completa: título com mais destaque, resto clean ---------- */
 .oferta-formula, .oferta > .oferta-formula { background: var(--white) !important; }
-.oferta-videos { background: var(--white) !important; }
-.oferta-numeros, .oferta > .oferta-numeros { background: var(--white) !important; }
-.oferta-clientes { background: var(--blue-mist) !important; }
-.oferta-resultados { background: var(--blue-soft) !important; }
-.oferta-confianca, .oferta > .oferta-confianca { background: var(--ink) !important; box-shadow: none !important; }
+.oferta-formula > .fp-chamada {
+  display: table;
+  margin: 0 auto;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue-ink);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+}
+.oferta-formula .fp-titulo { margin-top: 14px; font-size: clamp(27px, 8.4vw, 35px); }
+.oferta-formula .fp-titulo strong {
+  padding: 0 4px;
+  background: linear-gradient(transparent 56%, var(--blue-soft) 56%, var(--blue-soft) 94%, transparent 94%);
+}
+.oferta-formula .fp-item, .oferta-formula .fp-mini, .oferta-formula .fp-chip { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+.oferta-formula .fp-bolha { box-shadow: 0 0 0 1.5px var(--blue-soft) !important; }
+.oferta-formula .fp-bolha-icone { background: var(--blue-mist) !important; }
+.oferta-formula .fp-comprar::before, .oferta-formula .fp-comprar::after { display: none !important; }
 
-/* luzes e manchas decorativas atrás dos frascos e textos */
-.palco-luz, .reset-texto::before, .micro-texto::before, .conf-luz { display: none !important; }
-.conf-anel::after { box-shadow: none !important; }
+/* ---------- O reset ---------- */
+.oferta-reset .reset-texto::before { display: none !important; }
+.oferta-reset .reset-titulo strong { text-shadow: none !important; }
 
-/* frascos sem sombra projetada */
-.palco-frasco, .srrp-frasco, .num-frasco, .conf-frasco, .oferta-srrp .srrp-frasco-inteiro { filter: none !important; }
+/* ---------- Fórmula com ação SRRP ---------- */
+.oferta-srrp .srrp-cartao { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+.oferta-srrp .srrp-frasco, .oferta-srrp .srrp-frasco-inteiro { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
 
-/* ---------- Detalhes ---------- */
-.reset-titulo strong { text-shadow: none !important; }
-.vs-aro { background: var(--blue-ink) !important; }
-.fp-bolha-icone { background: var(--blue-mist) !important; }
-.conf-item { background: rgba(255, 255, 255, 0.05) !important; }
-.conf-icone { background: rgba(177, 199, 222, 0.14) !important; }
+/* ---------- Tecnologia coreana / microagulhamento ---------- */
+.oferta-micro .micro-texto::before { display: none !important; }
 
-/* rabiscos: ficam só em "+5.000 mulheres" e "O reset"; saem dos 3 do "aliado" e do "clientes" */
-.aliado-circulado > svg, .oferta-clientes .circulado > svg { display: none !important; }
+/* ---------- Um pouco dos nossos clientes: só os cartões (fundo e rabisco como no site) ---------- */
+.oferta-clientes .cli-card { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+.oferta-clientes .cli-avatar { box-shadow: none !important; }
 
-/* ---------- Efeitos em pontos estratégicos (mais leves que no site) ---------- */
-/* depoimentos: sombra suave (é a primeira prova depois dos kits) */
-.depo { box-shadow: 0 8px 22px rgba(77, 116, 168, 0.14) !important; }
-/* kit escolhido: só um aro azul claro, sem sombra embaixo */
-.plano::after { box-shadow: 0 0 0 4px rgba(177, 199, 222, 0.38) !important; }
-/* reflexo correndo só no selo "Mais vendido" */
-.plano-selo:not(.is-claro)::after { display: block !important; }
-/* botões de compra: sombra curta e leve (sem as ondas) */
-.comprar { box-shadow: 0 6px 16px rgba(26, 26, 26, 0.18) !important; }
-/* player dos vídeos: sombra suave no lugar do brilho azul */
-.vs-player { box-shadow: 0 10px 26px rgba(77, 116, 168, 0.18) !important; }
-/* frascos: sombra leve para não parecerem "colados" na página */
-.palco-frasco, .srrp-frasco, .num-frasco, .oferta-srrp .srrp-frasco-inteiro { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
-.conf-frasco { filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.45)) !important; }
+/* ---------- Por trás dos resultados (jornada) ---------- */
+.oferta-age .jornada { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+
+/* ---------- Avaliação dos clientes: clean, com o resumo da nota em destaque ---------- */
+.oferta-avaliacoes .aval-resumo {
+  background: var(--blue-mist) !important;
+  box-shadow: 0 0 0 1px var(--blue-soft) !important;
+}
+.oferta-avaliacoes .aval-numero { color: var(--blue-ink); }
+.oferta-avaliacoes .aval-trilho { background: var(--white) !important; }
+.oferta-avaliacoes .aval-lista .aval-item { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+
+/* ---------- Comece hoje o seu reset: cartão azul, pílula escura com brilho e mais animação ---------- */
+.oferta-final .final-cartao {
+  background: var(--blue-soft) !important;
+  box-shadow: none !important;
+}
+.oferta-final .final-pilula { position: relative; overflow: hidden; background: var(--ink); color: var(--white); }
+.oferta-final .final-texto { color: var(--gray-dark); }
+.oferta-final .final-pilula::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-130%) skewX(-18deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .oferta-final .final-foto img { animation: final-flutua 4.5s ease-in-out infinite; }
+  .oferta-final .final-pilula::after { animation: plano-reflexo 3.6s ease-in-out 1s infinite; }
+}
+@keyframes final-flutua {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.015); }
+}
