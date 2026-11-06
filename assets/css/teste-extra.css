@@ -1,2 +1,74 @@
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
-   Vazio = a página de teste fica igual às oficiais. */
+   Vazio = a página de teste fica igual às oficiais.
+
+   VERSÃO MINIMALISTA (em teste): mesmas seções e textos, sem degradês, sem sombras e sem brilhos.
+   Onde a sombra era o que separava um cartão do fundo, entra uma linha fina cinza (--min-linha).
+   A seção "Você envelhece" (oferta-envelhece) fica como está. */
+
+:root { --min-linha: #e4e7eb; }
+
+/* ---------- Topo: barra branca lisa, sem desfoque ---------- */
+html body .oferta-topo::before {
+  background: var(--white) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  border-bottom: 1px solid var(--min-linha);
+}
+html body .oferta-topo .brand::before {
+  background: var(--white) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* ---------- Cartões: sem sombra, com linha fina ---------- */
+.depo, .fp-item, .srrp-cartao, .cli-card, .garantia-cartao, .res-cartao, .vid-card, .jornada,
+.oferta-avaliacoes .aval-resumo, .aval-lista .aval-item, .final-cartao, .fp-mini, .fp-chip,
+.resultados-chamada, .selo-coreia, .selo-derm {
+  box-shadow: 0 0 0 1px var(--min-linha) !important;
+}
+.selo-coreia { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.cli-avatar, .vid-play, .vs-player, .barra-compra-botao, .selo-coreia-bandeira { box-shadow: none !important; }
+.fp-bolha { box-shadow: 0 0 0 1.5px var(--blue-soft) !important; }
+
+/* ---------- Botões: preto liso, sem ondas nem brilho pulsando ---------- */
+.comprar, .lista-enviar { background: var(--ink) !important; box-shadow: none !important; }
+.comprar::after { box-shadow: none !important; animation: none !important; }
+.fp-comprar::before, .fp-comprar::after { display: none !important; }
+
+/* ---------- Kits: sem reflexo correndo e sem brilho em volta ---------- */
+.plano::after { box-shadow: none !important; }
+.plano-selo::after { display: none !important; }
+.resumo-lista li::after { display: none !important; }
+
+/* ---------- Barra fixa de compra: linha em cima no lugar da sombra ---------- */
+.barra-compra { box-shadow: none !important; border-top: 1px solid var(--min-linha); }
+
+/* ---------- Fundos das seções: cores lisas ---------- */
+.oferta-conheca, .oferta > .oferta-conheca { background: var(--white) !important; }
+.oferta-formula, .oferta > .oferta-formula { background: var(--white) !important; }
+.oferta-videos { background: var(--white) !important; }
+.oferta-numeros, .oferta > .oferta-numeros { background: var(--white) !important; }
+.oferta-clientes { background: var(--blue-mist) !important; }
+.oferta-resultados { background: var(--blue-soft) !important; }
+.oferta-confianca, .oferta > .oferta-confianca { background: var(--ink) !important; box-shadow: none !important; }
+
+/* luzes e manchas decorativas atrás dos frascos e textos */
+.palco-luz, .palco-chao, .reset-texto::before, .micro-texto::before, .conf-luz { display: none !important; }
+.conf-anel::after { box-shadow: none !important; }
+
+/* frascos sem sombra projetada */
+.palco-frasco, .srrp-frasco, .num-frasco, .conf-frasco, .oferta-srrp .srrp-frasco-inteiro { filter: none !important; }
+
+/* ---------- Detalhes ---------- */
+.reset-titulo strong { text-shadow: none !important; }
+.vs-aro { background: var(--blue-ink) !important; }
+.fp-bolha-icone { background: var(--blue-mist) !important; }
+.conf-item { background: rgba(255, 255, 255, 0.05) !important; }
+.conf-icone { background: rgba(177, 199, 222, 0.14) !important; }
+
+/* rabiscos em volta dos títulos e a marca d'água "CELLIVE" atrás do SRRP */
+.circulado > svg { display: none !important; }
+.srrp-marca { display: none !important; }
