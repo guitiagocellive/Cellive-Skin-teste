@@ -101,8 +101,20 @@
       <!-- ============ RESUMO ============ -->
       <section class="aba" data-painel-aba="geral">
 
-        <!-- Relatório da IA: pontos de melhoria -->
-        <article class="ia revelar" data-ia aria-live="polite">
+        <!-- Vendas reais (B4You) no período: montado pelo painel-vendas.js -->
+        <article class="cartao revelar vend-resumo" data-vend-resumo>
+          <header class="cartao-cab">
+            <h2>Vendas no período</h2>
+            <p>Vendas aprovadas na B4You · da visita até a compra</p>
+          </header>
+          <div class="lanc-kpis" data-vend-resumo-kpis></div>
+          <div class="vend-funil" data-vend-resumo-funil></div>
+          <div class="vend-funis" data-vend-resumo-funis></div>
+          <button type="button" class="leads-baixar vend-ver" data-vend-ir>Ver todos os detalhes das vendas</button>
+        </article>
+
+        <!-- Relatório da IA: desligado por enquanto (hidden); o código continua no painel-analise.js -->
+        <article class="ia revelar" data-ia aria-live="polite" hidden>
           <div class="ia-cab">
             <span class="ia-selo">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
@@ -232,6 +244,14 @@
 
         <article class="cartao revelar">
           <header class="cartao-cab">
+            <h2>Quiz × oferta direta</h2>
+            <p>De qual funil veio cada venda · visitas, cliques em comprar e vendas de cada um</p>
+          </header>
+          <div class="vend-porfunil" data-vend-porfunil></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
             <h2>Vendas por dia</h2>
             <p>Vendas aprovadas no período · toque numa barra para ver o dia</p>
           </header>
@@ -266,6 +286,19 @@
             <p>Vendas aprovadas por forma de pagamento</p>
           </header>
           <div class="lanc-kits vend-grupo" data-vend-pagamentos></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Compradores</h2>
+            <p>Quem comprou no período (aprovadas e devolvidas) · toque para chamar no WhatsApp ou mandar e-mail</p>
+          </header>
+          <p class="lanc-contagem" data-vend-compradores-cont></p>
+          <ul class="lanc-lista" data-vend-compradores></ul>
+          <button type="button" class="leads-baixar" data-vend-baixar>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+            Baixar a lista de compradores (planilha)
+          </button>
         </article>
 
         <article class="cartao revelar">
@@ -372,7 +405,7 @@
     <div class="dica" role="tooltip" data-dica hidden></div>
 
     <!-- ============ Estrategista: chat de IA (texto, voz, imagem, PDF) ============ -->
-    <button type="button" class="agente-botao" data-agente-abrir aria-label="Abrir o Estrategista (IA de dados e conversão)" title="Estrategista">
+    <button type="button" class="agente-botao" hidden data-agente-abrir aria-label="Abrir o Estrategista (IA de dados e conversão)" title="Estrategista">
       <span class="orbe" aria-hidden="true"><span class="orbe-luz"></span><span class="orbe-cor"></span><span class="orbe-brilho"></span></span>
     </button>
 
@@ -432,7 +465,7 @@
   <script src="assets/js/quiz-perguntas.js"></script>
   <script src="assets/js/painel-analise.js"></script>
   <script src="assets/js/painel.js"></script>
-  <script src="assets/js/painel-agente.js"></script>
+  <!-- Estrategista (chat de IA) desligado por enquanto: <script src="assets/js/painel-agente.js"></script> -->
   <script src="assets/js/painel-lancamento.js"></script>
   <script src="assets/js/painel-vendas.js"></script>
 </body>

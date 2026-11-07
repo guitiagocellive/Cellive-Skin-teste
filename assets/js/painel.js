@@ -1233,7 +1233,9 @@
   }
 
   function montarIA(d) {
-    if (!window.PainelAnalise) return;
+    // análise por IA desligada por enquanto (o cartão está com hidden no painel.html)
+    var cartaoIA = $("[data-ia]");
+    if (!window.PainelAnalise || !cartaoIA || cartaoIA.hidden) return;
     var resumo = window.PainelAnalise.resumir(d, auxAnalise(d));
     estado.resumoIA = resumo;
     var chave = chaveIA();

@@ -4,12 +4,15 @@
    atualização do painel enquanto ela estiver aberta. Segue o período escolhido no topo.
    Mostra: números do período (vendas, faturamento, quanto você recebe, ticket, conversão,
    retorno sobre o gasto na Meta), vendas por dia, de onde vieram (fonte, campanha, anúncio),
-   kits/ofertas, formas de pagamento e as últimas vendas. No modo demonstração, usa vendas fictícias. */
+   kits/ofertas, formas de pagamento e as últimas vendas. No modo demonstração, usa vendas fictícias.
+   Também monta o cartão "Vendas no período" da aba Resumo (busca a cada atualização do painel)
+   e mostra quiz × oferta direta e a lista de compradores (com planilha). */
 (function () {
   "use strict";
 
   var App = window.PainelApp;
   var secao = document.querySelector('[data-painel-aba="vendas"]');
+  var resumoCartao = document.querySelector("[data-vend-resumo]");
   if (!App || !secao) return;
 
   var $ = function (s) { return secao.querySelector(s); };
@@ -78,23 +81,33 @@
         recusadas: vendas.filter(function (v) { return v.classe === "recusada"; }).length,
         devolvidas: vendas.filter(function (v) { return v.classe === "reembolso"; }).length,
         devolvidas_valor: soma(vendas.filter(function (v) { return v.classe === "reembolso"; })),
+        aprovacao: 0.86, pix_gerados: 14, pix_pagos: 9, compradores: Math.min(12, ap.length), recompra: 3,
       },
       cliques: ap.length * 4, gasto: soma(ap) / 2.6,
       porOferta: agrupar("oferta"), porPagamento: agrupar("pagamento"), porFonte: agrupar("fonte"),
       porCampanha: agrupar("campanha"), porAnuncio: agrupar("anuncio"), porDia: porDia, ultimas: vendas.slice(0, 40),
+      porFunil: [
+        { funil: "quiz", nome: "Funil do quiz", vendas: Math.round(ap.length * 0.45), valor: soma(ap) * 0.45, upsells: 4, visitas: 1240, cliques: 96 },
+        { funil: "oferta-direta", nome: "Oferta direta", vendas: Math.round(ap.length * 0.55), valor: soma(ap) * 0.55, upsells: 5, visitas: 2310, cliques: 52 },
+      ],
+      compradores: ap.slice(0, 12).map(function (v, i) {
+        return { nome: "Compradora " + (i + 1) + " (exemplo)", email: "exemplo" + (i + 1) + "@email.com", telefone: "5561999" + String(100000 + i * 7919).slice(0, 6),
+          cidade: ["Brasília", "São Paulo", "Goiânia", "Rio de Janeiro"][i % 4], uf: ["DF", "SP", "GO", "RJ"][i % 4],
+          compras: i % 5 === 0 ? 2 : 1, upsells: i % 3 === 0 ? 1 : 0, total: v.valor * (i % 5 === 0 ? 2 : 1), devolvidas: 0, ultima: v.data, ofertas: [v.oferta], funil: i % 2 ? "quiz" : "oferta-direta", fonte: v.fonte };
+      }),
     };
   }
 
   function carregar() {
     var r = intervalo();
-    if (App.estado.demo) { dados = demo(r); desenhar(); return; }
+    if (App.estado.demo) { dados = demo(r); desenharResumo(); desenhar(); return; }
     if (!App.estado.senha || carregando) return;
     var chave = r.de + "-" + r.ate;
     carregando = true;
     if (!dados || chave !== chaveAtual) $("[data-vend-aviso]").textContent = "Carregando as vendas…";
     fetch("/api/vendas?de=" + r.de + "&ate=" + r.ate, { headers: { authorization: "Bearer " + App.estado.senha } })
       .then(function (resp) { if (!resp.ok) throw new Error(String(resp.status)); return resp.json(); })
-      .then(function (d) { dados = d; chaveAtual = chave; desenhar(); })
+      .then(function (d) { dados = d; chaveAtual = chave; desenharResumo(); if (!secao.hidden) desenhar(); })
       .catch(function () { $("[data-vend-aviso]").textContent = "Não foi possível carregar as vendas agora. Toque em atualizar no topo."; })
       .then(function () { carregando = false; });
   }
@@ -122,6 +135,9 @@
     box2.appendChild(cartaoNum("Aguardando pagamento", n(s.pendentes), s.pendentes ? r$(s.pendentes_valor) + " em Pix ou boleto" : "Pix e boleto em aberto"));
     box2.appendChild(cartaoNum("Recusadas", n(s.recusadas), "pagamento não aprovado"));
     box2.appendChild(cartaoNum("Reembolsos e chargebacks", n(s.devolvidas), s.devolvidas ? r$(s.devolvidas_valor) + " devolvidos" : "nenhum no período"));
+    box2.appendChild(cartaoNum("Aprovação de pagamento", s.aprovacao != null ? pct(s.aprovacao, 1) : "–", "das tentativas aprovadas"));
+    box2.appendChild(cartaoNum("Pix pagos", s.pix_gerados ? pct(s.pix_pagos, s.pix_gerados) : "–", n(s.pix_pagos) + " de " + n(s.pix_gerados) + " Pix gerados"));
+    box2.appendChild(cartaoNum("Compradores", n(s.compradores), s.recompra ? n(s.recompra) + " compraram mais de uma vez" : "pessoas diferentes"));
     box2.appendChild(cartaoNum("Upsell", s.principais ? pct(s.upsells, s.principais) : "–", n(s.upsells) + " de " + n(s.principais) + " compradores · " + r$(s.upsell_valor)));
   }
 
@@ -195,9 +211,128 @@
       var pag = nomePagamento(v.pagamento) + (v.parcelas > 1 ? " em " + v.parcelas + "x" : "");
       li.appendChild(el("p", "lanc-pessoa-info", quando + " · " + r$(v.valor) + " · " + pag));
       var origem = [v.fonte || "sem UTM", v.campanha, v.anuncio].filter(Boolean).join(" › ");
-      li.appendChild(el("p", "lanc-pessoa-info vend-origem", "Origem: " + origem));
+      var funil = v.funil === "quiz" ? "quiz" : v.funil === "oferta-direta" ? "oferta direta" : null;
+      li.appendChild(el("p", "lanc-pessoa-info vend-origem", "Origem: " + origem + (funil ? " · " + funil : "")));
+      if (v.nome || v.cidade) li.appendChild(el("p", "lanc-pessoa-info", [v.nome, [v.cidade, v.uf].filter(Boolean).join("/")].filter(Boolean).join(" · ")));
       ul.appendChild(li);
     });
+  }
+
+  /* ---------- quiz × oferta direta ---------- */
+  function cartaoFunil(g) {
+    var c = el("div", "vend-f");
+    c.appendChild(el("p", "vend-f-nome", g.nome));
+    c.appendChild(el("p", "vend-f-valor", n(g.vendas) + (g.vendas === 1 ? " venda" : " vendas")));
+    var partes = [r$(g.valor)];
+    if (g.cliques) partes.push(pct(g.vendas, g.cliques) + " de quem clicou em comprar");
+    if (g.visitas) partes.push(pct(g.vendas, g.visitas) + " das visitas");
+    c.appendChild(el("p", "vend-f-sub", partes.join(" · ")));
+    return c;
+  }
+  function desenharPorFunil() {
+    var box = limpar($("[data-vend-porfunil]"));
+    var lista = dados.porFunil || [];
+    if (!lista.length) { box.appendChild(el("p", "lanc-vazio", "Sem dados de funil no período.")); return; }
+    var tabela = el("div", "vend-funis");
+    lista.forEach(function (g) { tabela.appendChild(cartaoFunil(g)); });
+    box.appendChild(tabela);
+    var linhas = el("div", "lanc-kits");
+    linhas.style.marginTop = "16px";
+    lista.forEach(function (g) {
+      var l = el("div", "lanc-kit");
+      var topo = el("div", "lanc-kit-topo");
+      topo.appendChild(el("span", "lanc-kit-nome", g.nome));
+      l.appendChild(topo);
+      var nums = el("div", "lanc-kit-nums");
+      nums.appendChild(el("span", null, n(g.visitas || 0) + " visitas"));
+      nums.appendChild(el("span", null, n(g.cliques || 0) + " cliques em comprar"));
+      nums.appendChild(el("strong", null, n(g.vendas) + " vendas" + (g.upsells ? " + " + n(g.upsells) + " upsell" : "")));
+      l.appendChild(nums);
+      linhas.appendChild(l);
+    });
+    box.appendChild(linhas);
+    if (lista.some(function (g) { return g.funil === "nao-identificado"; }))
+      box.appendChild(el("p", "lanc-nota", "\"Não identificado\" = vendas de antes do site passar a informar o funil para a B4You."));
+  }
+
+  /* ---------- compradores ---------- */
+  function linkZap(t) {
+    var d = String(t || "").replace(/\D/g, "");
+    if (d.length < 10) return null;
+    if (d.length <= 11) d = "55" + d;
+    return "https://wa.me/" + d;
+  }
+  function desenharCompradores() {
+    var ul = limpar($("[data-vend-compradores]")), cont = $("[data-vend-compradores-cont]");
+    var lista = dados.compradores || [];
+    cont.textContent = lista.length ? n(lista.length) + (lista.length === 1 ? " pessoa" : " pessoas") + " no período" : "";
+    if (!lista.length) { ul.appendChild(el("li", "lanc-vazio", "Nenhum comprador no período.")); return; }
+    lista.forEach(function (c) {
+      var li = el("li", "lanc-pessoa");
+      var topo = el("div", "vend-comprador-topo");
+      topo.appendChild(el("strong", "lanc-pessoa-nome", c.nome || c.email || "Comprador sem nome"));
+      topo.appendChild(el("span", "vend-comprador-total", r$(c.total)));
+      li.appendChild(topo);
+      var info = [];
+      info.push(n(c.compras) + (c.compras === 1 ? " compra" : " compras") + (c.upsells ? " + " + n(c.upsells) + " upsell" : ""));
+      if (c.devolvidas) info.push(n(c.devolvidas) + " devolvida" + (c.devolvidas > 1 ? "s" : ""));
+      if (c.cidade || c.uf) info.push([c.cidade, c.uf].filter(Boolean).join("/"));
+      if (c.funil) info.push(c.funil === "quiz" ? "quiz" : c.funil === "oferta-direta" ? "oferta direta" : c.funil);
+      if (c.fonte) info.push(c.fonte);
+      li.appendChild(el("p", "lanc-pessoa-info", info.join(" · ")));
+      if (c.ofertas && c.ofertas.length) li.appendChild(el("p", "lanc-pessoa-info", c.ofertas.join(" + ")));
+      var acoes = el("div", "lanc-pessoa-acoes");
+      var zap = linkZap(c.telefone);
+      if (zap) { var a = el("a", "lanc-acao lanc-zap", "WhatsApp"); a.href = zap; a.target = "_blank"; a.rel = "noopener"; acoes.appendChild(a); }
+      if (c.email) { var m = el("a", "lanc-acao", c.email); m.href = "mailto:" + c.email; acoes.appendChild(m); }
+      if (acoes.childNodes.length) li.appendChild(acoes);
+      ul.appendChild(li);
+    });
+  }
+  function baixarCompradores() {
+    if (App.estado.demo) { alert("Entre com a senha do painel para baixar a lista de compradores."); return; }
+    var r = intervalo();
+    fetch("/api/vendas?formato=csv&de=" + r.de + "&ate=" + r.ate, { headers: { authorization: "Bearer " + App.estado.senha } })
+      .then(function (resp) { if (!resp.ok) throw new Error(); return resp.blob(); })
+      .then(function (blob) {
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "cellive-compradores-" + diaIso(Date.now()) + ".csv";
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      })
+      .catch(function () { alert("Não foi possível baixar a lista agora."); });
+  }
+
+  /* ---------- cartão "Vendas no período" da aba Resumo ---------- */
+  function desenharResumo() {
+    if (!resumoCartao || !dados) return;
+    var s = dados.resumo, funis = dados.porFunil || [];
+    var visitas = funis.reduce(function (t, g) { return t + (g.visitas || 0); }, 0);
+    var box = limpar(resumoCartao.querySelector("[data-vend-resumo-kpis]"));
+    box.appendChild(cartaoNum("Vendas aprovadas", n(s.aprovadas), s.upsells ? n(s.principais) + " do kit + " + n(s.upsells) + " de upsell" : "no período", true));
+    box.appendChild(cartaoNum("Faturamento", r$(s.faturamento), "você recebe " + r$(s.comissao)));
+    box.appendChild(cartaoNum("Conversão", visitas ? pct(s.principais, visitas) : "–", "das visitas viraram venda"));
+    box.appendChild(dados.gasto ? cartaoNum("Retorno sobre o anúncio", (s.faturamento / dados.gasto).toFixed(2).replace(".", ",") + "x", r$(dados.gasto) + " gastos na Meta")
+      : cartaoNum("Ticket médio", r$(s.ticket), "por venda aprovada"));
+    // mini funil: visitas → clicaram em comprar → compraram
+    var etapas = [["Visitas", visitas, null], ["Clicaram em comprar", dados.cliques || 0, visitas], ["Compraram", s.principais, dados.cliques || 0]];
+    var maior = Math.max(1, visitas);
+    var fbox = limpar(resumoCartao.querySelector("[data-vend-resumo-funil]"));
+    etapas.forEach(function (e) {
+      var l = el("div");
+      var topo = el("div", "vend-etapa-topo");
+      topo.appendChild(el("span", null, e[0]));
+      topo.appendChild(el("strong", null, n(e[1])));
+      l.appendChild(topo);
+      var barra = el("div", "lanc-kit-barra"), cheio = el("i");
+      cheio.style.transform = "scaleX(" + Math.max(e[1] ? 0.01 : 0, e[1] / maior).toFixed(4) + ")";
+      barra.appendChild(cheio); l.appendChild(barra);
+      if (e[2] != null) l.appendChild(el("span", "vend-etapa-sub", pct(e[1], e[2]) + " da etapa anterior"));
+      fbox.appendChild(l);
+    });
+    var fun = limpar(resumoCartao.querySelector("[data-vend-resumo-funis]"));
+    funis.forEach(function (g) { fun.appendChild(cartaoFunil(g)); });
   }
 
   function desenhar() {
@@ -213,6 +348,8 @@
     desenharGrupo("[data-vend-origem]", dados[grupo]);
     desenharGrupo("[data-vend-ofertas]", dados.porOferta);
     desenharGrupo("[data-vend-pagamentos]", dados.porPagamento, nomePagamento);
+    desenharPorFunil();
+    desenharCompradores();
     desenharLista();
   }
 
@@ -225,11 +362,13 @@
     });
   });
 
-  // abriu a aba: carrega; atualização do painel (ou troca de período) com a aba aberta: carrega de novo
+  $("[data-vend-baixar]").addEventListener("click", baixarCompradores);
+  var irVendas = document.querySelector("[data-vend-ir]");
   var botaoAba = document.querySelector('[data-aba="vendas"]');
-  if (botaoAba) botaoAba.addEventListener("click", carregar);
-  document.addEventListener("painel:montado", function () {
-    if (!secao.hidden) carregar();
-    else if (App.estado.demo || chaveAtual) dados = null;
-  });
+  if (irVendas && botaoAba) irVendas.addEventListener("click", function () { botaoAba.click(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+  // abriu a aba: desenha (ou carrega); cada atualização do painel (ou troca de período) busca de novo,
+  // porque o cartão "Vendas no período" fica na aba Resumo
+  if (botaoAba) botaoAba.addEventListener("click", function () { if (dados && chaveAtual === intervalo().de + "-" + intervalo().ate || App.estado.demo) { if (App.estado.demo) dados = demo(intervalo()); desenhar(); } else carregar(); });
+  document.addEventListener("painel:montado", carregar);
 })();

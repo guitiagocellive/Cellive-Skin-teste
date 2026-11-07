@@ -83,6 +83,12 @@
       conteudo: q.get("utm_content") || null,
     };
     gravar(sessionStorage, "cl-origem", JSON.stringify(origem));
+    // parâmetros da entrada, como vieram no link (o oferta.js repassa para o checkout)
+    var entrada = {};
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "gclid", "ttclid"].forEach(function (k) {
+      if (q.get(k)) entrada[k] = q.get(k).slice(0, 200);
+    });
+    gravar(sessionStorage, "cl-entrada", JSON.stringify(entrada));
   }
 
   // Aparelho, sistema e navegador (bem resumidos)
