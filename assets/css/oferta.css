@@ -6059,7 +6059,16 @@ html.lista-aberta {
 /* ---------- Por trás dos resultados (jornada) ---------- */
 .oferta-age .jornada { box-shadow: 0 0 0 1px var(--min-linha) !important; }
 
-/* ---------- Os números falam por si: fundo branco, frasco com sombra leve ---------- */
+/* ---------- Avaliação dos clientes: clean, com o resumo da nota em destaque ---------- */
+.oferta-avaliacoes .aval-resumo {
+  background: var(--blue-mist) !important;
+  box-shadow: 0 0 0 1px var(--blue-soft) !important;
+}
+.oferta-avaliacoes .aval-numero { color: var(--blue-ink); }
+.oferta-avaliacoes .aval-trilho { background: var(--white) !important; }
+.oferta-avaliacoes .aval-lista .aval-item { box-shadow: 0 0 0 1px var(--min-linha) !important; }
+
+/* ---------- Os números falam por si: fundo transparente, frasco com sombra leve ---------- */
 .oferta-numeros, .oferta > .oferta-numeros { background: none !important; }
 .oferta-numeros .num-frasco { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
 
