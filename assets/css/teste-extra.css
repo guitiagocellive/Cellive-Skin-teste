@@ -1,8 +1,7 @@
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
    Vazio = a página de teste fica igual às oficiais.
 
-   EM TESTE: versão clean também no reset, microagulhamento, avaliação dos clientes (+ destaque)
-   e chamada final (+ animação). As outras seções clean já estão no oferta.css (site oficial). */
+   EM TESTE: versão clean também no reset, microagulhamento e chamada final (+ animação). As outras seções clean já estão no oferta.css (site oficial). */
 
 /* ---------- O reset ---------- */
 .oferta-reset .reset-texto::before { display: none !important; }
@@ -10,15 +9,6 @@
 
 /* ---------- Tecnologia coreana / microagulhamento ---------- */
 .oferta-micro .micro-texto::before { display: none !important; }
-
-/* ---------- Avaliação dos clientes: clean, com o resumo da nota em destaque ---------- */
-.oferta-avaliacoes .aval-resumo {
-  background: var(--blue-mist) !important;
-  box-shadow: 0 0 0 1px var(--blue-soft) !important;
-}
-.oferta-avaliacoes .aval-numero { color: var(--blue-ink); }
-.oferta-avaliacoes .aval-trilho { background: var(--white) !important; }
-.oferta-avaliacoes .aval-lista .aval-item { box-shadow: 0 0 0 1px var(--min-linha) !important; }
 
 /* ---------- Comece hoje o seu reset: cartão azul, pílula escura com brilho e mais animação ---------- */
 .oferta-final .final-cartao {
