@@ -1630,3 +1630,26 @@ body.agente-aberto .agente-botao { transform: translateX(-50%) scale(0.6); }
 }
 /* na aba Lançamento a lista completa já aparece embaixo: o cartão do período mostra só os números */
 [data-painel-aba="lancamento"] .leads-ultimos { display: none; }
+
+/* ---------- Aba Vendas (B4You) ---------- */
+.vend-aviso { margin: 0 0 12px; color: var(--texto-3); font-size: 12.5px; }
+.vend-kpis-2 .lanc-kpi-valor { font-size: 22px; }
+.vend-chips { margin-bottom: 14px; }
+.vend-grupo .lanc-kit-nome { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vend-dia i { background: rgba(25, 158, 112, 0.55); }
+.vend-dia.is-ativo i { background: var(--s3); }
+.vend-status { flex: none; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.vend-status.is-ok { background: rgba(25, 158, 112, 0.18); color: #5fd3a3; }
+.vend-status.is-espera { background: rgba(240, 168, 48, 0.16); color: #f0b45a; }
+.vend-status.is-ruim { background: rgba(217, 89, 38, 0.18); color: #f08a62; }
+.vend-origem { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* valores em reais são longos: as colunas não podem crescer além da tela */
+[data-painel-aba="vendas"] { min-width: 0; }
+[data-painel-aba="vendas"] .lanc-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+[data-painel-aba="vendas"] .lanc-kpi { min-width: 0; }
+[data-painel-aba="vendas"] .lanc-kpi-valor { font-size: clamp(19px, 5.4vw, 28px); overflow-wrap: anywhere; }
+[data-painel-aba="vendas"] .vend-kpis-2 .lanc-kpi-valor { font-size: clamp(18px, 5vw, 22px); }
+[data-painel-aba="vendas"] .lanc-kit-nums strong { white-space: nowrap; }
+@media (min-width: 900px) {
+  [data-painel-aba="vendas"] .lanc-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
