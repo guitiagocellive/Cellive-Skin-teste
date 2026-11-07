@@ -22,7 +22,7 @@ function autorizado(url) {
 
 // tira dados pessoais; troca e-mail por hash
 const PESSOAL = /cpf|cnpj|document|doc_number|rg$|phone|telefone|celular|whatsapp|mobile|card|cartao|cvv|birth|nascimento|address|endereco|street|logradouro|numero_casa|complement|neighborhood|bairro|zip|cep|^ip$|ip_address|password|senha/i;
-const PESSOA = /^(customer|client|buyer|comprador|cliente|student|aluno|user|usuario|shipping|billing|delivery|entrega)$/i;
+const PESSOA = /^(customer|client|buyer|comprador|cliente|student|aluno|user|usuario|shipping|billing|delivery|entrega|producer|affiliate|afiliado)$/i;
 const NOME = /^(name|nome|full_name|fullname|first_name|last_name|sobrenome)$/i;
 function limpar(v, dentroDePessoa, prof) {
   if (prof > 8 || v == null) return v;
@@ -32,7 +32,7 @@ function limpar(v, dentroDePessoa, prof) {
   for (const [k, val] of Object.entries(v)) {
     if (PESSOAL.test(k)) continue;
     if (/e-?mail/i.test(k)) { if (val) out.email_hash = hash(String(val).trim().toLowerCase()); continue; }
-    if (dentroDePessoa && NOME.test(k)) continue;
+    if ((dentroDePessoa && NOME.test(k)) || /^(full_name|fullname|first_name|last_name)$/i.test(k)) continue;
     out[k] = limpar(val, dentroDePessoa || PESSOA.test(k), prof + 1);
   }
   return out;
@@ -86,22 +86,34 @@ export async function POST(request) {
     return json({ ok: false }, 413);
   }
 
+  // formato da B4You (visto no teste): event_name, sale_id, status, payment_method, installments, type,
+  // product.name, offer.{id,name,quantity}, splits.{base_price,my_commission}, tracking_parameters.{utm_*, src, sck}
+  const tp = (dados && dados.tracking_parameters) || {};
+  const off = (dados && dados.offer) || {};
+  const spl = (dados && dados.splits) || {};
   const linha = {
-    evento: corta(achar(dados, ["event", "evento", "event_name", "type", "tipo"]), 80),
-    venda: corta(achar(dados, ["sale_item_id", "sale_id", "id_sale", "transaction_id", "transaction", "order_id", "uuid", "id"]), 120),
-    status: corta(achar(dados, ["status", "sale_status", "payment_status", "situacao"]), 60),
-    valor: numero(achar(dados, ["price", "amount", "total", "value", "valor", "paid_price", "sale_price"])),
-    oferta: corta(achar(dados, ["offer_id", "offerId", "id_offer", "offer", "plan_id", "plan"]), 120),
-    produto: corta(achar(dados, ["product_name", "product", "produto", "product_id"]), 200),
-    pagamento: corta(achar(dados, ["payment_method", "paymentMethod", "metodo_pagamento", "method"]), 40),
-    fonte: corta(achar(dados, ["utm_source"]), 120),
-    campanha: corta(achar(dados, ["utm_campaign"]), 200),
-    midia: corta(achar(dados, ["utm_medium"]), 120),
-    conteudo: corta(achar(dados, ["utm_content"]), 200),
-    termo: corta(achar(dados, ["utm_term"]), 200),
-    src: corta(achar(dados, ["src"]), 120),
-    sck: corta(achar(dados, ["sck"]), 120),
-    email: corta(achar(dados, ["email_hash"]), 64),
+    evento: corta(dados.event_name ?? achar(dados, ["event", "evento", "type"]), 80),
+    venda: corta(dados.sale_id ?? achar(dados, ["sale_item_id", "transaction_id", "order_id", "id"]), 120),
+    grupo: corta(dados.group_id, 120),
+    status: corta(dados.status ?? achar(dados, ["sale_status", "payment_status"]), 60),
+    valor: numero(spl.base_price ?? (Array.isArray(dados.charges) && dados.charges[0] ? dados.charges[0].amount : null) ?? off.original_price),
+    comissao: numero(spl.my_commission),
+    oferta: corta(off.id, 120),
+    oferta_nome: corta(off.name, 200),
+    quantidade: numero(off.quantity),
+    produto: corta(dados.product && dados.product.name, 200),
+    tipo: corta(dados.type, 40),
+    pagamento: corta(dados.payment_method, 40),
+    parcelas: numero(dados.installments),
+    fonte: corta(tp.utm_source ?? achar(dados, ["utm_source"]), 120),
+    campanha: corta(tp.utm_campaign ?? achar(dados, ["utm_campaign"]), 200),
+    midia: corta(tp.utm_medium ?? achar(dados, ["utm_medium"]), 120),
+    conteudo: corta(tp.utm_content ?? achar(dados, ["utm_content"]), 200),
+    termo: corta(tp.utm_term ?? achar(dados, ["utm_term"]), 200),
+    src: corta(tp.src ?? achar(dados, ["src"]), 120),
+    sck: corta(tp.sck ?? achar(dados, ["sck"]), 120),
+    email: corta(dados.customer && dados.customer.email_hash, 64),
+    pago_em: corta(dados.paid_at, 40),
   };
 
   let textoDados = JSON.stringify(dados);
@@ -114,20 +126,22 @@ export async function POST(request) {
   try { q = await banco(); } catch (e) { return json({ ok: false, erro: "banco" }, 503); }
   if (!q) return json({ ok: false, erro: "sem banco" }, 503);
   try {
-    await q(`CREATE TABLE IF NOT EXISTS vendas (
+    await q(`CREATE TABLE IF NOT EXISTS vendas_b4you (
       id BIGSERIAL PRIMARY KEY, recebido BIGINT NOT NULL,
-      evento TEXT, venda TEXT, status TEXT, valor NUMERIC, oferta TEXT, produto TEXT, pagamento TEXT,
+      evento TEXT, venda TEXT, grupo TEXT, status TEXT, valor NUMERIC, comissao NUMERIC,
+      oferta TEXT, oferta_nome TEXT, quantidade NUMERIC, produto TEXT, tipo TEXT, pagamento TEXT, parcelas NUMERIC,
       fonte TEXT, campanha TEXT, midia TEXT, conteudo TEXT, termo TEXT, src TEXT, sck TEXT,
-      email_hash TEXT, dados JSONB NOT NULL
+      email_hash TEXT, pago_em TEXT, dados JSONB NOT NULL
     )`);
-    await q("CREATE INDEX IF NOT EXISTS vendas_recebido ON vendas(recebido)");
-    await q("CREATE INDEX IF NOT EXISTS vendas_venda ON vendas(venda)");
-    await q(`INSERT INTO vendas (recebido, evento, venda, status, valor, oferta, produto, pagamento,
-      fonte, campanha, midia, conteudo, termo, src, sck, email_hash, dados)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17::jsonb)`,
-      [Date.now(), linha.evento, linha.venda, linha.status, linha.valor, linha.oferta, linha.produto, linha.pagamento,
-       linha.fonte, linha.campanha, linha.midia, linha.conteudo, linha.termo, linha.src, linha.sck, linha.email,
-       textoDados]);
+    await q("CREATE INDEX IF NOT EXISTS vendas_b4you_recebido ON vendas_b4you(recebido)");
+    await q("CREATE INDEX IF NOT EXISTS vendas_b4you_venda ON vendas_b4you(venda)");
+    const L = linha;
+    await q(`INSERT INTO vendas_b4you (recebido, evento, venda, grupo, status, valor, comissao, oferta, oferta_nome, quantidade,
+      produto, tipo, pagamento, parcelas, fonte, campanha, midia, conteudo, termo, src, sck, email_hash, pago_em, dados)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24::jsonb)`,
+      [Date.now(), L.evento, L.venda, L.grupo, L.status, L.valor, L.comissao, L.oferta, L.oferta_nome, L.quantidade,
+       L.produto, L.tipo, L.pagamento, L.parcelas, L.fonte, L.campanha, L.midia, L.conteudo, L.termo, L.src, L.sck,
+       L.email, L.pago_em, textoDados]);
   } catch (e) {
     await registrarTentativa(request, url, { resposta: 500, motivo: "erro ao gravar: " + (e && e.message), tamanho: texto.length, previa });
     return json({ ok: false }, 500);
@@ -152,7 +166,7 @@ export async function GET(request) {
   const ler = async (sql) => { try { return await q(sql); } catch (e) { return []; } };
   return json({
     tentativas: await ler("SELECT ts, metodo, resposta, motivo, tipo, tamanho, tem_codigo, agente, previa FROM webhook_tentativas ORDER BY id DESC LIMIT 15"),
-    vendas: await ler("SELECT recebido, evento, venda, status, valor, oferta, produto, pagamento, fonte, campanha, conteudo, src, dados FROM vendas ORDER BY id DESC LIMIT 10"),
+    vendas: await ler("SELECT recebido, evento, venda, status, valor, comissao, oferta_nome, produto, tipo, pagamento, parcelas, fonte, campanha, midia, conteudo, src, sck FROM vendas_b4you ORDER BY id DESC LIMIT 10"),
   });
 }
 
