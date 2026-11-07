@@ -349,11 +349,37 @@
     });
   });
 
+  /* Link do checkout com o rastreio: as UTMs de quem chegou (ou a fonte que o rastreio
+     descobriu), o funil (sck: quiz, oferta-direta ou teste) e o código da visita (src).
+     A B4You devolve tudo isso no aviso de venda (tracking_parameters), e o painel liga
+     cada venda ao funil, à campanha e ao anúncio. */
+  function linkCheckout(base) {
+    if (!base || base === "#") return base;
+    try {
+      var u = new URL(base, location.href);
+      var R = window.CelliveRastreio || {}, o = R.origem || {}, e = {};
+      try { e = JSON.parse(sessionStorage.getItem("cl-entrada")) || {}; } catch (x) { e = {}; }
+      var pagina = document.documentElement.getAttribute("data-pagina");
+      var funil = pagina === "teste" ? "teste" : document.documentElement.getAttribute("data-versao") === "v2" ? "oferta-direta" : "quiz";
+      var p = {
+        utm_source: e.utm_source || (o.fonte && o.fonte !== "direto" ? o.fonte : null),
+        utm_medium: e.utm_medium || o.midia, utm_campaign: e.utm_campaign || o.campanha,
+        utm_content: e.utm_content || o.conteudo, utm_term: e.utm_term,
+        fbclid: e.fbclid, gclid: e.gclid, ttclid: e.ttclid,
+        sck: funil, src: R.sessao,
+      };
+      Object.keys(p).forEach(function (k) { if (p[k] && !u.searchParams.has(k)) u.searchParams.set(k, String(p[k]).slice(0, 200)); });
+      return u.toString();
+    } catch (x) { return base; }
+  }
+
   // Clique em "Comprar Agora": vai para o checkout com o plano escolhido.
   // No pré-lançamento, abre o cadastro do grupo VIP (o clique conta igual no painel).
   var preLancamento = document.body.hasAttribute("data-pre-lancamento");
   comprar.addEventListener("click", function (ev) {
     var marcado = document.querySelector(".plano input:checked");
+    var planoAtual = marcado && marcado.closest(".plano");
+    if (!preLancamento && planoAtual && planoAtual.getAttribute("data-link")) comprar.setAttribute("href", linkCheckout(planoAtual.getAttribute("data-link")));
     rastrear("checkout", { val: marcado ? marcado.value : null, x: { link: preLancamento ? "lista" : comprar.getAttribute("href") } });
     if (preLancamento) {
       ev.preventDefault();

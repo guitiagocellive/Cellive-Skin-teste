@@ -2,8 +2,9 @@
    Configurar na B4You em Apps e Webhooks, colando o endereço completo (com o ?t=).
    O código fica só no endereço; aqui guardamos apenas a "impressão digital" dele (SHA-256),
    então o código não aparece no repositório.
-   Privacidade: CPF, telefone, endereço, cartão e nome de quem comprou NÃO são guardados.
-   O e-mail vira um código (hash), só para reconhecer compras da mesma pessoa.
+   Comprador: nome, e-mail, telefone (para contato no WhatsApp), cidade e UF ficam em colunas
+   próprias, vistas só no painel (com senha). CPF, endereço completo e cartão NÃO são guardados,
+   e o JSON bruto guardado (coluna dados) continua sem nenhum dado pessoal.
    Também aceita o código no caminho: /api/venda/<código> (regra no vercel.json), para
    plataformas que cortam o que vem depois do "?".
    Cada tentativa que chega (até as recusadas) fica registrada em webhook_tentativas, já sem
@@ -76,6 +77,17 @@ export async function POST(request) {
   try { bruto = texto ? JSON.parse(texto) : {}; }
   catch (e) { bruto = Object.fromEntries(new URLSearchParams(texto)); }
   const dados = limpar(bruto, false, 0);
+  // comprador (antes da limpeza): só o necessário para contato e para saber de onde é
+  const cli = (bruto && (bruto.customer || bruto.buyer || bruto.client || bruto.cliente)) || {};
+  const end = cli.address || cli.endereco || (bruto && (bruto.address || bruto.shipping_address || bruto.delivery_address)) || {};
+  const tel = cli.phone || cli.cellphone || cli.mobile || cli.phone_number || cli.whatsapp || cli.telefone || cli.celular;
+  const comprador = {
+    nome: corta(cli.full_name || cli.name || cli.nome || [cli.first_name, cli.last_name].filter(Boolean).join(" ") || null, 160),
+    email: corta(cli.email ? String(cli.email).trim().toLowerCase() : null, 160),
+    telefone: corta(tel ? String(tel).replace(/[^\d+]/g, "") : null, 30),
+    cidade: corta(end.city || end.cidade || cli.city || null, 80),
+    uf: corta(end.state || end.uf || end.estado || cli.state || null, 30),
+  };
   const previa = JSON.stringify(dados).slice(0, 3000);
   if (!autorizado(url)) {
     await registrarTentativa(request, url, { resposta: 401, motivo: url.searchParams.has("t") ? "código errado" : "sem código no endereço", tamanho: texto.length, previa });
@@ -115,6 +127,9 @@ export async function POST(request) {
     email: corta(dados.customer && dados.customer.email_hash, 64),
     pago_em: corta(dados.paid_at, 40),
   };
+  // funil e visita: o site manda sck = quiz | oferta-direta | teste e src = código da visita
+  linha.funil = /^(quiz|oferta-direta|teste)$/.test(linha.sck || "") ? linha.sck : null;
+  linha.sessao = linha.funil ? linha.src : null;
 
   let textoDados = JSON.stringify(dados);
   if (textoDados.length > 100000) textoDados = JSON.stringify({ grande_demais: true, tamanho: textoDados.length });
@@ -135,13 +150,19 @@ export async function POST(request) {
     )`);
     await q("CREATE INDEX IF NOT EXISTS vendas_b4you_recebido ON vendas_b4you(recebido)");
     await q("CREATE INDEX IF NOT EXISTS vendas_b4you_venda ON vendas_b4you(venda)");
+    await q(`ALTER TABLE vendas_b4you ADD COLUMN IF NOT EXISTS funil TEXT, ADD COLUMN IF NOT EXISTS sessao TEXT,
+      ADD COLUMN IF NOT EXISTS comprador_nome TEXT, ADD COLUMN IF NOT EXISTS comprador_email TEXT,
+      ADD COLUMN IF NOT EXISTS comprador_telefone TEXT, ADD COLUMN IF NOT EXISTS comprador_cidade TEXT,
+      ADD COLUMN IF NOT EXISTS comprador_uf TEXT`);
     const L = linha;
     await q(`INSERT INTO vendas_b4you (recebido, evento, venda, grupo, status, valor, comissao, oferta, oferta_nome, quantidade,
-      produto, tipo, pagamento, parcelas, fonte, campanha, midia, conteudo, termo, src, sck, email_hash, pago_em, dados)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24::jsonb)`,
+      produto, tipo, pagamento, parcelas, fonte, campanha, midia, conteudo, termo, src, sck, email_hash, pago_em, dados,
+      funil, sessao, comprador_nome, comprador_email, comprador_telefone, comprador_cidade, comprador_uf)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24::jsonb,$25,$26,$27,$28,$29,$30,$31)`,
       [Date.now(), L.evento, L.venda, L.grupo, L.status, L.valor, L.comissao, L.oferta, L.oferta_nome, L.quantidade,
        L.produto, L.tipo, L.pagamento, L.parcelas, L.fonte, L.campanha, L.midia, L.conteudo, L.termo, L.src, L.sck,
-       L.email, L.pago_em, textoDados]);
+       L.email, L.pago_em, textoDados, L.funil, L.sessao,
+       comprador.nome, comprador.email, comprador.telefone, comprador.cidade, comprador.uf]);
   } catch (e) {
     await registrarTentativa(request, url, { resposta: 500, motivo: "erro ao gravar: " + (e && e.message), tamanho: texto.length, previa });
     return json({ ok: false }, 500);
