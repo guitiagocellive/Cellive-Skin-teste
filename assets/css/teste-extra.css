@@ -1,67 +1,15 @@
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
    Vazio = a página de teste fica igual às oficiais.
 
-   VERSÃO CLEAN SÓ EM ALGUMAS SEÇÕES (em teste). As seções escolhidas ficam sem degradês,
-   sombras e brilhos (onde a sombra separava o cartão do fundo, entra uma linha fina cinza).
-   Todas as outras seções ficam iguais ao site.
-   Seções clean: amado por +5.000 mulheres, conheça o sérum (+ um pouco mais vivo), fórmula
-   completa (título com mais destaque), o reset, fórmula com ação SRRP, microagulhamento,
-   clientes (só os cartões), jornada, avaliação dos clientes (+ destaque) e chamada final
-   (+ animação). */
-
-:root { --min-linha: #e4e7eb; }
-
-/* ---------- Amado por +5.000 mulheres: sombra mais suave nos cartões ---------- */
-.oferta-depoimentos .depo { box-shadow: 0 8px 22px rgba(77, 116, 168, 0.14) !important; }
-
-/* ---------- Conheça o Sérum: fundo branco, com um círculo azul liso atrás do produto ---------- */
-.oferta-conheca, .oferta > .oferta-conheca { background: var(--white) !important; }
-.oferta-conheca .palco-luz {
-  width: calc(440 * var(--u)) !important;
-  height: calc(440 * var(--u)) !important;
-  background: var(--blue-soft) !important;
-}
-.oferta-conheca .palco-frasco { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.16)) !important; }
-
-/* ---------- Uma fórmula completa: título com mais destaque, resto clean ---------- */
-.oferta-formula, .oferta > .oferta-formula { background: var(--white) !important; }
-.oferta-formula > .fp-chamada {
-  display: table;
-  margin: 0 auto;
-  padding: 7px 16px;
-  border-radius: 999px;
-  background: var(--blue-soft);
-  color: var(--blue-ink);
-  font-size: 12.5px;
-  letter-spacing: 0.06em;
-}
-.oferta-formula .fp-titulo { margin-top: 14px; font-size: clamp(27px, 8.4vw, 35px); }
-.oferta-formula .fp-titulo strong {
-  padding: 0 4px;
-  background: linear-gradient(transparent 56%, var(--blue-soft) 56%, var(--blue-soft) 94%, transparent 94%);
-}
-.oferta-formula .fp-item, .oferta-formula .fp-mini, .oferta-formula .fp-chip { box-shadow: 0 0 0 1px var(--min-linha) !important; }
-.oferta-formula .fp-bolha { box-shadow: 0 0 0 1.5px var(--blue-soft) !important; }
-.oferta-formula .fp-bolha-icone { background: var(--blue-mist) !important; }
-.oferta-formula .fp-comprar::before, .oferta-formula .fp-comprar::after { display: none !important; }
+   EM TESTE: versão clean também no reset, microagulhamento, avaliação dos clientes (+ destaque)
+   e chamada final (+ animação). As outras seções clean já estão no oferta.css (site oficial). */
 
 /* ---------- O reset ---------- */
 .oferta-reset .reset-texto::before { display: none !important; }
 .oferta-reset .reset-titulo strong { text-shadow: none !important; }
 
-/* ---------- Fórmula com ação SRRP ---------- */
-.oferta-srrp .srrp-cartao { box-shadow: 0 0 0 1px var(--min-linha) !important; }
-.oferta-srrp .srrp-frasco, .oferta-srrp .srrp-frasco-inteiro { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
-
 /* ---------- Tecnologia coreana / microagulhamento ---------- */
 .oferta-micro .micro-texto::before { display: none !important; }
-
-/* ---------- Um pouco dos nossos clientes: só os cartões (fundo e rabisco como no site) ---------- */
-.oferta-clientes .cli-card { box-shadow: 0 0 0 1px var(--min-linha) !important; }
-.oferta-clientes .cli-avatar { box-shadow: none !important; }
-
-/* ---------- Por trás dos resultados (jornada) ---------- */
-.oferta-age .jornada { box-shadow: 0 0 0 1px var(--min-linha) !important; }
 
 /* ---------- Avaliação dos clientes: clean, com o resumo da nota em destaque ---------- */
 .oferta-avaliacoes .aval-resumo {
