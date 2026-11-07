@@ -83,6 +83,8 @@
     <nav class="abas" role="tablist" aria-label="Seções do painel" data-abas>
       <button type="button" role="tab" aria-selected="true" data-aba="geral">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>Resumo</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="vendas">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M7 15l3.5-4 3 2.5L19 7"/><path d="M15 7h4v4"/></svg>Vendas</button>
       <button type="button" role="tab" aria-selected="false" data-aba="funil">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>Funil</button>
       <button type="button" role="tab" aria-selected="false" data-aba="respostas">
@@ -217,6 +219,61 @@
             <p>Botões, dúvidas, vídeos e contatos</p>
           </header>
           <div data-cliques></div>
+        </article>
+      </section>
+
+      <!-- ============ VENDAS (B4You) ============
+           Vendas que a B4You avisa pelo webhook (api/venda.js → tabela vendas_b4you).
+           Montada pelo assets/js/painel-vendas.js com /api/vendas. Segue só o período do topo. -->
+      <section class="aba" data-painel-aba="vendas" hidden>
+        <p class="vend-aviso" data-vend-aviso></p>
+        <div class="lanc-kpis" data-vend-kpis></div>
+        <div class="lanc-kpis vend-kpis-2" data-vend-kpis2></div>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Vendas por dia</h2>
+            <p>Vendas aprovadas no período · toque numa barra para ver o dia</p>
+          </header>
+          <div class="lanc-dias" data-vend-dias></div>
+          <p class="lanc-dia-info" data-vend-dia-info></p>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>De onde vieram as vendas</h2>
+            <p>Pelas UTMs que chegam junto com a compra · vendas aprovadas e faturamento</p>
+          </header>
+          <div class="lanc-chips vend-chips" role="radiogroup" aria-label="Agrupar por" data-vend-chips>
+            <button type="button" data-vend-grupo="porFonte" class="is-ativo">Fonte</button>
+            <button type="button" data-vend-grupo="porCampanha">Campanha</button>
+            <button type="button" data-vend-grupo="porAnuncio">Anúncio</button>
+          </div>
+          <div class="lanc-kits vend-grupo" data-vend-origem></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Kits e ofertas</h2>
+            <p>Vendas aprovadas por oferta (inclui o upsell)</p>
+          </header>
+          <div class="lanc-kits vend-grupo" data-vend-ofertas></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Formas de pagamento</h2>
+            <p>Vendas aprovadas por forma de pagamento</p>
+          </header>
+          <div class="lanc-kits vend-grupo" data-vend-pagamentos></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Últimas vendas</h2>
+            <p>Da mais recente para a mais antiga · sem dados pessoais de quem comprou</p>
+          </header>
+          <ul class="lanc-lista" data-vend-lista></ul>
         </article>
       </section>
 
@@ -377,5 +434,6 @@
   <script src="assets/js/painel.js"></script>
   <script src="assets/js/painel-agente.js"></script>
   <script src="assets/js/painel-lancamento.js"></script>
+  <script src="assets/js/painel-vendas.js"></script>
 </body>
 </html>
