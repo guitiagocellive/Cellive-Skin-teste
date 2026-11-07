@@ -3,7 +3,11 @@
    O código fica só no endereço; aqui guardamos apenas a "impressão digital" dele (SHA-256),
    então o código não aparece no repositório.
    Privacidade: CPF, telefone, endereço, cartão e nome de quem comprou NÃO são guardados.
-   O e-mail vira um código (hash), só para reconhecer compras da mesma pessoa. */
+   O e-mail vira um código (hash), só para reconhecer compras da mesma pessoa.
+   Também aceita o código no caminho: /api/venda/<código> (regra no vercel.json), para
+   plataformas que cortam o que vem depois do "?".
+   Cada tentativa que chega (até as recusadas) fica registrada em webhook_tentativas, já sem
+   dados pessoais, para descobrir por que um teste falhou. Ver: GET /api/venda?t=<código>&ver=1 */
 import { createHash, timingSafeEqual } from "node:crypto";
 import { banco, json } from "./_db.js";
 
@@ -45,21 +49,42 @@ function achar(obj, nomes, prof = 0) {
   return null;
 }
 const corta = (v, n) => (v == null ? null : String(v).slice(0, n));
+
+async function registrarTentativa(request, url, info) {
+  try {
+    const q = await banco();
+    if (!q) return;
+    await q(`CREATE TABLE IF NOT EXISTS webhook_tentativas (
+      id BIGSERIAL PRIMARY KEY, ts BIGINT NOT NULL, metodo TEXT, resposta INT, motivo TEXT,
+      tipo TEXT, tamanho INT, tem_codigo BOOLEAN, agente TEXT, previa TEXT
+    )`);
+    await q(`INSERT INTO webhook_tentativas (ts, metodo, resposta, motivo, tipo, tamanho, tem_codigo, agente, previa)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      [Date.now(), request.method, info.resposta, corta(info.motivo, 200), corta(request.headers.get("content-type"), 120),
+       info.tamanho ?? null, url.searchParams.has("t"), corta(request.headers.get("user-agent"), 160), corta(info.previa, 3000)]);
+    // guarda só as 300 mais recentes
+    await q("DELETE FROM webhook_tentativas WHERE id < (SELECT COALESCE(MAX(id), 0) - 300 FROM webhook_tentativas)");
+  } catch (e) { /* registro é só para diagnóstico */ }
+}
 const numero = (v) => { const x = Number(String(v ?? "").replace(",", ".")); return Number.isFinite(x) ? x : null; };
 
 export async function POST(request) {
   const url = new URL(request.url);
-  if (!autorizado(url)) return json({ ok: false }, 401);
+  let texto = "";
+  try { texto = await request.text(); } catch (e) { texto = ""; }
   let bruto;
-  try {
-    const texto = await request.text();
-    if (texto.length > 200000) return json({ ok: false }, 413);
-    try { bruto = JSON.parse(texto); }
-    catch (e) { bruto = Object.fromEntries(new URLSearchParams(texto)); }
-  } catch (e) {
-    return json({ ok: false }, 400);
-  }
+  try { bruto = texto ? JSON.parse(texto) : {}; }
+  catch (e) { bruto = Object.fromEntries(new URLSearchParams(texto)); }
   const dados = limpar(bruto, false, 0);
+  const previa = JSON.stringify(dados).slice(0, 3000);
+  if (!autorizado(url)) {
+    await registrarTentativa(request, url, { resposta: 401, motivo: url.searchParams.has("t") ? "código errado" : "sem código no endereço", tamanho: texto.length, previa });
+    return json({ ok: false }, 401);
+  }
+  if (texto.length > 200000) {
+    await registrarTentativa(request, url, { resposta: 413, motivo: "grande demais", tamanho: texto.length, previa: "" });
+    return json({ ok: false }, 413);
+  }
 
   const linha = {
     evento: corta(achar(dados, ["event", "evento", "event_name", "type", "tipo"]), 80),
@@ -104,12 +129,34 @@ export async function POST(request) {
        linha.fonte, linha.campanha, linha.midia, linha.conteudo, linha.termo, linha.src, linha.sck, linha.email,
        textoDados]);
   } catch (e) {
+    await registrarTentativa(request, url, { resposta: 500, motivo: "erro ao gravar: " + (e && e.message), tamanho: texto.length, previa });
     return json({ ok: false }, 500);
   }
+  await registrarTentativa(request, url, { resposta: 200, motivo: "venda gravada", tamanho: texto.length, previa });
   return json({ ok: true });
 }
 
 // a B4You (ou você) pode abrir o endereço para testar: responde ok se o código estiver certo
-export function GET(request) {
-  return autorizado(new URL(request.url)) ? json({ ok: true, aviso: "endereço de vendas da B4You funcionando" }) : json({ ok: false }, 401);
+export async function GET(request) {
+  const url = new URL(request.url);
+  if (!autorizado(url)) {
+    await registrarTentativa(request, url, { resposta: 401, motivo: "GET sem código certo" });
+    return json({ ok: false }, 401);
+  }
+  if (url.searchParams.get("ver") !== "1") {
+    await registrarTentativa(request, url, { resposta: 200, motivo: "teste (GET)" });
+    return json({ ok: true, aviso: "endereço de vendas da B4You funcionando" });
+  }
+  const q = await banco().catch(() => null);
+  if (!q) return json({ ok: false, erro: "sem banco" }, 503);
+  const ler = async (sql) => { try { return await q(sql); } catch (e) { return []; } };
+  return json({
+    tentativas: await ler("SELECT ts, metodo, resposta, motivo, tipo, tamanho, tem_codigo, agente, previa FROM webhook_tentativas ORDER BY id DESC LIMIT 15"),
+    vendas: await ler("SELECT recebido, evento, venda, status, valor, oferta, produto, pagamento, fonte, campanha, conteudo, src, dados FROM vendas ORDER BY id DESC LIMIT 10"),
+  });
 }
+
+// alguns sistemas testam o endereço com HEAD ou OPTIONS antes de enviar
+export function HEAD() { return new Response(null, { status: 200 }); }
+export function OPTIONS() { return new Response(null, { status: 204, headers: { allow: "GET, POST, PUT, HEAD, OPTIONS" } }); }
+export const PUT = POST;
