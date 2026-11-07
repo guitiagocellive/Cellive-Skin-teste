@@ -30,7 +30,7 @@ const CSS = {
 };
 const JS = ["rastreio", "proxima", "oferta", "oferta-formula", "oferta-avaliacoes", "quiz-perguntas", "quiz"];
 // páginas públicas (painel e a página /teste antiga ficam de fora)
-const PAGINAS = ["index.html", "quiz.html", "oferta.html", "v2.html", "lancamento.html", "oferta/lancamento.html",
+const PAGINAS = ["index.html", "quiz.html", "oferta.html", "v2.html",
   "politica-de-privacidade.html", "404.html"];
 
 await mkdir(arq("assets/min/"), { recursive: true });
