@@ -82,6 +82,9 @@ export async function POST(request) {
   let textoDados = JSON.stringify(dados);
   if (textoDados.length > 100000) textoDados = JSON.stringify({ grande_demais: true, tamanho: textoDados.length });
 
+  // registro no log da Vercel (já sem dados pessoais), para conferir o formato que a B4You envia
+  console.log("venda-b4you", JSON.stringify(linha), textoDados.slice(0, 6000));
+
   let q;
   try { q = await banco(); } catch (e) { return json({ ok: false, erro: "banco" }, 503); }
   if (!q) return json({ ok: false, erro: "sem banco" }, 503);
