@@ -4228,23 +4228,53 @@ a.avaliacao-qtd {
   text-align: left;
 }
 
-/* a parte azul cresce até --v; o texto vai sendo revelado junto */
+/* a parte azul entra deslizando até --v (a barra já tem o tamanho final; a parte azul
+   desliza de dentro do trilho). Deslizar é feito pela placa de vídeo do celular, então
+   fica lisa mesmo no 1º acesso, com a página ainda carregando. O texto aparece junto. */
 .num-preenche {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 0;
+  width: var(--v);
   height: 100%;
   overflow: hidden;
   border-radius: 999px;
-  background: var(--blue);
   white-space: nowrap;
-  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--i) * 0.12s);
 }
 
-.num-lista.is-visivel .num-preenche {
-  width: var(--v);
+.num-preenche::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--blue);
+  transform: translateX(-101%);
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 0.12s);
+  will-change: transform;
+}
+
+.num-preenche > * {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  transition-delay: calc(var(--i) * 0.12s + 0.45s);
+}
+
+.num-lista.is-visivel .num-preenche::before {
+  transform: none;
+}
+
+.num-lista.is-visivel .num-preenche > * {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .num-preenche::before,
+  .num-preenche > * {
+    transition: none;
+  }
 }
 
 .num-rotulo {
@@ -4350,7 +4380,7 @@ a.avaliacao-qtd {
 }
 
 .jornada:not(.is-manual) .jor-aba.is-ativa .jor-barra-cheia {
-  animation: jor-enche var(--jor-tempo, 9.5s) linear forwards;
+  animation: jor-enche var(--jor-tempo, 4s) linear forwards;
 }
 
 .jornada.is-pausada .jor-aba.is-ativa .jor-barra-cheia {
@@ -6030,7 +6060,7 @@ html.lista-aberta {
 .oferta-age .jornada { box-shadow: 0 0 0 1px var(--min-linha) !important; }
 
 /* ---------- Os números falam por si: fundo branco, frasco com sombra leve ---------- */
-.oferta-numeros, .oferta > .oferta-numeros { background: var(--white) !important; }
+.oferta-numeros, .oferta > .oferta-numeros { background: none !important; }
 .oferta-numeros .num-frasco { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
 
 

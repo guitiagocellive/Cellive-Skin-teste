@@ -1193,14 +1193,18 @@
      rolagem). Barras: crescem e contam até o valor ao aparecer. */
   var numeros = document.querySelector("[data-numeros]");
   if (numeros) {
-    var pedidoNum = 0;
+    var pedidoNum = 0, ultimoP = "";
+    var frascosNum = Array.prototype.slice.call(numeros.querySelectorAll(".num-frasco"));
     var atualizarNum = function () {
       pedidoNum = 0;
       var alto = window.innerHeight;
       var p = (alto * 0.95 - numeros.getBoundingClientRect().top) / (alto * 0.65);
       p = Math.min(1, Math.max(0, p));
       p = 1 - Math.pow(1 - p, 2);
-      numeros.style.setProperty("--p", semMovimento ? "1" : p.toFixed(3));
+      var valorP = semMovimento ? "1" : p.toFixed(3);
+      if (valorP === ultimoP) return;
+      ultimoP = valorP;
+      frascosNum.forEach(function (f) { f.style.setProperty("--p", valorP); });
     };
     var pedirNum = function () { if (!pedidoNum) pedidoNum = requestAnimationFrame(atualizarNum); };
     window.addEventListener("scroll", pedirNum, { passive: true });
@@ -1213,11 +1217,12 @@
       if (semMovimento) return;
       Array.prototype.forEach.call(listaNum.querySelectorAll("[data-contar-num]"), function (el, i) {
         var valor = Number(el.getAttribute("data-contar-num"));
-        var inicio = null;
+        var inicio = null, mostrado = -1;
         var passo = function (t) {
           if (!inicio) inicio = t + i * 120;
           var k = Math.max(0, Math.min(1, (t - inicio) / 1400));
-          el.textContent = Math.round(valor * (1 - Math.pow(1 - k, 3))) + "%";
+          var n = Math.round(valor * (1 - Math.pow(1 - k, 3)));
+          if (n !== mostrado) { mostrado = n; el.textContent = n + "%"; }
           if (k < 1) requestAnimationFrame(passo);
         };
         requestAnimationFrame(passo);
@@ -1233,7 +1238,7 @@
   }
 
   /* ---------- Jornada "como ele age na pele" ----------
-     Avança sozinha a cada 9,5 s (barrinha enchendo, como stories) enquanto a
+     Avança sozinha a cada 4 s (barrinha enchendo, como stories) enquanto a
      seção está na tela. Ao tocar numa etapa ou arrastar o cartão, para de
      avançar sozinha e fica na escolha da pessoa. */
   var jornada = document.querySelector("[data-jornada]");
@@ -1330,9 +1335,11 @@
     // só avança enquanto está na tela
     jornada.classList.add("is-pausada");
     if ("IntersectionObserver" in window) {
+      // conta como "na tela" quando alguma parte dela está na faixa do meio da tela
+      // (antes exigia metade dela visível, o que em celular de tela baixa podia nunca acontecer)
       new IntersectionObserver(function (itens) {
         jornada.classList.toggle("is-pausada", !itens[0].isIntersecting);
-      }, { threshold: 0.5 }).observe(jornada);
+      }, { rootMargin: "-25% 0px -25% 0px", threshold: 0 }).observe(jornada);
     } else {
       jornada.classList.remove("is-pausada");
     }
