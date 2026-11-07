@@ -6032,3 +6032,46 @@ html.lista-aberta {
 /* ---------- Os números falam por si: fundo branco, frasco com sombra leve ---------- */
 .oferta-numeros, .oferta > .oferta-numeros { background: var(--white) !important; }
 .oferta-numeros .num-frasco { filter: drop-shadow(0 10px 14px rgba(77, 116, 168, 0.14)) !important; }
+
+
+/* =====================================================================
+   GARANTIA (opção 1 aprovada): selo escuro com texto girando em volta, frasco saindo
+   por cima e medalha de 30 dias. Classes gn-* (não batem com as do resto do site).
+   ===================================================================== */
+.gn-secao { padding: 28px 16px 36px; }
+.gn-cartao { position: relative; padding: 34px 22px 30px; border-radius: 28px; background: var(--blue-soft); text-align: center; overflow: hidden; }
+.gn-titulo { margin: 22px 0 0; font-family: var(--font-condensed); font-size: 30px; font-weight: 400; line-height: 1.05; text-transform: uppercase; }
+.gn-titulo strong { font-weight: 700; }
+.gn-texto { margin: 12px auto 0; max-width: 320px; color: var(--gray-dark); font-size: 16.5px; line-height: 1.45; }
+.gn-texto b { color: var(--ink); }
+/* selo: anel escuro com texto em volta */
+.gn-selo { position: relative; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 6px rgba(255,255,255,.7), 0 14px 30px rgba(26,26,26,.18); }
+.gn-selo svg.gn-volta { position: absolute; inset: 0; width: 100%; height: 100%; animation: gn-gira 30s linear infinite; }
+.gn-selo svg.gn-volta text { fill: var(--blue); font: 700 11.5px var(--font); letter-spacing: .22em; text-transform: uppercase; }
+.gn-selo .gn-miolo { position: absolute; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1px rgba(26,26,26,.08); }
+.gn-selo .gn-linha { position: absolute; border-radius: 50%; border: 1px solid rgba(177,199,222,.45); }
+@keyframes gn-gira { to { transform: rotate(360deg); } }
+.gn-num { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+.gn-num svg { width: 30px; height: 22px; fill: none; stroke: var(--blue-ink); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.gn-num b { font-family: var(--font-condensed); font-size: 64px; font-weight: 700; letter-spacing: -.02em; }
+.gn-num span { margin-top: 2px; color: var(--blue-ink); font-size: 13px; font-weight: 700; letter-spacing: .28em; }
+.gn-sombra-frasco { filter: drop-shadow(0 12px 14px rgba(26,26,26,.22)); }
+/* ---- Opção 1: frasco dentro do selo, saindo por cima ---- */
+.gn-o1 .gn-palco { position: relative; width: 270px; height: 310px; margin: 0 auto; }
+.gn-o1 .gn-selo { position: absolute; left: 0; bottom: 0; width: 270px; height: 270px; }
+.gn-o1 .gn-miolo { inset: 52px; background: var(--blue-mist); }
+.gn-o1 .gn-linha { inset: 44px; }
+.gn-o1 .gn-frasco { position: absolute; left: 50%; bottom: 58px; height: 270px; width: auto; transform: translateX(-50%); z-index: 2; }
+.gn-o1 .gn-medalha { position: absolute; right: -6px; bottom: 6px; z-index: 3; display: grid; place-items: center; width: 94px; height: 94px; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 4px var(--ink), 0 8px 18px rgba(26,26,26,.2); }
+.gn-o1 .gn-medalha .gn-num b { font-size: 40px; }
+.gn-o1 .gn-medalha .gn-num span { font-size: 9px; letter-spacing: .2em; }
+.gn-o1 .gn-medalha .gn-num svg { width: 20px; height: 15px; }
+/* a faixa da seção já é azul: o cartão fica branco */
+.oferta-garantia.gn { padding-bottom: 28px; }
+.gn .gn-secao { padding: 0; }
+/* selo com o produto menor (não ocupa a tela toda); título e texto continuam iguais */
+.gn .gn-palco { zoom: 0.74; }
+.gn .gn-cartao { padding-top: 26px; }
+.gn .gn-titulo { margin-top: 18px; }
+.gn .gn-cartao { background: var(--white); max-width: 440px; margin: 0 auto; }
+@media (prefers-reduced-motion: reduce) { .gn .gn-selo svg.gn-volta { animation: none; } }
