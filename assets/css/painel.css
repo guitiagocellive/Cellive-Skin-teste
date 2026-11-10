@@ -1679,3 +1679,67 @@ body.agente-aberto .agente-botao { transform: translateX(-50%) scale(0.6); }
 .vend-comprador-topo { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .vend-comprador-total { flex: none; color: var(--bom); font-weight: 700; font-variant-numeric: tabular-nums; }
 @media (min-width: 900px) { .vend-resumo .lanc-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } .vend-funis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* ---------- Aba Estratégia ---------- */
+.est-comp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.est-c { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 12px 14px; border: 1px solid var(--linha); border-radius: 16px; background: var(--cartao-2); }
+.est-c-rotulo { color: var(--texto-2); font-size: 12px; }
+.est-c-valor { font-size: clamp(17px, 4.8vw, 22px); font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.est-c-delta { font-size: 12px; font-weight: 700; }
+.est-c-delta.is-bom { color: #5fd3a3; }
+.est-c-delta.is-ruim { color: #f08a62; }
+.est-c-delta.is-neutro { color: var(--texto-2); }
+.est-c-antes { color: var(--texto-3); font-size: 11.5px; }
+@media (min-width: 900px) { .est-comp { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.est-lucro { display: grid; gap: 2px; }
+.est-l { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--linha); font-size: 14px; }
+.est-l-nome { color: var(--texto-2); min-width: 0; }
+.est-l-valor { flex: none; font-variant-numeric: tabular-nums; text-align: right; }
+.est-l-valor.is-menos { color: #f0b45a; }
+.est-l-total { border-bottom: 0; padding-top: 12px; font-size: 16px; }
+.est-l-total .est-l-nome { color: var(--texto); font-weight: 700; }
+.est-l-valor.is-bom { color: #5fd3a3; }
+.est-l-valor.is-ruim { color: #f08a62; }
+.est-custos { margin-top: 14px; }
+.est-custos summary { cursor: pointer; color: var(--texto-2); font-size: 13.5px; }
+.est-custos-form { display: grid; gap: 10px; margin-top: 12px; }
+.est-custos-form label { display: grid; gap: 4px; color: var(--texto-2); font-size: 12.5px; }
+.est-custos-form input { height: 42px; padding: 0 12px; border: 1px solid var(--linha-forte); border-radius: 12px; background: var(--cartao-2); color: var(--texto); font: inherit; font-size: 16px; }
+
+.est-tabela-caixa { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+.est-tabela { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.est-tabela th { padding: 8px 6px; border-bottom: 1px solid var(--linha-forte); color: var(--texto-3); font-size: 11.5px; font-weight: 600; text-align: right; white-space: nowrap; }
+.est-tabela td { padding: 10px 6px; border-bottom: 1px solid var(--linha); text-align: right; white-space: nowrap; }
+.est-tabela th:first-child, .est-tabela td:first-child { text-align: left; }
+.est-tabela .est-nome { max-width: 200px; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+.est-tabela .is-bom { color: #5fd3a3; font-weight: 700; }
+.est-tabela .is-ruim { color: #f08a62; font-weight: 700; }
+.est-tabela .is-melhor::after { content: " ★"; color: #f0b45a; }
+.est-tabela .est-vazio { color: var(--texto-3); text-align: left; white-space: normal; }
+
+.est-secoes { display: grid; gap: 16px; }
+.est-s-topo { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.est-s-nome { min-width: 0; font-weight: 700; font-size: 14px; }
+.est-s-lift { flex: none; color: var(--texto-2); font-size: 12.5px; }
+.est-s-lift.is-bom { color: #5fd3a3; font-weight: 700; }
+.est-s-barra-linha { display: grid; grid-template-columns: 74px 1fr 52px; align-items: center; gap: 8px; margin-top: 4px; font-size: 12px; color: var(--texto-2); }
+.est-s-barra { height: 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+.est-s-barra i { display: block; height: 100%; border-radius: inherit; transform-origin: 0 50%; }
+.est-s-barra i.is-viu { background: var(--s3); }
+.est-s-barra i.is-nao { background: rgba(255, 255, 255, 0.28); }
+.est-s-num { text-align: right; font-variant-numeric: tabular-nums; color: var(--texto); }
+.est-sub { margin: 14px 0 0; color: var(--texto-2); font-size: 12.5px; }
+
+.est-kit-barra { position: relative; }
+.est-kit-barra i { position: absolute; inset: 0; }
+.est-kit-barra i.is-clique { background: rgba(177, 199, 222, 0.35); }
+.est-kit-barra i.is-venda { background: var(--s3); }
+
+.est-mapa { overflow-x: auto; }
+.est-grade { display: grid; grid-template-columns: 30px repeat(24, minmax(9px, 1fr)); gap: 2px; min-width: 300px; }
+.est-g-hora { color: var(--texto-3); font-size: 9.5px; text-align: left; }
+.est-g-dia { color: var(--texto-2); font-size: 11px; line-height: 14px; }
+.est-g-c { height: 14px; border-radius: 3px; background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 0 100px rgba(25, 158, 112, var(--a)); }
+.est-arraste { margin: 8px 0 0; color: var(--texto-3); font-size: 11.5px; }
+@media (min-width: 700px) { .est-arraste { display: none; } }

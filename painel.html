@@ -85,6 +85,8 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>Resumo</button>
       <button type="button" role="tab" aria-selected="false" data-aba="vendas">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M7 15l3.5-4 3 2.5L19 7"/><path d="M15 7h4v4"/></svg>Vendas</button>
+      <button type="button" role="tab" aria-selected="false" data-aba="estrategia">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.8"/></svg>Estratégia</button>
       <button type="button" role="tab" aria-selected="false" data-aba="funil">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>Funil</button>
       <button type="button" role="tab" aria-selected="false" data-aba="respostas">
@@ -310,6 +312,101 @@
         </article>
       </section>
 
+      <!-- ============ ESTRATÉGIA ============
+           Cruza o rastreio do site com as vendas da B4You (api/estrategia.js), montada pelo
+           assets/js/painel-estrategia.js. Segue o período do topo e compara com o período anterior. -->
+      <section class="aba" data-painel-aba="estrategia" hidden>
+        <p class="vend-aviso" data-est-aviso></p>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Este período × anterior</h2>
+            <p data-est-periodos>Comparado com o período anterior do mesmo tamanho</p>
+          </header>
+          <div class="est-comp" data-est-comp></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Lucro estimado</h2>
+            <p>O que você recebe da B4You, menos anúncios, produto, frete e impostos</p>
+          </header>
+          <div class="est-lucro" data-est-lucro></div>
+          <details class="est-custos">
+            <summary>Ajustar os custos usados na conta</summary>
+            <form class="est-custos-form" data-est-custos>
+              <label><span>Custo por frasco (R$)</span><input type="number" step="0.01" min="0" inputmode="decimal" name="custo_frasco"></label>
+              <label><span>Frete por pedido (R$)</span><input type="number" step="0.01" min="0" inputmode="decimal" name="frete_pedido"></label>
+              <label><span>Impostos (% do faturamento)</span><input type="number" step="0.1" min="0" max="100" inputmode="decimal" name="imposto_pct"></label>
+              <button type="submit" class="leads-baixar">Salvar custos</button>
+              <p class="lanc-nota" data-est-custos-msg></p>
+            </form>
+          </details>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Campanhas e anúncios</h2>
+            <p>Visitas e cliques do site, vendas da B4You e gasto da Meta, pelo nome nas UTMs</p>
+          </header>
+          <div class="lanc-chips vend-chips" role="radiogroup" aria-label="Ver por" data-est-chips>
+            <button type="button" data-est-nivel="campanhas" class="is-ativo">Campanhas</button>
+            <button type="button" data-est-nivel="anuncios">Anúncios</button>
+          </div>
+          <div class="est-tabela-caixa"><table class="est-tabela" data-est-tabela></table></div>
+          <p class="est-arraste">Arraste a tabela para o lado para ver todas as colunas</p>
+          <p class="lanc-nota" data-est-tabela-nota></p>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>O que faz vender</h2>
+            <p>Na página de oferta: quanto clica em comprar quem viu cada seção × quem não viu</p>
+          </header>
+          <div class="est-secoes" data-est-secoes></div>
+          <p class="lanc-nota">Quem rola mais a página costuma estar mais interessado, então use como pista do que prende a atenção, não como prova.</p>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Jornada do comprador</h2>
+            <p>Da primeira visita até a compra (vendas ligadas a uma visita do site)</p>
+          </header>
+          <div class="lanc-kpis" data-est-jornada></div>
+          <div class="lanc-kits vend-grupo" data-est-caminhos></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Aparelhos</h2>
+            <p>Visitas, cliques em comprar e vendas em cada tipo de aparelho</p>
+          </header>
+          <div class="est-tabela-caixa"><table class="est-tabela" data-est-aparelhos></table></div>
+          <p class="est-arraste">Arraste a tabela para o lado para ver todas as colunas</p>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Kits: clique × compra</h2>
+            <p>Quantas pessoas clicaram em comprar cada kit e quantas pagaram</p>
+          </header>
+          <div class="lanc-kits vend-grupo" data-est-kits></div>
+        </article>
+
+        <article class="cartao revelar">
+          <header class="cartao-cab">
+            <h2>Melhores horários</h2>
+            <p>Por dia da semana e hora (horário de Brasília) · quanto mais forte a cor, mais</p>
+          </header>
+          <div class="lanc-chips vend-chips" role="radiogroup" aria-label="Mostrar" data-est-hchips>
+            <button type="button" data-est-h="cliques" class="is-ativo">Cliques em comprar</button>
+            <button type="button" data-est-h="vendas">Vendas</button>
+          </div>
+          <div class="est-mapa" data-est-mapa></div>
+          <p class="lanc-dia-info" data-est-mapa-info></p>
+        </article>
+      </section>
+
       <!-- ============ LANÇAMENTO (lista do grupo VIP) ============
            Quem preencheu o cadastro (nome, WhatsApp, e-mail e kit de interesse).
            Montada pelo assets/js/painel-lancamento.js com /api/lead?formato=json. -->
@@ -468,5 +565,6 @@
   <!-- Estrategista (chat de IA) desligado por enquanto: <script src="assets/js/painel-agente.js"></script> -->
   <script src="assets/js/painel-lancamento.js"></script>
   <script src="assets/js/painel-vendas.js"></script>
+  <script src="assets/js/painel-estrategia.js"></script>
 </body>
 </html>

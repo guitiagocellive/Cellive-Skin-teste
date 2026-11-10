@@ -84,3 +84,50 @@ export async function insightsMeta(q, de, ate, campanha) {
   }
   return dados;
 }
+
+/* Gasto por campanha ou por anúncio no período (para cruzar com as vendas pelas UTMs).
+   nivel: "campaign" ou "ad". Devolve [{ nome, campanha, gasto, cliques_no_link, impressoes }].
+   O cruzamento com as vendas é pelo nome: use nos anúncios utm_campaign={{campaign.name}}
+   e utm_content={{ad.name}}. Guardado por 30 minutos. */
+export async function gastoPorNivel(q, de, ate, nivel) {
+  if (!metaLigada()) return { erro: "sem-meta" };
+  const nv = nivel === "ad" ? "ad" : "campaign";
+  const chave = ["nivel", nv, de, ate].join("|");
+  if (q) {
+    try {
+      const salvo = await q("SELECT dados, criado FROM meta_cache WHERE chave = $1", [chave]);
+      if (salvo.length && Date.now() - Number(salvo[0].criado) < VALIDADE) return salvo[0].dados;
+    } catch (e) { /* segue sem cache */ }
+  }
+  const versao = process.env.META_API_VERSAO || "v23.0";
+  const base = `${process.env.META_API_URL || "https://graph.facebook.com"}/${versao}/${conta()}/insights`;
+  const params = new URLSearchParams({
+    fields: (nv === "ad" ? "ad_name,campaign_name" : "campaign_name") + ",spend,inline_link_clicks,impressions",
+    time_range: JSON.stringify({ since: de, until: ate }),
+    level: nv, limit: "500",
+    access_token: process.env.META_TOKEN,
+  });
+  let linhas;
+  try {
+    const r = await fetch(base + "?" + params);
+    const j = await r.json();
+    if (!r.ok || j.error) return { erro: "meta", detalhe: (j.error && j.error.message) || String(r.status) };
+    linhas = j.data || [];
+  } catch (e) {
+    return { erro: "meta", detalhe: "sem conexão com a Meta" };
+  }
+  const dados = {
+    ok: true, nivel: nv,
+    itens: linhas.map((l) => ({
+      nome: nv === "ad" ? l.ad_name : l.campaign_name, campanha: l.campaign_name || null,
+      gasto: numero(l.spend), cliques_no_link: numero(l.inline_link_clicks), impressoes: numero(l.impressions),
+    })),
+  };
+  if (q) {
+    try {
+      await q(`INSERT INTO meta_cache (chave, criado, dados) VALUES ($1, $2, $3::jsonb)
+        ON CONFLICT (chave) DO UPDATE SET criado = EXCLUDED.criado, dados = EXCLUDED.dados`, [chave, Date.now(), JSON.stringify(dados)]);
+    } catch (e) { /* sem cache, tudo bem */ }
+  }
+  return dados;
+}
