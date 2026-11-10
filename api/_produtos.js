@@ -20,15 +20,6 @@ export const PRODUTO_INICIAL = {
     { nome: "Kit 2 unidades", unidades: 2, preco: 297.9, caixa: null, envio: null },
     { nome: "Kit 3 unidades", unidades: 3, preco: 397.9, caixa: null, envio: null },
   ],
-  ficha: {
-    marca: "Cellive Skin", categoria: "Sérum facial", volume: "30 ml", uso: "Noturno, 1 passo: aplicar no rosto limpo à noite.",
-    ativos: "24 ativos. Destaques (ação SRRP): GHK-Cu, Retinal (retinaldeído 0,05%), PDRN e microespículas.",
-    registro: "Regularizado na Anvisa", testes: "Testado dermatologicamente", garantia: "30 dias (reembolso de 100%)",
-    validade: "", fornecedor: "", ean: "", observacoes: "",
-  },
-  criativos: {
-    publico: "", promessa: "", dores: "", beneficios: "", diferenciais: "", provas: "", objecoes: "", proibido: "", angulos: "", referencias: "",
-  },
 };
 
 export async function tabela(q) {

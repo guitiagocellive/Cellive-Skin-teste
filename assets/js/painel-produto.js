@@ -1,7 +1,7 @@
 /* Aba "Produto" do painel: custos, taxas, kits e preços de cada produto, com análise por kit
-   (venda direta ou por afiliado), ficha do produto, briefing para criativos e relatório em PDF.
+   (venda direta ou por afiliado) e relatório em PDF.
 
-   Lista de produtos em cartões → abrir um produto mostra as 5 etapas à esquerda e a análise por
+   Lista de produtos em cartões → abrir um produto mostra as 3 etapas à esquerda e a análise por
    kit à direita. Tudo salva sozinho (/api/produtos) alguns instantes depois de cada mudança.
    Conta de cada kit (igual à planilha de custos):
      custo fixo  = unidades × custo por unidade + caixa + envio + outros custos por pedido + CAC (em R$, só venda direta)
@@ -24,24 +24,6 @@
   var espera = 0, estadoSalvo = "";
 
   var STATUS = { desenvolvimento: "Em desenvolvimento", ativo: "Ativo", pausado: "Pausado" };
-  var FICHA = [
-    ["marca", "Marca"], ["categoria", "Categoria"], ["volume", "Volume / tamanho"], ["uso", "Modo de uso", true],
-    ["ativos", "Ativos principais", true], ["registro", "Registro / regularização"], ["testes", "Testes"], ["garantia", "Garantia"],
-    ["validade", "Validade"], ["fornecedor", "Fornecedor / fábrica"], ["ean", "Código de barras (EAN) / SKU"], ["observacoes", "Observações", true],
-  ];
-  var CRIATIVOS = [
-    ["publico", "Público-alvo", "Quem compra: idade, momento de vida, o que busca"],
-    ["promessa", "Promessa principal", "A transformação em uma frase"],
-    ["dores", "Dores", "O que incomoda: pé de galinha, testa, linha do sorriso, pele cansada…"],
-    ["beneficios", "Benefícios", "O que a pessoa sente e vê com o uso"],
-    ["diferenciais", "Diferenciais", "Por que este e não outro: ação SRRP, microespículas, 1 passo…"],
-    ["provas", "Provas", "Testes, números do laudo, depoimentos reais, Anvisa, garantia"],
-    ["objecoes", "Objeções e respostas", "\"Substitui Botox?\", \"Serve para pele sensível?\"…"],
-    ["proibido", "O que não pode dizer", "Promessas proibidas pela Anvisa, Conar e Meta"],
-    ["angulos", "Ângulos e ganchos", "Ideias de abertura de vídeo"],
-    ["referencias", "Referências", "Links de vídeos, concorrentes, criadoras"],
-  ];
-
   /* ---------- utilidades ---------- */
   function el(tag, cls, texto) {
     var e = document.createElement(tag);
@@ -86,19 +68,12 @@
       markup: produtosR ? preco / produtosR : null, porUnidade: un ? preco / un : null,
     };
   }
-  function completoCriativos(p) {
-    var c = p.criativos || {};
-    var feitos = CRIATIVOS.filter(function (f) { return !vazio(c[f[0]]); }).length;
-    return feitos / CRIATIVOS.length;
-  }
-
   /* ---------- dados ---------- */
   var DEMO = {
     id: "demo-serum", nome: "Sérum Revitalizador Noturno 30ml (exemplo)", status: "ativo",
     custosUnidade: [{ nome: "Custo unitário do produto", valor: 14.85, fixo: true }, { nome: "Embalagem (frasco, pote...)", valor: 14.99, fixo: true }, { nome: "Rótulo", valor: 0.95, fixo: true }, { nome: "Caixa Cartucho", valor: 1.9 }],
     custosPedido: { caixa: 1, envio: 25, cac: 80, cacTipo: "reais", outros: [] }, taxas: { impostos: 6, plataforma: 5, afiliado: 20 }, margemAlvo: 30,
     kits: [{ nome: "Kit 1 unidade", unidades: 1, preco: 197.9 }, { nome: "Kit 2 unidades", unidades: 2, preco: 297.9 }, { nome: "Kit 3 unidades", unidades: 3, preco: 397.9 }],
-    ficha: { marca: "Cellive Skin", categoria: "Sérum facial", volume: "30 ml" }, criativos: {},
   };
   function carregar() {
     if (App.estado.demo) { if (!produtos || produtos[0].id !== "demo-serum") { produtos = [copia(DEMO)]; } desenhar(); return; }
@@ -172,7 +147,7 @@
       var p = copia(DEMO); delete p.id; p.nome = "Novo produto"; p.status = "desenvolvimento";
       p.custosUnidade = [{ nome: "Custo unitário do produto", valor: 0, fixo: true }, { nome: "Embalagem (frasco, pote...)", valor: 0, fixo: true }, { nome: "Rótulo", valor: 0, fixo: true }];
       p.custosPedido = { caixa: 0, envio: 0, cac: 0, cacTipo: "reais", outros: [] };
-      p.kits = [{ nome: "Kit 1 unidade", unidades: 1, preco: 0 }]; p.ficha = {}; p.criativos = {};
+      p.kits = [{ nome: "Kit 1 unidade", unidades: 1, preco: 0 }];
       p.id = App.estado.demo ? "demo-" + Date.now() : null;
       produtos.push(p);
       if (!App.estado.demo) {
@@ -192,14 +167,13 @@
       var info = el("div", "prod-card-nums");
       [["Custo por unidade", r$(custoUnidade(p))], ["Kits", String((p.kits || []).length)],
         ["Margem (direta)", margens.length ? pct(Math.min.apply(null, margens), 0) + " a " + pct(Math.max.apply(null, margens), 0) : "–"],
-        ["Para criativos", pct(completoCriativos(p), 0)]].forEach(function (x) {
+        ["Maior lucro por venda", (function () { var l = (p.kits || []).map(function (k) { return analisar(p, k, "direta").lucro; }); return l.length ? r$(Math.max.apply(null, l)) : "–"; })()]].forEach(function (x) {
         var d = el("div"); d.appendChild(el("span", null, x[0])); d.appendChild(el("b", null, x[1])); info.appendChild(d);
       });
       c.appendChild(info);
       var etapas = el("div", "prod-card-etapas");
-      ["Custos", "Taxas", "Kits", "Ficha", "Criativos"].forEach(function (nome, i) {
-        var ok = [custoUnidade(p) > 0, p.taxas && (num(p.taxas.impostos) || num(p.taxas.plataforma)), (p.kits || []).some(function (k) { return num(k.preco) > 0; }),
-          p.ficha && Object.keys(p.ficha).some(function (k) { return !vazio(p.ficha[k]); }), completoCriativos(p) >= 0.6][i];
+      ["Custos", "Taxas", "Kits"].forEach(function (nome, i) {
+        var ok = [custoUnidade(p) > 0, p.taxas && (num(p.taxas.impostos) || num(p.taxas.plataforma)), (p.kits || []).some(function (k) { return num(k.preco) > 0; })][i];
         etapas.appendChild(el("span", ok ? "is-ok" : null, (ok ? "✓ " : "") + nome));
       });
       c.appendChild(etapas);
@@ -211,10 +185,8 @@
   function abrir(id) { atualId = id; passo = 1; desenhar(); window.scrollTo({ top: 0, behavior: "smooth" }); }
 
   /* ---------- editor ---------- */
-  var PASSOS = ["Custos", "Taxas e comissões", "Kits e preços", "Ficha", "Para criativos"];
+  var PASSOS = ["Custos", "Taxas e comissões", "Kits e preços"];
   function atualizarCabecalho(p) {
-    var b = raiz.querySelector('[data-prod-passo="5"]');
-    if (b) b.textContent = "5. Para criativos · " + pct(completoCriativos(p), 0);
     var t = raiz.querySelector("[data-prod-total-un]");
     if (t) t.textContent = r$(custoUnidade(p));
   }
@@ -260,7 +232,7 @@
 
     var nav = el("nav", "prod-passos");
     PASSOS.forEach(function (nomeP, i) {
-      var b = el("button", i + 1 === passo ? "is-ativo" : null, (i + 1) + ". " + nomeP + (i === 4 ? " · " + pct(completoCriativos(p), 0) : ""));
+      var b = el("button", i + 1 === passo ? "is-ativo" : null, (i + 1) + ". " + nomeP);
       b.type = "button"; b.setAttribute("data-prod-passo", String(i + 1));
       b.addEventListener("click", function () { passo = i + 1; Array.prototype.forEach.call(nav.children, function (x) { x.classList.toggle("is-ativo", x === b); }); desenharPasso(p); });
       nav.appendChild(b);
@@ -280,7 +252,7 @@
     var r = el("div", "prod-rodape");
     if (passo > 1) r.appendChild(botaoTexto("← Voltar", function () { irPasso(p, passo - 1); }, "is-voltar"));
     else r.appendChild(el("span"));
-    if (passo < 5) r.appendChild(botaoTexto("Próximo →", function () { irPasso(p, passo + 1); }, "is-borda"));
+    if (passo < PASSOS.length) r.appendChild(botaoTexto("Próximo →", function () { irPasso(p, passo + 1); }, "is-borda"));
     return r;
   }
   function irPasso(p, n) {
@@ -292,7 +264,7 @@
   function desenharPasso(p) {
     var esq = limpar(raiz.querySelector("[data-prod-esq]"));
     p.custosUnidade = p.custosUnidade || []; p.custosPedido = p.custosPedido || { outros: [] }; p.custosPedido.outros = p.custosPedido.outros || [];
-    p.taxas = p.taxas || {}; p.kits = p.kits || []; p.ficha = p.ficha || {}; p.criativos = p.criativos || {};
+    p.taxas = p.taxas || {}; p.kits = p.kits || [];
     if (passo === 1) {
       var tot = el("div", "prod-total"); tot.appendChild(el("span", null, "Total por unidade")); var tv = el("strong", null, r$(custoUnidade(p))); tv.setAttribute("data-prod-total-un", ""); tot.appendChild(tv);
       var c1 = cartao("Custos por unidade", "Quanto custa produzir uma unidade do produto.", tot);
@@ -360,19 +332,6 @@
       });
       c4.appendChild(botaoTexto("+ Adicionar kit", function () { var n = p.kits.length + 1; p.kits.push({ nome: "Kit " + n + " unidades", unidades: n, preco: 0 }); mudou(p, true); }));
       esq.appendChild(c4);
-    } else if (passo === 4) {
-      var c5 = cartao("Ficha do produto", "Os dados do produto num lugar só (para anúncios, atendimento e fornecedores).");
-      var g5 = el("div", "prod-linha-2");
-      FICHA.forEach(function (f) { g5.appendChild(campo(f[1], p.ficha[f[0]], function (v) { p.ficha[f[0]] = v; mudou(p); }, { texto: true, linhas: f[2] ? 3 : 0, largo: !!f[2] })); });
-      c5.appendChild(g5);
-      esq.appendChild(c5);
-    } else {
-      var feito = el("span", "prod-total"); feito.appendChild(el("span", null, "Preenchido")); feito.appendChild(el("strong", null, pct(completoCriativos(p), 0)));
-      var c6 = cartao("Para criativos", "Briefing para quem grava e edita os anúncios. Quanto mais completo, melhores os roteiros.", feito);
-      CRIATIVOS.forEach(function (f) {
-        c6.appendChild(campo(f[1], p.criativos[f[0]], function (v) { p.criativos[f[0]] = v; feito.lastChild.textContent = pct(completoCriativos(p), 0); mudou(p); }, { texto: true, linhas: 3, largo: true, dica: f[2] }));
-      });
-      esq.appendChild(c6);
     }
     esq.appendChild(rodape(p));
   }
@@ -434,7 +393,6 @@
       return "<div class='kit'><h3>" + esc(k.nome) + " · " + r$(num(k.preco)) + "</h3><table>" + a.linhas.map(function (l) { return "<tr><td>" + esc(l[0]) + "</td><td class='n'>− " + r$(l[1]) + "</td></tr>"; }).join("") +
         "<tr class='t'><td>Custo total</td><td class='n'>" + r$(a.total) + "</td></tr><tr class='t'><td>Lucro por venda</td><td class='n'>" + r$(a.lucro) + " (" + pct(a.margem) + ")</td></tr></table></div>";
     }).join("");
-    var ficha = FICHA.filter(function (f) { return !vazio((p.ficha || {})[f[0]]); }).map(function (f) { return "<tr><td>" + esc(f[1]) + "</td><td>" + esc(p.ficha[f[0]]) + "</td></tr>"; }).join("");
     var html = "<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'><title>Relatório dos kits · " + esc(p.nome) + "</title><style>" +
       "body{font:13px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif;color:#1a1a1a;margin:32px}h1{margin:0;font-size:22px}h2{margin:28px 0 8px;font-size:15px;border-bottom:1px solid #ddd;padding-bottom:4px}" +
       "h3{margin:0 0 6px;font-size:13px}.sub{color:#666;margin:4px 0 0}table{width:100%;border-collapse:collapse;margin-top:6px}th,td{padding:6px 8px;border-bottom:1px solid #eee;text-align:left}" +
@@ -449,7 +407,6 @@
       "<table>" + (p.custosUnidade || []).map(function (c) { return "<tr><td>" + esc(c.nome) + "</td><td class='n'>" + r$(num(c.valor)) + "</td></tr>"; }).join("") + "</table>" +
       "<h2>Venda direta</h2>" + tabelaKits("direta") + "<h2>Venda por afiliado</h2>" + tabelaKits("afiliado") +
       "<h2>Composição do custo por kit (venda direta)</h2><div class='kits'>" + detalhe + "</div>" +
-      (ficha ? "<h2>Ficha do produto</h2><table>" + ficha + "</table>" : "") +
       "<script>setTimeout(function(){print()},400)<\/script></body></html>";
     var w = window.open("", "_blank");
     if (!w) { alert("O navegador bloqueou a janela do relatório. Permita pop-ups para o painel e tente de novo."); return; }
