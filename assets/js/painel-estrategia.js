@@ -59,7 +59,7 @@
     var horasM = function (pico) { return DIAS.map(function (_, d) { return Array.from({ length: 24 }, function (_, h) { var base = Math.max(0, Math.round((Math.sin((h - 6) / 24 * Math.PI * 2 - 1.2) + 1) * pico)); return base + (d === 0 || d === 6 ? 1 : 0); }); }); };
     return {
       periodo: { de: r.de, ate: r.ate, deAnt: r.de - (r.ate - r.de), ateAnt: r.de },
-      custos: { custo_frasco: 32, frete_pedido: 18, imposto_pct: 6 },
+      custos: { custo_frasco: 32.69, frete_pedido: 26, imposto_pct: 6, origem: "produto", produto: "Sérum Revitalizador Noturno 30ml (exemplo)" },
       atual: m(3550, 148, 28, 11022.3, 4239.35), anterior: m(3120, 121, 21, 8460.1, 3810.2),
       campanhas: { meta: "ok", linhas: [linha("botox (exemplo)", 1480, 70, 14, 5310, 1820), linha("pele-mais-velha (exemplo)", 1210, 48, 9, 3420, 1550), linha("rotina-coreana (exemplo)", 610, 21, 4, 1590, 869.35), linha("(sem utm)", 250, 9, 1, 702.3, null)] },
       anuncios: { meta: "ok", linhas: [linha("video-pe-de-galinha (exemplo)", 990, 52, 11, 4100, 1210), linha("video-botox-congela (exemplo)", 820, 38, 8, 3010, 1190), linha("video-rotina-noite (exemplo)", 700, 25, 5, 1890, 980), linha("video-teste-expressao (exemplo)", 790, 24, 3, 1320, 859.35)] },
@@ -144,7 +144,12 @@
     total.appendChild(el("span", "est-l-nome", "Lucro estimado"));
     total.appendChild(el("strong", "est-l-valor" + (a.lucro < 0 ? " is-ruim" : " is-bom"), r$(a.lucro) + (a.margem != null ? " · " + pct(a.margem, 0) + " do faturamento" : "")));
     box.appendChild(total);
-    if (semCustos) box.appendChild(el("p", "lanc-nota", "Os custos ainda não foram preenchidos: abra \"Ajustar os custos\" abaixo para o lucro ficar real."));
+    var doProduto = c.origem === "produto";
+    $(".est-custos").hidden = doProduto;
+    if (doProduto) {
+      var nota = el("p", "lanc-nota", "Custos do produto \"" + (c.produto || "Produto") + "\": custo por frasco " + r$(c.custo_frasco) + ", caixa e frete por pedido " + r$(c.frete_pedido) + ", impostos " + String(c.imposto_pct).replace(".", ",") + "%. Para mudar, use a aba Produto.");
+      box.appendChild(nota);
+    } else if (semCustos) box.appendChild(el("p", "lanc-nota", "Os custos ainda não foram preenchidos: abra \"Ajustar os custos\" abaixo para o lucro ficar real."));
     var f = $("[data-est-custos]");
     if (document.activeElement && f.contains(document.activeElement)) return; // não apaga o que a pessoa está digitando
     f.custo_frasco.value = c.custo_frasco || ""; f.frete_pedido.value = c.frete_pedido || ""; f.imposto_pct.value = c.imposto_pct || "";

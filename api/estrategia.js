@@ -1,5 +1,6 @@
 /* GET  /api/estrategia?de=<ms>&ate=<ms> — números para a aba "Estratégia" do painel (senha do painel).
-   POST /api/estrategia — salva os custos usados no lucro estimado: { custo_frasco, frete_pedido, imposto_pct }.
+   POST /api/estrategia — salva custos manuais { custo_frasco, frete_pedido, imposto_pct } (só valem se não houver
+   produto cadastrado; normalmente o lucro usa os custos do produto ativo da aba Produto).
 
    Cruza o rastreio do site (tabela eventos) com as vendas da B4You (vendas_b4you, via _vendas.js):
    - comparativo: período escolhido × período anterior do mesmo tamanho;
@@ -14,6 +15,7 @@
 import { autorizado, banco, json } from "./_db.js";
 import { insightsMeta, gastoPorNivel } from "./_meta.js";
 import { lerVendas, frascosDaVenda } from "./_vendas.js";
+import { lerProdutos, custosDoProduto } from "./_produtos.js";
 
 const PADRAO = { custo_frasco: 0, frete_pedido: 0, imposto_pct: 0 };
 const BR = (ms) => new Date(Number(ms) - 3 * 3600e3); // horário de Brasília (sem horário de verão)
@@ -23,10 +25,17 @@ const ehUpsell = (v) => /upsell/i.test(v.tipo || "");
 const mediana = (l) => { if (!l.length) return null; const s = [...l].sort((a, b) => a - b), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
 
 async function lerCustos(q) {
+  // custos do produto ativo (aba Produto); se não houver produto, os custos digitados aqui
+  try {
+    const produtos = await lerProdutos(q);
+    const p = produtos.find((x) => x.status === "ativo") || produtos[0];
+    const c = custosDoProduto(p);
+    if (c) return Object.assign({ origem: "produto" }, c);
+  } catch (e) { /* segue com os custos manuais */ }
   try {
     await q("CREATE TABLE IF NOT EXISTS configuracoes (chave TEXT PRIMARY KEY, valor JSONB NOT NULL, atualizado BIGINT NOT NULL)");
     const r = await q("SELECT valor FROM configuracoes WHERE chave = 'custos'");
-    return Object.assign({}, PADRAO, (r[0] && r[0].valor) || {});
+    return Object.assign({ origem: "manual" }, PADRAO, (r[0] && r[0].valor) || {});
   } catch (e) { return Object.assign({}, PADRAO); }
 }
 
