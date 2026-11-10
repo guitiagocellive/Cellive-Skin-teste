@@ -2,7 +2,7 @@
    GET               → { produtos: [...] }   (cria o Sérum com os números atuais na primeira vez)
    POST {produto}    → salva (cria se não tiver id)
    DELETE ?id=<id>   → apaga
-   Cada produto é um JSON livre (custos, taxas, kits, ficha, briefing para criativos), guardado
+   Cada produto é um JSON livre (custos, taxas e kits), guardado
    na tabela produtos. As contas (custo, lucro, preço mínimo/sugerido) são feitas no painel
    (assets/js/painel-produto.js); a aba Estratégia usa os custos do produto ativo no lucro estimado. */
 import { randomUUID } from "node:crypto";
