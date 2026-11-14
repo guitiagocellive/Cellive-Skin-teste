@@ -9,7 +9,7 @@
 
   var pagina = document.documentElement.getAttribute("data-pagina");
   var oferta = [
-    "assets/img/oferta/produto-1.webp",
+    "assets/img/oferta/produto-1b.webp", "assets/img/oferta/produto-1b-mini.webp",
     "assets/img/oferta/produto-1-mini.webp", "assets/img/oferta/produto-2-mini.webp",
     "assets/img/oferta/produto-3-mini.webp", "assets/img/oferta/produto-4-mini.webp",
     "assets/img/oferta/produto-5-mini.webp", "assets/img/oferta/produto-6-mini.webp",
