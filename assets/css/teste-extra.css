@@ -1,34 +1,7 @@
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
    Vazio = a página de teste fica igual às oficiais.
 
-   EM TESTE: versão clean no microagulhamento e na chamada final (+ animação). O reset voltou ao brilho atrás do texto, como no site oficial. As outras seções clean já estão no oferta.css (site oficial). */
-
-/* ---------- Tecnologia coreana / microagulhamento ---------- */
-.oferta-micro .micro-texto::before { display: none !important; }
-
-/* ---------- Comece hoje o seu reset: cartão azul, pílula escura com brilho e mais animação ---------- */
-.oferta-final .final-cartao {
-  background: var(--blue-soft) !important;
-  box-shadow: none !important;
-}
-.oferta-final .final-pilula { position: relative; overflow: hidden; background: var(--ink); color: var(--white); }
-.oferta-final .final-texto { color: var(--gray-dark); }
-.oferta-final .final-pilula::after {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 40%;
-  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 100%);
-  transform: translateX(-130%) skewX(-18deg);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .oferta-final .final-foto img { animation: final-flutua 4.5s ease-in-out infinite; }
-  .oferta-final .final-pilula::after { animation: plano-reflexo 3.6s ease-in-out 1s infinite; }
-}
-@keyframes final-flutua {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-6px) scale(1.015); }
-}
+   Sem versão clean: as seções seguem o site oficial. Aqui fica só a opção /teste-borda. */
 
 /* ---------- OPÇÃO /teste-borda: vídeo do reset dentro da moldura de cantos arredondados (como antes),
    título embaixo com marca-texto. A classe reset-borda só existe nessa página. ---------- */
