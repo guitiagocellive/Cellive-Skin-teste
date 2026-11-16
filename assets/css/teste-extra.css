@@ -69,3 +69,20 @@
 .reset-v1 .reset-video > video,
 .reset-v2 .reset-video > video,
 .reset-v3 .reset-video > video { filter: brightness(1.025); }
+
+/* ---------- OPÇÕES DE TÍTULO do reset (só /teste-titulo-1, -2 e -3; layout = reset 1): sem o círculo atrás ---------- */
+.reset-t1 .reset-circulado svg,
+.reset-t2 .reset-circulado svg,
+.reset-t3 .reset-circulado svg { display: none; }
+/* 1 · LIMPO: duas linhas, fina em cima e negrito embaixo (como "Um pouco / dos nossos clientes") */
+/* 2 · MARCA-TEXTO: faixa azul clara atrás da linha em negrito (como "Uma fórmula completa") */
+.reset-t2 .reset-titulo .titulo-leve { margin-bottom: 8px; }
+.reset-t2 .reset-titulo strong {
+  display: inline;
+  padding: 0 3px;
+  background: linear-gradient(transparent 56%, var(--blue-soft) 56%, var(--blue-soft) 94%, transparent 94%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* 3 · AZUL: linha em negrito no azul da marca (como "Resultados reais!") */
+.reset-t3 .reset-titulo strong { color: var(--blue-ink); }
