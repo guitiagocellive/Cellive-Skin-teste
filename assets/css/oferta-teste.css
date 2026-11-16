@@ -6165,11 +6165,7 @@ html.lista-aberta {
 /* Só na página de teste (/teste): o gerar-teste.mjs junta este arquivo no fim do oferta-teste.css.
    Vazio = a página de teste fica igual às oficiais.
 
-   EM TESTE: versão clean também no reset, microagulhamento e chamada final (+ animação). As outras seções clean já estão no oferta.css (site oficial). */
-
-/* ---------- O reset ---------- */
-.oferta-reset .reset-texto::before { display: none !important; }
-.oferta-reset .reset-titulo strong { text-shadow: none !important; }
+   EM TESTE: versão clean no microagulhamento e na chamada final (+ animação). O reset voltou ao brilho atrás do texto, como no site oficial. As outras seções clean já estão no oferta.css (site oficial). */
 
 /* ---------- Tecnologia coreana / microagulhamento ---------- */
 .oferta-micro .micro-texto::before { display: none !important; }
