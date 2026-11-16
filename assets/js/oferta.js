@@ -782,7 +782,22 @@
   });
 
   /* ---------- Partes que entram ao aparecer na tela ---------- */
-  var aparecer = document.querySelectorAll("[data-aparecer]");
+  // data-aparecer="tarde": só entra depois que a pessoa rola um pouco (parte de cima de 78% da tela)
+  var aparecer = document.querySelectorAll('[data-aparecer]:not([data-aparecer="tarde"])');
+  var aparecerTarde = document.querySelectorAll('[data-aparecer="tarde"]');
+  if ("IntersectionObserver" in window) {
+    var obsTarde = new IntersectionObserver(function (itens) {
+      itens.forEach(function (item) {
+        if (item.isIntersecting) {
+          item.target.classList.add("is-visivel");
+          obsTarde.unobserve(item.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -22% 0px" });
+    Array.prototype.forEach.call(aparecerTarde, function (el) { obsTarde.observe(el); });
+  } else {
+    Array.prototype.forEach.call(aparecerTarde, function (el) { el.classList.add("is-visivel"); });
+  }
   if ("IntersectionObserver" in window) {
     var obsAparecer = new IntersectionObserver(function (itens) {
       itens.forEach(function (item) {
