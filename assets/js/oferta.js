@@ -1371,6 +1371,24 @@
     }
   }
 
+  /* ---------- Vídeos em loop (estilo GIF, sem som): [data-video-loop] ----------
+     Só baixa e toca quando chega perto da tela; pausa quando sai (economiza bateria).
+     Com "reduzir movimento" ligado no aparelho, fica parado na capa. */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-video-loop]"), function (v) {
+    v.muted = true;
+    if (semMovimento) return;
+    var tocar = function () {
+      if (v.getAttribute("preload") !== "auto") { v.setAttribute("preload", "auto"); v.load(); }
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    };
+    if (!("IntersectionObserver" in window)) { tocar(); return; }
+    new IntersectionObserver(function (itens) {
+      if (itens[0].isIntersecting) tocar();
+      else if (!v.paused) v.pause();
+    }, { rootMargin: "250px 0px" }).observe(v);
+  });
+
   /* ---------- Avaliações: barras de distribuição crescem ao aparecer ---------- */
   var resumoAval = document.querySelector("[data-aval-resumo]");
   if (resumoAval) {
