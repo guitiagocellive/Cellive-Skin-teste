@@ -1372,21 +1372,34 @@
   }
 
   /* ---------- Vídeos em loop (estilo GIF, sem som): [data-video-loop] ----------
-     Só baixa e toca quando chega perto da tela; pausa quando sai (economiza bateria).
+     Baixa quando chega perto da tela, mas só começa a tocar quando pelo menos
+     metade do vídeo está visível — sempre do início; pausa quando sai (economiza bateria).
      Com "reduzir movimento" ligado no aparelho, fica parado na capa. */
   Array.prototype.forEach.call(document.querySelectorAll("[data-video-loop]"), function (v) {
     v.muted = true;
     if (semMovimento) return;
-    var tocar = function () {
+    var carregar = function () {
       if (v.getAttribute("preload") !== "auto") { v.setAttribute("preload", "auto"); v.load(); }
+    };
+    var doInicio = true;
+    var tocar = function () {
+      carregar();
+      if (!v.paused) return;
+      if (doInicio) { doInicio = false; try { v.currentTime = 0; } catch (e) {} }
       var p = v.play();
       if (p && p.catch) p.catch(function () {});
     };
     if (!("IntersectionObserver" in window)) { tocar(); return; }
+    var perto = new IntersectionObserver(function (itens) {
+      if (itens[0].isIntersecting) { carregar(); perto.disconnect(); }
+    }, { rootMargin: "300px 0px" });
+    perto.observe(v);
     new IntersectionObserver(function (itens) {
-      if (itens[0].isIntersecting) tocar();
-      else if (!v.paused) v.pause();
-    }, { rootMargin: "250px 0px" }).observe(v);
+      var it = itens[0];
+      var visivel = it.isIntersecting && (it.intersectionRatio >= 0.5 || it.intersectionRect.height >= window.innerHeight * 0.5);
+      if (visivel) tocar();
+      else { doInicio = true; if (!v.paused) v.pause(); }
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1] }).observe(v);
   });
 
   /* ---------- Avaliações: barras de distribuição crescem ao aparecer ---------- */
