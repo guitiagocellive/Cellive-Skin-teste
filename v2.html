@@ -35,7 +35,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1b.webp?v=1f64b46908" imagesrcset="assets/img/oferta/produto-1b-720.webp?v=b7a415e7ed 720w, assets/img/oferta/produto-1b.webp?v=1f64b46908 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=80a5a18d1d">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=3382053cb4">
   <link rel="stylesheet" href="assets/min/oferta-computador.css?v=018ca3e398" media="(min-width: 1024px)">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=246a13e142" defer></script>
@@ -552,18 +552,9 @@
 
     <!-- ===================== DOBRA 10: o reset ===================== -->
     <section data-secao="reset" class="oferta-reset" aria-labelledby="reset-titulo">
-      <h2 class="reset-titulo" id="reset-titulo" data-revelar="palavras">
-        <span class="circulado reset-circulado" data-circulo>
-          <span class="titulo-leve">O reset</span>
-          <strong>de que sua pele precisa!</strong>
-          <svg viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true">
-            <path pathLength="1" d="M206 93C128 99 22 88 13 60 4 31 96 7 186 6c74-1 116 16 107 44-7 24-62 37-118 40"/>
-          </svg>
-        </span>
-      </h2>
 
-      <!-- Vídeo em loop (estilo GIF, sem som): a gota do sérum entrando na pele.
-           assets/video/reset-pele.webm (VP9) e .mp4 (H.264, iPhone), 896 × 560, 4 s, ~110 KB;
+      <!-- Vídeo em loop (estilo GIF, sem som), de ponta a ponta: a gota do sérum entrando na pele.
+           assets/video/reset-pele.webm (VP9) e .mp4 (H.264, iPhone), 1152 × 720, 6 s, ~190–250 KB;
            capa enquanto carrega: assets/img/oferta/reset-pele-poster.webp. O oferta.js só baixa e
            toca quando a seção chega perto da tela e pausa fora dela (data-video-loop). -->
       <span class="slot reset-foto reset-video" data-label="Vídeo: o sérum na pele (o reset)" data-aparecer>
@@ -572,6 +563,12 @@
           <source src="assets/video/reset-pele.mp4?v=e5def26353" type="video/mp4">
         </video>
       </span>
+
+      <!-- Título logo abaixo do vídeo; "de que sua pele precisa!" com marca-texto azul que se pinta da esquerda para a direita -->
+      <h2 class="reset-titulo" id="reset-titulo" data-revelar="palavras">
+        <span class="titulo-leve">O reset</span>
+        <strong>de que sua pele precisa!</strong>
+      </h2>
 
       <p class="reset-texto">Sua pele não precisa de mais um produto. Ela precisa de uma fórmula dedicada a reativar os fatores de jovialidade: auxiliar a produção de colágeno e elastina, devolver firmeza, acelerar a renovação celular e fortalecer a barreira cutânea. Tudo com a <strong>ação SRRP</strong>, em um único passo. <strong>Esse é o reset que sua pele estava esperando.</strong></p>
     </section>
@@ -586,7 +583,7 @@
       <!-- Computador: o frasco inteiro (a foto de cima é cortada embaixo, feita para entrar pela borda do celular) -->
       <img class="srrp-frasco-inteiro" src="assets/img/oferta/numeros-frasco.webp?v=c0063a4f73" alt="" width="220" height="737" loading="lazy" aria-hidden="true">
 
-      <div class="srrp-cabeca">
+      <div class="srrp-cabeca" data-aparecer="tarde">
         <h2 class="srrp-titulo" id="srrp-titulo">
           <span class="titulo-leve">Fórmula com ação</span>
           <strong data-linha>SRRP</strong>
@@ -1332,7 +1329,7 @@
     </div>
   </dialog>
 
-  <script src="assets/min/oferta.js?v=b8b3f480f2" defer></script>
+  <script src="assets/min/oferta.js?v=ce622dfb9e" defer></script>
   <script src="assets/min/quiz-perguntas.js?v=c666bf3499" defer></script>
   <script src="assets/min/oferta-formula.js?v=008ad36e1f" defer></script>
   <script src="assets/min/oferta-avaliacoes.js?v=5dc7d0caee" defer></script>

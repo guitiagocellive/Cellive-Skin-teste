@@ -5305,9 +5305,9 @@ a.avaliacao-qtd {
 .oferta-envelhece { margin-top: calc(var(--vao-secao) - 10px); }
 .oferta-conheca { margin-top: calc(var(--vao-secao) - 43px); }
 .oferta-formula { margin-top: calc(var(--vao-secao) - 64px); }
-.oferta-srrp { margin-top: calc(var(--vao-secao) - 41px); } /* depois do reset */
+.oferta-srrp { margin-top: calc(var(--vao-secao) - 9px); } /* depois do reset (um respiro a mais antes do SRRP) */
 .oferta-inimigo { margin-top: var(--vao-secao); }
-.oferta-reset { margin-top: var(--vao-secao); }
+.oferta-reset { margin-top: calc(var(--vao-secao) - 26px); } /* o topo do vídeo já some no branco */
 .oferta-aliado { margin-top: calc(var(--vao-secao) - 22px); } /* logo depois da fórmula */
 .oferta-micro { margin-top: calc(var(--vao-secao) - 21px); }
 .oferta-clientes { margin-top: calc(var(--vao-secao) - 58px); }
@@ -6120,3 +6120,43 @@ html.lista-aberta {
 /* sem borda: a borda de 1px mostrava a beirada da imagem de fundo como uma listra em cima do vídeo */
 .slot:has(> video) { border: 0; background: #f9f9f9; }
 .slot:has(> video)::before { content: none; }
+
+/* ---------- O reset: vídeo de ponta a ponta, título embaixo com marca-texto ----------
+   O topo do vídeo some no branco da página (a gota parece cair da própria página) e o
+   marca-texto azul se pinta da esquerda para a direita quando o título aparece. */
+.oferta-reset .reset-video {
+  width: calc(100% + 2 * var(--gutter));
+  margin: 0 calc(-1 * var(--gutter));
+  border-radius: 0;
+  background: transparent;
+  transform: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%);
+}
+.oferta-reset .reset-video > video { filter: brightness(1.025); } /* branco do vídeo (249) = branco da página */
+.oferta-reset .reset-titulo { margin-top: 22px; }
+.oferta-reset .reset-titulo .titulo-leve { margin-bottom: 8px; }
+.oferta-reset .reset-titulo strong {
+  display: inline;
+  margin-top: 0;
+  padding: 0 3px;
+  text-shadow: none;
+  background: linear-gradient(transparent 56%, var(--blue-soft) 56%, var(--blue-soft) 94%, transparent 94%) 0 0 / 0% 100% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 1s cubic-bezier(0.65, 0, 0.35, 1) 0.5s;
+}
+.oferta-reset .reset-titulo.is-visivel strong { background-size: 100% 100%; }
+
+/* SRRP: título e introdução entram (sobem e aparecem) só depois de rolar um pouco */
+.srrp-cabeca[data-aparecer] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.srrp-cabeca[data-aparecer].is-visivel { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .oferta-reset .reset-titulo strong { transition: none; background-size: 100% 100%; }
+  .srrp-cabeca[data-aparecer] { opacity: 1; transform: none; transition: none; }
+}
