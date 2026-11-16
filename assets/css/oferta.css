@@ -6142,7 +6142,6 @@ html.lista-aberta {
   display: inline;
   margin-top: 0;
   padding: 0 3px;
-  text-shadow: none;
   background: linear-gradient(transparent 56%, var(--blue-soft) 56%, var(--blue-soft) 94%, transparent 94%) 0 0 / 0% 100% no-repeat;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
