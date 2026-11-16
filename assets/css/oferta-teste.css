@@ -6134,6 +6134,8 @@ html.lista-aberta {
   mask-image: linear-gradient(180deg, transparent 0, #000 14%);
 }
 .oferta-reset .reset-video > video { filter: brightness(1.025); } /* branco do vídeo (249) = branco da página */
+/* computador: o vídeo fica na coluna da esquerda, alinhado à margem (sem passar dela) */
+@media (min-width: 1024px) { .oferta-reset .reset-video { width: 100%; margin: 0; } }
 .oferta-reset .reset-titulo { margin-top: 22px; }
 .oferta-reset .reset-titulo .titulo-leve { margin-bottom: 8px; }
 .oferta-reset .reset-titulo strong {
@@ -6209,3 +6211,4 @@ html.lista-aberta {
 .oferta-reset.reset-borda .reset-video.is-visivel { transform: none; }
 .oferta-reset.reset-borda .reset-video > video { filter: none; }
 .oferta-reset.reset-borda .reset-titulo { margin-top: 24px; }
+@media (min-width: 1024px) { .oferta-reset.reset-borda .reset-video { border-radius: 22px; } } /* computador: mesmos cantos de antes */
