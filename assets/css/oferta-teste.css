@@ -6116,8 +6116,9 @@ html.lista-aberta {
 @media (prefers-reduced-motion: reduce) { .gn .gn-selo svg.gn-volta { animation: none; } }
 
 /* vídeo em loop no lugar de foto (seção O reset): ocupa o espaço da foto, sem o quadro tracejado */
-.slot > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.slot:has(> video) { border-color: transparent; background: var(--blue-mist) url("/assets/img/oferta/reset-pele-poster.webp") center / cover; }
+.slot > video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* sem borda: a borda de 1px mostrava a beirada da imagem de fundo como uma listra em cima do vídeo */
+.slot:has(> video) { border: 0; background: #f9f9f9; }
 .slot:has(> video)::before { content: none; }
 
 
