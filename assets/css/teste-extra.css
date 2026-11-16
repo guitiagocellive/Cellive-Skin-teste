@@ -33,3 +33,39 @@
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(-6px) scale(1.015); }
 }
+
+/* ---------- OPÇÕES DE LAYOUT do reset (só /teste-reset-1, -2 e -3): vídeo de ponta a ponta, título embaixo ----------
+   A classe reset-v1/v2/v3 na seção vem do script que gera essas páginas; o /teste não usa. */
+.oferta-reset.reset-v1,
+.oferta-reset.reset-v2,
+.oferta-reset.reset-v3 { margin-top: calc(var(--vao-secao) - 26px); }
+.reset-v1 .reset-video,
+.reset-v2 .reset-video,
+.reset-v3 .reset-video {
+  width: calc(100% + 2 * var(--gutter));
+  margin: 0 calc(-1 * var(--gutter));
+  border-radius: 0;
+  background: transparent;
+  transform: none;
+}
+/* topo do vídeo some no branco da página (a gota parece cair da própria página) */
+.reset-v1 .reset-video,
+.reset-v3 .reset-video {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%);
+}
+/* 1 · RETO: corte reto embaixo, título logo abaixo */
+.reset-v1 .reset-titulo { margin-top: 22px; }
+/* 2 · DEGRADÊ: o vídeo some no branco em cima e embaixo, e o título sobe por cima do degradê */
+.reset-v2 .reset-video {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 70%, transparent 100%);
+}
+.reset-v2 .reset-titulo { position: relative; z-index: 1; margin-top: -38px; }
+/* 3 · CURVA: a base do vídeo faz uma curva suave, título abaixo */
+.reset-v3 .reset-video { border-radius: 0 0 50% 50% / 0 0 16% 16%; }
+.reset-v3 .reset-titulo { margin-top: 26px; }
+/* o branco do vídeo (249) vira o branco da página (255): sem emenda no topo */
+.reset-v1 .reset-video > video,
+.reset-v2 .reset-video > video,
+.reset-v3 .reset-video > video { filter: brightness(1.025); }
