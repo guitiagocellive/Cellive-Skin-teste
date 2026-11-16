@@ -45,3 +45,4 @@
 .oferta-reset.reset-borda .reset-video.is-visivel { transform: none; }
 .oferta-reset.reset-borda .reset-video > video { filter: none; }
 .oferta-reset.reset-borda .reset-titulo { margin-top: 24px; }
+@media (min-width: 1024px) { .oferta-reset.reset-borda .reset-video { border-radius: 22px; } } /* computador: mesmos cantos de antes */
