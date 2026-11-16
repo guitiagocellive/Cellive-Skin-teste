@@ -35,7 +35,7 @@
   <noscript><link rel="stylesheet" href="https://use.typekit.net/zvs4xwq.css"></noscript>
   <!-- Primeira dobra primeiro: a foto principal baixa junto com o CSS -->
   <link rel="preload" as="image" href="assets/img/oferta/produto-1b.webp?v=1f64b46908" imagesrcset="assets/img/oferta/produto-1b-720.webp?v=b7a415e7ed 720w, assets/img/oferta/produto-1b.webp?v=1f64b46908 900w" imagesizes="(max-width: 480px) calc(100vw - 44px), 436px" type="image/webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/min/oferta.css?v=36466270de">
+  <link rel="stylesheet" href="assets/min/oferta.css?v=7411bf16a0">
   <link rel="stylesheet" href="assets/min/oferta-computador.css?v=018ca3e398" media="(min-width: 1024px)">
   <!-- Rastreamento próprio (painel); defer = não atrasa o desenho da página -->
   <script src="assets/min/rastreio.js?v=246a13e142" defer></script>
@@ -562,10 +562,15 @@
         </span>
       </h2>
 
-      <!-- Foto: assets/img/oferta/reset-rosto.webp (1280 × 800), -1080 e -720 (paisagem, 1,6 : 1);
-           o navegador escolhe o tamanho pela tela -->
-      <span class="slot reset-foto" data-label="Foto: rosto (o reset)" data-aparecer>
-        <img src="assets/img/oferta/reset-rosto-720.webp?v=2adc4c59fc" srcset="assets/img/oferta/reset-rosto-720.webp?v=2adc4c59fc 720w, assets/img/oferta/reset-rosto-1080.webp?v=8a393ef752 1080w, assets/img/oferta/reset-rosto.webp?v=6da1e857f2 1280w" sizes="(min-width: 1024px) 582px, 86vw" width="1280" height="800" alt="Dedo aplicando o sérum no rosto" loading="lazy" onerror="this.hidden=true">
+      <!-- Vídeo em loop (estilo GIF, sem som): a gota do sérum entrando na pele.
+           assets/video/reset-pele.webm (VP9) e .mp4 (H.264, iPhone), 896 × 560, 4 s, ~110 KB;
+           capa enquanto carrega: assets/img/oferta/reset-pele-poster.webp. O oferta.js só baixa e
+           toca quando a seção chega perto da tela e pausa fora dela (data-video-loop). -->
+      <span class="slot reset-foto reset-video" data-label="Vídeo: o sérum na pele (o reset)" data-aparecer>
+        <video muted loop playsinline preload="none" poster="assets/img/oferta/reset-pele-poster.webp?v=0b5f6d3324" width="896" height="560" aria-label="Animação: a gota do sérum penetrando na pele" data-video-loop>
+          <source src="assets/video/reset-pele.webm?v=22bc9296c9" type="video/webm">
+          <source src="assets/video/reset-pele.mp4?v=4b6fec7053" type="video/mp4">
+        </video>
       </span>
 
       <p class="reset-texto">Sua pele não precisa de mais um produto. Ela precisa de uma fórmula dedicada a reativar os fatores de jovialidade: auxiliar a produção de colágeno e elastina, devolver firmeza, acelerar a renovação celular e fortalecer a barreira cutânea. Tudo com a <strong>ação SRRP</strong>, em um único passo. <strong>Esse é o reset que sua pele estava esperando.</strong></p>
@@ -1327,7 +1332,7 @@
     </div>
   </dialog>
 
-  <script src="assets/min/oferta.js?v=1df8d104d7" defer></script>
+  <script src="assets/min/oferta.js?v=15442c5735" defer></script>
   <script src="assets/min/quiz-perguntas.js?v=c666bf3499" defer></script>
   <script src="assets/min/oferta-formula.js?v=008ad36e1f" defer></script>
   <script src="assets/min/oferta-avaliacoes.js?v=5dc7d0caee" defer></script>
