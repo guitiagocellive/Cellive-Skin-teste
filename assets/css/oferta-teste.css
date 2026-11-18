@@ -6184,3 +6184,11 @@ html.lista-aberta {
 .oferta-reset.reset-borda .reset-video > video { filter: none; }
 .oferta-reset.reset-borda .reset-titulo { margin-top: 24px; }
 @media (min-width: 1024px) { .oferta-reset.reset-borda .reset-video { border-radius: 22px; } } /* computador: mesmos cantos de antes */
+
+/* ---------- OPÇÃO /teste-suave: sem borda, mas a base do vídeo se dissolve no branco antes do título
+   (sem o corte reto). A classe reset-suave só existe nessa página. ---------- */
+.oferta-reset.reset-suave .reset-video {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 74%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 74%, transparent 100%);
+}
+.oferta-reset.reset-suave .reset-titulo { margin-top: 4px; }
