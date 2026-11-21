@@ -10,6 +10,9 @@
   "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
+  // endereço de teste cellive-skin-teste.<conta>.workers.dev e links de prévia sempre ligados
+  "workers_dev": true,
+  "preview_urls": true,
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
