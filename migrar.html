@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cópia dos dados</title>
+  <style>
+    :root { --tinta: #14213d; --cinza: #5b6475; --linha: #e3e7ee; --azul: #2f6fed; --ok: #18794e; --erro: #c0392b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fb; color: var(--tinta); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    p { color: var(--cinza); margin: 0 0 16px; }
+    .cartao { background: #fff; border: 1px solid var(--linha); border-radius: 12px; padding: 20px; margin-top: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 12px; border: 1px solid var(--linha); border-radius: 8px; font: inherit; }
+    button { margin-top: 12px; padding: 10px 16px; border: 0; border-radius: 8px; background: var(--azul); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+    button.leve { background: #fff; color: var(--azul); border: 1px solid var(--azul); }
+    button:disabled { opacity: .5; cursor: default; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px; }
+    th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--linha); }
+    td.n { text-align: right; font-variant-numeric: tabular-nums; }
+    #registro { white-space: pre-wrap; font: 13px/1.5 ui-monospace, monospace; color: var(--cinza); max-height: 260px; overflow: auto; }
+    .ok { color: var(--ok); } .erro { color: var(--erro); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Cópia dos dados: Neon → D1</h1>
+  <p>Usada uma vez, no dia da troca. Copia vendas, leads, eventos, produtos e configurações do banco antigo para o banco da Cloudflare.</p>
+
+  <div class="cartao">
+    <label for="senha">Senha do painel</label>
+    <input id="senha" type="password" autocomplete="current-password">
+    <button id="conferir" class="leve">Conferir quantidades</button>
+  </div>
+
+  <div class="cartao">
+    <strong>1. Copiar tudo</strong>
+    <p>Apaga o que houver no D1 e copia tudo do Neon. Faça logo antes de apontar o site para a Cloudflare.</p>
+    <button id="tudo">Copiar tudo</button>
+  </div>
+
+  <div class="cartao">
+    <strong>2. Copiar o que chegou depois</strong>
+    <p>Uns 30 minutos depois da troca: copia só o que ainda chegou no Neon depois da cópia 1, sem apagar nada.</p>
+    <button id="complemento">Copiar o que chegou depois</button>
+  </div>
+
+  <div class="cartao">
+    <strong>Quantidades</strong>
+    <table id="quantidades"><thead><tr><th>Tabela</th><th>Neon</th><th>D1</th></tr></thead><tbody></tbody></table>
+    <div id="registro"></div>
+  </div>
+</main>
+<script>
+(function () {
+  "use strict";
+  var TABELAS = ["vendas_b4you", "leads", "produtos", "configuracoes", "analises", "agente_uso", "webhook_tentativas", "eventos"];
+  var COM_NUMERO = { vendas_b4you: 1, leads: 1, webhook_tentativas: 1, eventos: 1 };
+  var $ = function (id) { return document.getElementById(id); };
+  var botoes = ["conferir", "tudo", "complemento"].map($);
+  function log(t, classe) { var d = document.createElement("div"); if (classe) d.className = classe; d.textContent = t; $("registro").appendChild(d); $("registro").scrollTop = 1e9; }
+  function travar(sim) { botoes.forEach(function (b) { b.disabled = sim; }); }
+  function chamar(metodo, corpo) {
+    return fetch("/api/migrar", {
+      method: metodo,
+      headers: { "authorization": "Bearer " + $("senha").value, "content-type": "application/json" },
+      body: corpo ? JSON.stringify(corpo) : undefined,
+    }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.erro + (j.detalhe ? ": " + j.detalhe : "")); return j; }); });
+  }
+  function ler(chave) { try { return JSON.parse(localStorage.getItem(chave) || "null"); } catch (e) { return null; } }
+  function guardar(chave, v) { try { localStorage.setItem(chave, JSON.stringify(v)); } catch (e) {} }
+
+  function conferir() {
+    return chamar("GET").then(function (j) {
+      var tb = $("quantidades").querySelector("tbody"); tb.innerHTML = "";
+      Object.keys(j.tabelas).forEach(function (t) {
+        var x = j.tabelas[t], tr = document.createElement("tr");
+        [t, x.neon, x.d1].forEach(function (v, i) { var td = document.createElement("td"); td.textContent = v == null ? "—" : v; if (i) td.className = "n"; tr.appendChild(td); });
+        tb.appendChild(tr);
+      });
+    });
+  }
+
+  async function copiar(complemento) {
+    var ultimos = ler("migrar-ultimos") || {};
+    if (complemento && !Object.keys(ultimos).length) { log("Faça primeiro a cópia 1 neste mesmo navegador.", "erro"); return; }
+    for (var i = 0; i < TABELAS.length; i++) {
+      var t = TABELAS[i];
+      if (complemento && !COM_NUMERO[t]) continue;
+      var depois = complemento ? ultimos[t] : null, total = 0, j;
+      if (complemento && depois == null) continue;
+      do {
+        j = await chamar("POST", { tabela: t, depois: depois, complemento: complemento });
+        total += j.copiadas; depois = j.depois;
+        if (COM_NUMERO[t] && j.depois != null) ultimos[t] = Math.max(ultimos[t] == null ? -1 : ultimos[t], j.depois);
+        guardar("migrar-ultimos", ultimos);
+      } while (!j.fim);
+      log(t + ": " + total + " linha(s) copiada(s)" + (j.aviso ? " (" + j.aviso + ")" : ""), "ok");
+    }
+  }
+
+  function rodar(acao) {
+    if (!$("senha").value) { log("Digite a senha do painel.", "erro"); return; }
+    travar(true);
+    Promise.resolve().then(acao).then(conferir).then(function () { log("Pronto.", "ok"); })
+      .catch(function (e) { log("Erro: " + e.message, "erro"); })
+      .then(function () { travar(false); });
+  }
+  $("conferir").onclick = function () { rodar(function () {}); };
+  $("tudo").onclick = function () { if (confirm("Apagar o que houver no D1 e copiar tudo do Neon?")) rodar(function () { guardar("migrar-ultimos", {}); return copiar(false); }); };
+  $("complemento").onclick = function () { rodar(function () { return copiar(true); }); };
+})();
+</script>
+</body>
+</html>

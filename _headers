@@ -1,0 +1,30 @@
+# Cabeçalhos dos arquivos (o que antes ficava no vercel.json)
+
+# arquivos com ?v= no endereço (CSS e JS compactados): podem ficar guardados 1 ano no navegador
+/assets/min/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=604800
+
+/assets/video/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/css/*
+  Cache-Control: public, max-age=300
+
+/assets/js/*
+  Cache-Control: public, max-age=300
+
+# painel e página de cópia de dados fora do Google
+/painel
+  X-Robots-Tag: noindex, nofollow
+
+/painel.html
+  X-Robots-Tag: noindex, nofollow
+
+/migrar
+  X-Robots-Tag: noindex, nofollow
+
+https://analises.celliveskin.com/*
+  X-Robots-Tag: noindex, nofollow

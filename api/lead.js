@@ -5,9 +5,9 @@
    GET  /api/lead?formato=csv      — baixa a lista completa em planilha (precisa da senha do painel).
    GET  /api/lead?formato=json     — a lista para a aba "Lançamento" do painel (precisa da senha).
 
-   O link do grupo vem da variável WHATSAPP_GRUPO na Vercel (ou de GRUPO_PADRAO abaixo).
-   Na prévia (link de teste da Vercel) nada é gravado, como acontece com os eventos. */
-import { autorizado, banco, json } from "./_db.js";
+   O link do grupo vem da variável WHATSAPP_GRUPO na Cloudflare (ou de GRUPO_PADRAO abaixo).
+   Na prévia (link de teste) nada é gravado, como acontece com os eventos. */
+import { autorizado, banco, ehPrevia, json } from "./_db.js";
 
 const GRUPO_PADRAO = "https://chat.whatsapp.com/Fqv8LHoWwSMLHKpRPWGr7b";
 
@@ -47,7 +47,7 @@ export async function POST(request) {
   if (!email || !EMAIL.test(email)) return json({ ok: false, erro: "email" }, 400);
   if (c.aceite !== true) return json({ ok: false, erro: "aceite" }, 400);
 
-  if (process.env.VERCEL_ENV === "preview") return json({ ok: true, previa: true, grupo: grupo() });
+  if (ehPrevia()) return json({ ok: true, previa: true, grupo: grupo() });
   // página de teste (op.celliveskin.com/teste): valida, mas não grava na lista
   if (new URL(request.url).searchParams.get("teste") === "1") return json({ ok: true, teste: true, grupo: grupo() });
 

@@ -10,10 +10,9 @@
      {"tipo":"status","texto":"Consultando os números de hoje…"}
      {"tipo":"resposta","texto":"..."}   ou   {"tipo":"erro","texto":"..."}
 
-   Precisa da variável ANTHROPIC_API_KEY na Vercel (a mesma da análise).
+   Precisa da variável ANTHROPIC_API_KEY na Cloudflare (a mesma da análise).
    Limite: AGENTE_LIMITE_DIA mensagens por dia (padrão 150). */
-import vm from "node:vm";
-import { readFile } from "node:fs/promises";
+import { QUIZ_FLUXO } from "./_quiz.js";
 import Anthropic from "@anthropic-ai/sdk";
 import { autorizado, banco, json } from "./_db.js";
 import { dadosPainel } from "./painel.js";
@@ -32,11 +31,8 @@ export async function nomesDoQuiz() {
   if (NOMES) return NOMES;
   NOMES = { telas: [], titulo: {} };
   try {
-    const codigo = await readFile(new URL("../assets/js/quiz-perguntas.js", import.meta.url), "utf8");
-    const ctx = { window: {} };
-    vm.runInNewContext(codigo, ctx, { timeout: 500 });
     let n = 0;
-    (ctx.window.QUIZ_FLUXO || []).forEach((b) => {
+    QUIZ_FLUXO.forEach((b) => {
       if (b.perguntas) {
         b.perguntas.forEach((p) => {
           n++;
@@ -286,7 +282,7 @@ export async function POST(request) {
   try { q = await banco(); } catch (e) { q = null; }
   if (!q) return json({ erro: "sem-banco" }, 503);
   try {
-    const uso = await q("SELECT COUNT(*)::int AS n FROM agente_uso WHERE ts > $1", [Date.now() - DIA_MS]);
+    const uso = await q("SELECT COUNT(*) AS n FROM agente_uso WHERE ts > $1", [Date.now() - DIA_MS]);
     if (uso[0].n >= LIMITE_DIA) return json({ erro: "limite" }, 429);
     await q("INSERT INTO agente_uso (ts) VALUES ($1)", [Date.now()]);
   } catch (e) { /* segue sem contar */ }
@@ -345,7 +341,7 @@ export async function POST(request) {
         }
       } catch (e) {
         let texto = "Não consegui falar com o Claude agora. Tente de novo em instantes.";
-        if (e instanceof Anthropic.AuthenticationError) texto = "A chave do Claude na Vercel parece inválida.";
+        if (e instanceof Anthropic.AuthenticationError) texto = "A chave do Claude na Cloudflare parece inválida.";
         else if (e instanceof Anthropic.RateLimitError) texto = "O Claude está ocupado agora. Tente de novo em um minuto.";
         else if (e instanceof Anthropic.BadRequestError) texto = "Não consegui ler um dos anexos. Tente um arquivo menor ou outro formato.";
         enviar({ tipo: "erro", texto });

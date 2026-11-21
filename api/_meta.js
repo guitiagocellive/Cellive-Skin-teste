@@ -1,5 +1,5 @@
 /* Números dos anúncios da Meta (API de Marketing / Insights).
-   Liga quando existem na Vercel:
+   Liga quando existem na Cloudflare (variáveis do Worker):
      META_TOKEN  – token de acesso com permissão ads_read (usuário do sistema
                    do Gerenciador de Negócios)
      META_CONTA  – ID da conta de anúncios (só os números, ou "act_123…")
@@ -7,6 +7,8 @@
    Devolve gasto, cliques no link, impressões, CPM, CTR e visualizações da
    página de destino do período (horário da conta de anúncios). Guarda o
    resultado por 30 minutos para não consultar a Meta toda hora. */
+import { lerJson } from "./_db.js";
+
 const VALIDADE = 30 * 60e3;
 
 export function metaLigada() {
@@ -35,7 +37,7 @@ export async function insightsMeta(q, de, ate, campanha) {
   if (q) {
     try {
       const salvo = await q("SELECT dados, criado FROM meta_cache WHERE chave = $1", [chave]);
-      if (salvo.length && Date.now() - Number(salvo[0].criado) < VALIDADE) return salvo[0].dados;
+      if (salvo.length && Date.now() - Number(salvo[0].criado) < VALIDADE) return lerJson(salvo[0].dados);
     } catch (e) { /* segue sem cache */ }
   }
   const versao = process.env.META_API_VERSAO || "v23.0";
@@ -78,7 +80,7 @@ export async function insightsMeta(q, de, ate, campanha) {
   };
   if (q) {
     try {
-      await q(`INSERT INTO meta_cache (chave, criado, dados) VALUES ($1, $2, $3::jsonb)
+      await q(`INSERT INTO meta_cache (chave, criado, dados) VALUES ($1, $2, $3)
         ON CONFLICT (chave) DO UPDATE SET criado = EXCLUDED.criado, dados = EXCLUDED.dados`, [chave, Date.now(), JSON.stringify(dados)]);
     } catch (e) { /* sem cache, tudo bem */ }
   }
@@ -96,7 +98,7 @@ export async function gastoPorNivel(q, de, ate, nivel) {
   if (q) {
     try {
       const salvo = await q("SELECT dados, criado FROM meta_cache WHERE chave = $1", [chave]);
-      if (salvo.length && Date.now() - Number(salvo[0].criado) < VALIDADE) return salvo[0].dados;
+      if (salvo.length && Date.now() - Number(salvo[0].criado) < VALIDADE) return lerJson(salvo[0].dados);
     } catch (e) { /* segue sem cache */ }
   }
   const versao = process.env.META_API_VERSAO || "v23.0";
@@ -125,7 +127,7 @@ export async function gastoPorNivel(q, de, ate, nivel) {
   };
   if (q) {
     try {
-      await q(`INSERT INTO meta_cache (chave, criado, dados) VALUES ($1, $2, $3::jsonb)
+      await q(`INSERT INTO meta_cache (chave, criado, dados) VALUES ($1, $2, $3)
         ON CONFLICT (chave) DO UPDATE SET criado = EXCLUDED.criado, dados = EXCLUDED.dados`, [chave, Date.now(), JSON.stringify(dados)]);
     } catch (e) { /* sem cache, tudo bem */ }
   }

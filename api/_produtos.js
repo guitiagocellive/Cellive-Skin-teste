@@ -1,6 +1,7 @@
 /* Produtos da aba "Produto" do painel (tabela produtos): leitura, produto inicial e os custos
    que a aba Estratégia usa no lucro estimado. Arquivos com "_" em /api não viram endereços. */
 import { randomUUID } from "node:crypto";
+import { lerJson } from "./_db.js";
 
 // produto inicial: os números da planilha de custos do Sérum (dá para mudar tudo no painel)
 export const PRODUTO_INICIAL = {
@@ -23,7 +24,8 @@ export const PRODUTO_INICIAL = {
 };
 
 export async function tabela(q) {
-  await q("CREATE TABLE IF NOT EXISTS produtos (id TEXT PRIMARY KEY, dados JSONB NOT NULL, criado BIGINT NOT NULL, atualizado BIGINT NOT NULL)");
+  // a tabela já é criada em _db.js; fica aqui só para os chamadores antigos
+  return q;
 }
 
 export async function lerProdutos(q) {
@@ -31,10 +33,10 @@ export async function lerProdutos(q) {
   let linhas = await q("SELECT id, dados, criado, atualizado FROM produtos ORDER BY criado ASC");
   if (!linhas.length) {
     const id = randomUUID(), agora = Date.now();
-    await q("INSERT INTO produtos (id, dados, criado, atualizado) VALUES ($1, $2::jsonb, $3, $3) ON CONFLICT (id) DO NOTHING", [id, JSON.stringify(PRODUTO_INICIAL), agora]);
+    await q("INSERT INTO produtos (id, dados, criado, atualizado) VALUES ($1, $2, $3, $3) ON CONFLICT (id) DO NOTHING", [id, JSON.stringify(PRODUTO_INICIAL), agora]);
     linhas = await q("SELECT id, dados, criado, atualizado FROM produtos ORDER BY criado ASC");
   }
-  return linhas.map((l) => Object.assign({}, l.dados, { id: l.id, criado: Number(l.criado), atualizado: Number(l.atualizado) }));
+  return linhas.map((l) => Object.assign({}, lerJson(l.dados, {}), { id: l.id, criado: Number(l.criado), atualizado: Number(l.atualizado) }));
 }
 
 

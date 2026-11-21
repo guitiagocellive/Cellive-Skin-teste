@@ -12,7 +12,7 @@
    - kits: cliques em comprar × vendas de cada kit;
    - horários: vendas e cliques por dia da semana e hora (Brasília).
    Vendas ligadas a uma visita só existem a partir de quando o site passou a mandar src/sck ao checkout. */
-import { autorizado, banco, json } from "./_db.js";
+import { autorizado, banco, json, lerJson } from "./_db.js";
 import { insightsMeta, gastoPorNivel } from "./_meta.js";
 import { lerVendas, frascosDaVenda } from "./_vendas.js";
 import { lerProdutos, custosDoProduto } from "./_produtos.js";
@@ -33,9 +33,8 @@ async function lerCustos(q) {
     if (c) return Object.assign({ origem: "produto" }, c);
   } catch (e) { /* segue com os custos manuais */ }
   try {
-    await q("CREATE TABLE IF NOT EXISTS configuracoes (chave TEXT PRIMARY KEY, valor JSONB NOT NULL, atualizado BIGINT NOT NULL)");
     const r = await q("SELECT valor FROM configuracoes WHERE chave = 'custos'");
-    return Object.assign({ origem: "manual" }, PADRAO, (r[0] && r[0].valor) || {});
+    return Object.assign({ origem: "manual" }, PADRAO, lerJson(r[0] && r[0].valor, {}));
   } catch (e) { return Object.assign({}, PADRAO); }
 }
 
@@ -49,7 +48,7 @@ export async function POST(request) {
   try { q = await banco(); } catch (e) { q = null; }
   if (!q) return json({ erro: "sem-banco" }, 503);
   await lerCustos(q); // cria a tabela se preciso
-  await q(`INSERT INTO configuracoes (chave, valor, atualizado) VALUES ('custos', $1::jsonb, $2)
+  await q(`INSERT INTO configuracoes (chave, valor, atualizado) VALUES ('custos', $1, $2)
     ON CONFLICT (chave) DO UPDATE SET valor = EXCLUDED.valor, atualizado = EXCLUDED.atualizado`, [JSON.stringify(custos), Date.now()]);
   return json({ ok: true, custos });
 }
@@ -135,13 +134,13 @@ export async function GET(request) {
            clique AS (SELECT DISTINCT sessao FROM eventos WHERE tipo = 'checkout' AND ts >= $1 AND ts < $2)
       SELECT e.etapa AS secao, COUNT(DISTINCT e.sessao) AS viram,
         COUNT(DISTINCT CASE WHEN c.sessao IS NOT NULL THEN e.sessao END) AS clicaram,
-        COUNT(DISTINCT CASE WHEN e.sessao = ANY($3::text[]) THEN e.sessao END) AS compraram
+        COUNT(DISTINCT CASE WHEN e.sessao IN (SELECT value FROM json_each($3)) THEN e.sessao END) AS compraram
       FROM eventos e JOIN oferta o ON o.sessao = e.sessao LEFT JOIN clique c ON c.sessao = e.sessao
       WHERE e.tipo = 'secao' AND e.ts >= $1 AND e.ts < $2 GROUP BY 1`, [de, ate, sessoesVenda]),
     ler(`WITH oferta AS (SELECT DISTINCT sessao FROM eventos WHERE tipo = 'pagina' AND pagina = 'oferta' AND ts >= $1 AND ts < $2)
       SELECT COUNT(*) AS total,
         COUNT(*) FILTER (WHERE sessao IN (SELECT sessao FROM eventos WHERE tipo = 'checkout' AND ts >= $1 AND ts < $2)) AS clicaram,
-        COUNT(*) FILTER (WHERE sessao = ANY($3::text[])) AS compraram FROM oferta`, [de, ate, sessoesVenda]),
+        COUNT(*) FILTER (WHERE sessao IN (SELECT value FROM json_each($3))) AS compraram FROM oferta`, [de, ate, sessoesVenda]),
   ]);
   const T = { total: Number(ofertaTot[0] && ofertaTot[0].total) || 0, clicaram: Number(ofertaTot[0] && ofertaTot[0].clicaram) || 0, compraram: Number(ofertaTot[0] && ofertaTot[0].compraram) || 0 };
   const secoes = secRows.map((r) => {
@@ -157,10 +156,10 @@ export async function GET(request) {
   const comVisita = principaisJ.filter((v) => v.sessao);
   let jornada = { identificadas: comVisita.length, total: principaisJ.length };
   if (comVisita.length) {
-    const ses = await ler(`SELECT sessao, MIN(visitante) AS visitante, MIN(aparelho) AS aparelho FROM eventos WHERE sessao = ANY($1::text[]) GROUP BY sessao`, [comVisita.map((v) => v.sessao)]);
+    const ses = await ler(`SELECT sessao, MIN(visitante) AS visitante, MIN(aparelho) AS aparelho FROM eventos WHERE sessao IN (SELECT value FROM json_each($1)) GROUP BY sessao`, [comVisita.map((v) => v.sessao)]);
     const porSessao = new Map(ses.map((s) => [s.sessao, s]));
     const visitantes = [...new Set(ses.map((s) => s.visitante).filter(Boolean))];
-    const hist = visitantes.length ? await ler(`SELECT visitante, sessao, MIN(ts) AS ts, MIN(fonte) AS fonte FROM eventos WHERE visitante = ANY($1::text[]) GROUP BY visitante, sessao`, [visitantes]) : [];
+    const hist = visitantes.length ? await ler(`SELECT visitante, sessao, MIN(ts) AS ts, MIN(fonte) AS fonte FROM eventos WHERE visitante IN (SELECT value FROM json_each($1)) GROUP BY visitante, sessao`, [visitantes]) : [];
     const porVisitante = new Map();
     for (const h of hist) { if (!porVisitante.has(h.visitante)) porVisitante.set(h.visitante, []); porVisitante.get(h.visitante).push({ ts: Number(h.ts), fonte: h.fonte, sessao: h.sessao }); }
     const horas = [], visitas = [], aparelhos = {}, caminhos = {};
@@ -206,8 +205,8 @@ export async function GET(request) {
   const vendasHora = Array.from({ length: 7 }, () => Array(24).fill(0));
   for (const v of principaisJ) { const d = BR(v.data); vendasHora[d.getUTCDay()][d.getUTCHours()]++; }
   const cliquesHora = Array.from({ length: 7 }, () => Array(24).fill(0));
-  for (const r of await ler(`SELECT EXTRACT(DOW FROM to_timestamp(ts / 1000.0) AT TIME ZONE 'America/Sao_Paulo')::int AS dia,
-      EXTRACT(HOUR FROM to_timestamp(ts / 1000.0) AT TIME ZONE 'America/Sao_Paulo')::int AS hora, COUNT(DISTINCT sessao) AS n
+  for (const r of await ler(`SELECT CAST(strftime('%w', ts / 1000 - 10800, 'unixepoch') AS INTEGER) AS dia,
+      CAST(strftime('%H', ts / 1000 - 10800, 'unixepoch') AS INTEGER) AS hora, COUNT(DISTINCT sessao) AS n
       FROM eventos WHERE tipo = 'checkout' AND ts >= $1 AND ts < $2 GROUP BY 1, 2`, [de, ate])) {
     if (cliquesHora[r.dia]) cliquesHora[r.dia][r.hora] = Number(r.n) || 0;
   }

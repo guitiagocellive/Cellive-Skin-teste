@@ -109,7 +109,7 @@
     return (v >= 0 ? "+" : "") + v + "% vs período anterior";
   }
 
-  // números da Meta vindos da API (quando ligada na Vercel)
+  // números da Meta vindos da API (quando ligada na Cloudflare)
   var metaApi = {}; // chave do período -> { estado: "carregando"|"ok"|"sem"|"erro", dados }
   function buscarMeta(c) {
     var e = app.estado, chave = c.chaveMeta;
@@ -258,7 +258,7 @@
       }
       if (api.estado === "ok") partes.push("CPM " + REAL.format(api.dados.cpm) + " · CTR " + api.dados.ctr_pct.toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + "%");
       var dica = api.estado === "carregando" ? "Buscando os números da Meta…"
-        : api.estado === "sem" ? "Dica: ligando a API da Meta na Vercel, estes campos se preenchem sozinhos."
+        : api.estado === "sem" ? "Dica: ligando a API da Meta na Cloudflare, estes campos se preenchem sozinhos."
         : api.estado === "erro" ? "Não consegui ler a Meta agora; preencha à mão."
         : "Connect rate = visitas que chegaram ao site ÷ cliques no link do anúncio.";
       resultadoMeta.textContent = partes.join(" · ") || dica;
@@ -875,7 +875,7 @@
 
     var estado = app.estado;
     if (estado.demo || !estado.senha) {
-      responder({ papel: "assistant", texto: "No **modo demonstração** eu não converso: entre no painel com a senha para eu ler os números reais.\n\nO chat também precisa da chave do Claude na Vercel (variável `ANTHROPIC_API_KEY`).", erro: true });
+      responder({ papel: "assistant", texto: "No **modo demonstração** eu não converso: entre no painel com a senha para eu ler os números reais.\n\nO chat também precisa da chave do Claude na Cloudflare (variável `ANTHROPIC_API_KEY`).", erro: true });
       return;
     }
 
@@ -920,7 +920,7 @@
       if (!resp.ok || tipo.indexOf("ndjson") === -1) {
         return resp.json().catch(function () { return {}; }).then(function (b) {
           var motivos = {
-            "sem-ia": "O chat precisa da chave do Claude na Vercel (variável `ANTHROPIC_API_KEY`). Depois de colocar, faça um Redeploy.",
+            "sem-ia": "O chat precisa da chave do Claude na Cloudflare (segredo `ANTHROPIC_API_KEY` do Worker).",
             limite: "Chegamos ao limite de mensagens de hoje. Amanhã libera de novo.",
             grande: "Os anexos ficaram grandes demais. Mande um arquivo menor.",
             senha: "A sessão expirou. Saia e entre de novo com a senha.",

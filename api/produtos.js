@@ -42,7 +42,7 @@ export async function POST(request) {
   try {
     await tabela(c.q);
     const agora = Date.now();
-    await c.q(`INSERT INTO produtos (id, dados, criado, atualizado) VALUES ($1, $2::jsonb, $3, $3)
+    await c.q(`INSERT INTO produtos (id, dados, criado, atualizado) VALUES ($1, $2, $3, $3)
       ON CONFLICT (id) DO UPDATE SET dados = EXCLUDED.dados, atualizado = EXCLUDED.atualizado`, [id, JSON.stringify(dados), agora]);
     return json({ ok: true, id, atualizado: agora });
   } catch (e) { return json({ erro: "banco" }, 500); }

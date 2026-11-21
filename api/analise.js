@@ -4,7 +4,7 @@
    pessoa: sem e-mail, sem IP, sem respostas individuais) e manda para cá.
    Aqui o resumo vai para o Claude, que devolve o relatório em JSON.
 
-   Liga sozinho quando existe a variável ANTHROPIC_API_KEY na Vercel.
+   Liga sozinho quando existe a variável ANTHROPIC_API_KEY na Cloudflare.
    Sem ela, o painel usa a análise automática (gratuita, feita no navegador).
 
    Para não gastar à toa:
@@ -13,7 +13,7 @@
    - no máximo IA_LIMITE_DIA relatórios por dia (padrão: 20). */
 import { createHash } from "node:crypto";
 import Anthropic from "@anthropic-ai/sdk";
-import { autorizado, banco, json } from "./_db.js";
+import { autorizado, banco, json, lerJson } from "./_db.js";
 
 const MODELO = process.env.IA_MODELO || "claude-opus-5-5";
 const VALIDADE = 6 * 3600e3;
@@ -126,12 +126,12 @@ export async function POST(request) {
   if (q && !corpo.forcar) {
     try {
       const salvo = await q("SELECT dados, criado FROM analises WHERE chave = $1", [chave]);
-      if (salvo.length) return json({ ok: true, guardado: true, criado: Number(salvo[0].criado), modelo: MODELO, relatorio: salvo[0].dados });
+      if (salvo.length) return json({ ok: true, guardado: true, criado: Number(salvo[0].criado), modelo: MODELO, relatorio: lerJson(salvo[0].dados) });
     } catch (e) { /* segue sem cache */ }
   }
   if (q) {
     try {
-      const hoje = await q("SELECT COUNT(*)::int AS n FROM analises WHERE criado > $1", [Date.now() - 864e5]);
+      const hoje = await q("SELECT COUNT(*) AS n FROM analises WHERE criado > $1", [Date.now() - 864e5]);
       if (hoje[0].n >= LIMITE_DIA) return json({ erro: "limite" }, 429);
     } catch (e) { /* segue */ }
   }
@@ -171,7 +171,7 @@ export async function POST(request) {
   const criado = Date.now();
   if (q) {
     try {
-      await q(`INSERT INTO analises (chave, criado, dados) VALUES ($1, $2, $3::jsonb)
+      await q(`INSERT INTO analises (chave, criado, dados) VALUES ($1, $2, $3)
         ON CONFLICT (chave) DO UPDATE SET criado = EXCLUDED.criado, dados = EXCLUDED.dados`, [chave, criado, JSON.stringify(relatorio)]);
     } catch (e) { /* sem cache, tudo bem */ }
   }

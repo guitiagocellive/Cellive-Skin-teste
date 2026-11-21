@@ -1,13 +1,14 @@
 /* GET /api/painel                — números do painel (precisa da senha).
    GET /api/painel?formato=csv    — baixa os eventos do período em CSV.
-   A senha fica na variável PAINEL_SENHA (Vercel > Settings > Environment Variables). */
+   A senha fica na variável PAINEL_SENHA (segredo do Worker na Cloudflare). */
 import { autorizado, banco, json } from "./_db.js";
 
-const FUSO = "America/Sao_Paulo";
-const DIA = `to_char(to_timestamp(ts / 1000.0) AT TIME ZONE '${FUSO}', 'YYYY-MM-DD')`;
-const HORA = `EXTRACT(HOUR FROM to_timestamp(ts / 1000.0) AT TIME ZONE '${FUSO}')::int`;
-const SEMANA = `EXTRACT(DOW FROM to_timestamp(ts / 1000.0) AT TIME ZONE '${FUSO}')::int`;
-const MS = "(extra->>'ms')::numeric";
+// Horário de Brasília (UTC−3, sem horário de verão desde 2019): ts em milissegundos → segundos − 3 h
+const BRT = "ts / 1000 - 10800, 'unixepoch'";
+const DIA = `strftime('%Y-%m-%d', ${BRT})`;
+const HORA = `CAST(strftime('%H', ${BRT}) AS INTEGER)`;
+const SEMANA = `CAST(strftime('%w', ${BRT}) AS INTEGER)`; // 0 = domingo
+const MS = "CAST(json_extract(extra, '$.ms') AS REAL)";
 
 // Campos que são texto (os outros números chegam como texto do Postgres e viram número)
 const TEXTO = new Set(["valor", "etapa", "nome", "pagina", "dia", "campo", "v"]);
@@ -41,7 +42,7 @@ function filtros(url, deslocamento = 0) {
     if (v) { cond.push(`${campo} = ?`); args.push(v); }
   }
   // versão do funil: "v2" = oferta direta (anúncios); padrão = funil com quiz
-  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS DISTINCT FROM 'v2'");
+  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS NOT 'v2'");
   return { where: cond.join(" AND "), args };
 }
 
@@ -56,14 +57,14 @@ async function listaLancamento(q, url) {
     const v = url.searchParams.get(campo);
     if (v) { cond.push(`${campo} = ?`); args.push(v); }
   }
-  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS DISTINCT FROM 'v2'");
+  cond.push(ehV2(url) ? "versao = 'v2'" : "versao IS NOT 'v2'");
   const W = cond.join(" AND ");
   try {
     const [periodo, total, ultimos, porKit] = await Promise.all([
-      q(sql(`SELECT COUNT(*)::int AS n FROM leads WHERE ${W}`), args),
-      q("SELECT COUNT(*)::int AS n FROM leads"),
+      q(sql(`SELECT COUNT(*) AS n FROM leads WHERE ${W}`), args),
+      q("SELECT COUNT(*) AS n FROM leads"),
       q(sql(`SELECT nome, kit, criado FROM leads WHERE ${W} ORDER BY criado DESC LIMIT 6`), args),
-      q(sql(`SELECT COALESCE(kit, '') AS kit, COUNT(*)::int AS n FROM leads WHERE ${W} GROUP BY 1`), args),
+      q(sql(`SELECT COALESCE(kit, '') AS kit, COUNT(*) AS n FROM leads WHERE ${W} GROUP BY 1`), args),
     ]);
     return {
       periodo: periodo[0].n, total: total[0].n,
@@ -136,7 +137,7 @@ export async function dadosPainel(q, url) {
       SELECT etapa, valor, COUNT(*) AS n,
         SUM(CASE WHEN sessao IN (${conv}) THEN 1 ELSE 0 END) AS conv
       FROM ult WHERE r = 1 GROUP BY etapa, valor`, [...A, ...A]),
-    todos(`SELECT etapa, AVG(${MS})::float AS ms, COUNT(*) AS n
+    todos(`SELECT etapa, AVG(${MS}) AS ms, COUNT(*) AS n
       FROM eventos WHERE tipo='resposta' AND ${MS} < 600000 AND ${W} GROUP BY etapa`, A),
     todos(`SELECT valor, COUNT(DISTINCT sessao) AS n, COUNT(*) AS cliques FROM eventos WHERE tipo='plano' AND ${W} GROUP BY valor`, A),
     todos(`SELECT valor, COUNT(DISTINCT sessao) AS n, COUNT(*) AS cliques FROM eventos WHERE tipo='checkout' AND ${W} GROUP BY valor`, A),
@@ -148,9 +149,9 @@ export async function dadosPainel(q, url) {
     // cliques em comprar por hora do dia (para achar o horário de pico)
     todos(`SELECT ${HORA} AS hora, COUNT(DISTINCT sessao) AS n
       FROM eventos WHERE tipo='checkout' AND ${W} GROUP BY 1`, A),
-    todos(`SELECT valor::bigint AS ms FROM eventos WHERE tipo='quiz_fim' AND valor ~ '^[0-9]+$' AND ${W} ORDER BY 1 LIMIT 20000`, A),
-    todos(`SELECT ${MS}::bigint AS ms FROM eventos WHERE tipo='saida' AND pagina='oferta' AND jsonb_exists(extra, 'ms') AND ${W} ORDER BY 1 LIMIT 20000`, A),
-    todos(`SELECT pagina, (extra->>'rolagem')::int AS r FROM eventos WHERE tipo='saida' AND ${W} LIMIT 40000`, A),
+    todos(`SELECT CAST(valor AS INTEGER) AS ms FROM eventos WHERE tipo='quiz_fim' AND valor <> '' AND valor NOT GLOB '*[^0-9]*' AND ${W} ORDER BY 1 LIMIT 20000`, A),
+    todos(`SELECT CAST(${MS} AS INTEGER) AS ms FROM eventos WHERE tipo='saida' AND pagina='oferta' AND json_type(extra, '$.ms') IS NOT NULL AND ${W} ORDER BY 1 LIMIT 20000`, A),
+    todos(`SELECT pagina, CAST(json_extract(extra, '$.rolagem') AS INTEGER) AS r FROM eventos WHERE tipo='saida' AND ${W} LIMIT 40000`, A),
     todos(`SELECT 'fonte' AS campo, fonte AS v FROM eventos WHERE ts >= ? GROUP BY fonte
       UNION ALL SELECT 'campanha', campanha FROM eventos WHERE ts >= ? AND campanha IS NOT NULL GROUP BY campanha
       UNION ALL SELECT 'aparelho', aparelho FROM eventos WHERE ts >= ? GROUP BY aparelho`, [ha90, ha90, ha90]),
@@ -163,7 +164,7 @@ export async function dadosPainel(q, url) {
   return {
     gerado: Date.now(),
     versao: ehV2(url) ? "v2" : "v1",
-    ambiente: process.env.VERCEL_ENV || "local", // production, preview ou local
+    ambiente: process.env.AMBIENTE || "local", // production, preview ou local
     ia: !!process.env.ANTHROPIC_API_KEY, // a análise com o Claude está ligada?
     kpi: kpi[0], kpiAnt: kpiAnt[0], diario, etapas, paradas, respostas, tempoPergunta, planos, checkoutPlano, secoes, cliques,
     origem: { fonte: porFonte, campanha: porCampanha, aparelho: porAparelho, sistema: porSistema, pais: porPais },

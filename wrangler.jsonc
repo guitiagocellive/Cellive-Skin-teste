@@ -1,0 +1,28 @@
+// Configuração da Cloudflare (Worker "cellive-skin-teste").
+// - As páginas e arquivos desta pasta vão para o ar como arquivos estáticos (menos o que está em .assetsignore).
+// - worker/index.js atende /api/*, a página inicial (OP → oferta direta), /painel e o ícone.
+// - Banco: D1 "cellive-skin", acessado nas funções como env.DB (ver api/_db.js).
+// - Segredos (senha do painel, chave da IA, token da Meta) ficam só no painel da Cloudflare,
+//   em Settings → Variables and Secrets. Nunca aqui.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "cellive-skin-teste",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/", "/painel", "/favicon.ico", "/api/*"]
+  },
+  // sem "database_id": na primeira publicação a Cloudflare cria o banco sozinha e depois reaproveita
+  "d1_databases": [
+    { "binding": "DB", "database_name": "cellive-skin" }
+  ],
+  // variáveis comuns (não secretas); as que você criar no painel da Cloudflare são mantidas
+  "vars": { "AMBIENTE": "production" },
+  "keep_vars": true,
+  "observability": { "enabled": true }
+}

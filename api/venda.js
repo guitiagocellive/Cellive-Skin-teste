@@ -55,10 +55,6 @@ async function registrarTentativa(request, url, info) {
   try {
     const q = await banco();
     if (!q) return;
-    await q(`CREATE TABLE IF NOT EXISTS webhook_tentativas (
-      id BIGSERIAL PRIMARY KEY, ts BIGINT NOT NULL, metodo TEXT, resposta INT, motivo TEXT,
-      tipo TEXT, tamanho INT, tem_codigo BOOLEAN, agente TEXT, previa TEXT
-    )`);
     await q(`INSERT INTO webhook_tentativas (ts, metodo, resposta, motivo, tipo, tamanho, tem_codigo, agente, previa)
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [Date.now(), request.method, info.resposta, corta(info.motivo, 200), corta(request.headers.get("content-type"), 120),
@@ -134,31 +130,18 @@ export async function POST(request) {
   let textoDados = JSON.stringify(dados);
   if (textoDados.length > 100000) textoDados = JSON.stringify({ grande_demais: true, tamanho: textoDados.length });
 
-  // registro no log da Vercel (já sem dados pessoais), para conferir o formato que a B4You envia
+  // registro no log do Worker (já sem dados pessoais), para conferir o formato que a B4You envia
   console.log("venda-b4you", JSON.stringify(linha), textoDados.slice(0, 6000));
 
   let q;
   try { q = await banco(); } catch (e) { return json({ ok: false, erro: "banco" }, 503); }
   if (!q) return json({ ok: false, erro: "sem banco" }, 503);
   try {
-    await q(`CREATE TABLE IF NOT EXISTS vendas_b4you (
-      id BIGSERIAL PRIMARY KEY, recebido BIGINT NOT NULL,
-      evento TEXT, venda TEXT, grupo TEXT, status TEXT, valor NUMERIC, comissao NUMERIC,
-      oferta TEXT, oferta_nome TEXT, quantidade NUMERIC, produto TEXT, tipo TEXT, pagamento TEXT, parcelas NUMERIC,
-      fonte TEXT, campanha TEXT, midia TEXT, conteudo TEXT, termo TEXT, src TEXT, sck TEXT,
-      email_hash TEXT, pago_em TEXT, dados JSONB NOT NULL
-    )`);
-    await q("CREATE INDEX IF NOT EXISTS vendas_b4you_recebido ON vendas_b4you(recebido)");
-    await q("CREATE INDEX IF NOT EXISTS vendas_b4you_venda ON vendas_b4you(venda)");
-    await q(`ALTER TABLE vendas_b4you ADD COLUMN IF NOT EXISTS funil TEXT, ADD COLUMN IF NOT EXISTS sessao TEXT,
-      ADD COLUMN IF NOT EXISTS comprador_nome TEXT, ADD COLUMN IF NOT EXISTS comprador_email TEXT,
-      ADD COLUMN IF NOT EXISTS comprador_telefone TEXT, ADD COLUMN IF NOT EXISTS comprador_cidade TEXT,
-      ADD COLUMN IF NOT EXISTS comprador_uf TEXT`);
     const L = linha;
     await q(`INSERT INTO vendas_b4you (recebido, evento, venda, grupo, status, valor, comissao, oferta, oferta_nome, quantidade,
       produto, tipo, pagamento, parcelas, fonte, campanha, midia, conteudo, termo, src, sck, email_hash, pago_em, dados,
       funil, sessao, comprador_nome, comprador_email, comprador_telefone, comprador_cidade, comprador_uf)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24::jsonb,$25,$26,$27,$28,$29,$30,$31)`,
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)`,
       [Date.now(), L.evento, L.venda, L.grupo, L.status, L.valor, L.comissao, L.oferta, L.oferta_nome, L.quantidade,
        L.produto, L.tipo, L.pagamento, L.parcelas, L.fonte, L.campanha, L.midia, L.conteudo, L.termo, L.src, L.sck,
        L.email, L.pago_em, textoDados, L.funil, L.sessao,

@@ -256,14 +256,14 @@
           try { sessionStorage.removeItem("cl-painel-senha"); } catch (e) { /* ok */ }
           return mostrarEntrada("Senha incorreta.");
         }
-        if (x.corpo.erro === "sem-senha") return mostrarEntrada("A senha do painel ainda não foi configurada na Vercel (variável PAINEL_SENHA).");
-        if (x.corpo.erro === "sem-banco") return mostrarEntrada("O banco de dados ainda não foi conectado ao projeto na Vercel (Storage > Neon).");
+        if (x.corpo.erro === "sem-senha") return mostrarEntrada("A senha do painel ainda não foi configurada na Cloudflare (segredo PAINEL_SENHA).");
+        if (x.corpo.erro === "sem-banco") return mostrarEntrada("O banco de dados (D1) ainda não foi ligado ao Worker na Cloudflare.");
         if (!x.resp.ok) { status("Erro ao carregar", "demo"); return; }
         estado.dados = x.corpo;
         $("[data-entrar]").hidden = true;
         $("[data-painel]").hidden = false;
         montar();
-        // na prévia (link de teste da Vercel) o selo avisa que não é a versão no ar
+        // na prévia (link de teste) o selo avisa que não é a versão no ar
         if (x.corpo.ambiente === "preview") status("Prévia · versão de teste", "demo");
         else status(x.corpo.aoVivo ? x.corpo.aoVivo + " pessoa" + (x.corpo.aoVivo > 1 ? "s" : "") + " agora" : "Ao vivo", "ao-vivo");
       })
@@ -1209,11 +1209,11 @@
 
   /* ================= relatório da IA (pontos de melhoria) =================
      Sempre mostra na hora a análise automática (feita aqui, sem custo).
-     Se a chave do Claude estiver na Vercel, pede o relatório ao Claude e
+     Se a chave do Claude estiver na Cloudflare, pede o relatório ao Claude e
      troca quando ele chegar. */
   var ia = { claude: {}, pedindo: {}, fechouPrimeiro: false };
   var MOTIVOS = {
-    limite: "o limite diário de análises foi atingido", chave: "a chave do Claude na Vercel parece inválida",
+    limite: "o limite diário de análises foi atingido", chave: "a chave do Claude na Cloudflare parece inválida",
     ocupado: "o Claude está ocupado agora", recusa: "o Claude não conseguiu analisar este resumo", "sem-ia": "a chave do Claude não está configurada",
   };
 
@@ -1384,7 +1384,7 @@
     if (estado.demo) txt = "Modo demonstração: análise automática feita sobre números fictícios.";
     else if (claude) txt = "O Claude leu só os números agregados deste período (nenhum dado pessoal) e escreveu este relatório.";
     else if (d.ia) txt = meta.erro ? "Não deu para falar com o Claude agora (" + meta.erro + "). Esta é a análise automática do painel." : "Esta é a análise automática do painel (sem custo). Toque em “Gerar com o Claude” para um relatório escrito pelo Claude (usa a API, custo por uso).";
-    else txt = "Análise automática, feita pelo próprio painel com regras de conversão, sem custo. Para o relatório escrito pelo Claude, adicione a chave ANTHROPIC_API_KEY na Vercel.";
+    else txt = "Análise automática, feita pelo próprio painel com regras de conversão, sem custo. Para o relatório escrito pelo Claude, adicione a chave ANTHROPIC_API_KEY na Cloudflare.";
     rod.appendChild(el("p", null, txt));
     // atalho para conversar sobre o relatório com o Estrategista (chat)
     {

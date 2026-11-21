@@ -1,6 +1,6 @@
 /* GET /api/meta?de=AAAA-MM-DD&ate=AAAA-MM-DD[&campanha=nome]
    Números dos anúncios da Meta no período (precisa da senha do painel).
-   Sem META_TOKEN/META_CONTA na Vercel, responde {erro:"sem-meta"} e o
+   Sem META_TOKEN/META_CONTA na Cloudflare, responde {erro:"sem-meta"} e o
    painel usa os campos para digitar à mão. */
 import { autorizado, banco, json } from "./_db.js";
 import { insightsMeta } from "./_meta.js";

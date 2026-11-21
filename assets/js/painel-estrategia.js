@@ -179,7 +179,7 @@
     t.appendChild(tb);
     var nota = $("[data-est-tabela-nota]");
     nota.textContent = bloco.meta === "sem-meta"
-      ? "Gasto, retorno e custo por venda aparecem quando a conta de anúncios da Meta estiver conectada ao painel (META_TOKEN e META_CONTA na Vercel)."
+      ? "Gasto, retorno e custo por venda aparecem quando a conta de anúncios da Meta estiver conectada ao painel (META_TOKEN e META_CONTA na Cloudflare)."
       : "Para o gasto bater com as vendas, use nos anúncios: utm_campaign={{campaign.name}} e utm_content={{ad.name}}. Retorno em verde = 2x ou mais; em vermelho = menos de 1x.";
   }
 

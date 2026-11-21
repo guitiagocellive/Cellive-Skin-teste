@@ -1,12 +1,12 @@
 /* POST /api/evento — recebe os eventos do rastreio.js e grava no banco. */
-import { banco, json } from "./_db.js";
+import { banco, ehPrevia, json } from "./_db.js";
 
 const TIPOS = new Set(["pagina", "etapa", "resposta", "voltar", "quiz_fim", "secao", "plano", "checkout", "lead", "clique", "saida", "erro"]);
 const corta = (v, n) => (v == null ? null : String(v).slice(0, n));
 
 export async function POST(request) {
-  // prévias (VERCEL_ENV=preview) não gravam: testes não sujam os números reais
-  if (process.env.VERCEL_ENV === "preview") return json({ ok: true, n: 0, previa: true });
+  // prévias (AMBIENTE=preview) não gravam: testes não sujam os números reais
+  if (ehPrevia()) return json({ ok: true, n: 0, previa: true });
   let lista;
   try {
     const texto = await request.text();
@@ -23,30 +23,33 @@ export async function POST(request) {
   try { q = await banco(); } catch (e) { return json({ ok: false, erro: "banco" }, 503); }
   if (!q) return json({ ok: false, erro: "sem banco" }, 503);
 
-  // país vem do cabeçalho da Vercel
-  const pais = corta(request.headers.get("x-vercel-ip-country"), 4);
+  // país vem do cabeçalho da Cloudflare
+  const pais = corta(request.headers.get("cf-ipcountry"), 4);
   const agora = Date.now();
-  const COLS = 18;
-  const valores = [];
-  const linhas = lista.map((e, i) => {
+  const linhas = lista.map((e) => {
     const ts = typeof e.ts === "number" && Math.abs(agora - e.ts) < 6 * 3600e3 ? Math.round(e.ts) : agora;
     let extra = null;
     if (e.x && typeof e.x === "object") {
       const txt = JSON.stringify(e.x);
       if (txt.length <= 500) extra = txt;
     }
-    valores.push(
+    return [
       ts, corta(e.v, 40), corta(e.s, 40), e.t, corta(e.p, 40), corta(e.e, 80), corta(e.val, 300), extra,
       corta(e.u && e.u.fonte, 80) || "direto", corta(e.u && e.u.campanha, 120), corta(e.u && e.u.midia, 80), corta(e.u && e.u.conteudo, 120),
-      corta(e.ap, 20), corta(e.so, 20), corta(e.nav, 20), pais, !!e.novo, e.ver === "v2" ? "v2" : null
-    );
-    const base = i * COLS;
-    return "(" + Array.from({ length: COLS }, (_, k) => "$" + (base + k + 1) + (k === 7 ? "::jsonb" : "")).join(",") + ")";
+      corta(e.ap, 20), corta(e.so, 20), corta(e.nav, 20), pais, e.novo ? 1 : 0, e.ver === "v2" ? "v2" : null,
+    ];
   });
-  try {
-    await q(`INSERT INTO eventos
+  // o D1 aceita até 100 valores por consulta: 5 eventos (18 colunas) por INSERT, tudo num lote só
+  const COLS = 18, POR = 5, consultas = [];
+  for (let i = 0; i < linhas.length; i += POR) {
+    const grupo = linhas.slice(i, i + POR);
+    const marcas = grupo.map((_, j) => "(" + Array.from({ length: COLS }, (_, k) => "$" + (j * COLS + k + 1)).join(",") + ")");
+    consultas.push([`INSERT INTO eventos
       (ts, visitante, sessao, tipo, pagina, etapa, valor, extra, fonte, campanha, midia, conteudo, aparelho, sistema, navegador, pais, novo, versao)
-      VALUES ${linhas.join(",")}`, valores);
+      VALUES ${marcas.join(",")}`, grupo.flat()]);
+  }
+  try {
+    await q.lote(consultas);
   } catch (e) {
     return json({ ok: false }, 500);
   }
